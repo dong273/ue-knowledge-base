@@ -54,13 +54,14 @@ ue-kb query "角色移动 速度衰减" --json   # machine-readable for agents
 ### Example
 
 ```text
-$ ue-kb query "GAS cooldown"
-🔍 UE 知识库检索：GAS cooldown
+$ ue-kb query "GAS 技能冷却"
+🔍 UE 知识库检索：GAS 技能冷却
 
-[1] ue-gameplay-abilities/SKILL.md › GameplayEffect 冷却配置 (匹配度: 86.3%)
-    Cooldown tags 通过 GameplayTag 管理冷却状态：在 GameplayEffect 中设置
-    CooldownGameplayEffectClass ... 
-[2] ue-gameplay-abilities/references/gas-input-integration.md › 冷却与输入 (匹配度: 82.1%)
+[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 21.1%)
+    UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，容易陷入
+    两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的事件
+    模型，且 CommitAbility 的 GC 延迟影响跳跃手感 ...
+[2] ue-gameplay-abilities/references/gas-input-integration.md › Jump — GAS 即时技能 (匹配度: 14.2%)
     ...
 ```
 
