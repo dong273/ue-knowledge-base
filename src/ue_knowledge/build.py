@@ -32,13 +32,6 @@ def build_index(
         # Force huggingface_hub into offline mode so a missing file in the
         # local cache can never trigger network retries (slow in CN networks).
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    if embedder is None:
-        from sentence_transformers import SentenceTransformer
-        embedder = SentenceTransformer(
-            model_name,
-            local_files_only=offline,
-        )
-        embedder.max_seq_length = 512
     import chromadb
 
     source = source_dir or config.source_dir()
@@ -52,6 +45,17 @@ def build_index(
 
     if not source.is_dir():
         raise FileNotFoundError(f"corpus directory not found: {source}")
+
+    # Load the model lazily: after all cheap, model-independent failure
+    # checks so missing corpus/paths report precisely even with no model
+    # cached (CI) or no network (offline mode).
+    if embedder is None:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(
+            model_name,
+            local_files_only=offline,
+        )
+        embedder.max_seq_length = 512
 
     print(f"[*] Loading model: {model_name}")
     model = embedder
