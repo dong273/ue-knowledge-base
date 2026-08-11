@@ -13,8 +13,13 @@ def build_index(
     model_name: str | None = None,
     force: bool = False,
     offline: bool = True,
+    embedder=None,
 ) -> dict:
     """Build (or rebuild) the vector index from the markdown corpus.
+
+    ``embedder`` injects a custom embedder for testing (must expose
+    ``encode(texts, **kwargs)`` and ``get_sentence_embedding_dimension()``);
+    defaults to a local SentenceTransformer when omitted.
 
     Returns a summary dict: {files, chunks, collection, chroma_dir}.
     """
@@ -22,7 +27,13 @@ def build_index(
         # Force huggingface_hub into offline mode so a missing file in the
         # local cache can never trigger network retries (slow in CN networks).
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    from sentence_transformers import SentenceTransformer
+    if embedder is None:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(
+            model_name,
+            local_files_only=offline,
+        )
+        embedder.max_seq_length = 512
     import chromadb
 
     source = source_dir or config.source_dir()
@@ -33,11 +44,7 @@ def build_index(
         raise FileNotFoundError(f"corpus directory not found: {source}")
 
     print(f"[*] Loading model: {model_name}")
-    model = SentenceTransformer(
-        model_name,
-        local_files_only=offline,
-    )
-    model.max_seq_length = 512
+    model = embedder
     print(f"    Embedding dim: {model.get_sentence_embedding_dimension()}")
 
     print(f"[*] Reading corpus: {source}")

@@ -12,19 +12,26 @@ def query(
     chroma_dir: Path | None = None,
     model_name: str | None = None,
     offline: bool = True,
+    embedder=None,
 ) -> list[dict]:
-    """Search the knowledge base. Returns [{source, heading, score, text}]."""
+    """Search the knowledge base. Returns [{source, heading, score, text}].
+
+    ``embedder`` injects a custom embedder for testing (must expose
+    ``encode(texts, **kwargs)``); defaults to a local SentenceTransformer.
+    """
     if offline:
         # Force huggingface_hub into offline mode so a missing file in the
         # local cache can never trigger network retries (slow in CN networks).
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    from sentence_transformers import SentenceTransformer
+    if embedder is None:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(model_name, local_files_only=offline)
     import chromadb
 
     chroma = chroma_dir or config.chroma_dir()
     model_name = model_name or config.MODEL_NAME
 
-    model = SentenceTransformer(model_name, local_files_only=offline)
+    model = embedder
     client = chromadb.PersistentClient(path=str(chroma))
     collection = client.get_collection(config.COLLECTION_NAME)
 
