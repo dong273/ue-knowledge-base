@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ue-knowledge-base"
+version = "0.1.0"
+description = "Offline semantic search over Unreal Engine development knowledge (BGE + ChromaDB)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Dong" }]
+keywords = ["unreal-engine", "rag", "semantic-search", "chromadb", "knowledge-base"]
+dependencies = [
+    "sentence-transformers>=2.6",
+    "chromadb>=0.5",
+]
+
+[project.scripts]
+ue-kb = "ue_knowledge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
