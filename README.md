@@ -44,7 +44,7 @@ pip install -e .                 # or: pip install ue-knowledge-base
 
 # 2. Download the embedding model once (~100MB)
 ue-kb download-model
-#    In China:  export HF_ENDPOINT=https://hf-mirror.com  then retry
+#    No manual setup needed in China — falls back to hf-mirror automatically
 
 # 3. Build the index
 ue-kb build
@@ -53,6 +53,35 @@ ue-kb build
 ue-kb query "GAS ability cooldown" --top-k 5
 ue-kb query "角色移动 速度衰减" --json   # machine-readable for agents
 ```
+
+### Install in mainland China without a proxy
+
+GitHub / PyPI / HuggingFace are often slow or blocked from mainland China.
+This path works **with zero proxy setup**:
+
+```bash
+# 1. Get the code (GitHub mirrors, pick either)
+git clone --depth 1 https://gh-proxy.com/https://github.com/dong273/ue-knowledge-base.git
+#   git clone --depth 1 https://ghfast.top/https://github.com/dong273/ue-knowledge-base.git
+
+# 2. Install dependencies (Tsinghua PyPI mirror)
+pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 3. Download the model (mirror fallback is automatic)
+ue-kb download-model
+#    Falls back to hf-mirror.com automatically if the official source fails;
+#    if it still fails, force it manually:
+#    export HF_ENDPOINT=https://hf-mirror.com && ue-kb download-model
+
+# 4. Build the index (fully local; offline from here on)
+ue-kb build
+
+# 5. Search
+ue-kb query "GAS ability cooldown"
+```
+
+> Tip: `download-model` **automatically retries via the hf-mirror.com mirror**
+> when the official HuggingFace source fails — no manual `HF_ENDPOINT` needed.
 
 ### Example
 

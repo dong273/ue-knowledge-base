@@ -1,5 +1,6 @@
 """Semantic querying against the built index."""
 
+import os
 from pathlib import Path
 
 from . import config
@@ -13,6 +14,10 @@ def query(
     offline: bool = True,
 ) -> list[dict]:
     """Search the knowledge base. Returns [{source, heading, score, text}]."""
+    if offline:
+        # Force huggingface_hub into offline mode so a missing file in the
+        # local cache can never trigger network retries (slow in CN networks).
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
     from sentence_transformers import SentenceTransformer
     import chromadb
 

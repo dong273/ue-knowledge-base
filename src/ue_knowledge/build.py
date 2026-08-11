@@ -1,5 +1,6 @@
 """Index building — embed the corpus and store it in ChromaDB."""
 
+import os
 from pathlib import Path
 
 from . import config
@@ -17,6 +18,10 @@ def build_index(
 
     Returns a summary dict: {files, chunks, collection, chroma_dir}.
     """
+    if offline:
+        # Force huggingface_hub into offline mode so a missing file in the
+        # local cache can never trigger network retries (slow in CN networks).
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
     from sentence_transformers import SentenceTransformer
     import chromadb
 

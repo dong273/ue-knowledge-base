@@ -2,18 +2,23 @@
 
 import argparse
 import json
+import os
+import subprocess
 import sys
 
 from . import __version__, config
 from .build import build_index
 from .query import format_results, query
 
+# HuggingFace 国内镜像。官方源下载失败时自动切换重试（无需手动 export）。
+HF_MIRROR = "https://hf-mirror.com"
+
 
 def _model_unavailable_hint(exc: Exception) -> str:
     return (
         "Model 未找到或无法加载。首次使用请先运行:\n"
         "    ue-kb download-model\n"
-        "（中国大陆网络受限时: 设置 HF_ENDPOINT=https://hf-mirror.com 再执行）\n"
+        "（网络受限时会自动切换到 hf-mirror 镜像，无需代理）\n"
         f"原始错误: {exc}"
     )
 
@@ -75,16 +80,36 @@ def cmd_info(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_download_model(args: argparse.Namespace) -> int:
+def _download_model_once(model_name: str) -> None:
+    """Load the embedding model, downloading it if needed (raises on failure)."""
     from sentence_transformers import SentenceTransformer
 
+    SentenceTransformer(model_name)
+
+
+def cmd_download_model(args: argparse.Namespace) -> int:
     model_name = args.model or config.MODEL_NAME
     print(f"[*] 下载模型: {model_name}（首次约 100MB，之后完全离线）")
-    print("    网络受限时请设置: HF_ENDPOINT=https://hf-mirror.com")
     try:
-        SentenceTransformer(model_name)  # online download
+        _download_model_once(model_name)
     except Exception as e:
-        print(f"[!] 下载失败: {e}", file=sys.stderr)
+        print(f"[!] 官方源下载失败: {e}", file=sys.stderr)
+        if os.environ.get("HF_ENDPOINT") != HF_MIRROR:
+            print(f"[*] 自动切换到国内镜像重试（无需代理）: {HF_MIRROR}")
+            os.environ["HF_ENDPOINT"] = HF_MIRROR
+            # huggingface_hub 在进程启动时读取 HF_ENDPOINT；改环境变量后
+            # 需重启进程才生效，这里用子进程以新环境变量重新下载。
+            try:
+                r = subprocess.run(
+                    [sys.executable, "-m", "ue_knowledge.cli", "download-model",
+                     "--model", model_name],
+                    env=os.environ,
+                )
+                if r.returncode == 0:
+                    return 0
+            except Exception as e2:
+                print(f"[!] 镜像重试异常: {e2}", file=sys.stderr)
+        print("[!] 镜像源下载也失败，请检查网络后重试。", file=sys.stderr)
         return 1
     print("[✓] 模型已缓存。现在可以运行: ue-kb build && ue-kb query")
     return 0

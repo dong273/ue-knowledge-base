@@ -40,7 +40,7 @@ pip install -e .            # 或: pip install ue-knowledge-base
 
 # 2. 下载嵌入模型（仅一次，约 100MB）
 ue-kb download-model
-#    国内网络: export HF_ENDPOINT=https://hf-mirror.com 后重试
+#    国内网络无需手动设置——官方源失败时自动切换到 hf-mirror 镜像重试
 
 # 3. 建立索引
 ue-kb build
@@ -49,6 +49,33 @@ ue-kb build
 ue-kb query "GAS 技能冷却" --top-k 5
 ue-kb query "角色移动 速度衰减" --json      # 机器可读，供 Agent 使用
 ```
+
+### 中国大陆：零代理安装
+
+GitHub / PyPI / HuggingFace 直连在国内经常超时或失败，以下路径**全程无需代理**：
+
+```bash
+# 1. 获取代码（GitHub 镜像，任选其一）
+git clone --depth 1 https://gh-proxy.com/https://github.com/dong273/ue-knowledge-base.git
+#   git clone --depth 1 https://ghfast.top/https://github.com/dong273/ue-knowledge-base.git
+
+# 2. 安装依赖（PyPI 清华镜像）
+pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 3. 下载模型（自动切换镜像，无需手动 export）
+ue-kb download-model
+#    官方源失败时自动改用 hf-mirror.com 重试；仍失败再手动指定：
+#    export HF_ENDPOINT=https://hf-mirror.com && ue-kb download-model
+
+# 4. 建立索引（纯本地，之后完全离线）
+ue-kb build
+
+# 5. 检索
+ue-kb query "GAS 技能冷却"
+```
+
+> 提示：`download-model` 在官方 HuggingFace 源失败时会**自动切换国内镜像重试**，
+> 中国大陆用户无需手动设置 `HF_ENDPOINT`。
 
 ### 示例
 
