@@ -14,12 +14,17 @@ def build_index(
     force: bool = False,
     offline: bool = True,
     embedder=None,
+    append: bool = False,
 ) -> dict:
     """Build (or rebuild) the vector index from the markdown corpus.
 
     ``embedder`` injects a custom embedder for testing (must expose
     ``encode(texts, **kwargs)`` and ``get_sentence_embedding_dimension()``);
     defaults to a local SentenceTransformer when omitted.
+
+    ``append`` indexes only chunks whose ids are not yet in the collection
+    (ids are content-hash based, so appending is idempotent); without it an
+    existing index is refused unless ``force`` is set.
 
     Returns a summary dict: {files, chunks, collection, chroma_dir}.
     """
@@ -74,14 +79,33 @@ def build_index(
             "hnsw:space": "cosine",
         },
     )
-    if collection.count() > 0 and not force:
+    if collection.count() > 0 and not force and not append:
         raise RuntimeError(
-            f"collection already has {collection.count()} docs; use --force to rebuild"
+            f"collection already has {collection.count()} docs; "
+            "use --force to rebuild or --append to add new chunks"
         )
 
     texts = [d["text"] for d in documents]
     ids = [d["id"] for d in documents]
     metadatas = [{"source": d["source"], "heading": d["heading"]} for d in documents]
+
+    if append and collection.count() > 0:
+        # Content-hash ids make this idempotent: unchanged chunks keep their
+        # ids and are skipped; only new chunks are embedded and added.
+        existing = set(collection.get(ids=ids)["ids"])
+        keep = [i for i, cid in enumerate(ids) if cid not in existing]
+        texts = [texts[i] for i in keep]
+        ids = [ids[i] for i in keep]
+        metadatas = [metadatas[i] for i in keep]
+        if not texts:
+            print("[·] No new chunks to add (index is up to date).")
+            return {
+                "files": len(list(source.rglob("*.md"))),
+                "chunks": 0,
+                "added": 0,
+                "collection": config.COLLECTION_NAME,
+                "chroma_dir": str(chroma),
+            }
 
     print(f"[*] Embedding {len(texts)} chunks...")
     batch_size = 64
@@ -102,6 +126,7 @@ def build_index(
     return {
         "files": len(list(source.rglob("*.md"))),
         "chunks": len(documents),
+        "added": len(texts),
         "collection": config.COLLECTION_NAME,
         "chroma_dir": str(chroma),
     }

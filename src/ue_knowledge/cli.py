@@ -48,6 +48,7 @@ def cmd_build(args: argparse.Namespace) -> int:
             chroma_dir=config.chroma_dir(args.db),
             model_name=args.model,
             force=args.force,
+            append=args.append,
             offline=not args.online,
         )
     except FileNotFoundError as e:
@@ -163,6 +164,7 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("--db", help="chroma dir (default: repo .chroma_db/)")
     p_build.add_argument("--model", default=config.MODEL_NAME, help="embedding model")
     p_build.add_argument("--force", action="store_true", help="rebuild even if index exists")
+    p_build.add_argument("--append", action="store_true", help="add only new chunks (idempotent)")
     p_build.add_argument("--online", action="store_true", help="allow model download if missing")
     p_build.set_defaults(func=cmd_build)
 

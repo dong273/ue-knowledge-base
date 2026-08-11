@@ -14,7 +14,7 @@ import pytest
 from ue_knowledge.build import build_index
 from ue_knowledge.query import query
 
-DIM = 8
+DIM = 64
 
 
 class FakeEmbedder:
@@ -103,3 +103,40 @@ def test_rebuild_without_force_raises(corpus, tmp_path):
     build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
     with pytest.raises(RuntimeError):
         build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
+
+
+def test_append_only_adds_new_chunks(corpus, tmp_path):
+    """--append semantics: only new chunk ids are indexed; idempotent."""
+    import chromadb
+
+    db = tmp_path / "chroma"
+    build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
+    client = chromadb.PersistentClient(path=str(db))
+    col = client.get_collection("ue_knowledge")
+    n1 = col.count()
+
+    # add a new document to the corpus
+    (corpus / "topic" / "new.md").write_text(
+        "# New Topic\n\n" + ("brand new content words " * 20),
+        encoding="utf-8",
+    )
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake",
+        embedder=FakeEmbedder(), append=True,
+    )
+    n2 = client.get_collection("ue_knowledge").count()
+    assert n2 > n1
+
+    # idempotent: appending again adds nothing
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake",
+        embedder=FakeEmbedder(), append=True,
+    )
+    assert client.get_collection("ue_knowledge").count() == n2
+
+    # the new doc is queryable
+    results = query(
+        "brand new content", top_k=1, chroma_dir=db,
+        model_name="fake", embedder=FakeEmbedder(),
+    )
+    assert "new.md" in results[0]["source"]
