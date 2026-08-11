@@ -23,17 +23,26 @@ def query(
         # Force huggingface_hub into offline mode so a missing file in the
         # local cache can never trigger network retries (slow in CN networks).
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    if embedder is None:
-        from sentence_transformers import SentenceTransformer
-        embedder = SentenceTransformer(model_name, local_files_only=offline)
     import chromadb
 
     chroma = chroma_dir or config.chroma_dir()
     model_name = model_name or config.MODEL_NAME
 
-    model = embedder
+    # Verify the index exists BEFORE loading the model: gives a precise,
+    # model-independent error for a missing index (and works without any
+    # model cached, which is what CI exercises).
     client = chromadb.PersistentClient(path=str(chroma))
-    collection = client.get_collection(config.COLLECTION_NAME)
+    try:
+        collection = client.get_collection(config.COLLECTION_NAME)
+    except chromadb.errors.InvalidCollectionException as e:
+        raise FileNotFoundError(
+            f"索引不存在: {chroma}（请先运行: ue-kb build）"
+        ) from e
+
+    if embedder is None:
+        from sentence_transformers import SentenceTransformer
+        embedder = SentenceTransformer(model_name, local_files_only=offline)
+    model = embedder
 
     query_embedding = model.encode(
         [query_text], normalize_embeddings=True

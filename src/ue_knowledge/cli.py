@@ -23,6 +23,24 @@ def _model_unavailable_hint(exc: Exception) -> str:
     )
 
 
+def _classify_error(exc: Exception) -> str:
+    """Classify a caught exception so the user gets the right next action."""
+    msg = str(exc).lower()
+    if any(k in msg for k in ("hnsw", "segment", "backfill", "corrupt", "sqlite")):
+        return "index_corrupt"
+    return "model"
+
+
+def _print_index_corrupt_hint(exc: Exception) -> None:
+    print(
+        "[!] 索引文件损坏或不可读（chromadb 持久化问题）。\n"
+        "    请删除索引目录后重新构建:\n"
+        "        ue-kb build --force\n"
+        f"    原始错误: {exc}",
+        file=sys.stderr,
+    )
+
+
 def cmd_build(args: argparse.Namespace) -> int:
     try:
         summary = build_index(
@@ -36,7 +54,10 @@ def cmd_build(args: argparse.Namespace) -> int:
         print(f"[!] {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
+        if _classify_error(e) == "index_corrupt":
+            _print_index_corrupt_hint(e)
+        else:
+            print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
         return 1
     print(json.dumps(summary, ensure_ascii=False))
     return 0
@@ -51,8 +72,16 @@ def cmd_query(args: argparse.Namespace) -> int:
             model_name=args.model,
             offline=not args.online,
         )
+    except FileNotFoundError as e:
+        # Raised by query() when the index is missing (checked before any
+        # model loading) — distinct from a model problem.
+        print(f"[!] {e}", file=sys.stderr)
+        return 1
     except Exception as e:
-        print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
+        if _classify_error(e) == "index_corrupt":
+            _print_index_corrupt_hint(e)
+        else:
+            print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
         return 1
 
     if args.json:
