@@ -28,6 +28,9 @@ def query(
     chroma = chroma_dir or config.chroma_dir()
     model_name = model_name or config.MODEL_NAME
 
+    # Fail fast on non-ASCII paths (hnswlib Windows limitation).
+    config.check_ascii_path(chroma, "索引")
+
     # Verify the index exists BEFORE loading the model: gives a precise,
     # model-independent error for a missing index (and works without any
     # model cached, which is what CI exercises).

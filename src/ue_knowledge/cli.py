@@ -53,6 +53,9 @@ def cmd_build(args: argparse.Namespace) -> int:
     except FileNotFoundError as e:
         print(f"[!] {e}", file=sys.stderr)
         return 1
+    except config.AsciiPathError as e:
+        print(f"[!] {e}", file=sys.stderr)
+        return 1
     except Exception as e:
         if _classify_error(e) == "index_corrupt":
             _print_index_corrupt_hint(e)
@@ -75,6 +78,9 @@ def cmd_query(args: argparse.Namespace) -> int:
     except FileNotFoundError as e:
         # Raised by query() when the index is missing (checked before any
         # model loading) — distinct from a model problem.
+        print(f"[!] {e}", file=sys.stderr)
+        return 1
+    except config.AsciiPathError as e:
         print(f"[!] {e}", file=sys.stderr)
         return 1
     except Exception as e:

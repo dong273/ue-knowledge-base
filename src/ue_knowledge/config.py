@@ -31,3 +31,23 @@ def chroma_dir(override: str | None = None) -> Path:
         return Path(override)
     env = os.environ.get("UE_KB_CHROMA_DIR")
     return Path(env) if env else DEFAULT_CHROMA_DIR
+
+
+class AsciiPathError(ValueError):
+    """Raised when an index/corpus path contains non-ASCII characters."""
+
+
+def check_ascii_path(p: Path, what: str) -> None:
+    """Reject non-ASCII paths early.
+
+    hnswlib on Windows cannot open its index files under non-ASCII paths
+    ('Cannot open header file') — e.g. C:\\用户\\... — so fail fast with a
+    clear hint instead of a cryptic crash deep inside ChromaDB.
+    """
+    s = str(p)
+    if any(ord(c) > 127 for c in s):
+        raise AsciiPathError(
+            f"{what} 路径包含非 ASCII 字符（hnswlib 在 Windows 上无法打开此类路径）:\n"
+            f"    {s}\n"
+            f"    请改用纯英文路径，例如: C:/uekb/.chroma_db"
+        )

@@ -110,6 +110,21 @@ for hit in query("GAS 冷却", top_k=5):
 `scripts/index_engine_source.py` 与 `scripts/crawl_epic_docs.py`（需要本地引擎
 路径；提取出的索引数据仅本地生成、不随仓库分发，尊重 Epic 版权）。
 
+## FAQ
+
+- **Windows 下查询报 `Cannot open header file`** — hnswlib 无法在含非 ASCII
+  字符的路径（中文用户名/中文文件夹）下打开索引文件。CLI 会提前拒绝此类
+  路径：请使用纯英文索引目录，例如 `ue-kb build --db C:/uekb/.chroma_db`。
+  语料目录本身无此限制。
+- **国内下载模型慢** — `ue-kb download-model` 在官方源失败时会自动通过
+  `hf-mirror.com` 镜像重试，无需代理或手动设置 `HF_ENDPOINT`。
+- **构建成功但查询提示索引不存在** — 索引目录被移动/删除，或 `chromadb`
+  升级改变了存储格式。用 `ue-kb build --force` 重建（注意 `chromadb` 必须
+  低于 1.0：1.x 的 Rust 后端无法重新加载自己构建的 HNSW 索引；
+  `chromadb>=0.5,<1.0` 已自动处理）。
+- **stderr 出现两行无害 telemetry 报错** — `posthog` 版本与 chromadb 0.6.x
+  的兼容性问题；已通过 pin `posthog<4` 消除。
+
 ## License
 
 MIT。知识文档均为原创撰写，不包含引擎源码或 Epic 文档的逐字内容。

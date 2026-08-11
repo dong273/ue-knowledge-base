@@ -13,7 +13,9 @@ def test_version(capsys):
 
 
 def test_build_missing_source_errors(capsys):
-    rc = main(["build", "--source", "C:/definitely/not/here"])
+    # --db must be ASCII: the repo path itself may contain non-ASCII chars
+    # (e.g. C:\\Users\\张三\\...), which would trip the path guard first.
+    rc = main(["build", "--source", "C:/definitely/not/here", "--db", "C:/ascii_uekb/db"])
     assert rc == 1
     err = capsys.readouterr().err
     assert "not found" in err
@@ -30,3 +32,19 @@ def test_query_missing_index_reports_index_not_model(capsys):
     err = capsys.readouterr().err
     assert "索引" in err
     assert "Model" not in err
+
+
+def test_build_rejects_non_ascii_chroma_path(capsys):
+    """hnswlib on Windows cannot open index files under non-ASCII paths;
+    build must reject them early with a clear hint (before loading a model)."""
+    rc = main(["build", "--source", "C:/definitely/not/here", "--db", "C:/中文路径/db"])
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "ASCII" in err
+
+
+def test_query_rejects_non_ascii_chroma_path(capsys):
+    rc = main(["query", "anything", "--db", "C:/中文路径/db"])
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "ASCII" in err

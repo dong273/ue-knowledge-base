@@ -117,6 +117,23 @@ see `scripts/index_engine_source.py` and `scripts/crawl_epic_docs.py`
 (they expect local engine/UE paths — the extracted index data is generated
 locally and is not redistributed, out of respect for Epic's copyright).
 
+## FAQ
+
+- **Windows: `Cannot open header file` when querying** — hnswlib cannot open
+  its index files under non-ASCII paths (Chinese usernames/folders). The CLI
+  rejects such paths up front: use a pure-ASCII index directory, e.g.
+  `ue-kb build --db C:/uekb/.chroma_db`. The corpus itself may stay anywhere.
+- **Slow model download in mainland China** — `ue-kb download-model`
+  automatically retries via the `hf-mirror.com` mirror when the official
+  source fails; no proxy or manual `HF_ENDPOINT` needed.
+- **`Index ready` but queries say the index is missing** — the index directory
+  was moved/deleted, or a `chromadb` upgrade changed the format. Rebuild with
+  `ue-kb build --force` (downgrading `chromadb` below 1.0 is required — the
+  Rust backend in 1.x cannot reload its own HNSW index; the pinned
+  `chromadb>=0.5,<1.0` handles this automatically).
+- **Two harmless telemetry lines on stderr** — a `posthog` version quirk with
+  chromadb 0.6.x; pinned `posthog<4` suppresses it.
+
 ## License
 
 MIT. The knowledge documents are original writing; no engine source code or

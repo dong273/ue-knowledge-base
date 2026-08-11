@@ -40,6 +40,11 @@ def build_index(
     chroma = chroma_dir or config.chroma_dir()
     model_name = model_name or config.MODEL_NAME
 
+    # Fail fast on non-ASCII index paths (hnswlib Windows limitation) before
+    # loading the model or touching ChromaDB. The corpus itself may live
+    # anywhere — only the vector index is subject to the restriction.
+    config.check_ascii_path(chroma, "索引")
+
     if not source.is_dir():
         raise FileNotFoundError(f"corpus directory not found: {source}")
 
