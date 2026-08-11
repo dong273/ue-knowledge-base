@@ -1,5 +1,8 @@
 # UE Knowledge Base
 
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
+[![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
+
 Offline semantic search over Unreal Engine development knowledge — a curated
 **Chinese-language knowledge corpus** (29 topics: GAS, animation, AI,
 networking, UMG, Niagara, PCG, ...) plus a local RAG pipeline that indexes it

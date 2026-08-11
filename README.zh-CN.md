@@ -1,5 +1,8 @@
 # UE Knowledge Base（UE 知识库）
 
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
+[![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
+
 面向 Unreal Engine 开发者的**本地语义检索工具链**：29 个主题的中文 UE 开发知识文档
 （GAS、动画、AI、网络、UMG、Niagara、PCG 等），配合 `BAAI/bge-small-zh-v1.5`
 嵌入模型 + ChromaDB 建立本地向量索引。
