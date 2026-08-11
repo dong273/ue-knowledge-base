@@ -100,6 +100,13 @@ for hit in query("GAS 冷却", top_k=5):
     print(hit["source"], hit["heading"], hit["score"])
 ```
 
+## Agent 集成
+
+`ue-kb` 专为 AI Agent 设计：所有命令支持 `--json` 输出、完全离线运行、
+每次查询零成本。参见
+[docs/agent-integration.md](docs/agent-integration.md) 获取现成接入模板：
+Hermes skill、Claude Code 斜杠命令、OpenCode 命令、纯 Python 片段。
+
 ## 扩展语料
 
 1. 在 `knowledge/<topic>/` 下新增 Markdown 文档（使用 `##`/`###` 标题，索引器

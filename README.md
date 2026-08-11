@@ -106,6 +106,14 @@ for hit in query("GAS cooldown", top_k=5):
     print(hit["source"], hit["heading"], hit["score"])
 ```
 
+## Agent integration
+
+`ue-kb` is built for AI agents: every command supports `--json`, runs fully
+offline, and costs nothing per query. See
+[docs/agent-integration.md](docs/agent-integration.md) for ready-made
+integration patterns: Hermes skill, Claude Code slash command, OpenCode
+command, and a plain Python snippet.
+
 ## Extending the corpus
 
 1. Add a markdown file under `knowledge/<topic>/` (use `##`/`###` headings —
