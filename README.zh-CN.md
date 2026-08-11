@@ -1,95 +1,103 @@
-# UE Knowledge Base（UE 知识库）
+# UE Knowledge Base — 中文 UE 开发者的本地语义知识库
 
 [![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-面向 Unreal Engine 开发者的**本地语义检索工具链**：29 个主题的中文 UE 开发知识文档
-（GAS、动画、AI、网络、UMG、Niagara、PCG 等），配合 `BAAI/bge-small-zh-v1.5`
-嵌入模型 + ChromaDB 建立本地向量索引。
+> 面向中文 UE 开发者的本地语义知识库：83 篇原创中文文档，
+> 配合本地向量检索（BGE + ChromaDB）。模型一次下载（约 100MB）后
+> 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
-**零 API 成本，模型下载一次后完全离线**。适合中文 UE 开发者，也方便接入任何
-AI Agent、IDE 或命令行工作流。
+## 为什么你需要它
 
-```
-knowledge/  (29 个主题, ~84 篇 Markdown 文档)
-    │  ue-kb build          分块 + 嵌入（本地 BGE small）
-    ▼
-.chroma_db/  (向量索引)
-    │  ue-kb query "GAS 冷却"
-    ▼
-top-k 语义命中结果（含来源与标题）
-```
+| 痛点 | 常见现状 | 这个项目 |
+|---|---|---|
+| **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 29 个主题、83 篇**结构化原创中文文档**，一次检索直达答案 |
+| **LLM 会幻觉 UE API** | 通用模型分不清 UE 5.4 和 5.7 的 API 差异，给你"看起来对"的代码 | 文档来自真实项目实践，包含**可直接使用的 C++ 模式**，并针对特定引擎版本校验 |
+| **云 RAG 花钱 + 泄代码** | 每次查询都把你的代码片段发给云端 API，还要按 token 计费 | **完全本地运行，零 API 成本**——游戏代码一行都不会离开你的机器 |
+| **英文文档阅读成本高** | 官方文档全是英文，翻译丢上下文，专有名词对不上 | **原生中文语料 + 中文优先的 embedding**，中文提问命中率最高 |
 
-## 特性
+覆盖：Gameplay Ability System、角色移动、动画、AI 导航、网络/复制、UMG/Slate、
+Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模块构建系统、
+编辑器工具……（完整 29 主题见 `knowledge/`）
 
-- 📚 **精选语料**：中文 UE 开发文档，覆盖 Gameplay Ability System、角色移动、
-  动画、物理碰撞、AI 导航、网络复制、UMG/Slate、Niagara、Mass Entity、
-  State Trees、PCG 程序化生成、材质渲染、模块构建系统、编辑器工具等。
-- 🧠 **本地语义检索**：`BAAI/bge-small-zh-v1.5`（多语言，约 100MB）+ ChromaDB，
-  无云 API、零费用，笔记本 CPU 可跑。
-- 🖥️ **简洁 CLI**（`ue-kb`）：`build` / `query` / `info` / `download-model`，
-  支持 `--json` 输出方便 Agent 集成。
-- 🔌 **可扩展**：用 `--source` 索引任意额外 UE 文档；`scripts/` 提供引擎源码
-  注释与 Epic 官方文档的索引脚本。
+## 特点
 
-## 快速开始
+- 83 篇原创中文文档，共 **1424 个检索块**，内容来自实际项目实践
+- 中文查询实测 top-1 命中 **60.5% 相似度**（见下方真实输出）
+- 无 API key、无 token 计费，`pip install` 后即可使用
+- embedding 与检索全部在本地完成，代码不会离开你的机器
+- 所有命令支持 `--json` 输出，可接入 Hermes / Claude Code / OpenCode 等 Agent
+- 面向国内网络：GitHub 镜像克隆 + 清华 PyPI + hf-mirror 自动回退，无需代理
+- 模型约 100MB，笔记本 CPU 即可运行，无 GPU 要求；索引构建约 1 分钟
+
+## 一分钟上手
 
 ```bash
-# 1. 安装
-pip install -e .            # 或: pip install ue-knowledge-base
+pip install ue-knowledge-base   # 安装
 
-# 2. 下载嵌入模型（仅一次，约 100MB）
-ue-kb download-model
-#    国内网络无需手动设置——官方源失败时自动切换到 hf-mirror 镜像重试
-
-# 3. 建立索引
-ue-kb build
-
-# 4. 检索
-ue-kb query "GAS 技能冷却" --top-k 5
-ue-kb query "角色移动 速度衰减" --json      # 机器可读，供 Agent 使用
+ue-kb download-model            # 下载模型（约 100MB，仅一次；官方源失败自动切 hf-mirror）
+ue-kb build                     # 构建索引（约 1 分钟，之后完全离线）
+ue-kb query "GAS 技能冷却"       # 语义检索
+ue-kb query "角色移动 速度衰减" --json   # JSON 输出，给 Agent 用
 ```
 
-### 中国大陆：零代理安装
+## 真实查询示例（实测输出）
 
-GitHub / PyPI / HuggingFace 直连在国内经常超时或失败，以下路径**全程无需代理**：
+```text
+$ ue-kb query "GAS 技能冷却"
+🔍 UE 知识库检索：GAS 技能冷却
+
+[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 60.5%)
+    ## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，
+    容易陷入两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的
+    事件模型，且 `CommitAbility` 的 GC 延迟影响跳跃手感 - **全直调** → 绕过 GAS，
+    失去标签阻断、冷却、属性驱动的 BUFF/DEBUFF...
+[2] ue-gameplay-abilities/references/gas-input-integration.md › Jump — GAS 即时技能 (匹配度: 57.1%)
+    ### Jump — GAS 即时技能
+    `cpp void AMyCharacter::OnJumpStarted() {
+        if (AbilitySystem)
+            AbilitySystem->TryActivateAbilityByClass(UGA_Jump::StaticClass());
+    } // GA_Jump.cpp ...
+```
+
+检索结果直接包含可用的 C++ 写法，不只是相关文字。
+
+## 国内安装（零代理）
 
 ```bash
 # 1. 获取代码（GitHub 镜像，任选其一）
 git clone --depth 1 https://gh-proxy.com/https://github.com/dong273/ue-knowledge-base.git
 #   git clone --depth 1 https://ghfast.top/https://github.com/dong273/ue-knowledge-base.git
 
-# 2. 安装依赖（PyPI 清华镜像）
+# 2. 安装依赖（清华镜像）
 pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 3. 下载模型（自动切换镜像，无需手动 export）
+# 3. 下载模型（自动镜像回退，无需手动配置）
 ue-kb download-model
-#    官方源失败时自动改用 hf-mirror.com 重试；仍失败再手动指定：
-#    export HF_ENDPOINT=https://hf-mirror.com && ue-kb download-model
 
-# 4. 建立索引（纯本地，之后完全离线）
+# 4. 构建索引（全本地，此后完全离线）
 ue-kb build
 
 # 5. 检索
-ue-kb query "GAS 技能冷却"
+ue-kb query "GAS ability cooldown"
 ```
 
-> 提示：`download-model` 在官方 HuggingFace 源失败时会**自动切换国内镜像重试**，
-> 中国大陆用户无需手动设置 `HF_ENDPOINT`。
+## CLI 参考
 
-### 示例
-
-```text
-$ ue-kb query "GAS 技能冷却"
-🔍 UE 知识库检索：GAS 技能冷却
-
-[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 21.1%)
-    UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，容易陷入
-    两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的事件
-    模型，且 CommitAbility 的 GC 延迟影响跳跃手感 ...
-[2] ue-gameplay-abilities/references/gas-input-integration.md › Jump — GAS 即时技能 (匹配度: 14.2%)
-    ...
-```
+| 命令 | 说明 | 示例 |
+| --- | --- | --- |
+| `ue-kb build` | 切块 + embedding 建立索引 | `ue-kb build --force` |
+| `ue-kb build --append` | 增量索引：只处理新增文档，已有内容保持不变；日常扩充语料无需全量重建 | `ue-kb build --append` |
+| `ue-kb query "..."` | 语义检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
+| `ue-kb info` | 查看索引统计（文档数、目录） | `ue-kb info` |
+| `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
+| `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
+| `--db <dir>` | 自定义索引目录（Windows 中文路径请用纯英文目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
+| `--source <dir>` | 自定义语料目录 | `ue-kb build --source my-docs/` |
+| `--model <name>` | 自定义 embedding 模型 | `ue-kb query "..." --model BAAI/bge-large-zh-v1.5` |
+| `--force` | 已存在索引时强制重建 | `ue-kb build --force` |
+| `--online` | 允许模型缺失时联网下载（默认离线） | `ue-kb build --online` |
 
 ## Python API
 
@@ -97,40 +105,43 @@ $ ue-kb query "GAS 技能冷却"
 from ue_knowledge.query import query
 
 for hit in query("GAS 冷却", top_k=5):
-    print(hit["source"], hit["heading"], hit["score"])
+    print(hit["source"], hit["heading"], hit["score"])   # 来源、章节、相似度
 ```
 
 ## Agent 集成
 
-`ue-kb` 专为 AI Agent 设计：所有命令支持 `--json` 输出、完全离线运行、
-每次查询零成本。参见
-[docs/agent-integration.md](docs/agent-integration.md) 获取现成接入模板：
-Hermes skill、Claude Code 斜杠命令、OpenCode 命令、纯 Python 片段。
+`ue-kb` 专为 AI Agent 设计：完全离线、每次查询零成本、所有命令支持 `--json`。
+接入方式见 [docs/agent-integration.md](docs/agent-integration.md)，包含：
+
+- **Hermes Agent** skill 封装（把检索变成 agent 工具）
+- **Claude Code** 斜杠命令
+- **OpenCode** 命令
+- 任意管线的**纯 Python 片段**
 
 ## 扩展语料
 
-1. 在 `knowledge/<topic>/` 下新增 Markdown 文档（使用 `##`/`###` 标题，索引器
-   按标题边界分块）。
-2. `ue-kb build --force` 重建索引。
+语料可以自行扩充：
+
+1. 在 `knowledge/<topic>/` 下新增 Markdown 文档（用 `##`/`###` 标题，索引器按标题边界切块）；
+2. `ue-kb build --append` 把新增文档加入索引，无需全量重建；
+3. 也可以直接索引任意本地 `.md` 目录：`ue-kb build --source my-docs/`。
 
 如需索引 **UE 引擎 C++ 头文件注释** 或 **Epic 官方文档**，参见
 `scripts/index_engine_source.py` 与 `scripts/crawl_epic_docs.py`（需要本地引擎
-路径；提取出的索引数据仅本地生成、不随仓库分发，尊重 Epic 版权）。
+路径；提取的索引数据仅本地生成、不随仓库分发，尊重 Epic 版权）。
 
 ## FAQ
 
-- **Windows 下查询报 `Cannot open header file`** — hnswlib 无法在含非 ASCII
-  字符的路径（中文用户名/中文文件夹）下打开索引文件。CLI 会提前拒绝此类
-  路径：请使用纯英文索引目录，例如 `ue-kb build --db C:/uekb/.chroma_db`。
-  语料目录本身无此限制。
-- **国内下载模型慢** — `ue-kb download-model` 在官方源失败时会自动通过
-  `hf-mirror.com` 镜像重试，无需代理或手动设置 `HF_ENDPOINT`。
-- **构建成功但查询提示索引不存在** — 索引目录被移动/删除，或 `chromadb`
-  升级改变了存储格式。用 `ue-kb build --force` 重建（注意 `chromadb` 必须
-  低于 1.0：1.x 的 Rust 后端无法重新加载自己构建的 HNSW 索引；
-  `chromadb>=0.5,<1.0` 已自动处理）。
-- **stderr 出现两行无害 telemetry 报错** — `posthog` 版本与 chromadb 0.6.x
-  的兼容性问题；已通过 pin `posthog<4` 消除。
+- **Windows 下报 `Cannot open header file`？** — hnswlib 无法在含非 ASCII 字符
+  的路径（中文用户名/文件夹）下打开索引文件。CLI 会提前拒绝并给出提示：请使用
+  纯英文索引目录，如 `ue-kb build --db C:/uekb/.chroma_db`。语料目录本身无限制。
+- **国内下载模型慢？** — `ue-kb download-model` 官方源失败时自动经
+  `hf-mirror.com` 镜像重试，无需代理或手动 `HF_ENDPOINT`。
+- **构建成功但查询说索引不存在？** — 索引目录被移动/删除，或 `chromadb` 升级
+  改了存储格式。`ue-kb build --force` 重建即可（`chromadb>=0.5,<1.0` 已自动
+  规避 1.x Rust 后端无法重载自身 HNSW 索引的问题）。
+- **stderr 有两行 telemetry 报错？** — `posthog` 与 chromadb 0.6.x 的版本
+  兼容噪音，已通过 pin `posthog<4` 消除，不影响任何功能。
 
 ## License
 
