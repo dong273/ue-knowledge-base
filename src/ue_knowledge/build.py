@@ -52,7 +52,10 @@ def build_index(
 
     collection = client.get_or_create_collection(
         name=config.COLLECTION_NAME,
-        metadata={"description": "UE Game Development Knowledge Base"},
+        metadata={
+            "description": "UE Game Development Knowledge Base",
+            "hnsw:space": "cosine",
+        },
     )
     if collection.count() > 0 and not force:
         raise RuntimeError(
