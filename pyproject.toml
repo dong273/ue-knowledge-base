@@ -13,7 +13,13 @@ authors = [{ name = "Dong" }]
 keywords = ["unreal-engine", "rag", "semantic-search", "chromadb", "knowledge-base"]
 dependencies = [
     "sentence-transformers>=2.6",
-    "chromadb>=0.5",
+    # chromadb 1.x 的 Rust 后端无法重新加载自己构建的 HNSW 索引
+    # （Error loading hnsw index），pin 在 0.x 稳定后端
+    "chromadb>=0.5,<1.0",
+    # transformers 5.x + tokenizers 0.23.1 组合在运行时
+    # require_version 检查会失败（pip 元数据解析却通过），pin 到 4.x
+    "transformers>=4.40,<5",
+    "tokenizers>=0.22,<0.23",
 ]
 
 [project.scripts]
