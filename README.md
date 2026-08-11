@@ -1,7 +1,7 @@
 # UE Knowledge Base
 
 Offline semantic search over Unreal Engine development knowledge — a curated
-**Chinese-language knowledge corpus** (30 topics: GAS, animation, AI,
+**Chinese-language knowledge corpus** (29 topics: GAS, animation, AI,
 networking, UMG, Niagara, PCG, ...) plus a local RAG pipeline that indexes it
 with `BAAI/bge-small-zh-v1.5` embeddings into ChromaDB.
 
@@ -10,7 +10,7 @@ Chinese-speaking UE developers, and ready to plug into any AI agent, IDE, or
 CLI workflow.
 
 ```
-knowledge/  (30 topics, ~84 markdown docs)
+knowledge/  (29 topics, ~84 markdown docs)
     │  ue-kb build          chunk + embed (BGE small, local)
     ▼
 .chroma_db/  (vector index)

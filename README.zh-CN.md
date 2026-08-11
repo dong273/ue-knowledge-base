@@ -1,6 +1,6 @@
 # UE Knowledge Base（UE 知识库）
 
-面向 Unreal Engine 开发者的**本地语义检索工具链**：30 个主题的中文 UE 开发知识文档
+面向 Unreal Engine 开发者的**本地语义检索工具链**：29 个主题的中文 UE 开发知识文档
 （GAS、动画、AI、网络、UMG、Niagara、PCG 等），配合 `BAAI/bge-small-zh-v1.5`
 嵌入模型 + ChromaDB 建立本地向量索引。
 
@@ -8,7 +8,7 @@
 AI Agent、IDE 或命令行工作流。
 
 ```
-knowledge/  (30 个主题, ~84 篇 Markdown 文档)
+knowledge/  (29 个主题, ~84 篇 Markdown 文档)
     │  ue-kb build          分块 + 嵌入（本地 BGE small）
     ▼
 .chroma_db/  (向量索引)
