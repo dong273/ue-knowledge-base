@@ -5,4 +5,4 @@ Build a local vector index from the bundled knowledge/ markdown corpus
 or from Python. Zero API cost, fully offline after the one-time model download.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
