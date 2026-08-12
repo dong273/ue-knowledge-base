@@ -1,13 +1,13 @@
 ---
 title: ue-networking-replication
-description: Covers working on multiplayer networking, replication, RPC calls, net role logic, server/client authority, prediction, or synchronizing game state. Also covers 'DOREPLIFETIME', 'dedicated server', 'replicated', or 'net role'. See references/replication-patterns.md for common patterns and references/rpc-decision-guide.md for RPC type selection. For GAS networking, see ue-gameplay-abilities.
+description: Covers working on multiplayer networking, replication, RPC calls, net role logic, server/client authority, prediction, or synchronizing game state. Also use when the user mentions 'DOREPLIFETIME', 'dedicated server', 'replicated', or 'net role'. See references/replication-patterns.md for common patterns and references/rpc-decision-guide.md for RPC type selection. For GAS networking, see ue-gameplay-abilities.
 ---
 
 # UE Networking & Replication
 
+
 ## Context Check
 
-Read  for this project's multiplayer configuration.
 Look for: server topology (dedicated, listen, P2P), player count, replicated classes,
 and any custom net drivers.
 
@@ -26,19 +26,19 @@ Clients predict locally and reconcile with server corrections.
 
 Every actor on every machine has a local role and a remote role (`ENetRole`).
 
-`
+```
 ROLE_Authority       — owns and can modify this actor (server for replicated actors)
 ROLE_AutonomousProxy — client copy of the locally controlled pawn
 ROLE_SimulatedProxy  — client copy of another player's actor; engine interpolates state
 ROLE_None            — not replicated
-`
+```
 
 From `Actor.h`:
-`cpp
+```cpp
 ENetRole GetLocalRole() const { return Role; }   // role on current machine
 ENetRole GetRemoteRole() const;                   // role the other end sees
 bool HasAuthority() const { return (GetLocalRole() == ROLE_Authority); }
-`
+```
 
 Net modes: `NM_Standalone`, `NM_DedicatedServer`, `NM_ListenServer`, `NM_Client`.
 
@@ -61,11 +61,11 @@ Use `IsLocallyControlled()` to distinguish logic that should skip the host playe
 packet delivery for a world. It owns the list of `UNetConnection` objects and drives the
 replication tick. Access it via `UWorld::GetNetDriver()`.
 
-`cpp
+```cpp
 UNetDriver* Driver = GetWorld()->GetNetDriver();
 // Driver->ClientConnections  — all connected clients (server-side)
 // Driver->ServerConnection   — connection to server (client-side)
-`
+```
 
 For most gameplay code you never interact with `UNetDriver` directly; it is relevant when
 writing custom net drivers, profiling connection state, or debugging packet loss.
@@ -76,7 +76,7 @@ writing custom net drivers, profiling connection state, or debugging packet loss
 
 ### Actor Setup
 
-`cpp
+```cpp
 AMyActor::AMyActor()
 {
     bReplicates = true;             // AActor::SetReplicates() also available at runtime
@@ -85,7 +85,7 @@ AMyActor::AMyActor()
     SetMinNetUpdateFrequency(2.f);  // floor when nothing changes
     NetPriority = 1.0f;            // higher = preferred when bandwidth is saturated
 }
-`
+```
 
 From `Actor.h`: `SetReplicates`, `SetReplicateMovement`, `SetNetUpdateFrequency`,
 `SetMinNetUpdateFrequency`, and `SetNetCullDistanceSquared` are all `ENGINE_API`.
@@ -99,7 +99,7 @@ default for characters using CMC.
 
 ### Declaring Properties
 
-`cpp
+```cpp
 UPROPERTY(Replicated)
 int32 Health;
 
@@ -108,11 +108,11 @@ EMyState State;
 
 UFUNCTION()
 void OnRep_State(EMyState PreviousState); // old value passed as optional parameter
-`
+```
 
 ### GetLifetimeReplicatedProps
 
-`cpp
+```cpp
 // MyActor.cpp
 #include "Net/UnrealNetwork.h"
 
@@ -126,7 +126,7 @@ void AMyActor::GetLifetimeReplicatedProps(
     DOREPLIFETIME_CONDITION(AMyActor, InitData,     COND_InitialOnly);
     DOREPLIFETIME_CONDITION(AMyActor, PublicData,   COND_SkipOwner);
 }
-`
+```
 
 **Conditions:** `COND_None` (all), `COND_OwnerOnly`, `COND_SkipOwner`,
 `COND_SimulatedOnly`, `COND_AutonomousOnly`, `COND_InitialOnly`, `COND_Custom`.
@@ -165,7 +165,7 @@ position bandwidth.
 
 See `references/rpc-decision-guide.md` for the full decision flowchart.
 
-`cpp
+```cpp
 // Client calls → server executes. WithValidation is required for state changes.
 UFUNCTION(Server, Reliable, WithValidation)
 void ServerFireWeapon(FVector_NetQuantize Origin, FVector_NetQuantizeNormal Dir);
@@ -177,7 +177,7 @@ void ClientShowKillConfirm();
 // Server calls → server + all clients execute.
 UFUNCTION(NetMulticast, Unreliable)
 void MulticastPlayHitEffect(FVector ImpactPoint);
-`
+```
 
 Implementations always end in `_Implementation`. Server RPCs with validation also
 need `_Validate` (return `false` to kick the client).
@@ -186,12 +186,12 @@ need `_Validate` (return `false` to kick the client).
 possession). **Unreliable** — fire-and-forget; use for high-frequency cosmetics.
 
 Real examples from `PlayerController.h`:
-`cpp
+```cpp
 UFUNCTION(unreliable, server, WithValidation) void ServerSetSpectatorLocation(...);
 UFUNCTION(reliable,   server, WithValidation) void ServerAcknowledgePossession(APawn* P);
 UFUNCTION(Reliable,   Client)                 void ClientReceiveLocalizedMessage(...);
 UFUNCTION(Client,     Unreliable)             void ClientAckTimeDilation(float, int32);
-`
+```
 
 **RPC ownership:** Server RPCs must be called on an actor whose ownership chain
 leads to the calling client's `APlayerController`. Client RPCs must be called on
@@ -209,7 +209,7 @@ Large payloads (>1 KB) should use replicated properties instead of RPC parameter
 
 ## Ownership and Relevancy
 
-`cpp
+```cpp
 // Server sets owner to control connection routing for RPCs and COND_OwnerOnly
 Weapon->SetOwner(PlayerController);
 
@@ -220,17 +220,17 @@ bOnlyRelevantToOwner = true;  // replicate only to the owning connection
 // Override for custom logic (e.g., team-based relevancy)
 virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget,
                                const FVector& SrcLocation) const override;
-`
+```
 
 Default relevancy culls actors beyond `NetCullDistanceSquared` from the client
 viewpoint. `NetPriority` determines which actors win when bandwidth is saturated.
 
 **Dormancy:** actors that rarely change can pause replication entirely.
 
-`cpp
+```cpp
 SetNetDormancy(DORM_DormantAll); // stop replication
 FlushNetDormancy();              // send one update then return to dormant
-`
+```
 
 **Re-relevancy**: When an actor moves outside `NetCullDistanceSquared` it stops replicating. When it returns to range, the engine treats it as a fresh relevancy event — sending another initial burst and firing all `OnRep_` callbacks with current server state. Design `OnRep_` functions to be idempotent (tolerate being called multiple times with the same value). Dormant actors (`DORM_DormantAll`) behave similarly when woken — they flush all dirty properties at once.
 
@@ -241,14 +241,14 @@ FlushNetDormancy();              // send one update then return to dormant
 ### Modern API (UE 5.1+)
 
 From `Actor.h`:
-`cpp
+```cpp
 ENGINE_API void AddReplicatedSubObject(UObject* SubObject,
                                        ELifetimeCondition NetCondition = COND_None);
 ENGINE_API void RemoveReplicatedSubObject(UObject* SubObject);
 ENGINE_API void AddActorComponentReplicatedSubObject(UActorComponent* OwnerComponent,
                                                      UObject* SubObject,
                                                      ELifetimeCondition NetCondition = COND_None);
-`
+```
 
 Enable with `bReplicateUsingRegisteredSubObjectList = true` (now the default).
 Call `AddReplicatedSubObject` on the server during `BeginPlay`; call
@@ -258,7 +258,7 @@ Call `AddReplicatedSubObject` on the server during `BeginPlay`; call
 
 Override `ReplicateSubobjects` when `bReplicateUsingRegisteredSubObjectList = false`:
 
-`cpp
+```cpp
 bool AMyActor::ReplicateSubobjects(UActorChannel* Channel,
                                     FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
@@ -266,7 +266,7 @@ bool AMyActor::ReplicateSubobjects(UActorChannel* Channel,
     bWrote |= Channel->ReplicateSubobject(MySubObject, *Bunch, *RepFlags);
     return bWrote;
 }
-`
+```
 
 ---
 
@@ -274,7 +274,7 @@ bool AMyActor::ReplicateSubobjects(UActorChannel* Channel,
 
 Pattern (for non-movement systems without GAS):
 
-`cpp
+```cpp
 // 1. Client predicts immediately
 void AMyCharacter::LocalPredictAbility(int32 AbilityId)
 {
@@ -298,7 +298,7 @@ void AMyCharacter::ServerActivateAbility_Implementation(int32 AbilityId)
         ClientCorrectionAbilityFailed(AbilityId); // roll back client prediction
     }
 }
-`
+```
 
 When the server rejects a prediction, smooth the visual correction to avoid jarring
 snaps: interpolate the actor to the corrected position over 2-3 frames rather than
@@ -325,7 +325,7 @@ for the full GAS networking details.
 
 ## Actor Replication Setup Checklist
 
-`
+```
 [ ] bReplicates = true in constructor
 [ ] SetNetUpdateFrequency / SetMinNetUpdateFrequency set appropriately
 [ ] All UPROPERTY(Replicated) / UPROPERTY(ReplicatedUsing=...) declared
@@ -337,7 +337,7 @@ for the full GAS networking details.
 [ ] Subobjects registered via AddReplicatedSubObject or ReplicateSubobjects
 [ ] SetOwner() called on server after spawning owned actors
 [ ] DORM_DormantAll set on actors that rarely update
-`
+```
 
 ---
 
@@ -345,7 +345,7 @@ for the full GAS networking details.
 
 For large player counts (50+ connections), the default net driver relevancy checks become expensive. `UReplicationGraph` replaces per-connection per-actor relevancy with spatial and policy-based nodes.
 
-`cpp
+```cpp
 // Build.cs: "ReplicationGraph"
 // Project: set ReplicationDriverClassName in DefaultEngine.ini
 // [/Script/OnlineSubsystemUtils.IpNetDriver]
@@ -360,7 +360,7 @@ public:
     virtual void InitGlobalGraphNodes() override;
     virtual void InitConnectionGraphNodes(UNetReplicationGraphConnection* RepGraphConnection) override;
 };
-`
+```
 
 Key node types: `UReplicationGraphNode_GridSpatialization2D` (spatial), `UReplicationGraphNode_AlwaysRelevant` (GameState, managers), `UReplicationGraphNode_AlwaysRelevant_ForConnection` (PlayerController, PlayerState, HUD), `UReplicationGraphNode_ActorList` (custom lists).
 
@@ -387,11 +387,11 @@ Key node types: `UReplicationGraphNode_GridSpatialization2D` (spatial), `UReplic
 clients. Put data meant for all clients on `APawn` or `APlayerState`.
 
 From `PlayerController.h`:
-`cpp
+```cpp
 // nullptr on local players (server-side); points to the network connection otherwise
 UPROPERTY(DuplicateTransient)
 TObjectPtr<UNetConnection> NetConnection;
-`
+```
 
 **UNetConnection** represents a single client's network connection on the server. Each
 connected client has exactly one `UNetConnection` owned by `UNetDriver`. Retrieve it

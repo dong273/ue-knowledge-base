@@ -5,9 +5,9 @@ description: Covers implementing AI, AIController, behavior tree, blackboard, AI
 
 # UE AI and Navigation
 
+
 ## Context
 
-Read  for project AI plugins, subsystem configs, enabled modules (AIModule, NavigationSystem, GameplayStateTreeModule, SmartObjectsModule), and existing AI frameworks.
 
 ## Information Gathering
 
@@ -17,7 +17,7 @@ Before implementing, clarify: AI complexity, navigation needs (ground/fly/swim, 
 
 ## AI Architecture
 
-`
+```
 APawn
   └── AAIController (server-only in multiplayer)
         ├── UBehaviorTreeComponent  (UBrainComponent subclass)
@@ -25,7 +25,7 @@ APawn
         ├── UBlackboardComponent    (AI knowledge store)
         ├── UAIPerceptionComponent  (sight, hearing, damage)
         └── UPathFollowingComponent (NavMesh path execution)
-`
+```
 
 **Build.cs modules**: `AIModule`, `NavigationSystem`, `GameplayTasks`
 
@@ -33,7 +33,7 @@ APawn
 
 ## AIController
 
-`cpp
+```cpp
 // MyAIController.h
 UCLASS()
 class AMyAIController : public AAIController
@@ -65,11 +65,11 @@ void AMyAIController::OnPossess(APawn* InPawn)
     if (UAIPerceptionComponent* PC = GetAIPerceptionComponent())
         PC->OnTargetPerceptionUpdated.AddDynamic(this, &AMyAIController::OnTargetPerceptionUpdated);
 }
-`
+```
 
 ### Key AAIController API
 
-`cpp
+```cpp
 // Navigation
 EPathFollowingRequestResult::Type MoveToActor(AActor* Goal, float AcceptanceRadius = -1,
     bool bStopOnOverlap = true, bool bUsePathfinding = true, bool bCanStrafe = true,
@@ -98,7 +98,7 @@ UBlackboardComponent* GetBlackboardComponent();
 void SetGenericTeamId(const FGenericTeamId& NewTeamID);
 
 // Delegate: FAIMoveCompletedSignature ReceiveMoveCompleted (RequestID, Result)
-`
+```
 
 **On Pawn**: `AIControllerClass = AMyAIController::StaticClass(); AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;`
 
@@ -119,7 +119,7 @@ void SetGenericTeamId(const FGenericTeamId& NewTeamID);
 | String | `GetValueAsString` | `SetValueAsString` |
 | Class | `GetValueAsClass` | `SetValueAsClass` |
 
-`cpp
+```cpp
 UBlackboardComponent* BB = GetBlackboardComponent();
 BB->SetValueAsObject(TEXT("TargetActor"), SomeActor);
 BB->SetValueAsVector(TEXT("LastKnownLocation"), Location);
@@ -136,7 +136,7 @@ BB->UnregisterObserver(KeyID, H);
 FBBKeyCachedAccessor<UBlackboardKeyType_Bool> BBInCombat;
 // Init: BBInCombat = FBBKeyCachedAccessor<...>(*BBComp, KeyID);
 // Use: bool b = BBInCombat.Get(); BBInCombat.SetValue(*BB, true);
-`
+```
 
 Mark keys **Instance Synced** to share values across all AI using the same `UBlackboardData` (squad-wide alerts via `UAISystem` propagation).
 
@@ -146,7 +146,7 @@ Mark keys **Instance Synced** to share values across all AI using the same `UBla
 
 ### Custom Task
 
-`cpp
+```cpp
 UCLASS()
 class UMyBTTask_Attack : public UBTTaskNode
 {
@@ -178,11 +178,11 @@ EBTNodeResult::Type UMyBTTask_Attack::AbortTask(UBehaviorTreeComponent& OwnerCom
 {
     return EBTNodeResult::Aborted; // cleanup; or InProgress + FinishLatentAbort()
 }
-`
+```
 
 ### Custom Decorator
 
-`cpp
+```cpp
 UCLASS()
 class UMyBTDecorator_CanSee : public UBTDecorator
 {
@@ -204,11 +204,11 @@ protected:
         return IsValid(Target) && OwnerComp.GetAIOwner()->LineOfSightTo(Target);
     }
 };
-`
+```
 
 ### Custom Service
 
-`cpp
+```cpp
 UCLASS()
 class UMyBTService_UpdateTarget : public UBTService
 {
@@ -230,7 +230,7 @@ protected:
         OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), Best);
     }
 };
-`
+```
 
 ### Built-in Nodes (reference)
 
@@ -244,7 +244,7 @@ protected:
 
 ## AI Perception
 
-`cpp
+```cpp
 // In AIController constructor:
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
@@ -267,7 +267,9 @@ Hearing->HearingRange = 3000.f;
 Hearing->DetectionByAffiliation.bDetectEnemies = true;
 Hearing->DetectionByAffiliation.bDetectNeutrals = true;
 AIP->ConfigureSense(*Hearing);
-cpp
+```
+
+```cpp
 // Perception handler:
 void AMyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
@@ -289,7 +291,9 @@ UAISense_Hearing::ReportNoiseEvent(GetWorld(), Location, Loudness, Instigator, M
 
 // Report damage:
 UAISense_Damage::ReportDamageEvent(GetWorld(), DamagedActor, Instigator, Amount, EventLoc, HitLoc);
-cpp
+```
+
+```cpp
 // On perceived actors — add UAIPerceptionStimuliSourceComponent:
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 UAIPerceptionStimuliSourceComponent* Source =
@@ -297,7 +301,9 @@ UAIPerceptionStimuliSourceComponent* Source =
 Source->bAutoRegister = true;
 Source->RegisterForSense(TSubclassOf<UAISense>(UAISense_Sight::StaticClass()));
 Source->RegisterForSense(TSubclassOf<UAISense>(UAISense_Hearing::StaticClass()));
-cpp
+```
+
+```cpp
 // Query perception state:
 UAIPerceptionComponent* PC = GetAIPerceptionComponent();
 TArray<AActor*> Visible; PC->GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), Visible);
@@ -310,7 +316,7 @@ PC->ForgetAll();
 // Batch delegate — fires once per frame with all updated actors:
 // OnPerceptionUpdated — signature: void(const TArray<AActor*>& UpdatedActors)
 // Also: OnTargetPerceptionForgotten, OnTargetPerceptionInfoUpdated
-`
+```
 
 Additional sense configs: `UAISenseConfig_Touch` (fires on physical contact with perceived actor), `UAISense_Team` (propagates enemy awareness across teammates via `IGenericTeamAgentInterface`), `UAISense_Prediction` (predicts future location — call `UAISense_Prediction::RequestPawnPredictionEvent`).
 
@@ -318,7 +324,7 @@ Additional sense configs: `UAISenseConfig_Touch` (fires on physical contact with
 
 ## Navigation System
 
-`cpp
+```cpp
 #include "NavigationSystem.h"
 UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 
@@ -357,7 +363,7 @@ ARecastNavMesh* RNM = Cast<ARecastNavMesh>(NavSys->GetDefaultNavDataInstance());
 // Key properties: AgentRadius, AgentHeight, AgentMaxStepHeight, AgentMaxSlope
 // ANavMeshBoundsVolume must exist in level — without it, no tiles generate.
 // For streaming/open-world: use UNavigationInvokerComponent on AI pawns instead.
-`
+```
 
 **Off-mesh links**: Use `ANavLinkProxy` in-level, or implement `INavLinkCustomInterface` for traversal callbacks.
 
@@ -365,7 +371,7 @@ ARecastNavMesh* RNM = Cast<ARecastNavMesh>(NavSys->GetDefaultNavDataInstance());
 
 ## EQS (Environment Query System)
 
-`cpp
+```cpp
 #include "EnvironmentQuery/EnvQueryManager.h"
 
 UPROPERTY(EditDefaultsOnly) TObjectPtr<UEnvQuery> FindCoverQuery;
@@ -383,7 +389,7 @@ void AMyAIController::OnCoverDone(TSharedPtr<FEnvQueryResult> Result)
         GetBlackboardComponent()->SetValueAsVector(TEXT("CoverLocation"),
             Result->GetItemAsLocation(0));
 }
-`
+```
 
 **Run modes**: `SingleResult` (cheapest), `RandomBest5Pct`, `RandomBest25Pct`, `AllMatching`
 
@@ -391,7 +397,7 @@ void AMyAIController::OnCoverDone(TSharedPtr<FEnvQueryResult> Result)
 
 **Custom context** (resolve BB actor for use in tests):
 
-`cpp
+```cpp
 UCLASS()
 class UEnvQueryContext_Enemy : public UEnvQueryContext
 {
@@ -403,7 +409,7 @@ class UEnvQueryContext_Enemy : public UEnvQueryContext
         if (IsValid(Enemy)) UEnvQueryItemType_Actor::SetContextHelper(CD, Enemy);
     }
 };
-`
+```
 
 See `references/eqs-reference.md` for generator and test configurations.
 
@@ -413,7 +419,7 @@ See `references/eqs-reference.md` for generator and test configurations.
 
 Use State Trees for simpler state machines, designer-friendly workflows, and Smart Object integration. Use Behavior Trees for complex reactive combat with priority-based interrupts.
 
-`cpp
+```cpp
 // Build.cs: "GameplayStateTreeModule"
 #include "Components/StateTreeComponent.h"
 
@@ -425,7 +431,7 @@ class AMyNPC : public ACharacter
 };
 AMyNPC::AMyNPC() { StateTreeComp = CreateDefaultSubobject<UStateTreeComponent>(TEXT("StateTree")); }
 void AMyNPC::BeginPlay() { Super::BeginPlay(); StateTreeComp->StartLogic(); }
-`
+```
 
 State Tree tasks use `FStateTreeTaskBase` + `FInstanceDataType`. Override `EnterState`, `Tick`, `ExitState`.
 
@@ -437,7 +443,7 @@ State Tree **evaluators** (`FStateTreeEvaluatorBase`) run persistently across al
 
 Add `USmartObjectComponent` to world actors (set `SmartObjectDefinition`). AI interacts via `USmartObjectSubsystem`:
 
-`cpp
+```cpp
 // Build.cs: "SmartObjectsModule"
 #include "SmartObjectSubsystem.h"
 USmartObjectSubsystem* SOS = USmartObjectSubsystem::GetCurrent(GetWorld());
@@ -450,7 +456,7 @@ if (Res.IsValid())
     // ... use slot, then:
     SOS->MarkSlotAsFree(Handle);
 }
-`
+```
 
 ---
 

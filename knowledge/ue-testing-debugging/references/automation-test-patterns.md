@@ -8,7 +8,7 @@ Reference for common Unreal Engine automation test setups, latent command patter
 
 ### Build Rules
 
-`csharp
+```csharp
 // MyGameTests.Build.cs
 public class MyGameTests : ModuleRules
 {
@@ -30,11 +30,11 @@ public class MyGameTests : ModuleRules
         }
     }
 }
-`
+```
 
 ### Target File Inclusion
 
-`csharp
+```csharp
 // MyGameEditor.Target.cs  (editor target — tests run here)
 ExtraModuleNames.Add("MyGameTests");
 
@@ -43,11 +43,11 @@ if (bWithAutomationTests)
 {
     ExtraModuleNames.Add("MyGameTests");
 }
-`
+```
 
 ### Naming Convention
 
-`
+```
 MyGame.Category.SubCategory.TestName
 
 Examples:
@@ -57,7 +57,7 @@ Examples:
   MyGame.Pathfinding.SimpleGrid
   MyGame.Pathfinding.ObstacleDense
   MyGame.Assets.PrimaryWeaponLoad
-`
+```
 
 The dot-separated path creates a tree in the Session Frontend Automation tab.
 
@@ -67,7 +67,7 @@ The dot-separated path creates a tree in the Session Frontend Automation tab.
 
 For testing stateless utility functions and pure C++ classes.
 
-`cpp
+```cpp
 #include "Misc/AutomationTest.h"
 #include "MyMath.h"   // the unit under test
 
@@ -87,7 +87,7 @@ bool FMyMathLerpTest::RunTest(const FString& Parameters)
     TestEqual(TEXT("Lerp below 0"), MyMath::LerpClamped(0.f, 10.f, -1.f), 0.f, 0.001f);
     return true;
 }
-`
+```
 
 ---
 
@@ -95,7 +95,7 @@ bool FMyMathLerpTest::RunTest(const FString& Parameters)
 
 For testing `UObject`-derived classes. `NewObject<>` requires a valid outer.
 
-`cpp
+```cpp
 #include "Misc/AutomationTest.h"
 #include "Engine/Engine.h"
 #include "Inventory/InventoryComponent.h"
@@ -127,13 +127,13 @@ bool FInventoryComponentTest::RunTest(const FString& Parameters)
 
     return true;
 }
-`
+```
 
 ---
 
 ## Pattern: Parameterized Test Over Asset Paths
 
-`cpp
+```cpp
 IMPLEMENT_COMPLEX_AUTOMATION_TEST(
     FDataAssetValidation,
     "MyGame.Assets.DataAssetValidation",
@@ -170,7 +170,7 @@ bool FDataAssetValidation::RunTest(const FString& Parameters)
 
     return true;
 }
-`
+```
 
 ---
 
@@ -178,7 +178,7 @@ bool FDataAssetValidation::RunTest(const FString& Parameters)
 
 Use `AddExpectedMessage` to suppress and verify expected error log output.
 
-`cpp
+```cpp
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
     FInventoryOverflowNegativeTest,
     "MyGame.Inventory.OverflowRejectsItem",
@@ -203,13 +203,13 @@ bool FInventoryOverflowNegativeTest::RunTest(const FString& Parameters)
 
     return true;
 }
-`
+```
 
 ---
 
 ## Pattern: Latent Command — Wait for Delegate
 
-`cpp
+```cpp
 #include "Misc/AutomationTest.h"
 
 // Command that waits until a shared bool flag is set
@@ -260,7 +260,7 @@ bool FAsyncOperationTest::RunTest(const FString& Parameters)
     // For post-async assertions, use a custom latent command that captures the test ptr
     return true;
 }
-`
+```
 
 ---
 
@@ -268,7 +268,7 @@ bool FAsyncOperationTest::RunTest(const FString& Parameters)
 
 To make assertions after async work, capture the test reference in the latent command.
 
-`cpp
+```cpp
 class FValidateAfterAsyncCommand : public IAutomationLatentCommand
 {
 public:
@@ -305,7 +305,7 @@ bool FMyAsyncCalcTest::RunTest(const FString& Parameters)
     ADD_LATENT_AUTOMATION_COMMAND(FValidateAfterAsyncCommand(this, bDone, Result));
     return true;
 }
-`
+```
 
 ---
 
@@ -319,7 +319,7 @@ bool FMyAsyncCalcTest::RunTest(const FString& Parameters)
 
 ### Command Line (Unattended)
 
-`bash
+```bash
 # Run all tests matching a name filter, exit when done
 UnrealEditor-Cmd MyGame -ExecCmds="Automation RunTests MyGame.Inventory" \
     -unattended -nopause -testexit="Automation Test Queue Empty" \
@@ -329,16 +329,16 @@ UnrealEditor-Cmd MyGame -ExecCmds="Automation RunTests MyGame.Inventory" \
 UnrealEditor-Cmd MyGame \
     -ExecCmds="Automation RunFilter Smoke" \
     -unattended -nopause -testexit="Automation Test Queue Empty"
-`
+```
 
 ### Programmatic (C++ / Python)
 
-`python
+```python
 # Inside Editor Python (via Editor Python Plugin)
 import unreal
 subsystem = unreal.get_editor_subsystem(unreal.AutomationControllerManager)
 # Use Automation Controller API to queue and run tests
-`
+```
 
 ---
 
@@ -346,7 +346,7 @@ subsystem = unreal.get_editor_subsystem(unreal.AutomationControllerManager)
 
 Use `PushContext` / `PopContext` to annotate which sub-step caused a failure.
 
-`cpp
+```cpp
 bool FMyComplexTest::RunTest(const FString& Parameters)
 {
     ExecutionInfo.PushContext(TEXT("Phase 1: Setup"));
@@ -359,7 +359,7 @@ bool FMyComplexTest::RunTest(const FString& Parameters)
 
     return true;
 }
-`
+```
 
 Errors recorded while a context is active will include the context string in the failure report.
 
@@ -369,7 +369,7 @@ Errors recorded while a context is active will include the context string in the
 
 Report numeric measurements alongside test results (captured by automation infrastructure):
 
-`cpp
+```cpp
 bool FMyPerfTest::RunTest(const FString& Parameters)
 {
     double StartTime = FPlatformTime::Seconds();
@@ -384,4 +384,4 @@ bool FMyPerfTest::RunTest(const FString& Parameters)
 
     return true;
 }
-`
+```

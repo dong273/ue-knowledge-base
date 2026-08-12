@@ -6,14 +6,14 @@ Environment Query System (EQS) generator and test configurations for common AI s
 
 ## Architecture Overview
 
-`
+```
 UEnvQuery (Data Asset)
   └── Options (array of UEnvQueryOption)
         ├── Generator — produces candidate items (locations or actors)
         └── Tests (array) — filter and score items
               ├── Filter: Discard items that fail the condition
               └── Score: Weight items by test result
-`
+```
 
 Key classes:
 - `UEnvQuery` — the query asset (inherits `UDataAsset`)
@@ -171,7 +171,7 @@ Filters/scores items based on GameplayTags on the item actor.
 
 Goal: AI hides from enemy, selecting the closest covered position.
 
-`
+```
 Generator: SimpleGrid
   GridHalfSize = 800
   SpaceBetween = 150
@@ -192,13 +192,13 @@ Test 3: Pathfinding Length (Filter + Score)
   Purpose = FilterAndScore
   FloatValueMax = 3000       ← discard unreachable points
   ScoringEquation = InverseLinear
-`
+```
 
 ### 2. Find Flee Point (Retreat from Enemy)
 
 Goal: AI moves far from enemy while staying navigable.
 
-`
+```
 Generator: PathingGrid
   MaxDistance = 2000
   SpaceBetween = 300
@@ -219,13 +219,13 @@ Test 3: Distance from Self (Filter)
   DistanceTo = EnvQueryContext_Querier
   Purpose = Filter
   FloatValueMin = 400           ← don't pick a spot right next to self
-`
+```
 
 ### 3. Find Flanking Position
 
 Goal: AI reaches a position perpendicular to the enemy, neither directly behind nor in front.
 
-`
+```
 Generator: Ring
   Center = EnemyContext
   Radius = 600
@@ -244,13 +244,13 @@ Test 2: Trace to Enemy from Item (Filter)
 
 Test 3: Pathfinding Length (Filter)
   FloatValueMax = 2500          ← must be reachable
-`
+```
 
 ### 4. Find Patrol Waypoint
 
 Goal: Select a patrol destination that is not the current location, ideally exploring unvisited areas.
 
-`
+```
 Generator: ActorsOfClass
   SearchedActorClass = APatrolPoint
   SearchCenter = EnvQueryContext_Querier
@@ -266,13 +266,13 @@ Test 1: Distance (Filter + Score)
 Test 2: GameplayTags (Filter — optional)
   TagsToMatch = PatrolPoint.Active
   bMustPass = true
-`
+```
 
 ### 5. Find Attack Position (Ranged AI)
 
 Goal: AI positions itself at ideal attack range, with LoS, not too close.
 
-`
+```
 Generator: Ring
   Center = EnvQueryContext_Querier
   Radius = [AttackRangeMin..AttackRangeMax]   ← can use two rings merged with Composite
@@ -293,7 +293,7 @@ Test 3: Distance from Self (Score — minimize movement)
   DistanceTo = EnvQueryContext_Querier
   ScoringEquation = InverseLinear
   ScoringFactor = 0.3           ← lower weight: prefer standing still if already in range
-`
+```
 
 ---
 
@@ -301,7 +301,7 @@ Test 3: Distance from Self (Score — minimize movement)
 
 A custom context resolves to a specific actor or location, used in tests:
 
-`cpp
+```cpp
 #include "EnvironmentQuery/EnvQueryContext.h"
 #include "EnvironmentQuery/Items/EnvQueryItemType_Actor.h"
 
@@ -328,7 +328,7 @@ public:
         }
     }
 };
-`
+```
 
 Blueprint context (simpler): Subclass `UEnvQueryContext_BlueprintBase` and implement `ProvideActorsSet` or `ProvideSingleLocation`.
 
@@ -338,7 +338,7 @@ Blueprint context (simpler): Subclass `UEnvQueryContext_BlueprintBase` and imple
 
 ### Direct call (one-shot)
 
-`cpp
+```cpp
 #include "EnvironmentQuery/EnvQueryManager.h"
 
 UPROPERTY(EditDefaultsOnly)
@@ -373,7 +373,7 @@ void AMyAIController::OnCoverQueryDone(TSharedPtr<FEnvQueryResult> Result)
     //     float Score = Result->Items[i].Score;
     // }
 }
-`
+```
 
 ### Via BT Task (BTTask_RunEQSQuery)
 
@@ -388,12 +388,12 @@ The task stores `FBTEnvQueryTaskMemory` (containing `RequestID`) in NodeMemory t
 
 ### Via BT Service (periodic queries)
 
-`cpp
+```cpp
 // BTService_RunEQS — built-in service that runs an EQS query on interval
 // Found in: BehaviorTree/Services/BTService_RunEQS.h
 // Configure: QueryTemplate, BlackboardKey, RunMode, Interval
 // This is equivalent to using a service that calls Request.Execute() in TickNode
-`
+```
 
 ---
 
@@ -401,11 +401,11 @@ The task stores `FBTEnvQueryTaskMemory` (containing `RequestID`) in NodeMemory t
 
 Enable EQS debug visualization:
 
-`
+```
 Console: ai.debug.eqs 1
 Console: DisplayAll EQS
 Gameplay Debugger: ' key → select AI → press 4 (EQS panel)
-`
+```
 
 In C++, `UEQSTestingPawn` (`EnvironmentQuery/EQSTestingPawn.h`) can be placed in the level to preview query results in-editor without running the game.
 

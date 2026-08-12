@@ -16,7 +16,7 @@ Streaming radius is configured per-partition in the World Partition editor UI (`
 
 ### Data Layers for Dynamic Content
 
-`cpp
+```cpp
 // Assign actors to data layers in editor (details panel: Data Layers).
 // At runtime, activate/deactivate via UDataLayerManager (UE 5.3+).
 // NOTE: UDataLayerSubsystem is deprecated since UE 5.3 — use UDataLayerManager instead.
@@ -36,7 +36,7 @@ DLMgr->SetDataLayerRuntimeState(InteriorLayerAsset, EDataLayerRuntimeState::Load
 
 // Unload completely
 DLMgr->SetDataLayerRuntimeState(InteriorLayerAsset, EDataLayerRuntimeState::Unloaded);
-`
+```
 
 ### Streaming Radius per Player (Multiplayer)
 
@@ -69,7 +69,7 @@ The persistent level contains: GameMode, GameState, player spawn points, UI acto
 
 Each zone is a separate `.umap` added to the persistent level's streaming list in the editor. Zones are loaded on demand.
 
-`cpp
+```cpp
 // MyZoneManager.h — UWorldSubsystem for zone state tracking
 UCLASS()
 class UMyZoneManager : public UWorldSubsystem
@@ -87,7 +87,9 @@ private:
     UFUNCTION()
     void OnZoneLoaded() { /* update LoadedZones */ }
 };
-cpp
+```
+
+```cpp
 // MyZoneManager.cpp
 void UMyZoneManager::LoadZone(FName ZoneLevelName)
 {
@@ -111,13 +113,13 @@ void UMyZoneManager::UnloadZone(FName ZoneLevelName)
     UGameplayStatics::UnloadStreamLevel(this, ZoneLevelName, LatentInfo, false);
     LoadedZones.Remove(ZoneLevelName);
 }
-`
+```
 
 ### Pre-Loading Adjacent Zones
 
 Load neighbor zones into `LoadedNotVisible` state so they are in memory before the player arrives:
 
-`cpp
+```cpp
 void UMyZoneManager::PreloadAdjacentZone(FName ZoneLevelName)
 {
     const TArray<ULevelStreaming*>& Levels = GetWorld()->GetStreamingLevels();
@@ -132,13 +134,13 @@ void UMyZoneManager::PreloadAdjacentZone(FName ZoneLevelName)
         }
     }
 }
-`
+```
 
 ### Loading Screen Handoff
 
 Before loading screen dismiss, wait for the target zone to reach `LoadedVisible`:
 
-`cpp
+```cpp
 void UMyHUD::WaitForZoneVisible(FName ZoneLevelName)
 {
     GetWorld()->GetTimerManager().SetTimer(
@@ -160,7 +162,7 @@ void UMyHUD::WaitForZoneVisible(FName ZoneLevelName)
         true    // looping
     );
 }
-`
+```
 
 ---
 
@@ -170,7 +172,7 @@ void UMyHUD::WaitForZoneVisible(FName ZoneLevelName)
 
 ### Core Pattern: ULevelStreamingDynamic
 
-`cpp
+```cpp
 // ProcDungeonGenerator.h
 UCLASS()
 class AProcDungeonGenerator : public AActor
@@ -192,7 +194,9 @@ private:
     UFUNCTION()
     void OnRoomVisible();
 };
-cpp
+```
+
+```cpp
 // ProcDungeonGenerator.cpp
 void AProcDungeonGenerator::SpawnRoom(FTransform RoomTransform, FString InstanceName)
 {
@@ -224,13 +228,13 @@ void AProcDungeonGenerator::DespawnRoom(FString InstanceName)
         SpawnedRooms.Remove(InstanceName);
     }
 }
-`
+```
 
 ### Multiplayer: Replicating Instance Names
 
 The server spawns room instances with deterministic names (e.g., "Room_0001", "Room_0002"). It replicates these names to clients via a replicated array on GameState. Clients call `LoadLevelInstance` with the same `OptionalLevelNameOverride`. The names must match exactly — without this, clients and server reference different package names and streaming breaks.
 
-`cpp
+```cpp
 // MyGameState.h
 UPROPERTY(ReplicatedUsing=OnRep_SpawnedRooms)
 TArray<FString> SpawnedRoomNames;
@@ -248,7 +252,7 @@ void AMyGameState::OnRep_SpawnedRooms()
         DungeonGenerator->SpawnRoom(GetRoomTransform(RoomName), RoomName);
     }
 }
-`
+```
 
 ---
 
@@ -262,7 +266,7 @@ Each chapter is a separate `.umap`. A small persistent level holds global actors
 
 ### Single-Player: OpenLevel with GameInstance State
 
-`cpp
+```cpp
 // Save chapter progress to GameInstance before traveling
 void AMyGameMode::TravelToChapter(FName ChapterMapName)
 {
@@ -275,15 +279,17 @@ void AMyGameMode::TravelToChapter(FName ChapterMapName)
 
     UGameplayStatics::OpenLevel(this, ChapterMapName, true);
 }
-`
+```
 
 ### Multiplayer: Seamless Travel
 
-`ini
+```ini
 ; DefaultEngine.ini
 [/Script/Engine.GameMapsSettings]
 TransitionMap=/Game/Maps/Transition_Loading
-cpp
+```
+
+```cpp
 // MyGameMode.h
 uint32 bUseSeamlessTravel : 1; // set to 1 in constructor
 
@@ -311,7 +317,7 @@ void AMyGameMode::HandleSeamlessTravelPlayer(AController*& C)
     // Restore character state from GameInstance or GameState
     RestorePlayerState(C);
 }
-`
+```
 
 ---
 
@@ -329,7 +335,7 @@ void AMyGameMode::HandleSeamlessTravelPlayer(AController*& C)
 
 ### Disabling Volume Control at Runtime (Cutscene or Boss Arena)
 
-`cpp
+```cpp
 void AMyBossRoomTrigger::BeginPlay()
 {
     Super::BeginPlay();
@@ -361,7 +367,7 @@ void AMyBossRoomTrigger::NotifyActorBeginOverlap(AActor* OtherActor)
         }
     }
 }
-`
+```
 
 ---
 
@@ -373,7 +379,7 @@ On a dedicated server, there is no rendering pipeline. Streaming must be entirel
 - **Sub-levels**: call `SetShouldBeLoaded` and `SetShouldBeVisible` explicitly. Volume-based streaming is disabled (no camera player controller overlap in server-only mode without clients).
 - **Avoid `bShouldBlockOnLoad`** on the server unless behind a map-change sequence — blocking the server stalls all clients.
 
-`cpp
+```cpp
 // Server-side: manually drive zone loading based on player positions
 // Inherits UTickableWorldSubsystem (UWorldSubsystem has no Tick)
 void UServerZoneSubsystem::Tick(float DeltaTime)
@@ -390,7 +396,7 @@ void UServerZoneSubsystem::Tick(float DeltaTime)
         }
     }
 }
-`
+```
 
 ---
 

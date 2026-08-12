@@ -25,28 +25,28 @@ All custom channels and profiles go in `Config/DefaultEngine.ini` under `[/Scrip
 
 ### Declaring a Custom Trace Channel
 
-`ini
+```ini
 [/Script/Engine.CollisionProfile]
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel1,DefaultResponse=ECR_Ignore,bTraceType=True,bStaticObject=False,Name="Weapon")
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Ignore,bTraceType=True,bStaticObject=False,Name="Interaction")
-`
+```
 
 - `bTraceType=True` — this is a trace channel (used in `LineTraceSingleByChannel`, `SweepSingleByChannel`)
 - `DefaultResponse` — response all components have unless overridden
 
 ### Declaring a Custom Object Type Channel
 
-`ini
+```ini
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel3,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=False,Name="Interactable")
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel4,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=True,Name="HazardZone")
-`
+```
 
 - `bTraceType=False` — object channel (what an object IS, not what a trace uses)
 - `bStaticObject=True` — object is non-moving (WorldStatic category behavior)
 
 ### Declaring Custom Profiles
 
-`ini
+```ini
 ; Weapon/projectile — blocks WorldStatic, WorldDynamic, Pawn; ignores triggers
 +Profiles=(Name="Projectile",CollisionEnabled=QueryAndPhysics,ObjectTypeName="WorldDynamic",CustomResponses=(\
     (Channel="WorldStatic",Response=ECR_Block),\
@@ -71,7 +71,7 @@ All custom channels and profiles go in `Config/DefaultEngine.ini` under `[/Scrip
     (Channel="Interaction",Response=ECR_Block),\
     (Channel="Weapon",Response=ECR_Ignore),\
     (Channel="Visibility",Response=ECR_Block)))
-`
+```
 
 ---
 
@@ -79,7 +79,7 @@ All custom channels and profiles go in `Config/DefaultEngine.ini` under `[/Scrip
 
 ### Shooter Game — Standard Channels
 
-`ini
+```ini
 ; Weapon trace — hits everything physical, ignores other weapon traces
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel1,DefaultResponse=ECR_Block,bTraceType=True,bStaticObject=False,Name="Weapon")
 
@@ -91,11 +91,11 @@ All custom channels and profiles go in `Config/DefaultEngine.ini` under `[/Scrip
 
 ; Damage volume object type
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel4,DefaultResponse=ECR_Ignore,bTraceType=False,bStaticObject=False,Name="DamageVolume")
-`
+```
 
 ### Corresponding Profiles
 
-`ini
+```ini
 ; Player character — responds to weapon hits, can interact
 +Profiles=(Name="PlayerPawn",CollisionEnabled=QueryAndPhysics,ObjectTypeName="Pawn",CustomResponses=(\
     (Channel="WorldStatic",Response=ECR_Block),\
@@ -121,13 +121,13 @@ All custom channels and profiles go in `Config/DefaultEngine.ini` under `[/Scrip
     (Channel="Weapon",Response=ECR_Block),\
     (Channel="Interaction",Response=ECR_Ignore),\
     (Channel="Camera",Response=ECR_Ignore)))
-`
+```
 
 ---
 
 ## Applying Profiles in C++
 
-`cpp
+```cpp
 // Apply a named profile — sets ObjectType, CollisionEnabled, and all channel responses at once
 MyMesh->SetCollisionProfileName(TEXT("PlayerPawn"));
 MyMesh->SetCollisionProfileName(TEXT("Projectile"));
@@ -138,7 +138,7 @@ FName ProfileName = MyMesh->GetCollisionProfileName();
 
 // Override individual channel responses after setting a profile
 MyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-`
+```
 
 ---
 
@@ -146,7 +146,7 @@ MyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 Custom trace channels map to `ETraceTypeQuery` for Blueprint functions and `ECollisionChannel` for C++ world queries.
 
-`cpp
+```cpp
 // Use the generated enum values — confirmed by checking Project Settings > Collision
 // ECC_GameTraceChannel1 = "Weapon" (in our setup)
 // ECC_GameTraceChannel2 = "Interaction"
@@ -165,7 +165,7 @@ GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, Par
 FCollisionObjectQueryParams ObjectParams;
 ObjectParams.AddObjectTypesToQuery(ECC_GameTraceChannel3); // Interactable type
 GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectParams, Params);
-`
+```
 
 ---
 
@@ -185,7 +185,7 @@ GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectParams, Params);
 
 These values live in `Config/DefaultEngine.ini` under `[/Script/Engine.PhysicsSettings]` and map to `UPhysicsSettingsCore`:
 
-`ini
+```ini
 [/Script/Engine.PhysicsSettings]
 DefaultGravityZ=-980.000000
 BounceThresholdVelocity=200.000000
@@ -198,7 +198,9 @@ MinContactOffset=2.000000
 MaxContactOffset=8.000000
 bSimulateSkeletalMeshOnDedicatedServer=True
 DefaultShapeComplexity=CTF_UseDefault
-DefaultShapeComplexity` accepts: `CTF_UseDefault`, `CTF_UseSimpleAndComplex`, `CTF_UseSimpleAsComplex`, `CTF_UseComplexAsSimple`.
+```
+
+`DefaultShapeComplexity` accepts: `CTF_UseDefault`, `CTF_UseSimpleAndComplex`, `CTF_UseSimpleAsComplex`, `CTF_UseComplexAsSimple`.
 
 ---
 

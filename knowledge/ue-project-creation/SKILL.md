@@ -1,6 +1,6 @@
 ---
 title: ue-project-creation
-description: >-
+description: Standard workflow for creating a new Unreal Engine project from CLI. Covers template selection, manual structure creation, project file generation, and post-creation configuration. Supports UE 5.x (tested on UE 5.7).
 tags: [ue, project, creation, setup, template]
 ---
 
@@ -22,9 +22,9 @@ tags: [ue, project, creation, setup, template]
 
 在 UE 5.x 中打开 **Unreal Editor**：
 
-`
+```
 File → New Project → Blank (C++) → 命名 → 创建
-`
+```
 
 编辑器自动完成全部工作：生成 `.uproject`、源码骨架、`.sln`、初始配置。
 
@@ -33,9 +33,9 @@ File → New Project → Blank (C++) → 命名 → 创建
 ## 方式 B：克隆模板 + CLI（推荐用于自动化）
 
 ### 前置条件
-- UE 引擎已安装（路径如 `<EngineRoot>/`）
+- UE 引擎已安装（路径如 `E:/UE_5.7/`）
 - 已安装 Visual Studio（含 C++ 工具链）
-- 本指南示例路径：`<EngineRoot>/`
+- 本指南示例路径：`E:/UE_5.7/`
 
 ### Step 1：选择模板
 
@@ -50,26 +50,26 @@ UE 预置模板在 `Engine/Templates/` 下：
 | `TP_ThirdPerson` | Third Person | ✅ | 第三人称模板 |
 | `TP_TopDown` | Top Down | ✅ | 俯视角模板 |
 
-> 查看所有：`ls "<EngineRoot>/Templates/" | grep "^TP_"`
+> 查看所有：`ls "E:/UE_5.7/Templates/" | grep "^TP_"`
 
 ### Step 2：复制模板到目标目录
 
-`bash
+```bash
 # 设定变量
-ENGINE="<EngineRoot>"
+ENGINE="E:/UE_5.7"
 TEMPLATE="$ENGINE/Templates/TP_Blank"
 PROJECT_NAME="MyNewProject"
 PROJECT_DIR="E:/Unreal Projects/$PROJECT_NAME"
 
 # 复制模板
 cp -r "$TEMPLATE" "$PROJECT_DIR"
-`
+```
 
 ### Step 3：重命名文件和目录
 
 模板中所有 `TP_Blank` 替换为你的项目名：
 
-`bash
+```bash
 cd "$PROJECT_DIR"
 
 # 重命名 .uproject
@@ -88,14 +88,14 @@ cd ..
 mv "TP_Blank.Target.cs" "${PROJECT_NAME}.Target.cs"
 mv "TP_BlankEditor.Target.cs" "${PROJECT_NAME}Editor.Target.cs"
 cd ..
-`
+```
 
 ### Step 4：更新文件内容
 
 将模板文件内所有 `TP_Blank` 替换为项目名，并设置正确的引擎版本：
 
 **`.uproject` 文件：**
-`json
+```json
 {
     "FileVersion": 3,
     "EngineAssociation": "5.7",   ← 改为你的 UE 版本
@@ -116,10 +116,10 @@ cd ..
         }
     ]
 }
-`
+```
 
 **`Source/MyNewProject/MyNewProject.Build.cs`：**
-`csharp
+```csharp
 public class MyNewProject : ModuleRules
 {
     public MyNewProject(ReadOnlyTargetRules Target) : base(Target)
@@ -138,10 +138,10 @@ public class MyNewProject : ModuleRules
         // PrivateDependencyModuleNames.Add("OnlineSubsystem");
     }
 }
-`
+```
 
 **`Source/MyNewProject.Target.cs`：**
-`csharp
+```csharp
 public class MyNewProjectTarget : TargetRules
 {
     public MyNewProjectTarget(TargetInfo Target) : base(Target)
@@ -152,10 +152,10 @@ public class MyNewProjectTarget : TargetRules
         ExtraModuleNames.Add("MyNewProject");
     }
 }
-`
+```
 
 **`Source/MyNewProjectEditor.Target.cs`：**
-`csharp
+```csharp
 public class MyNewProjectEditorTarget : TargetRules
 {
     public MyNewProjectEditorTarget(TargetInfo Target) : base(Target)
@@ -166,10 +166,10 @@ public class MyNewProjectEditorTarget : TargetRules
         ExtraModuleNames.Add("MyNewProject");
     }
 }
-`
+```
 
 **`Source/MyNewProject/MyNewProject.h`：**
-`cpp
+```cpp
 #pragma once
 #include "EngineMinimal.h"
 #include "Engine.h"
@@ -177,48 +177,48 @@ public class MyNewProjectEditorTarget : TargetRules
 
 // 日志分类
 DECLARE_LOG_CATEGORY_EXTERN(LogMyNewProject, Log, All);
-`
+```
 
 **`Source/MyNewProject/MyNewProject.cpp`：**
-`cpp
+```cpp
 #include "MyNewProject.h"
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, MyNewProject, "MyNewProject");
 
 DEFINE_LOG_CATEGORY(LogMyNewProject);
-`
+```
 
 ### Step 5：生成项目文件
 
 使用 **UnrealBuildTool** 生成 Visual Studio `.sln`：
 
-`bash
+```bash
 "${ENGINE}/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.exe" ^
     -projectfiles ^
     -project="${PROJECT_DIR}/${PROJECT_NAME}.uproject" ^
     -game ^
     -engine
-`
+```
 
 预期输出：
-`
+```
 Result: Succeeded
 Total execution time: XX.XX seconds
-`
+```
 
 ### Step 6：验证项目
 
-`bash
+```bash
 # 检查关键文件存在
 ls "$PROJECT_DIR/${PROJECT_NAME}.uproject"       # 项目文件
 ls "$PROJECT_DIR/${PROJECT_NAME}.sln"             # VS 解决方案
 ls "$PROJECT_DIR/Source/$PROJECT_NAME/"           # 源码目录
-`
+```
 
 ### Step 7：编译验证
 
-`bash
+```bash
 cd "$PROJECT_DIR"
 
 # 方式 1：通过编辑器（自动编译）
@@ -231,7 +231,7 @@ cd "$PROJECT_DIR"
     Development ^
     -project="${PROJECT_DIR}/${PROJECT_NAME}.uproject" ^
     -waitmutex
-`
+```
 
 ---
 
@@ -241,7 +241,7 @@ cd "$PROJECT_DIR"
 
 在 `.uproject` 中添加更多模块：
 
-`json
+```json
 "Modules": [
     {
         "Name": "MyNewProject",
@@ -254,11 +254,11 @@ cd "$PROJECT_DIR"
         "LoadingPhase": "Default"
     }
 ]
-`
+```
 
 ### 激活插件
 
-`json
+```json
 "Plugins": [
     {
         "Name": "GameplayAbilities",
@@ -273,7 +273,7 @@ cd "$PROJECT_DIR"
         "Enabled": true
     }
 ]
-`
+```
 
 ### 引擎版本匹配
 
@@ -309,5 +309,5 @@ cd "$PROJECT_DIR"
 ## 参考
 
 - 已创建的示例项目：`E:/Unreal Projects/MyBlankProject/`
-- 模板目录：`<EngineRoot>/Templates/`
+- 模板目录：`E:/UE_5.7/Templates/`
 - 相关技能：`ue-project-context`（项目配置）、`ue-module-build-system`（模块管理）

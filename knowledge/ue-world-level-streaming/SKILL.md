@@ -5,11 +5,11 @@ description: Covers World Partition, level streaming, level travel, OpenLevel, S
 
 # UE World & Level Streaming
 
+
 ---
 
 ## Context
 
-Read  before advising. Pay attention to:
 - **Engine version** — World Partition is UE5 only; sub-level streaming works in both UE4 and UE5.
 - **Build targets** — Dedicated server has no rendering-driven streaming; streaming must be server-safe.
 - **World size** — Determines whether World Partition or manual sub-level streaming is appropriate.
@@ -39,7 +39,7 @@ Enable via the Level menu: **World -> World Partition -> Convert Level**. Once e
 
 Data layers replace the old sub-level toggle pattern. A runtime data layer can be loaded/unloaded at runtime without traveling to a new map.
 
-`cpp
+```cpp
 // MyGameMode.cpp
 #include "WorldPartition/DataLayer/DataLayerManager.h"
 
@@ -61,7 +61,7 @@ void AMyGameMode::DeactivateDungeonDataLayer()
     UDataLayerAsset* DungeonLayer = DungeonDataLayerAsset.LoadSynchronous();
     DLMgr->SetDataLayerRuntimeState(DungeonLayer, EDataLayerRuntimeState::Unloaded);
 }
-`
+```
 
 **Data layer states:**
 - `Unloaded` — not loaded, not visible.
@@ -94,15 +94,15 @@ Streaming radius is configured per-partition in the World Partition editor UI (`
 
 From `LevelStreaming.h`, the full state sequence is:
 
-`
+```
 Removed -> Unloaded -> Loading -> LoadedNotVisible -> MakingVisible -> LoadedVisible -> MakingInvisible -> LoadedNotVisible
                                       |
                                  FailedToLoad   (check logs; level asset missing or corrupt)
-`
+```
 
 Query state with:
 
-`cpp
+```cpp
 ULevelStreaming* StreamingLevel = /* ... */;
 ELevelStreamingState State = StreamingLevel->GetLevelStreamingState();
 
@@ -116,13 +116,13 @@ switch (State)
     case ELevelStreamingState::MakingInvisible:  /* removing from rendering */ break;
     case ELevelStreamingState::FailedToLoad:     /* check logs */ break;
 }
-`
+```
 
 ### UGameplayStatics: LoadStreamLevel / UnloadStreamLevel
 
 For Blueprint-friendly async streaming with latent actions (from `GameplayStatics.h`):
 
-`cpp
+```cpp
 // MyActor.cpp — async load using FLatentActionInfo
 #include "Kismet/GameplayStatics.h"
 
@@ -164,7 +164,7 @@ void AMyActor::StreamOutRoom(FName LevelName)
         false // bShouldBlockOnUnload
     );
 }
-`
+```
 
 For soft object pointers (preferred for packaging safety), use `LoadStreamLevelBySoftObjectPtr` with the same arguments.
 
@@ -172,7 +172,7 @@ For soft object pointers (preferred for packaging safety), use `LoadStreamLevelB
 
 Use `ULevelStreamingDynamic::LoadLevelInstance` to load the same level package multiple times at different transforms — for procedural dungeons, modular buildings, or instanced rooms (from `LevelStreamingDynamic.h`):
 
-`cpp
+```cpp
 #include "Engine/LevelStreamingDynamic.h"
 
 void AMyDungeonGenerator::SpawnRoom(FVector Location, FRotator Rotation)
@@ -205,11 +205,11 @@ void AMyDungeonGenerator::UnloadRoom(ULevelStreamingDynamic* StreamingLevel)
         StreamingLevel->SetIsRequestingUnloadAndRemoval(true);
     }
 }
-`
+```
 
 For networking: use `OptionalLevelNameOverride` to give all clients and server the same package name for a given instance. Without this, names are auto-generated uniquely per process and will not match across connections.
 
-`cpp
+```cpp
 ULevelStreamingDynamic::FLoadLevelInstanceParams Params(
     GetWorld(),
     TEXT("/Game/Levels/Room_Corridor"),
@@ -220,35 +220,35 @@ Params.bInitiallyVisible = true;
 
 bool bSuccess = false;
 ULevelStreamingDynamic* Level = ULevelStreamingDynamic::LoadLevelInstance(Params, bSuccess);
-`
+```
 
 ### OnLevelShown / OnLevelHidden Delegates
 
 From `LevelStreaming.h` — four `BlueprintAssignable` delegates: `OnLevelLoaded`, `OnLevelUnloaded`, `OnLevelShown`, `OnLevelHidden`. Bind with `AddDynamic`:
 
-`cpp
+```cpp
 StreamingLevel->OnLevelShown.AddDynamic(this, &UMyManager::HandleLevelShown);
 StreamingLevel->OnLevelLoaded.AddDynamic(this, &UMyManager::HandleLevelLoaded);
-`
+```
 
 ### Streaming Volumes
 
 `ALevelStreamingVolume` automatically controls sub-level loading when the player camera is inside or outside the volume. From `LevelStreamingVolume.h`:
 
-`cpp
+```cpp
 // EStreamingVolumeUsage — set on the volume in editor
 SVB_Loading                 // load but do not make visible
 SVB_LoadingAndVisibility    // load and make visible (most common)
 SVB_VisibilityBlockingOnLoad // force blocking load when entering
 SVB_BlockingOnLoad          // block load of associated levels
 SVB_LoadingNotVisible       // load, keep invisible (pre-warm)
-`
+```
 
 Volumes are assigned to a sub-level via its `EditorStreamingVolumes` array. Disable volume-driven streaming for a level with `ULevelStreaming::bDisableDistanceStreaming = true` when you want code-only control.
 
 ### Manual Visibility Control
 
-`cpp
+```cpp
 // Get streaming level reference from world
 const TArray<ULevelStreaming*>& Levels = GetWorld()->GetStreamingLevels();
 for (ULevelStreaming* Level : Levels)
@@ -260,12 +260,12 @@ for (ULevelStreaming* Level : Levels)
         break;
     }
 }
-`
+```
 
 Force flush all streaming (blocks until complete — use sparingly):
-`cpp
+```cpp
 UGameplayStatics::FlushLevelStreaming(this);
-`
+```
 
 ---
 
@@ -285,52 +285,52 @@ UGameplayStatics::FlushLevelStreaming(this);
 
 Destroys the current world and loads a new one; all clients disconnect. From `GameplayStatics.h`:
 
-`cpp
+```cpp
 UGameplayStatics::OpenLevel(this, FName("/Game/Maps/MainMenu"), true);
 UGameplayStatics::OpenLevel(this, FName("/Game/Maps/GameLevel"), true, TEXT("?Difficulty=Hard"));
 UGameplayStatics::OpenLevelBySoftObjectPtr(this, GameLevelAsset, true); // packaging-safe
-`
+```
 
 ### Server Travel (Multiplayer, Non-Seamless)
 
 Initiated on the server; all connected clients follow (`World.h`):
 
-`cpp
+```cpp
 GetWorld()->ServerTravel(TEXT("/Game/Maps/Level02?listen"), /*bAbsolute=*/false);
-`
+```
 
 ### Seamless Travel
 
 Seamless travel loads the destination map in the background via a transition (midpoint) map. Clients stay connected. From `World.h`:
 
-`cpp
+```cpp
 void UWorld::SeamlessTravel(const FString& InURL, bool bAbsolute);
 bool UWorld::IsInSeamlessTravel() const;
 void UWorld::SetSeamlessTravelMidpointPause(bool bNowPaused);
-`
+```
 
 **Setup requirements:**
 
 1. Set `bUseSeamlessTravel = true` on `AGameModeBase`:
 
-`cpp
+```cpp
 // bUseSeamlessTravel is already declared in AGameModeBase — do NOT redeclare it.
 // Just set it in the constructor:
 
 // MyGameMode.cpp constructor
 bUseSeamlessTravel = true;
-`
+```
 
 2. Set a transition map in `DefaultEngine.ini`:
 
-`ini
+```ini
 [/Script/Engine.GameMapsSettings]
 TransitionMap=/Game/Maps/Transition
-`
+```
 
 3. Override `GetSeamlessTravelActorList` to control which actors persist:
 
-`cpp
+```cpp
 // GameMode — called on server side during transition
 void AMyGameMode::GetSeamlessTravelActorList(bool bToTransition, TArray<AActor*>& ActorList)
 {
@@ -357,15 +357,15 @@ void AMyGameMode::HandleSeamlessTravelPlayer(AController*& C)
     Super::HandleSeamlessTravelPlayer(C);
     // Restore player-specific state here
 }
-`
+```
 
 4. Trigger on server:
 
-`cpp
+```cpp
 // From GameMode, server-only
 GetWorld()->ServerTravel(TEXT("/Game/Maps/Level02?listen"));
 // Seamless travel is automatic because bUseSeamlessTravel is true
-`
+```
 
 **Travel sequence:** current world -> transition map -> destination world. Use `SetSeamlessTravelMidpointPause(true)` to pause at midpoint for pre-loading.
 
@@ -379,7 +379,7 @@ For client-initiated travel (join server, change options), call `APlayerControll
 
 `UWorldSubsystem` (from `Subsystems/WorldSubsystem.h`) is auto-instantiated once per `UWorld`. It is destroyed when the world is destroyed — including on level travel. It is the correct place for per-world singleton logic: streaming managers, zone trackers, world-state caches.
 
-`cpp
+```cpp
 // MyStreamingManager.h
 UCLASS()
 class MYGAME_API UMyStreamingManager : public UWorldSubsystem
@@ -396,17 +396,17 @@ public:
 private:
     TMap<FName, TWeakObjectPtr<ULevelStreaming>> ActiveZones;
 };
-`
+```
 
 Access from anywhere with a world context:
 
-`cpp
+```cpp
 UMyStreamingManager* Manager = GetWorld()->GetSubsystem<UMyStreamingManager>();
 if (Manager)
 {
     Manager->RequestLoadZone(FName("Zone_A"));
 }
-`
+```
 
 ### UTickableWorldSubsystem
 
@@ -421,17 +421,17 @@ For per-frame updates (distance checks, zone detection). Inherit from `UTickable
 | `UGameInstance` | Entire application session | Cross-level player state, session config |
 | `UGameInstanceSubsystem` | Entire application session | Services that outlive any world |
 | Seamless travel actor list | Transition only | Actors that physically cross (GameState, managers) |
-| `USaveGame` + `SaveGameToSlot` | Di[REDACTED] | Long-term saves, progression |
+| `USaveGame` + `SaveGameToSlot` | Disk-persistent | Long-term saves, progression |
 | `UWorldSubsystem` | Per world | World-scoped cache; push data to `UGameInstance` in `Deinitialize()` before travel clears it |
 
 ### GameInstance Pattern
 
 Store cross-level data in `UGameInstance` properties (survives all level travel). Access from anywhere with a world context:
 
-`cpp
+```cpp
 UMyGameInstance* GI = GetGameInstance<UMyGameInstance>();
 if (GI) GI->PlayerScore += 100;
-`
+```
 
 ---
 

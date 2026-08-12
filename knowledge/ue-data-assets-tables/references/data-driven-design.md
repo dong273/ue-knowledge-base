@@ -23,7 +23,7 @@ Best when each item has unique properties, may need Blueprint extension, and sho
 
 ### Schema
 
-`cpp
+```cpp
 // ItemDefinition.h
 #pragma once
 #include "Engine/DataAsset.h"
@@ -79,11 +79,11 @@ public:
               meta = (AssetBundles = "Game"))
     TSoftClassPtr<AActor> DroppedActorClass;
 };
-`
+```
 
 ### DefaultGame.ini Registration
 
-`ini
+```ini
 [/Script/Engine.AssetManagerSettings]
 +PrimaryAssetTypesToScan=(
     PrimaryAssetType="ItemDefinition",
@@ -92,11 +92,11 @@ public:
     bIsEditorOnly=False,
     Directories=((Path="/Game/Data/Items")),
     Rules=(Priority=1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
-`
+```
 
 ### Discovery and Loading
 
-`cpp
+```cpp
 // Get all item IDs (no assets loaded yet).
 TArray<FPrimaryAssetId> AllItemIds;
 UAssetManager::Get().GetPrimaryAssetIdList(
@@ -118,7 +118,7 @@ UAssetManager::Get().LoadPrimaryAssetsWithType(
 FPrimaryAssetId SwordId(TEXT("ItemDefinition"), TEXT("DA_Sword"));
 UItemDefinition* Sword =
     UAssetManager::Get().GetPrimaryAssetObject<UItemDefinition>(SwordId);
-`
+```
 
 ---
 
@@ -128,7 +128,7 @@ Best for large, flat, designer-authored datasets where all rows share the same s
 
 ### Row Struct
 
-`cpp
+```cpp
 // XPTableRow.h
 #pragma once
 #include "Engine/DataTable.h"
@@ -164,23 +164,23 @@ struct FXPTableRow : public FTableRowBase
         }
     }
 };
-`
+```
 
 ### CSV Format
 
-`csv
+```csv
 ---,Level,XPRequired,StatMultiplier
 Level_1,1,0,1.0
 Level_2,2,100,1.05
 Level_3,3,250,1.10
 Level_4,4,500,1.15
-`
+```
 
 The first column (`---` or `Name`) is the row name. Import via: DataTable asset > Import > select CSV.
 
 ### Runtime Lookup
 
-`cpp
+```cpp
 // Stored as a hard reference because it is small and always needed.
 UPROPERTY(EditDefaultsOnly, Category = "Data")
 TObjectPtr<UDataTable> XPTable;
@@ -197,7 +197,7 @@ int32 ULevelingComponent::GetXPToNextLevel(int32 CurrentLevel) const
     const FXPTableRow* Row = GetRowForLevel(CurrentLevel + 1);
     return Row ? Row->XPRequired : 0;
 }
-`
+```
 
 ---
 
@@ -205,7 +205,7 @@ int32 ULevelingComponent::GetXPToNextLevel(int32 CurrentLevel) const
 
 Use plain `UDataAsset` (not Primary) for global configuration that is always loaded with the referencing class, is not addressable by ID, and does not need Asset Manager integration.
 
-`cpp
+```cpp
 // GameBalanceConfig.h
 #pragma once
 #include "Engine/DataAsset.h"
@@ -228,14 +228,14 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
     float CritMultiplier = 2.f;
 };
-`
+```
 
 Reference from GameMode or GameInstance with a hard `TObjectPtr`:
 
-`cpp
+```cpp
 UPROPERTY(EditDefaultsOnly, Category = "Config")
 TObjectPtr<UGameBalanceConfig> BalanceConfig;
-`
+```
 
 ---
 
@@ -243,7 +243,7 @@ TObjectPtr<UGameBalanceConfig> BalanceConfig;
 
 An item definition holds a soft reference to a DataTable for per-tier stat scaling, while the DataAsset handles identity and art.
 
-`cpp
+```cpp
 UCLASS(BlueprintType)
 class MYGAME_API UWeaponDefinition : public UPrimaryDataAsset
 {
@@ -269,7 +269,7 @@ public:
         return Row ? Row->Damage : 0.f;
     }
 };
-`
+```
 
 ---
 
@@ -277,7 +277,7 @@ public:
 
 A `UGameInstanceSubsystem` caches loaded data assets after initial scan, providing a central access point that avoids repeated Asset Manager calls throughout the codebase.
 
-`cpp
+```cpp
 // ItemSubsystem.h
 #pragma once
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -299,7 +299,9 @@ private:
     TMap<FPrimaryAssetId, TObjectPtr<UItemDefinition>> ItemCache;
     TSharedPtr<FStreamableHandle> LoadHandle;
 };
-cpp
+```
+
+```cpp
 // ItemSubsystem.cpp
 void UItemSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -348,7 +350,7 @@ TArray<UItemDefinition*> UItemSubsystem::GetItemsByTag(FGameplayTag Tag) const
     }
     return Results;
 }
-`
+```
 
 ---
 

@@ -5,9 +5,9 @@ description: Covers Sequencer, LevelSequence, cutscene, cinematic, camera, movie
 
 # Skill: ue-sequencer-cinematics
 
+
 ## Context Check
 
-Read  before writing any cinematic code for:
 - Target UE version (API availability varies — SequencePlayer property deprecated in 5.4+)
 - Cinematic requirements (cutscenes, in-game cameras, offline rendering)
 - Multiplayer context (sequence replication behavior differs)
@@ -26,14 +26,14 @@ Ask for:
 
 ## Build.cs Modules
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[]
 {
     "LevelSequence", "MovieScene", "CinematicCamera",
 });
 // Offline rendering only:
 PrivateDependencyModuleNames.Add("MovieRenderPipelineCore");
-`
+```
 
 ---
 
@@ -44,15 +44,15 @@ PrivateDependencyModuleNames.Add("MovieRenderPipelineCore");
 `ALevelSequenceActor` owns the player. Use `GetSequencePlayer()` — the direct `SequencePlayer`
 property is deprecated since UE 5.4.
 
-`cpp
+```cpp
 // LevelSequenceActor.h: ULevelSequencePlayer* GetSequencePlayer() const;
 ULevelSequencePlayer* Player = SeqActor->GetSequencePlayer();
 if (Player) { Player->Play(); }
-`
+```
 
 ### ULevelSequencePlayer::CreateLevelSequencePlayer — Runtime Spawn
 
-`cpp
+```cpp
 // LevelSequencePlayer.h:
 // static ULevelSequencePlayer* CreateLevelSequencePlayer(
 //     UObject* WorldContextObject, ULevelSequence*, FMovieSceneSequencePlaybackSettings,
@@ -83,11 +83,11 @@ if (Player)
     Player->OnFinished.AddDynamic(this, &AMyClass::OnCutsceneFinished);
     Player->Play();
 }
-`
+```
 
 ### Play Control (UMovieSceneSequencePlayer base)
 
-`cpp
+```cpp
 // MovieSceneSequencePlayer.h
 Player->Play();
 Player->PlayReverse();
@@ -135,7 +135,7 @@ Player->Stop();
 FLevelSequencePlayerSnapshot Snap;
 Player->TakeFrameSnapshot(Snap);
 // Snap.CurrentShotName, Snap.RootTime, Snap.CameraComponent, Snap.ActiveShot
-`
+```
 
 ---
 
@@ -148,7 +148,7 @@ Tag bindings in Sequencer (right-click object binding -> Tags...) then override 
 
 **Possessables** bind to pre-existing world actors (placed in level or spawned by gameplay). **Spawnables** are actors the sequence itself creates and destroys.
 
-`cpp
+```cpp
 // Spawnable: sequence owns the actor lifecycle
 // Set in Sequencer editor: right-click actor track → "Change to Spawnable"
 // At runtime, actor spawns when sequence reaches its range, despawns when exiting
@@ -158,11 +158,11 @@ Tag bindings in Sequencer (right-click object binding -> Tags...) then override 
 FMovieSceneObjectBindingID BindingID = /* from sequence editor */;
 ALevelSequenceActor* SeqActor = /* your sequence actor */;
 SeqActor->SetBinding(BindingID, {SpawnedActor});
-`
+```
 
 **Why this matters**: Use possessables for persistent world actors (doors, elevators) and spawnables for transient cutscene-only actors (cinematic-only characters, props). Possessables survive sequence end; spawnables are cleaned up automatically.
 
-`cpp
+```cpp
 // LevelSequenceActor.h — all binding API lives here
 
 // Replace bound actors (preferred: tag-based, resilient to GUID changes)
@@ -192,7 +192,7 @@ TArray<UObject*> Bound = Player->GetBoundObjects(HeroBindingID);
 //   Access via public accessors — internal fields are private:
 //     GetGuid()              — FGuid identifying the binding track
 //     GetRelativeSequenceID() — which sub-sequence holds it (0 = local)
-`
+```
 
 ---
 
@@ -200,7 +200,7 @@ TArray<UObject*> Bound = Player->GetBoundObjects(HeroBindingID);
 
 ### ACineCameraActor / UCineCameraComponent
 
-`cpp
+```cpp
 // CineCameraActor.h: UCineCameraComponent* GetCineCameraComponent() const;
 // CineCameraComponent.h / CineCameraSettings.h:
 //   FCameraFilmbackSettings Filmback  (SensorWidth, SensorHeight in mm, read-only SensorAspectRatio)
@@ -239,7 +239,7 @@ APlayerController* PC = GetWorld()->GetFirstPlayerController();
 PC->SetViewTargetWithBlend(PC->GetPawn(), 0.5f, VTBlend_Cubic);
 PC->SetIgnoreMoveInput(false);
 PC->SetIgnoreLookInput(false);
-`
+```
 
 ### APlayerCameraManager
 
@@ -247,12 +247,12 @@ PC->SetIgnoreLookInput(false);
 blending and view target selection for the local player. After a cutscene ends, restore the
 gameplay camera explicitly — Sequencer does not do this automatically:
 
-`cpp
+```cpp
 APlayerController* PC = GetWorld()->GetFirstPlayerController();
 // PlayerCameraManager handles blend state; SetViewTargetWithBlend triggers it.
 PC->SetViewTargetWithBlend(PC->GetPawn(), 0.5f, VTBlend_Cubic);
 // The blend is processed each tick inside APlayerCameraManager::UpdateCamera.
-`
+```
 
 ---
 
@@ -261,7 +261,7 @@ PC->SetViewTargetWithBlend(PC->GetPawn(), 0.5f, VTBlend_Cubic);
 Event tracks call `UFUNCTION`s on objects in the event context.
 Default event context: `UWorld` + `ALevelScriptActor`.
 
-`cpp
+```cpp
 // Function must be UFUNCTION(BlueprintCallable) on a context object
 UFUNCTION(BlueprintCallable, Category = "Cinematics")
 void TriggerExplosion()
@@ -273,7 +273,7 @@ void TriggerExplosion()
 Player->PlayTo(
     FMovieSceneSequencePlaybackParams(FFrameTime(60), EUpdatePositionMethod::Play),
     FMovieSceneSequencePlayToParams());
-`
+```
 
 ### FMovieSceneEvent
 
@@ -295,7 +295,7 @@ calls. Subclass it (Blueprint or C++) and assign to the LevelSequence asset's Di
 property. The Director instance is created when the sequence begins playing and destroyed
 when it stops — its lifetime matches the sequence player.
 
-`cpp
+```cpp
 // MySequenceDirector.h
 #include "LevelSequenceDirector.h"
 #include "MySequenceDirector.generated.h"
@@ -321,7 +321,7 @@ void UMySequenceDirector::OnDialogueStart(FName SpeakerTag)
     TArray<UObject*> Bound = Player->GetBoundObjects(SpeakerBindingID);
     // Trigger gameplay logic: UI, dialogue system, camera focus, etc.
 }
-`
+```
 
 **Why Director over Level Script**: The Director travels with the sequence asset, not the level.
 Reusable across maps. Supports per-sequence state (member variables). Level Script events
@@ -331,7 +331,7 @@ only work when the sequence is placed in that specific level.
 
 ## MovieScene Tracks
 
-`cpp
+```cpp
 // MovieScene.h — get from the LevelSequence asset
 UMovieScene* MS = SeqActor->GetSequence()->GetMovieScene();
 
@@ -352,7 +352,7 @@ const TArray<UMovieSceneTrack*>& Masters = MS->GetTracks();
 // Tracks on a specific binding
 const FMovieSceneBinding* B = MS->FindBinding(SomeGuid);
 if (B) { for (UMovieSceneTrack* T : B->GetTracks()) { /* cast to subtype */ } }
-`
+```
 
 | Track Class | Purpose |
 |---|---|
@@ -378,7 +378,7 @@ sections of the matching type (e.g., `UMovieSceneFloatSection`) that store a `FM
 
 ### Sub-Sequences
 
-`cpp
+```cpp
 // Add a sub-sequence track to a master UMovieScene
 UMovieScene* MasterMS = MasterSequence->GetMovieScene();
 UMovieSceneSubTrack* SubTrack = MasterMS->AddTrack<UMovieSceneSubTrack>();
@@ -393,7 +393,9 @@ UMovieSceneSubSection* SubSection =
 // Configure sub-section timing
 SubSection->Parameters.TimeScale = 1.0;   // FMovieSceneTimeWarpVariant (double), playback speed multiplier
 SubSection->Parameters.bCanLoop = false;
-UMovieSceneSubTrack` is a singleton master track — `AddTrack` returns the existing one if already present. Binding IDs inside sub-sequences carry a non-zero `SequenceID`; use `FMovieSceneObjectBindingID::ResolveParentIndex` when overriding bindings from the root player. Requires `MovieSceneTracks` module.
+```
+
+`UMovieSceneSubTrack` is a singleton master track — `AddTrack` returns the existing one if already present. Binding IDs inside sub-sequences carry a non-zero `SequenceID`; use `FMovieSceneObjectBindingID::ResolveParentIndex` when overriding bindings from the root player. Requires `MovieSceneTracks` module.
 
 ### Time Dilation and SlowMo
 
@@ -406,7 +408,7 @@ for cinematic slow motion without disrupting gameplay state.
 
 ## Movie Render Queue
 
-`cpp
+```cpp
 // MovieRenderPipelineCore module. Classes:
 //   UMoviePipelineQueue           — holds jobs
 //   UMoviePipelineExecutorJob     — sequence + map + config per job
@@ -431,7 +433,7 @@ UMoviePipelineQueueEngineSubsystem* QueueSubsystem =
     GEngine->GetEngineSubsystem<UMoviePipelineQueueEngineSubsystem>();
 QueueSubsystem->RenderQueueWithExecutor(UMoviePipelineInProcessExecutor::StaticClass());
 // For runtime/non-editor rendering, implement UMoviePipelineExecutorBase instead.
-`
+```
 
 ---
 

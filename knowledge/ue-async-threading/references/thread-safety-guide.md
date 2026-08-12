@@ -18,7 +18,7 @@ UObjects are managed by the garbage collector, which runs on the game thread. An
 
 Never capture raw `UObject*` in lambdas dispatched to other threads or deferred to future game-thread ticks. The object may be garbage collected before execution.
 
-`cpp
+```cpp
 // Capture weak pointer BEFORE dispatching
 TWeakObjectPtr<AMyActor> WeakActor(MyActor);
 
@@ -36,7 +36,7 @@ UE::Tasks::Launch(UE_SOURCE_LOCATION, [WeakActor]()
         // If Get() returns nullptr, actor was GC'd — silently skip
     });
 });
-`
+```
 
 **Rule:** Create the `TWeakObjectPtr` on the game thread, then copy it into lambdas. `TWeakObjectPtr::Get()` is safe to call from the game thread to check validity.
 
@@ -46,7 +46,7 @@ UE::Tasks::Launch(UE_SOURCE_LOCATION, [WeakActor]()
 
 `TSharedPtr<T>` defaults to `ESPMode::NotThreadSafe` -- the reference count uses non-atomic operations. Sharing across threads causes data races on the refcount itself.
 
-`cpp
+```cpp
 // WRONG — default ESPMode is not thread-safe
 TSharedPtr<FComputeBuffer> Buffer = MakeShared<FComputeBuffer>();
 
@@ -56,7 +56,7 @@ TSharedPtr<FComputeBuffer, ESPMode::ThreadSafe> Buffer =
 
 // The data INSIDE the buffer still needs its own synchronization
 // ESPMode::ThreadSafe only protects the pointer/refcount operations
-`
+```
 
 **Key distinction:** `ESPMode::ThreadSafe` makes the *pointer operations* (copy, destroy, reset) thread-safe. It does NOT protect the pointed-to data. You still need locks or atomics for the actual data if mutated concurrently.
 
@@ -66,7 +66,7 @@ TSharedPtr<FComputeBuffer, ESPMode::ThreadSafe> Buffer =
 
 Use `FCriticalSection` (recursive mutex) when multiple threads read and write shared non-UObject data.
 
-`cpp
+```cpp
 class FThreadSafeAccumulator
 {
 public:
@@ -88,7 +88,7 @@ private:
     TArray<float> Samples;
     float Total = 0.0f;
 };
-`
+```
 
 **Always use `FScopeLock`** -- never call `Lock()` / `Unlock()` manually. Manual lock/unlock risks missing the unlock path on early returns or exceptions.
 
@@ -98,7 +98,7 @@ private:
 
 When reads vastly outnumber writes, `FRWLock` allows concurrent readers while writers get exclusive access. Significant performance win over `FCriticalSection` in read-heavy workloads.
 
-`cpp
+```cpp
 class FThreadSafeCache
 {
 public:
@@ -119,7 +119,7 @@ private:
     mutable FRWLock RWLock;
     TMap<FName, FVector> PositionCache;
 };
-`
+```
 
 **Critical:** `FRWLock` is NOT recursive. Do not acquire a read lock while holding a read lock, and do not acquire a write lock while holding a read lock. Both cause deadlocks on some platforms.
 
@@ -129,7 +129,7 @@ private:
 
 `FThreadSafeCounter` and `FThreadSafeBool` are deprecated in engine source comments. Use `std::atomic` directly.
 
-`cpp
+```cpp
 class FBackgroundProcessor
 {
 public:
@@ -143,7 +143,7 @@ private:
     std::atomic<bool> bShouldStop{false};
     std::atomic<int32> ProcessedCount{0};
 };
-`
+```
 
 **Memory ordering:** `std::memory_order_relaxed` is sufficient for simple flags and counters where you do not need happens-before guarantees with other data. Use `std::memory_order_acquire` / `std::memory_order_release` when the atomic guards visibility of other non-atomic writes.
 
@@ -153,7 +153,7 @@ private:
 
 For transferring bulk data from a background thread to the game thread without locks during the hot path. The background thread writes to one buffer while the game thread reads from the other.
 
-`cpp
+```cpp
 class FDoubleBufferedData
 {
 public:
@@ -183,7 +183,7 @@ private:
     FCriticalSection SwapLock;    // only held during swap
     std::atomic<bool> bSwapPending{false};
 };
-`
+```
 
 The lock is only contended during the brief swap operation. The game thread reads the front buffer without any synchronization for the rest of the frame.
 
@@ -200,7 +200,7 @@ When multiple locks must be held simultaneously, always acquire them in a consis
 4. **Prefer lock-free patterns** (`TQueue`, `std::atomic`, double-buffering) when they fit. No locks means no deadlocks.
 5. **Keep critical sections short.** Do expensive computation outside the lock, then lock briefly to commit results.
 
-`cpp
+```cpp
 // WRONG — inconsistent order causes deadlock
 // Thread 1: Lock(A) -> Lock(B)
 // Thread 2: Lock(B) -> Lock(A)
@@ -208,6 +208,6 @@ When multiple locks must be held simultaneously, always acquire them in a consis
 // RIGHT — consistent order
 // Thread 1: Lock(A) -> Lock(B)
 // Thread 2: Lock(A) -> Lock(B)
-`
+```
 
 When in doubt, restructure to use a single lock or a lock-free queue. Two locks that must be held simultaneously usually indicate a design that can be simplified.

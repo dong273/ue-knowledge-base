@@ -17,7 +17,7 @@ if the ability is meant to end at that point.
 4. The task runs asynchronously; the ability remains active but yields.
 5. In delegate callbacks, perform follow-up logic and call `EndAbility` when done.
 
-`cpp
+```cpp
 // Typical task usage in ActivateAbility:
 void UMyAbility::ActivateAbility(...)
 {
@@ -46,7 +46,7 @@ void UMyAbility::OnMontageInterrupted()
 {
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 }
-`
+```
 
 ---
 
@@ -54,7 +54,7 @@ void UMyAbility::OnMontageInterrupted()
 
 Plays an `AnimMontage` on the avatar actor's skeletal mesh and waits for it to finish.
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 UAbilityTask_PlayMontageAndWait* Task =
@@ -72,7 +72,7 @@ Task->OnBlendOut.AddDynamic(this, &UMyAbility::OnMontageBlendOut);
 Task->OnInterrupted.AddDynamic(this, &UMyAbility::OnMontageInterrupted);
 Task->OnCancelled.AddDynamic(this, &UMyAbility::OnMontageCancelled);
 Task->ReadyForActivation();
-`
+```
 
 Delegates:
 - `OnCompleted`: Montage finished playing
@@ -87,7 +87,7 @@ Delegates:
 Waits for a `FGameplayEventData` to be sent via `HandleGameplayEvent` on the ASC.
 Common use: waiting for an animation notify to trigger (e.g., `Event.Montage.Attack.Hit`).
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 FGameplayTag EventTag = FGameplayTag::RequestGameplayTag("Event.Montage.Attack.Hit");
@@ -102,10 +102,10 @@ UAbilityTask_WaitGameplayEvent* Task =
 
 Task->EventReceived.AddDynamic(this, &UMyAbility::OnAttackHitEvent);
 Task->ReadyForActivation();
-`
+```
 
 Sending the event (e.g., from an `AnimNotify`):
-`cpp
+```cpp
 // In AnimNotify or character code:
 FGameplayEventData EventData;
 EventData.Instigator = GetOwner();
@@ -113,7 +113,7 @@ UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
     GetOwner(),
     FGameplayTag::RequestGameplayTag("Event.Montage.Attack.Hit"),
     EventData);
-`
+```
 
 Delegate: `EventReceived(FGameplayEventData Payload)`
 
@@ -123,7 +123,7 @@ Delegate: `EventReceived(FGameplayEventData Payload)`
 
 Waits for a fixed duration and then fires a callback. Equivalent to a GAS-aware timer.
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 
 UAbilityTask_WaitDelay* Task =
@@ -131,7 +131,7 @@ UAbilityTask_WaitDelay* Task =
 
 Task->OnFinish.AddDynamic(this, &UMyAbility::OnDelayFinished);
 Task->ReadyForActivation();
-`
+```
 
 Delegate: `OnFinish()`
 
@@ -142,7 +142,7 @@ Delegate: `OnFinish()`
 Spawns a `AGameplayAbilityTargetActor` to gather targeting information (line trace,
 sphere trace, actor selection, etc.) and returns `FGameplayAbilityTargetDataHandle`.
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 #include "Abilities/GameplayAbilityTargetActor_SingleLineTrace.h"
 
@@ -156,7 +156,7 @@ UAbilityTask_WaitTargetData* Task =
 Task->ValidData.AddDynamic(this, &UMyAbility::OnValidTargetData);
 Task->Cancelled.AddDynamic(this, &UMyAbility::OnTargetCancelled);
 Task->ReadyForActivation();
-`
+```
 
 Targeting confirmation modes:
 | Mode | Behavior |
@@ -167,7 +167,7 @@ Targeting confirmation modes:
 | `CustomMulti` | Confirms multiple targets over time |
 
 Delegate `ValidData(FGameplayAbilityTargetDataHandle Data)`:
-`cpp
+```cpp
 void UMyAbility::OnValidTargetData(const FGameplayAbilityTargetDataHandle& Data)
 {
     // Apply effect to targets
@@ -176,7 +176,7 @@ void UMyAbility::OnValidTargetData(const FGameplayAbilityTargetDataHandle& Data)
         CurrentActivationInfo, SpecHandle, Data);
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
-`
+```
 
 ---
 
@@ -184,7 +184,7 @@ void UMyAbility::OnValidTargetData(const FGameplayAbilityTargetDataHandle& Data)
 
 Waits for an attribute to cross a threshold or change at all.
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitAttributeChange.h"
 
 UAbilityTask_WaitAttributeChange* Task =
@@ -197,12 +197,12 @@ UAbilityTask_WaitAttributeChange* Task =
 
 Task->OnChange.AddDynamic(this, &UMyAbility::OnHealthChanged);
 Task->ReadyForActivation();
-`
+```
 
 Delegate: `OnChange()`
 
 For threshold-based (separate class — `UAbilityTask_WaitAttributeChangeThreshold`):
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitAttributeChangeThreshold.h"
 
 UAbilityTask_WaitAttributeChangeThreshold* Task =
@@ -216,7 +216,7 @@ UAbilityTask_WaitAttributeChangeThreshold* Task =
 
 Task->OnChange.AddDynamic(this, &UMyAbility::OnHealthBelowThreshold);
 Task->ReadyForActivation();
-`
+```
 
 Delegate: `OnChange(bool bMatchesComparison, float CurrentValue)`
 
@@ -226,7 +226,7 @@ Delegate: `OnChange(bool bMatchesComparison, float CurrentValue)`
 
 Fires when a GameplayEffect matching specified tag requirements is applied to a target.
 
-`cpp
+```cpp
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEffectApplied.h"
 
 FGameplayTargetDataFilterHandle FilterHandle;
@@ -249,13 +249,13 @@ UAbilityTask_WaitGameplayEffectApplied_Self* Task =
 
 Task->OnApplied.AddDynamic(this, &UMyAbility::OnEffectApplied);
 Task->ReadyForActivation();
-`
+```
 
 ---
 
 ## Creating a Custom Ability Task
 
-`cpp
+```cpp
 // MyAbilityTask_WaitInputRelease.h
 #pragma once
 #include "Abilities/Tasks/AbilityTask.h"
@@ -286,7 +286,9 @@ public:
 private:
     bool bStartedAlreadyReleased = false;
 };
-cpp
+```
+
+```cpp
 // MyAbilityTask_WaitInputRelease.cpp
 #include "MyAbilityTask_WaitInputRelease.h"
 #include "AbilitySystemComponent.h"
@@ -329,15 +331,15 @@ void UMyAbilityTask_WaitInputRelease::OnDestroy(bool bInOwnerFinished)
 {
     Super::OnDestroy(bInOwnerFinished);
 }
-`
+```
 
 Usage in an ability:
-`cpp
+```cpp
 UMyAbilityTask_WaitInputRelease* Task =
     UMyAbilityTask_WaitInputRelease::WaitInputRelease(this);
 Task->OnReleased.AddDynamic(this, &UMyChargeAbility::OnInputReleased);
 Task->ReadyForActivation();
-`
+```
 
 ---
 
@@ -353,7 +355,7 @@ Task->ReadyForActivation();
 
 ## Task Execution Flow
 
-`
+```
 ActivateAbility()
     └── Task::WaitXxx() (static factory)
     └── Bind delegates
@@ -364,7 +366,7 @@ ActivateAbility()
                             └── Ability callback runs gameplay logic
                             └── EndAbility() called
                                     └── Task::OnDestroy() cleanup
-`
+```
 
 ---
 

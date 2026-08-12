@@ -5,9 +5,9 @@ description: Covers GAS, Gameplay Ability System, GameplayAbility, GameplayEffec
 
 # Gameplay Ability System (GAS)
 
+
 ## Context Check
 
-Before proceeding, read  to determine:
 - Whether the GameplayAbilities plugin is enabled
 - Which actors own the AbilitySystemComponent (PlayerState vs Character)
 - The replication mode in use (Minimal, Mixed, Full)
@@ -42,12 +42,12 @@ GameplayTags thread through all three as requirements, grants, and blockers.
 ### 1. Enable the Plugin
 
 Enable `GameplayAbilities` in `.uproject` Plugins array, then in `[ProjectName].Build.cs`:
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[]
 {
     "GameplayAbilities", "GameplayTags", "GameplayTasks"
 });
-`
+```
 
 ### 2. AbilitySystemComponent Ownership
 
@@ -63,7 +63,7 @@ See `references/gas-setup-patterns.md` for full initialization sequences for bot
 
 Every actor that owns or exposes an ASC must implement `IAbilitySystemInterface`:
 
-`cpp
+```cpp
 #include "AbilitySystemInterface.h"
 
 UCLASS()
@@ -76,16 +76,16 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };
-`
+```
 
 ### 4. Replication Modes
 
 Set on the ASC after creation (server-side only):
 
-`cpp
+```cpp
 // In BeginPlay or PossessedBy on the server:
 AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-`
+```
 
 | Mode | When to Use |
 |------|-------------|
@@ -105,7 +105,7 @@ See `references/gas-setup-patterns.md` for full dual-path code with respawn hand
 
 ### Subclass UGameplayAbility
 
-`cpp
+```cpp
 #include "Abilities/GameplayAbility.h"
 
 UCLASS()
@@ -142,11 +142,11 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "GAS")
     TSubclassOf<UGameplayEffect> DamageEffect;
 };
-`
+```
 
 ### ActivateAbility Pattern
 
-`cpp
+```cpp
 void UMyFireballAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo* ActorInfo,
     const FGameplayAbilityActivationInfo ActivationInfo,
@@ -167,7 +167,9 @@ void UMyFireballAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     // 3. End (instant abilities end immediately; latent abilities wait for tasks)
     EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
-CommitAbility` is shorthand for `CommitAbilityCost` + `CommitAbilityCooldown`. Call them
+```
+
+`CommitAbility` is shorthand for `CommitAbilityCost` + `CommitAbilityCooldown`. Call them
 separately when needed -- e.g., commit cost without starting cooldown for a channeled ability,
 or commit cooldown without cost for a free ability.
 
@@ -175,7 +177,7 @@ or commit cooldown without cost for a free ability.
 
 Set in the ability constructor:
 
-`cpp
+```cpp
 UMyFireballAbility::UMyFireballAbility()
 {
     // InstancedPerActor  - one instance per actor; cheapest for persistent abilities
@@ -189,11 +191,11 @@ UMyFireballAbility::UMyFireballAbility()
     // ServerInitiated - server activates, clients run non-authoritative predicted copy
     NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 }
-`
+```
 
 ### Granting and Activating Abilities
 
-`cpp
+```cpp
 // Grant (server/authority only):
 FGameplayAbilitySpecHandle Handle = ASC->GiveAbility(
     FGameplayAbilitySpec(UMyFireballAbility::StaticClass(), 1 /*Level*/));
@@ -202,20 +204,20 @@ ASC->TryActivateAbility(Handle);                                       // by han
 ASC->TryActivateAbilityByClass(UMyFireballAbility::StaticClass());    // by class
 ASC->TryActivateAbilitiesByTag(                                        // by tag
     FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Ability.Skill.Fireball")));
-`
+```
 
 ### Ability Tags
 
 Configure in the ability CDO constructor:
 
-`cpp
+```cpp
 // Tags this ability grants to its owner while active:
 ActivationOwnedTags.AddTag(FGameplayTag::RequestGameplayTag("Ability.Active.Casting"));
 // Tags that prevent this ability from activating:
 ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag("State.Stunned"));
 // Cancel other active abilities with these tags on activation:
 CancelAbilitiesWithTag.AddTag(FGameplayTag::RequestGameplayTag("Ability.Active.Melee"));
-`
+```
 
 ---
 
@@ -231,7 +233,7 @@ CancelAbilitiesWithTag.AddTag(FGameplayTag::RequestGameplayTag("Ability.Active.M
 
 ### Applying Effects
 
-`cpp
+```cpp
 FGameplayEffectContextHandle Ctx = ASC->MakeEffectContext();
 FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(UMyDamageEffect::StaticClass(), Level, Ctx);
 
@@ -245,7 +247,7 @@ ASC->ApplyGameplayEffectSpecToTarget(*Spec.Data.Get(), TargetASC); // target
 ASC->RemoveActiveGameplayEffect(ActiveHandle);                // by handle
 ASC->RemoveActiveGameplayEffectBySourceEffect(
     UMyDamageEffect::StaticClass(), nullptr);                  // by class
-`
+```
 
 See `references/gameplay-effect-reference.md` for stacking (AggregateBySource/AggregateByTarget),
 periodic effects (damage over time), `UGameplayEffectExecutionCalculation` (complex modifier logic),
@@ -257,7 +259,7 @@ conditional effects, and immunity.
 
 ### Define Attributes
 
-`cpp
+```cpp
 // MyHealthSet.h
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
@@ -299,11 +301,11 @@ protected:
     UFUNCTION()
     void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
 };
-`
+```
 
 In the `.cpp`, implement replication and callbacks:
 
-`cpp
+```cpp
 void UMyHealthSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -334,11 +336,11 @@ void UMyHealthSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackDat
         if (GetHealth() <= 0.f) { /* trigger death */ }
     }
 }
-`
+```
 
 ### Register AttributeSet on ASC
 
-`cpp
+```cpp
 // In PlayerState or Character constructor:
 // Option 1: CreateDefaultSubobject (auto-registered as subobject)
 HealthSet = CreateDefaultSubobject<UMyHealthSet>(TEXT("HealthSet"));
@@ -350,7 +352,7 @@ AbilitySystemComponent->AddSpawnedAttribute(NewSet);
 // Read attribute value:
 float CurrentHealth = AbilitySystemComponent->GetNumericAttribute(
     UMyHealthSet::GetHealthAttribute());
-`
+```
 
 **Multiple AttributeSets**: An ASC can host multiple `UAttributeSet` subclasses (e.g.,
 `UHealthSet` + `UOffenseSet`), each auto-discovered via subobject enumeration. Never register
@@ -364,7 +366,7 @@ two instances of the same class -- the second is silently ignored.
 
 In `Config/DefaultGameplayTags.ini` or via native tags (preferred for code references):
 
-`cpp
+```cpp
 // MyGameplayTags.h
 #include "NativeGameplayTags.h"
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Ability_Fireball)
@@ -373,13 +375,13 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_State_Stunned)
 // MyGameplayTags.cpp
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_Ability_Fireball, "Ability.Skill.Fireball", "Fireball ability")
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_State_Stunned, "State.Stunned", "Actor is stunned")
-`
+```
 
 ### Tag Matching
 
 `"A.1".MatchesTag("A") == true` (hierarchical); `MatchesTagExact` requires exact match.
 
-`cpp
+```cpp
 FGameplayTagContainer Tags;
 Tags.HasTag(FireballTag);      // parent-aware match
 Tags.HasTagExact(FireballTag); // exact only
@@ -393,18 +395,18 @@ ASC->GetOwnedGameplayTags(); // FGameplayTagContainer
 // Listen for changes:
 ASC->RegisterGameplayTagEvent(TAG_State_Stunned, EGameplayTagEventType::NewOrRemoved)
     .AddUObject(this, &AMyCharacter::OnStunnedTagChanged);
-`
+```
 
 ### Loose Tags (Manual, No GE)
 
-`cpp
+```cpp
 ASC->AddLooseGameplayTag(TAG_State_Stunned);
 ASC->RemoveLooseGameplayTag(TAG_State_Stunned);
 // Loose tags are NOT replicated by default. To replicate a loose tag,
 // pass EGameplayTagReplicationState::TagOnly as the third argument:
 ASC->AddLooseGameplayTag(TAG_State_Buffed, 1, EGameplayTagReplicationState::TagOnly);
 ASC->RemoveLooseGameplayTag(TAG_State_Buffed, 1, EGameplayTagReplicationState::TagOnly);
-`
+```
 
 ---
 
@@ -414,7 +416,7 @@ Cosmetic-only (particles, sounds, decals). Never affect gameplay state. Tag pref
 
 In the GE asset, add `FGameplayEffectCue` entries with `GameplayCueTags` and level range.
 
-`cpp
+```cpp
 // Burst (one-shot):
 ASC->ExecuteGameplayCue(FGameplayTag::RequestGameplayTag("GameplayCue.Hit.Fire"),
     ASC->MakeEffectContext());
@@ -425,7 +427,7 @@ ASC->RemoveGameplayCue(FGameplayTag::RequestGameplayTag("GameplayCue.Buff.Speed"
 
 // Poll active state:
 bool bActive = ASC->IsGameplayCueActive(FGameplayTag::RequestGameplayTag("GameplayCue.Buff.Speed"));
-`
+```
 
 Cue Notify classes:
 - `AGameplayCueNotify_Actor`: Persistent/looping. Overrides `OnActive`, `WhileActive`, `OnRemove`.
@@ -474,7 +476,7 @@ The following GAS API changes in UE 5.7 broke code written for earlier UE5 versi
 
 ### 1. `ActivateAbility` / `EndAbility` Parameter Type
 
-`cpp
+```cpp
 // UE 5.7 CORRECT — third parameter is FGameplayAbilityActivationInfo, NOT FGameplayAbilitySpec
 virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo* ActorInfo,
@@ -485,13 +487,13 @@ virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
     const FGameplayAbilityActorInfo* ActorInfo,
     const FGameplayAbilityActivationInfo ActivationInfo,   // ← changed
     bool bReplicateEndAbility, bool bWasCancelled) override;
-`
+```
 
 If you see `error C3668: 'ActivateAbility': method with override specifier did not override any base class method`, the third parameter type is wrong. Fix in both `.h` declaration and `.cpp` definition.
 
 ### 2. `GetFloatAttributeFromAbilitySystem` Removed
 
-`cpp
+```cpp
 // UE 5.7 — REMOVED from UAbilitySystemBlueprintLibrary
 float Stamina = UAbilitySystemBlueprintLibrary::GetFloatAttributeFromAbilitySystem(ASC, Attr, -1.0f);
 
@@ -499,11 +501,11 @@ float Stamina = UAbilitySystemBlueprintLibrary::GetFloatAttributeFromAbilitySyst
 float Stamina = ASC->GetNumericAttribute(Attr);
 // No sentinel value — GetNumericAttribute always returns the current value.
 // If the attribute doesn't exist on the ASC, the behavior is undefined.
-`
+```
 
 ### 3. `GrantedTags` Removed from UGameplayEffect Constructor
 
-`cpp
+```cpp
 // GE_Exhaustion.cpp — UE 5.7 REMOVED
 UGE_Exhaustion::UGE_Exhaustion()
 {
@@ -521,11 +523,11 @@ void ApplyExhaustion(UAbilitySystemComponent* ASC)
         ASC->ApplyGameplayEffectSpecToSelf(*Spec.Data.Get());
     }
 }
-`
+```
 
 ### 4. `AddLambda` on Dynamic Multicast Delegates
 
-`cpp
+```cpp
 // UE 5.7 — REMOVED: Dynamic multicast delegates don't support AddLambda/AddUObject
 // ❌ Compiler error C2039: 'AddLambda': not a member of 'FInputReleaseDelegate'
 WaitInputReleaseTask->OnRelease.AddLambda([this](float TimeHeld) { ... });
@@ -536,13 +538,15 @@ WaitInputReleaseTask->OnRelease.AddLambda([this](float TimeHeld) { ... });
 //    void OnInputReleased(float TimeHeld);
 // In cpp:
 WaitInputReleaseTask->OnRelease.AddDynamic(this, &UGA_Sprint::OnInputReleased);
-`
+```
 
 ### 5. `PrivateIncludePaths` / `PublicIncludePaths` Deprecated
 
 See `ue-module-build-system` skill — these are deprecated in UE 5.7. Use relative `#include` paths instead (e.g., `#include "../Attributes/BAttributeSet_Stamina.h"` from a sibling subdirectory). See `references/ue5.7-api-migration.md` for full details.
 
-### 6. `CancelAbilitiesByTag` → `CancelAbilitiescpp
+### 6. `CancelAbilitiesByTag` → `CancelAbilities`
+
+```cpp
 // UE 5.3-5.5 — was named CancelAbilitiesByTag, took FGameplayTagContainer by value
 ASC->CancelAbilitiesByTag(Tags);
 
@@ -550,7 +554,7 @@ ASC->CancelAbilitiesByTag(Tags);
 ASC->CancelAbilities(&SprintTags);                         // cancel matching
 ASC->CancelAbilities(&SprintTags, &ExcludeTags);           // cancel with exclusion
 ASC->CancelAbilities(nullptr, &ExcludeTags);               // cancel all except excluded
-`
+```
 
 The third parameter is `UGameplayAbility* Ignore=nullptr` — an ability instance to skip.
 

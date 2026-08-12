@@ -6,7 +6,7 @@ PCG nodes are categorized by their `EPCGSettingsType` enum value. Each node is a
 
 ## Data Flow Model
 
-`
+```
 [Actor/Landscape/Spline Input] --> [Sampler] --> [Filter/Density] --> [Spawner] --> [Output]
                                         |
                                   [UPCGPointData]
@@ -20,7 +20,7 @@ PCG nodes are categorized by their `EPCGSettingsType` enum value. Each node is a
                                     int32      Seed
                                     int64      MetadataEntry
                                     float      Steepness
-`
+```
 
 Data flows between nodes as `FPCGTaggedData` entries in an `FPCGDataCollection`. Each entry carries:
 - `Data` — pointer to `UPCGData` subclass
@@ -261,7 +261,7 @@ Data flows between nodes as `FPCGTaggedData` entries in an `FPCGDataCollection`.
 
 Derive from `UPCGBlueprintBaseElement`. Key configuration:
 
-`cpp
+```cpp
 UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Settings|Input & Output")
 TArray<FPCGPinProperties> CustomInputPins;
 
@@ -273,13 +273,13 @@ bool bIsCacheable = false;       // false if node creates actors/components
 
 UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = Settings)
 bool bRequiresGameThread = true; // true for actor spawn, component add
-`
+```
 
 The `Execute` function signature:
-`cpp
+```cpp
 UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PCG|Execution")
 void Execute(const FPCGDataCollection& Input, FPCGDataCollection& Output);
-`
+```
 
 ---
 
@@ -287,7 +287,7 @@ void Execute(const FPCGDataCollection& Input, FPCGDataCollection& Output);
 
 Graph-level parameters (`FInstancedPropertyBag UserParameters` on `UPCGGraph`) allow exposing typed parameters to instances and Blueprints.
 
-`cpp
+```cpp
 // Read a parameter by name (typed template)
 TValueOrError<float, EPropertyBagResult> Result =
     Graph->GetGraphParameter<float>(TEXT("SpawnRadius"));
@@ -303,7 +303,7 @@ Graph->SetGraphParameter<float>(TEXT("SpawnRadius"), 250.f);
 GraphInstance->UpdatePropertyOverride(Property, /*bMarkAsOverridden=*/true);
 GraphInstance->ResetPropertyToDefault(Property);
 bool bOverridden = GraphInstance->IsPropertyOverridden(Property);
-`
+```
 
 Parameter change events (`EPCGGraphParameterEvent`):
 `GraphChanged`, `GraphPostLoad`, `Added`, `RemovedUnused`, `RemovedUsed`, `PropertyMoved`, `PropertyRenamed`, `PropertyTypeModified`, `ValueModifiedLocally`, `ValueModifiedByParent`, `MultiplePropertiesAdded`, `UndoRedo`, `CategoryChanged`.
@@ -333,12 +333,12 @@ Call `NotifyPropertiesChangedFromBlueprint()` to mark dirty and trigger conditio
 ## Hierarchical Generation (HiGen)
 
 Enable on `UPCGGraph`:
-`cpp
+```cpp
 bool bUseHierarchicalGeneration = true;
 EPCGHiGenGrid HiGenGridSize = EPCGHiGenGrid::Grid256; // default grid cell size
 uint32 HiGenExponential = 0; // shifts grid sizes up by this exponent
 bool bUse2DGrid = true;      // 2D grid (XY plane) vs 3D volumetric
-`
+```
 
 Grid sizes available: `Grid16`, `Grid32`, `Grid64`, `Grid128`, `Grid256`, `Grid512`, `Grid1024`, `Grid2048`, `GridUnbounded`.
 

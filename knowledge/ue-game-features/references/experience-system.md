@@ -8,7 +8,7 @@ lightweight data assets that list which features to activate.
 
 ## Experience Definition Asset
 
-`cpp
+```cpp
 // UExperienceDefinition — a primary data asset listing features to compose
 #pragma once
 #include "Engine/DataAsset.h"
@@ -37,7 +37,7 @@ public:
             GetFName());
     }
 };
-`
+```
 
 Example experience assets:
 - **B_Deathmatch**: Enables `ShooterCore` + `DeathmatchRules`
@@ -53,7 +53,7 @@ adds mode-specific rules as separate Game Feature plugins.
 
 A `UGameStateComponent` on `AGameStateBase` orchestrates experience loading:
 
-`cpp
+```cpp
 #pragma once
 #include "Components/GameStateComponent.h"
 #include "ExperienceManagerComponent.generated.h"
@@ -88,13 +88,13 @@ private:
     int32 NumGameFeaturePluginsLoading = 0;
     bool bExperienceLoaded = false;
 };
-`
+```
 
 ---
 
 ## Experience Loading Flow
 
-`cpp
+```cpp
 // 1. GameMode selects and starts loading the experience
 void AMyGameMode::InitGame(const FString& MapName, const FString& Options,
     FString& ErrorMessage)
@@ -169,7 +169,7 @@ void UExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(
         OnExperienceLoaded.Add(MoveTemp(Delegate));
     }
 }
-`
+```
 
 ---
 
@@ -178,7 +178,7 @@ void UExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(
 Systems that depend on the experience being ready use `CallOrRegister_OnExperienceLoaded`
 instead of assuming features are available at `BeginPlay`:
 
-`cpp
+```cpp
 void UMyPawnComponent::BeginPlay()
 {
     Super::BeginPlay();
@@ -198,7 +198,7 @@ void UMyPawnComponent::OnExperienceReady(const UExperienceDefinition* Experience
     // All features active — safe to look up injected components, configure abilities, etc.
     // Experience->DefaultPawnData contains pawn configuration for this mode
 }
-`
+```
 
 ---
 
@@ -206,7 +206,7 @@ void UMyPawnComponent::OnExperienceReady(const UExperienceDefinition* Experience
 
 A Deathmatch experience composed from modular features:
 
-`
+```
 B_Deathmatch (UExperienceDefinition)
 ├── GameFeaturesToEnable:
 │   ├── "ShooterCore"        → Health, weapons, HUD, hit detection
@@ -215,7 +215,7 @@ B_Deathmatch (UExperienceDefinition)
 ├── Actions:
 │   └── AddComponents: DeathmatchScoreComponent → AGameState
 └── DefaultPawnData: BP_ShooterCharacter
-`
+```
 
 Switching to Control Point mode replaces `DeathmatchRules` with `ControlPointRules` while
 keeping `ShooterCore` and `TeamSystem`. This avoids duplicating shared gameplay code and

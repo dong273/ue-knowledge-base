@@ -8,7 +8,7 @@ Complete code templates for UE async and threading patterns. Each template is pr
 
 Full dedicated-thread pattern with cooperative shutdown via `std::atomic<bool>`.
 
-`cpp
+```cpp
 #include "HAL/Runnable.h"
 #include "HAL/RunnableThread.h"
 #include "HAL/PlatformProcess.h"
@@ -87,7 +87,7 @@ private:
         // Your actual work implementation
     }
 };
-`
+```
 
 ---
 
@@ -95,7 +95,7 @@ private:
 
 Thread pool work unit pattern. The `friend` declaration lets `FAsyncTask` construct the inner task.
 
-`cpp
+```cpp
 #include "Async/AsyncWork.h"
 
 class FChunkProcessTask : public FNonAbandonableTask
@@ -143,7 +143,7 @@ delete Task;
 (new FAutoDeleteAsyncTask<FChunkProcessTask>(MoveTemp(Vertices), 2.0f))
     ->StartBackgroundTask();
 // Task auto-deletes when DoWork completes — no result retrieval possible
-`
+```
 
 ---
 
@@ -151,7 +151,7 @@ delete Task;
 
 Custom TaskGraph task with dependency chaining.
 
-`cpp
+```cpp
 #include "Async/TaskGraphInterfaces.h"
 
 class FComputeNavTask
@@ -199,7 +199,7 @@ FGraphEventRef StepB = TGraphTask<FApplyNavTask>::CreateTask(&StepAPrereq)
 
 // Wait for final step on game thread
 FTaskGraphInterface::Get().WaitUntilTaskCompletes(StepB, ENamedThreads::GameThread);
-`
+```
 
 ---
 
@@ -207,7 +207,7 @@ FTaskGraphInterface::Get().WaitUntilTaskCompletes(StepB, ENamedThreads::GameThre
 
 Modern preferred API (UE 5.0+).
 
-`cpp
+```cpp
 #include "Tasks/Task.h"
 
 // Step 1: compute positions
@@ -244,13 +244,13 @@ if (SmoothTask.Wait(FTimespan::FromMilliseconds(5.0)))
 {
     // completed within timeout
 }
-`
+```
 
 ---
 
 ## ParallelFor Variants
 
-`cpp
+```cpp
 #include "Async/ParallelFor.h"
 
 // Basic — all iterations equal cost
@@ -280,13 +280,13 @@ ParallelForWithTaskContext(TEXT("GenNormals"), OutContexts, Meshes.Num(), 64,
         ComputeNormals(Meshes[Index], Ctx.TempBuffer);
     }
 );
-`
+```
 
 ---
 
 ## Async() with EAsyncExecution Modes
 
-`cpp
+```cpp
 #include "Async/Async.h"
 
 // ThreadPool — most common for CPU work
@@ -308,7 +308,7 @@ TFuture<void> F5 = AsyncThread(
     []() { BlockingIOWork(); },
     0,             // StackSize (0 = default)
     TPri_Normal);
-`
+```
 
 ---
 
@@ -316,7 +316,7 @@ TFuture<void> F5 = AsyncThread(
 
 Decouples the code that produces a value from the code that consumes it.
 
-`cpp
+```cpp
 #include "Async/Future.h"
 #include "Async/Async.h"
 
@@ -342,4 +342,4 @@ Future.Then([](TFuture<FAnalyticsResult> F)
 
 // Or block directly on game thread (use sparingly)
 FAnalyticsResult R = Future.Get();
-`
+```

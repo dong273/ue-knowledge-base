@@ -27,7 +27,7 @@ Define these in your `UBlackboardData` asset as a baseline. Extend per-character
 
 Classic three-phase NPC AI. The root Selector tries Combat first (highest priority), then Alerted search, then idle patrol.
 
-`
+```
 Root [Selector]
 ├── [Sequence] "Combat" — BTDecorator_Blackboard(TargetActor, IsSet, AbortBoth)
 │   ├── [Service] UpdateTarget (0.3s interval — re-scores nearest hostile)
@@ -47,13 +47,13 @@ Root [Selector]
     ├── [Service] PickNextPatrolPoint (5.0s interval, calls EQS or patrol spline)
     ├── BTTask_MoveTo (PatrolLocation, AcceptRadius=50)
     └── BTTask_Wait (WaitBlackboardTime key="PatrolWait")
-`
+```
 
 ### Perception Wiring
 
 `OnTargetPerceptionUpdated` on the AIController:
 
-`cpp
+```cpp
 void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
     UBlackboardComponent* BB = GetBlackboardComponent();
@@ -81,7 +81,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
         // Do NOT clear TargetActor — let the search phase handle it
     }
 }
-`
+```
 
 ---
 
@@ -89,7 +89,7 @@ void AEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 
 AI actively seeks cover, attacks from cover, repositions when suppressed.
 
-`
+```
 Root [Selector]
 ├── [Sequence] "Take Cover" — BTDecorator_Blackboard(IsInCombat, IsSet, AbortBoth)
 │   ├── [Service] RunEQSCoverService (1.0s — updates CoverLocation)
@@ -106,11 +106,11 @@ Root [Selector]
     ├── BTTask_RunEQSQuery (LastKnownLocationSearch)
     ├── BTTask_MoveTo (PatrolLocation, AcceptRadius=100)
     └── BTTask_Wait (3.0s)
-`
+```
 
 ### Cover Query Service (C++)
 
-`cpp
+```cpp
 // BTService_FindCover.cpp
 void UBTService_FindCover::TickNode(
     UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -131,7 +131,7 @@ void UBTService_FindCover::TickNode(
             }
         }));
 }
-`
+```
 
 ---
 
@@ -139,7 +139,7 @@ void UBTService_FindCover::TickNode(
 
 AI retreats when health drops below a threshold, uses EQS to find a safe escape point.
 
-`
+```
 Root [Selector]
 ├── [Sequence] "Flee" — MyBTDecorator_HealthBelow(30%, AbortBoth)
 │   ├── BTTask_RunEQSQuery (FleePointQuery → PatrolLocation)
@@ -150,11 +150,11 @@ Root [Selector]
 │   └── BTTask_Wait (5.0s)  ← catch breath before re-evaluating
 │
 └── [Sequence] "Normal Combat" (same as Pattern 1 combat branch)
-`
+```
 
 ### Health Threshold Decorator (C++)
 
-`cpp
+```cpp
 // BTDecorator_HealthBelow.h
 UCLASS()
 class UBTDecorator_HealthBelow : public UBTDecorator
@@ -176,7 +176,7 @@ protected:
         return HealthInterface->GetNormalizedHealth() < HealthThresholdNormalized;
     }
 };
-`
+```
 
 ---
 
@@ -184,7 +184,7 @@ protected:
 
 AI pauses current activity, moves to sound source, looks around, then resumes.
 
-`
+```
 Root [Selector]
 ├── [Sequence] "Investigate" — BTDecorator_Blackboard(InvestigateLocation, IsSet, AbortBoth)
 │   ├── BTTask_MoveTo (InvestigateLocation, AcceptRadius=100)
@@ -196,11 +196,11 @@ Root [Selector]
 ├── [Sequence] "Combat" (as before)
 │
 └── [Sequence] "Patrol" (as before)
-`
+```
 
 ### LookAround Task (C++)
 
-`cpp
+```cpp
 // BTTask_LookAround.cpp
 EBTNodeResult::Type UBTTask_LookAround::ExecuteTask(
     UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -228,7 +228,7 @@ void UBTTask_LookAround::TickTask(
         FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
     }
 }
-`
+```
 
 ---
 
@@ -236,17 +236,17 @@ void UBTTask_LookAround::TickTask(
 
 Looping patrol along a spline, with stop duration at each point.
 
-`
+```
 Root [Sequence]
 └── [Sequence + BTDecorator_Loop(NumLoops=0)] "Patrol Loop"
     ├── MyBTTask_GetNextSplinePoint (writes PatrolLocation + PatrolWaitTime)
     ├── BTTask_MoveTo (PatrolLocation, AcceptRadius=50)
     └── BTTask_WaitBlackboardTime (BlackboardKey=PatrolWaitTime)
-`
+```
 
 ### GetNextSplinePoint Task (C++)
 
-`cpp
+```cpp
 EBTNodeResult::Type UBTTask_GetNextSplinePoint::ExecuteTask(
     UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -269,7 +269,7 @@ EBTNodeResult::Type UBTTask_GetNextSplinePoint::ExecuteTask(
 
     return EBTNodeResult::Succeeded;
 }
-`
+```
 
 ---
 
@@ -281,7 +281,7 @@ Multiple AI agents share awareness via instance-synced blackboard keys.
 
 When any squad member's AI controller updates these keys, `UAISystem` propagates the change to all blackboards sharing the same asset (see `UBlackboardComponent::SetValue` template for the sync loop).
 
-`cpp
+```cpp
 // Squad leader sets target → all squad members receive it
 void ASquadLeaderAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
@@ -292,7 +292,7 @@ void ASquadLeaderAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimu
         GetBlackboardComponent()->SetValueAsFloat(TEXT("AlertLevel"), 1.0f);
     }
 }
-`
+```
 
 The BT on each squad member reacts independently to the shared `TargetActor` key via `BTDecorator_Blackboard`.
 
@@ -302,7 +302,7 @@ The BT on each squad member reacts independently to the shared `TargetActor` key
 
 Used when a task needs to wait for an external event (animation notify, ability end, timer) rather than polling.
 
-`cpp
+```cpp
 EBTNodeResult::Type UBTTask_PlayMontage::ExecuteTask(
     UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -333,7 +333,7 @@ void UBTTask_PlayMontage::OnMessage(
 // Or from C++:
 // UBehaviorTreeComponent* BTComp = Cast<UBehaviorTreeComponent>(Controller->GetBrainComponent());
 // if (BTComp) { BTComp->HandleMessage(FAIMessage(TEXT("MontageCompleted"), nullptr, true)); }
-`
+```
 
 ---
 
@@ -341,7 +341,7 @@ void UBTTask_PlayMontage::OnMessage(
 
 For tasks that store per-instance runtime data (not shared across AI using the same tree asset):
 
-`cpp
+```cpp
 struct FBTMyTaskMemory
 {
     FAIRequestID MoveRequestID;
@@ -363,7 +363,7 @@ class UBTTask_MyTask : public UBTTaskNode
 FBTMyTaskMemory* Mem = CastInstanceNodeMemory<FBTMyTaskMemory>(NodeMemory);
 new(Mem) FBTMyTaskMemory(); // placement-new to initialize
 Mem->ElapsedTime = 0.f;
-`
+```
 
 ---
 
@@ -379,14 +379,14 @@ Mem->ElapsedTime = 0.f;
 Most reactive decorators (Blackboard, CanSeeTarget) should use `Both` so the tree re-evaluates when the condition changes in either direction.
 
 Set via:
-`cpp
+```cpp
 FlowAbortMode = EBTFlowAbortMode::Both;
 bAllowAbortLowerPri = true;
 bAllowAbortChildNodes = true;
-`
+```
 
 Then call `ConditionalFlowAbort` from external event handlers to trigger re-evaluation:
-`cpp
+```cpp
 // In perception callback or timer:
 ConditionalFlowAbort(OwnerComp, EBTDecoratorAbortRequest::ConditionResultChanged);
-`
+```

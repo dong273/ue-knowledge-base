@@ -5,7 +5,7 @@ in UE 5.7, built entirely in C++ without Content Browser assets.
 
 ## Character Class Pattern
 
-`cpp
+```cpp
 ARoguePlayerCharacter(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer.SetDefaultSubobjectClass<UCharacterMovementComponent>(TEXT("CharMoveComp")))
 {
@@ -34,7 +34,7 @@ ARoguePlayerCharacter(const FObjectInitializer& ObjectInitializer)
     MoveComp->bCanWalkOffLedges = true;
     MoveComp->AirControl = 1.0f;
 }
-`
+```
 
 **Key rotation choices:**
 - `bOrientRotationToMovement = false` — character does NOT rotate toward velocity
@@ -43,7 +43,7 @@ ARoguePlayerCharacter(const FObjectInitializer& ObjectInitializer)
 
 ## Mouse-Based Aiming (FaceMouseCursor)
 
-`cpp
+```cpp
 void ARoguePlayerCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -71,7 +71,7 @@ FVector ARoguePlayerCharacter::GetMouseTargetLocation() const
     }
     return GetActorLocation() + GetActorForwardVector() * 500.f;
 }
-`
+```
 
 **Prerequisites:**
 - Controller must have `bShowMouseCursor = true`
@@ -81,14 +81,14 @@ FVector ARoguePlayerCharacter::GetMouseTargetLocation() const
 
 In top-down with a fixed camera, WASD maps to **absolute world directions** (not camera-relative):
 
-`cpp
+```cpp
 void OnMoveTriggered(const FInputActionValue& Value)
 {
     FVector2D Input = Value.Get<FVector2D>();
     FVector WorldDir = FVector(Input.Y, Input.X, 0.f).GetSafeNormal();
     AddMovementInput(WorldDir, 1.0f);
 }
-`
+```
 
 **WASD mapping:**
 - W → +Y (North/Forward in world space)
@@ -103,7 +103,7 @@ This is correct for a fixed top-down camera where Y is "up" on screen.
 Create all `UInputAction` and `UInputMappingContext` as `CreateDefaultSubobject` in the
 constructor, then map keys programmatically:
 
-`cpp
+```cpp
 // In constructor:
 IMC = CreateDefaultSubobject<UInputMappingContext>(TEXT("RogueIMC"));
 IA_Move = CreateDefaultSubobject<UInputAction>(TEXT("IA_Move"));
@@ -128,7 +128,7 @@ void ARoguePlayerCharacter::SetupInputMappings()
     IMC->MapKey(IA_Cast, FKey("R"));
     IMC->MapKey(IA_Call, FKey("E"));
 }
-`
+```
 
 This approach produces zero dependencies on Content Browser assets — everything is
 code-defined.
@@ -137,7 +137,7 @@ code-defined.
 
 Dash is a short burst of movement via `LaunchCharacter` followed by a timer:
 
-`cpp
+```cpp
 void UGA_Dash::ActivateAbility(...)
 {
     FVector DashDir = Character->GetLastMovementInputVector();
@@ -164,7 +164,7 @@ void UGA_Dash::OnDashFinished()
     Character->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
-`
+```
 
 **Why `MOVE_Flying` during dash?** Without it, `PhysWalking` computes a velocity from
 input each tick and fights the launch velocity. Flying mode preserves the dash trajectory
@@ -174,7 +174,7 @@ until the timer fires.
 
 Hades-style attacks are broad arc sweeps. Use multiple line traces in a fan pattern:
 
-`cpp
+```cpp
 void UGA_Attack::PerformDamageCheck()
 {
     FVector Start = Char->GetActorLocation();
@@ -198,11 +198,11 @@ void UGA_Attack::PerformDamageCheck()
             UGameplayStatics::ApplyDamage(HitActor, BaseDamage, Controller, Char, nullptr);
     }
 }
-`
+```
 
 ## 5-Slot Ability System
 
-`cpp
+```cpp
 // In character class:
 TArray<FGameplayAbilitySpecHandle> AbilitySlots;
 // Slots: 0=Attack, 1=Special, 2=Cast, 3=Call, 4=Dash
@@ -222,7 +222,7 @@ void ActivateSlotAbility(int32 SlotIndex)
     if (!Handle.IsValid()) return;
     AbilitySystem->TryActivateAbility(Handle);
 }
-`
+```
 
 Each input callback maps to a slot:
 - `OnAttackStarted()` → `ActivateSlotAbility(0)`

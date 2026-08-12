@@ -8,9 +8,9 @@ Source headers: `InputTriggers.h`, `InputModifiers.h`.
 
 ## UInputAction Properties
 
-`cpp
+```cpp
 class UInputAction : public UDataAsset
-`
+```
 
 | Property | Type | Default | Description |
 |---|---|---|---|
@@ -88,12 +88,12 @@ Triggers return one of three states:
 
 ### UInputTriggerDown
 
-`
+```
 DisplayName: "Down"
 Class: UInputTriggerDown : public UInputTrigger
 TriggerType: Explicit
 SupportedEvents: Instant
-`
+```
 
 **Behavior:** Fires `Triggered` every frame input magnitude exceeds `ActuationThreshold`.
 This is the implicit default when an action has no triggers assigned.
@@ -110,12 +110,12 @@ This is the implicit default when an action has no triggers assigned.
 
 ### UInputTriggerPressed
 
-`
+```
 DisplayName: "Pressed"
 Class: UInputTriggerPressed : public UInputTrigger
 TriggerType: Explicit
 SupportedEvents: Instant
-`
+```
 
 **Behavior:** Fires `Triggered` exactly once on the first frame input exceeds `ActuationThreshold`.
 Holding the input does not fire again. Re-press is required for another trigger.
@@ -132,12 +132,12 @@ Holding the input does not fire again. Re-press is required for another trigger.
 
 ### UInputTriggerReleased
 
-`
+```
 DisplayName: "Released"
 Class: UInputTriggerReleased : public UInputTrigger
 TriggerType: Explicit
 SupportedEvents: Instant
-`
+```
 
 **Behavior:** Returns `Ongoing` while input exceeds `ActuationThreshold`. Fires `Triggered`
 once when input drops back below the threshold after having been actuated.
@@ -154,12 +154,12 @@ once when input drops back below the threshold after having been actuated.
 
 ### UInputTriggerHold
 
-`
+```
 DisplayName: "Hold"
 Class: UInputTriggerHold : public UInputTriggerTimedBase
 TriggerType: Explicit
 SupportedEvents: Ongoing (Started, Ongoing, Triggered, Canceled)
-`
+```
 
 **Behavior:** Returns `Ongoing` while input is held. After `HoldTimeThreshold` seconds,
 fires `Triggered`. If `bIsOneShot=false`, continues firing `Triggered` every frame.
@@ -178,7 +178,7 @@ If input is released before the threshold, fires `Canceled`.
 to show a progress bar. Combine with `GetElapsedTime()` in the `Ongoing` handler.
 
 **Example — charge bar:**
-`cpp
+```cpp
 void AMyCharacter::UpdateChargeBar(const FInputActionInstance& Instance)
 {
     // Instance.GetElapsedTime() grows while key is held
@@ -186,18 +186,18 @@ void AMyCharacter::UpdateChargeBar(const FInputActionInstance& Instance)
         Instance.GetElapsedTime() / HoldTrigger->HoldTimeThreshold, 0.f, 1.f);
     ChargeBarWidget->SetPercent(Progress);
 }
-`
+```
 
 ---
 
 ### UInputTriggerHoldAndRelease
 
-`
+```
 DisplayName: "Hold And Release"
 Class: UInputTriggerHoldAndRelease : public UInputTriggerTimedBase
 TriggerType: Explicit
 SupportedEvents: Ongoing
-`
+```
 
 **Behavior:** Returns `Ongoing` while input is held. Fires `Triggered` only when input
 is released after having been held for at least `HoldTimeThreshold` seconds.
@@ -218,12 +218,12 @@ Different from `UInputTriggerHold` in that the payload fires on release, not dur
 
 ### UInputTriggerTap
 
-`
+```
 DisplayName: "Tap"
 Class: UInputTriggerTap : public UInputTriggerTimedBase
 TriggerType: Explicit
 SupportedEvents: Instant
-`
+```
 
 **Behavior:** Fires `Triggered` if input is actuated then released within
 `TapReleaseTimeThreshold` seconds. Returns `Ongoing` while held within the window.
@@ -244,12 +244,12 @@ If held past the threshold without release, the trigger does not fire.
 
 ### UInputTriggerRepeatedTap
 
-`
+```
 DisplayName: "Repeated Tap"
 Class: UInputTriggerRepeatedTap : public UInputTriggerTimedBase
 TriggerType: Explicit
 SupportedEvents: Instant
-`
+```
 
 **Behavior:** Fires `Triggered` when the input is tapped `NumberOfTapsWhichTriggerRepeat`
 times in succession, with each individual tap completing within `TapReleaseTimeThreshold`
@@ -270,12 +270,12 @@ and each gap between taps within `RepeatDelay` seconds.
 
 ### UInputTriggerPulse
 
-`
+```
 DisplayName: "Pulse"
 Class: UInputTriggerPulse : public UInputTriggerTimedBase
 TriggerType: Explicit
 SupportedEvents: Ongoing
-`
+```
 
 **Behavior:** While input is held, fires `Triggered` at regular `Interval` second intervals.
 If `bTriggerOnStart=true`, also fires immediately on the first actuation frame.
@@ -298,13 +298,13 @@ tick-based resource drain.
 
 ### UInputTriggerChordAction
 
-`
+```
 DisplayName: "Chorded Action"
 Class: UInputTriggerChordAction : public UInputTrigger
 TriggerType: Implicit
 SupportedEvents: Instant
 NotInputConfigurable: true (not exposed in per-mapping settings)
-`
+```
 
 **Behavior:** This action only fires when `ChordAction` is simultaneously in `Triggered`
 state. Automatically creates a `UInputTriggerChordBlocker` on `ChordAction` to prevent
@@ -328,13 +328,13 @@ the chord key from also firing solo actions while the chord is active.
 
 ### UInputTriggerCombo (Beta)
 
-`
+```
 DisplayName: "Combo (Beta)"
 Class: UInputTriggerCombo : public UInputTrigger
 TriggerType: Implicit
 SupportedEvents: All
 NotInputConfigurable: true
-`
+```
 
 **Behavior:** Fires when all `ComboActions` are completed in order. Each step must be
 completed within its `TimeToPressKey` window after the previous step. The trigger fires
@@ -364,10 +364,10 @@ multi-step ability combos.
 
 ### UInputModifierDeadZone
 
-`
+```
 DisplayName: "Dead Zone"
 Class: UInputModifierDeadZone : public UInputModifier
-`
+```
 
 **Behavior:** Input values with magnitude below `LowerThreshold` are zeroed out.
 Values are remapped from `[LowerThreshold, UpperThreshold]` to `[0, 1]`.
@@ -395,10 +395,10 @@ Values above `UpperThreshold` are clamped to 1.
 
 ### UInputModifierScalar
 
-`
+```
 DisplayName: "Scalar"
 Class: UInputModifierScalar : public UInputModifier
-`
+```
 
 **Behavior:** Multiplies each axis component of the input by the corresponding component
 of `Scalar`. Has no effect on Boolean value types.
@@ -416,10 +416,10 @@ using `Negate` (set component to -1.0), adjusting controller stick sensitivity.
 
 ### UInputModifierScaleByDeltaTime
 
-`
+```
 DisplayName: "Scale By Delta Time"
 Class: UInputModifierScaleByDeltaTime : public UInputModifier
-`
+```
 
 **Behavior:** Multiplies the input value by the current frame's DeltaTime.
 No configurable properties.
@@ -432,10 +432,10 @@ already accounts for DeltaTime internally).
 
 ### UInputModifierNegate
 
-`
+```
 DisplayName: "Negate"
 Class: UInputModifierNegate : public UInputModifier
-`
+```
 
 **Behavior:** Inverts selected axes by multiplying by -1.
 
@@ -457,10 +457,10 @@ Set `bX=false`, `bY=true`, `bZ=false`.
 
 ### UInputModifierSwizzleAxis
 
-`
+```
 DisplayName: "Swizzle Input Axis Values"
 Class: UInputModifierSwizzleAxis : public UInputModifier
-`
+```
 
 **Behavior:** Reorders the X, Y, Z components of the input value according to `Order`.
 
@@ -487,10 +487,10 @@ Adding `SwizzleAxis(YXZ)` converts it to Y=1.0, which is forward in the Axis2D M
 
 ### UInputModifierSmooth
 
-`
+```
 DisplayName: "Smooth"
 Class: UInputModifierSmooth : public UInputModifier
-`
+```
 
 **Behavior:** Averages the input value over recent samples to reduce per-frame jitter.
 Uses a rolling average with `TotalSampleTime` as the accumulation window
@@ -505,10 +505,10 @@ on mouse look mappings.
 
 ### UInputModifierSmoothDelta
 
-`
+```
 DisplayName: "Smooth Delta"
 Class: UInputModifierSmoothDelta : public UInputModifier
-`
+```
 
 **Behavior:** Produces a smoothed normalized delta between the current and previous frame's
 input value, using one of many configurable interpolation methods.
@@ -532,10 +532,10 @@ to author the feel curve precisely.
 
 ### UInputModifierResponseCurveExponential
 
-`
+```
 DisplayName: "Response Curve - Exponential"
 Class: UInputModifierResponseCurveExponential : public UInputModifier
-`
+```
 
 **Behavior:** Applies `sign(x) * |x|^CurveExponent` per axis, creating a non-linear
 response. Values below 1 create a "softer" near-center feel; values above 1 create a
@@ -554,10 +554,10 @@ fine control near center with fast movement at the edges.
 
 ### UInputModifierResponseCurveUser
 
-`
+```
 DisplayName: "Response Curve - User Defined"
 Class: UInputModifierResponseCurveUser : public UInputModifier
-`
+```
 
 **Behavior:** Applies separate `UCurveFloat` assets per axis, evaluating each curve with
 the current axis value as input. Gives full artist control over the response shape.
@@ -578,10 +578,10 @@ Curve Editor.
 
 ### UInputModifierFOVScaling
 
-`
+```
 DisplayName: "FOV Scaling"
 Class: UInputModifierFOVScaling : public UInputModifier
-`
+```
 
 **Behavior:** Scales the mouse look input value by the current camera FOV, maintaining
 a consistent angular displacement per mouse unit regardless of zoom level.
@@ -600,10 +600,10 @@ Without this, zoomed-in aim feels faster than unzoomed aim in terms of screen pi
 
 ### UInputModifierToWorldSpace
 
-`
+```
 DisplayName: "To World Space"
 Class: UInputModifierToWorldSpace : public UInputModifier
-`
+```
 
 **Behavior:** Converts a 2D axis input into world space. The up/down axis maps to world
 forward (X), and left/right maps to world right (Y). Allows the value to be passed
@@ -627,17 +627,17 @@ Within each group, modifiers execute in array order. The output of modifier N is
 input to modifier N+1.
 
 **Typical keyboard+mouse stack for a look action:**
-`
+```
 Mapping modifiers: [Scalar(0.4, 0.4, 1.0), Smooth, FOVScaling]
 Action modifiers:  [] (none needed at action level)
-`
+```
 
 **Typical gamepad stick move action:**
-`
+```
 Mapping modifiers: [DeadZone(Radial, 0.2, 1.0), SwizzleAxis(YXZ)]  // for W/S keys
 Mapping modifiers: [DeadZone(Radial, 0.2, 1.0)]                     // for D/A keys
 Action modifiers:  []
-`
+```
 
 ---
 
@@ -679,9 +679,9 @@ further processing, so you can return any type internally.
 
 ## UInputMappingContext Properties
 
-`cpp
+```cpp
 class UInputMappingContext : public UDataAsset
-`
+```
 
 | Property / Method | Type | Description |
 |---|---|---|
@@ -705,7 +705,7 @@ class UInputMappingContext : public UDataAsset
 
 ## UEnhancedInputLocalPlayerSubsystem API
 
-`cpp
+```cpp
 // Add a context (BeginPlay or on mode change)
 Subsystem->AddMappingContext(IMC, Priority, Options);
 
@@ -720,7 +720,7 @@ Subsystem->HasMappingContext(IMC);
 
 // Query current value of an action without a binding
 Subsystem->GetPlayerInput()->GetActionValue(InputAction);
-`
+```
 
 **FModifyContextOptions:**
 

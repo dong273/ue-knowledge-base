@@ -12,7 +12,7 @@ as the avatar (the physical representation).
 
 ### PlayerState
 
-`cpp
+```cpp
 // MyPlayerState.h
 #pragma once
 #include "GameFramework/PlayerState.h"
@@ -42,7 +42,9 @@ protected:
     UPROPERTY()
     TObjectPtr<UMyHealthSet> HealthSet;
 };
-cpp
+```
+
+```cpp
 // MyPlayerState.cpp
 #include "MyPlayerState.h"
 #include "AbilitySystemComponent.h"
@@ -67,11 +69,11 @@ UAbilitySystemComponent* AMyPlayerState::GetAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
 }
-`
+```
 
 ### Character (Avatar)
 
-`cpp
+```cpp
 // MyCharacter.h
 #pragma once
 #include "GameFramework/Character.h"
@@ -96,7 +98,9 @@ private:
     void InitGAS();
     void GiveDefaultAbilities(); // Server only
 };
-cpp
+```
+
+```cpp
 // MyCharacter.cpp
 #include "MyCharacter.h"
 #include "MyPlayerState.h"
@@ -148,13 +152,13 @@ void AMyCharacter::GiveDefaultAbilities()
         ASC->GiveAbility(Spec);
     }
 }
-`
+```
 
 ### Respawn Handling
 
 When the Pawn is destroyed and respawned, the new Pawn must re-init its actor info:
 
-`cpp
+```cpp
 void AMyGameMode::RespawnPlayer(AController* Controller)
 {
     // Destroy old pawn, spawn new one at respawn location
@@ -167,7 +171,7 @@ void AMyGameMode::RespawnPlayer(AController* Controller)
     // PossessedBy fires → InitGAS → InitAbilityActorInfo with old PlayerState ASC
     // Active effects and cooldowns on the ASC survive the respawn
 }
-`
+```
 
 ---
 
@@ -176,7 +180,7 @@ void AMyGameMode::RespawnPlayer(AController* Controller)
 Simpler setup. The ASC and AttributeSet both live on the Pawn. Use for AI actors or
 single-player games where persistence across respawns is not needed.
 
-`cpp
+```cpp
 // MyAICharacter.h
 #pragma once
 #include "GameFramework/Character.h"
@@ -200,7 +204,9 @@ protected:
     UPROPERTY()
     TObjectPtr<UMyHealthSet> HealthSet;
 };
-cpp
+```
+
+```cpp
 // MyAICharacter.cpp
 #include "MyAICharacter.h"
 #include "AbilitySystemComponent.h"
@@ -236,7 +242,7 @@ void AMyAICharacter::BeginPlay()
         }
     }
 }
-`
+```
 
 ---
 
@@ -246,18 +252,20 @@ GAS supports initializing attributes from a `UCurveTable` for data-driven level 
 Row format: `[GroupName].[AttributeSetName].[AttributeName]`
 
 Example rows:
-`
+```
 Default.MyHealthSet.Health    | 100 | 150 | 200 | ...  (per level)
 Default.MyHealthSet.MaxHealth | 100 | 150 | 200 | ...
 Hero1.MyHealthSet.Health      |  80 | 120 | 160 | ...
-cpp
+```
+
+```cpp
 // Call after InitAbilityActorInfo, on server only:
 UAbilitySystemGlobals::Get().GetAttributeSetInitter()->InitAttributeSetDefaults(
     AbilitySystemComponent,
     FName("Default"), // GroupName matches CurveTable row prefix
     PlayerLevel,
     true /*bInitialInit*/);
-`
+```
 
 ---
 
@@ -265,7 +273,7 @@ UAbilitySystemGlobals::Get().GetAttributeSetInitter()->InitAttributeSetDefaults(
 
 Store handles to remove or modify abilities later:
 
-`cpp
+```cpp
 // In a component or character header:
 UPROPERTY()
 TArray<FGameplayAbilitySpecHandle> GrantedAbilityHandles;
@@ -284,7 +292,7 @@ for (const FGameplayAbilitySpecHandle& H : GrantedAbilityHandles)
     AbilitySystemComponent->ClearAbility(H);
 }
 GrantedAbilityHandles.Empty();
-`
+```
 
 ---
 
@@ -292,7 +300,7 @@ GrantedAbilityHandles.Empty();
 
 Listen for gameplay tag additions/removals on the ASC:
 
-`cpp
+```cpp
 void AMyCharacter::InitGAS()
 {
     // ... init actor info ...
@@ -315,7 +323,7 @@ void AMyCharacter::OnStunnedTagChanged(const FGameplayTag Tag, int32 NewCount)
         // No longer stunned: re-enable movement
     }
 }
-`
+```
 
 ---
 
@@ -323,7 +331,7 @@ void AMyCharacter::OnStunnedTagChanged(const FGameplayTag Tag, int32 NewCount)
 
 React to attribute changes (e.g., update UI health bar):
 
-`cpp
+```cpp
 void UMyHealthWidget::BindToASC(UAbilitySystemComponent* ASC)
 {
     if (!ASC) return;
@@ -344,7 +352,7 @@ void UMyHealthWidget::UnbindFromASC(UAbilitySystemComponent* ASC)
     ASC->GetGameplayAttributeValueChangeDelegate(UMyHealthSet::GetHealthAttribute())
         .Remove(HealthChangedDelegateHandle);
 }
-`
+```
 
 ---
 

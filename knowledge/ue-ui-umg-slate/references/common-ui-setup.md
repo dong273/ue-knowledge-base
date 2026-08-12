@@ -12,25 +12,25 @@ Common UI is Epic's cross-platform UI framework built on top of UMG. It handles 
 
 In `<ProjectName>.uproject`:
 
-`json
+```json
 {
   "Plugins": [
     { "Name": "CommonUI", "Enabled": true },
     { "Name": "CommonInput", "Enabled": true }
   ]
 }
-`
+```
 
 ### 2. Build.cs Dependencies
 
-`csharp
+```csharp
 // <ProjectName>.Build.cs
 PrivateDependencyModuleNames.AddRange(new string[]
 {
     "CommonUI",
     "CommonInput",
 });
-`
+```
 
 ### 3. Configure the Game Viewport Client
 
@@ -40,10 +40,12 @@ Common UI requires a custom viewport client to detect input method changes.
 
 Or in `DefaultEngine.ini`:
 
-`ini
+```ini
 [/Script/Engine.Engine]
 GameViewportClientClassName=/Script/CommonUI.CommonGameViewportClient
-UCommonGameViewportClient` detects whether the most recent input was from a gamepad, mouse, or touch, and broadcasts this change via `UCommonInputSubsystem`. All `UCommonButtonBase` and `UCommonActivatableWidget` instances respond to this automatically.
+```
+
+`UCommonGameViewportClient` detects whether the most recent input was from a gamepad, mouse, or touch, and broadcasts this change via `UCommonInputSubsystem`. All `UCommonButtonBase` and `UCommonActivatableWidget` instances respond to this automatically.
 
 ### 4. Configure Common Input Settings
 
@@ -55,11 +57,11 @@ In **Project Settings → Common Input Settings**:
 
 Or via `DefaultInput.ini`:
 
-`ini
+```ini
 [/Script/CommonInput.CommonInputSettings]
 InputData=/Game/UI/CommonInputData.CommonInputData
 bEnableInputMethodTrigger=True
-`
+```
 
 ---
 
@@ -70,7 +72,9 @@ bEnableInputMethodTrigger=True
 The foundation of Common UI's screen management. A widget that can be activated (brought to focus) and deactivated without being created or destroyed.
 
 **Header:** `CommonActivatableWidget.h`
-**Base class:** `UCommonUserWidget` → `UUserWidgetcpp
+**Base class:** `UCommonUserWidget` → `UUserWidget`
+
+```cpp
 // Activation state
 bool IsActivated() const;
 void ActivateWidget();
@@ -84,11 +88,11 @@ FSimpleMulticastDelegate& OnDeactivated() const;
 UWidget* GetDesiredFocusTarget() const;
 void ClearFocusRestorationTarget();
 void RequestRefreshFocus();
-`
+```
 
 **Key UPROPERTY settings (configure in Blueprint defaults or C++ constructor):**
 
-`cpp
+```cpp
 // Auto-activate when constructed (false by default)
 UPROPERTY(EditAnywhere, Category = Activation)
 bool bAutoActivate = false;
@@ -114,11 +118,11 @@ UPROPERTY(EditAnywhere, Category = Activation)
 bool bSetVisibilityOnDeactivated = false;
 UPROPERTY(EditAnywhere, Category = Activation)
 ESlateVisibility DeactivatedVisibility = ESlateVisibility::Collapsed;
-`
+```
 
 **Subclassing pattern:**
 
-`cpp
+```cpp
 // MyMenuScreen.h
 #pragma once
 #include "CommonActivatableWidget.h"
@@ -138,7 +142,9 @@ protected:
     UPROPERTY(meta=(BindWidget)) TObjectPtr<UCommonButtonBase> CloseButton;
     UPROPERTY(meta=(BindWidget)) TObjectPtr<UCommonButtonBase> ConfirmButton;
 };
-cpp
+```
+
+```cpp
 // MyMenuScreen.cpp
 void UMyMenuScreen::NativeOnActivated()
 {
@@ -165,7 +171,7 @@ TOptional<FUIInputConfig> UMyMenuScreen::GetDesiredInputConfig() const
     // ECommonInputMode::Menu — enables gamepad menu navigation, hides cursor on gamepad
     return FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
 }
-`
+```
 
 ---
 
@@ -176,7 +182,7 @@ TOptional<FUIInputConfig> UMyMenuScreen::GetDesiredInputConfig() const
 
 The correct class for screen layer stacks. Shows only the topmost widget; deactivating the top widget reveals the previous one. Use this for game layer, menu layer, and modal layer containers — do NOT use `UCommonActivatableWidgetSwitcher` here, which inherits from `UCommonAnimatedSwitcher`/`UWidgetSwitcher` and is a different (index-based switcher) widget that does not have `AddWidget()`.
 
-`cpp
+```cpp
 // In a root HUD widget:
 UPROPERTY(meta=(BindWidget))
 TObjectPtr<UCommonActivatableWidgetStack> MenuLayer;
@@ -197,7 +203,7 @@ void UMyHUDWidget::GoBack()
         Active->DeactivateWidget();
     }
 }
-`
+```
 
 **Important:** `UCommonActivatableWidgetStack::AddWidget(TSubclassOf<UCommonActivatableWidget>)` creates the widget and pushes it. It returns `UCommonActivatableWidget*` (cast to your type). Deactivating the top widget automatically re-activates the widget beneath it.
 
@@ -210,7 +216,7 @@ void UMyHUDWidget::GoBack()
 
 A replacement for `UButton` that is aware of the current input method (mouse, gamepad, touch) and can display platform-appropriate icons (e.g., "A button" on Xbox, "Cross" on PlayStation).
 
-`cpp
+```cpp
 // OnClicked returns FCommonButtonEvent (DECLARE_EVENT-based) — NOT a DYNAMIC delegate
 // Use AddUObject or AddWeakLambda instead of AddDynamic
 FCommonButtonEvent& OnClicked();
@@ -228,7 +234,7 @@ bool bSelected = MyButton->GetSelected();
 
 // Hovering
 MyButton->SetIsInteractionEnabled(true);
-`
+```
 
 **Styling:** `UCommonButtonBase` uses a `UCommonButtonStyle` data asset instead of `FButtonStyle`. Configure this in the widget Blueprint.
 
@@ -251,7 +257,7 @@ The action router manages which activatable widget receives input actions (confi
 
 Provides runtime information about the current input method and allows observing changes.
 
-`cpp
+```cpp
 // Get the subsystem
 UCommonInputSubsystem* InputSubsystem = UCommonInputSubsystem::Get(GetOwningLocalPlayer());
 
@@ -274,7 +280,7 @@ void UMyWidget::HandleInputMethodChanged(ECommonInputType NewInputType)
                    || NewInputType == ECommonInputType::Touch;
     GetOwningPlayer()->SetShowMouseCursor(bShowMouse);
 }
-`
+```
 
 ---
 
@@ -284,7 +290,7 @@ void UMyWidget::HandleInputMethodChanged(ECommonInputType NewInputType)
 
 Returned from `UCommonActivatableWidget::GetDesiredInputConfig()` to define how input is handled while this widget is the active leaf.
 
-`cpp
+```cpp
 // Menu mode: gamepad navigates widgets, no mouse capture
 return FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
 
@@ -293,7 +299,7 @@ return FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanen
 
 // All mode: both game and UI receive input (e.g., for HUD with tooltips)
 return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
-`
+```
 
 | `ECommonInputMode` | Description |
 |---|---|
@@ -305,14 +311,14 @@ return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
 
 `UCommonActivatableWidget` supports an `InputMapping` property for adding an `UInputMappingContext` while the widget is active:
 
-`cpp
+```cpp
 // Set in the widget's Blueprint defaults or C++ constructor:
 UPROPERTY(EditAnywhere, Category="Input")
 TObjectPtr<UInputMappingContext> InputMapping;
 
 UPROPERTY(EditAnywhere, Category="Input")
 int32 InputMappingPriority = 0;
-`
+```
 
 The mapping context is added when `ActivateWidget()` is called and removed when `DeactivateWidget()` is called via `ActivateMappingContext()` / `DeactivateMappingContext()`.
 
@@ -322,7 +328,7 @@ The mapping context is added when `ActivateWidget()` is called and removed when 
 
 A typical Common UI hierarchy for a game with main menu, pause, and HUD:
 
-`
+```
 AHUD or PlayerController
     └── URootUIWidget (UUserWidget, AddToViewport ZOrder=0)
             ├── UCommonActivatableWidgetStack "GameLayer"
@@ -333,11 +339,11 @@ AHUD or PlayerController
             │       └── UMyPauseMenuWidget
             └── UCommonActivatableWidgetStack "ModalLayer"
                     └── UMyConfirmationDialog (modal, bIsModal=true)
-`
+```
 
 **Implementation:**
 
-`cpp
+```cpp
 // URootUIWidget.h
 UCLASS()
 class MYGAME_API URootUIWidget : public UUserWidget
@@ -370,7 +376,7 @@ protected:
     UPROPERTY(meta=(BindWidget))
     TObjectPtr<UCommonActivatableWidgetStack> ModalLayer;
 };
-`
+```
 
 ---
 
@@ -385,30 +391,30 @@ Common UI provides automatic focus management for gamepad navigation. When a `UC
 
 **Focus target best practices:**
 
-`cpp
+```cpp
 UWidget* UMyMenuScreen::NativeGetDesiredFocusTarget() const
 {
     // Return the first interactive widget in tab order
     // This is the widget that gets focus when the screen activates
     return FirstButton;
 }
-`
+```
 
 **Ensure your buttons are focusable:**
 
 In `UCommonButtonBase` Blueprint defaults or via C++:
-`cpp
+```cpp
 // IsFocusable is true by default on UCommonButtonBase
 // For standard UButton, explicitly set it:
 MyButton->InitIsFocusable(true); // Call before Slate widget is constructed
-`
+```
 
 ---
 
 ## Common Mistakes
 
 **Not removing the delegate binding when deactivated**
-`cpp
+```cpp
 // BAD: leaks bindings, fires after the screen is gone
 void UMyScreen::NativeOnActivated() {
     MyButton->OnClicked().AddUObject(this, &UMyScreen::HandleClick);
@@ -422,16 +428,16 @@ void UMyScreen::NativeOnActivated() {
 void UMyScreen::NativeOnDeactivated() {
     MyButton->OnClicked().RemoveAll(this);
 }
-`
+```
 
 **Using AddDynamic with UCommonButtonBase::OnClicked()**
-`cpp
+```cpp
 // WRONG: OnClicked() returns FCommonButtonEvent, not a DYNAMIC delegate
 MyButton->OnClicked().AddDynamic(this, &UMyScreen::HandleClick); // Compile error
 
 // CORRECT
 MyButton->OnClicked().AddUObject(this, &UMyScreen::HandleClick);
-`
+```
 
 **Skipping the viewport client configuration**
 
@@ -441,7 +447,7 @@ Common UI's input method detection requires `UCommonGameViewportClient`. Without
 
 Once Common UI is active, avoid calling `GetOwningPlayer()->SetInputMode(FInputModeUIOnly())`. Common UI manages input mode internally through `FUIInputConfig`. Direct calls bypass the activation tree and cause conflicts.
 
-`cpp
+```cpp
 // BAD with Common UI
 GetOwningPlayer()->SetInputMode(FInputModeUIOnly());
 
@@ -449,10 +455,10 @@ GetOwningPlayer()->SetInputMode(FInputModeUIOnly());
 TOptional<FUIInputConfig> UMyScreen::GetDesiredInputConfig() const {
     return FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
 }
-`
+```
 
 **Not calling Super in activation overrides**
-`cpp
+```cpp
 // REQUIRED — Super sets up internal state, delegates, and focus routing
 void UMyScreen::NativeOnActivated() {
     Super::NativeOnActivated(); // Must be called
@@ -462,7 +468,7 @@ void UMyScreen::NativeOnDeactivated() {
     // Your cleanup
     Super::NativeOnDeactivated(); // Must be called
 }
-`
+```
 
 ---
 

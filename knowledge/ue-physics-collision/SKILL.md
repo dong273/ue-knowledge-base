@@ -5,11 +5,11 @@ description: Use when implementing collision detection, trace queries, physics s
 
 # UE Physics & Collision
 
+
 ---
 
 ## Step 1: Read Project Context
 
-Read  to confirm:
 - UE version (Chaos is the default physics backend from UE 5.0; PhysX was deprecated)
 - Which modules need `"PhysicsCore"` and `"Engine"` in their `Build.cs`
 - Whether the project uses skeletal meshes with physics assets, or primarily static mesh collision
@@ -32,12 +32,12 @@ Ask which area applies if not stated:
 
 ### ECollisionChannel — built-in channels
 
-`cpp
+```cpp
 ECC_WorldStatic, ECC_WorldDynamic, ECC_Pawn, ECC_PhysicsBody,
 ECC_Vehicle, ECC_Destructible               // object channels (what an object IS)
 ECC_Visibility, ECC_Camera                  // trace channels (used for queries)
 // Custom: ECC_GameTraceChannel1..ECC_GameTraceChannel18
-`
+```
 
 **Responses**: `ECR_Ignore` / `ECR_Overlap` (events, no block) / `ECR_Block` (physical block + events).
 
@@ -45,7 +45,7 @@ ECC_Visibility, ECC_Camera                  // trace channels (used for queries)
 
 ### Setting Collision in C++
 
-`cpp
+```cpp
 MyMesh->SetCollisionProfileName(TEXT("BlockAll"));        // preferred — sets all at once
 MyMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 // ECollisionEnabled: NoCollision | QueryOnly | PhysicsOnly | QueryAndPhysics
@@ -53,7 +53,7 @@ MyMesh->SetCollisionObjectType(ECC_PhysicsBody);
 MyMesh->SetCollisionResponseToAllChannels(ECR_Block);
 MyMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 MyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-`
+```
 
 ### Object Type Channels vs Trace Channels
 
@@ -61,12 +61,14 @@ MyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 ### Custom Channels — DefaultEngine.ini
 
-`ini
+```ini
 [/Script/Engine.CollisionProfile]
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel1,DefaultResponse=ECR_Block,bTraceType=True,bStaticObject=False,Name="Weapon")
 +DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=False,Name="Interactable")
 +Profiles=(Name="Interactable",CollisionEnabled=QueryAndPhysics,ObjectTypeName="Interactable",CustomResponses=((Channel="Weapon",Response=ECR_Ignore),(Channel="Visibility",Response=ECR_Block)))
-bTraceType=True` = trace channel; `bTraceType=False` = object type channel. They use separate query functions.
+```
+
+`bTraceType=True` = trace channel; `bTraceType=False` = object type channel. They use separate query functions.
 
 See `references/collision-channel-setup.md` for full profile examples, `references/trace-patterns.md` for gameplay trace patterns, and `references/ground-penetration-debugging.md` for character-through-floor diagnosis.
 
@@ -76,7 +78,7 @@ See `references/collision-channel-setup.md` for full profile examples, `referenc
 
 ### FCollisionQueryParams
 
-`cpp
+```cpp
 FCollisionQueryParams Params;
 Params.TraceTag                = TEXT("WeaponTrace"); // for profiling/debug
 Params.bTraceComplex           = false;  // false=simple hull (fast); true=per-poly (expensive)
@@ -84,9 +86,11 @@ Params.bReturnPhysicalMaterial = true;   // populates Hit.PhysMaterial
 Params.bReturnFaceIndex        = false;  // expensive, only when needed
 Params.AddIgnoredActor(this);
 Params.AddIgnoredComponent(MyComp);
-`
+```
 
-### World-Level Trace Functions (C++) — from `WorldCollision.h` via `UWorldcpp
+### World-Level Trace Functions (C++) — from `WorldCollision.h` via `UWorld`
+
+```cpp
 FHitResult Hit;
 // By trace channel
 GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params);
@@ -97,11 +101,11 @@ ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjParams, Params);
 // By profile
 GetWorld()->LineTraceSingleByProfile(Hit, Start, End, TEXT("BlockAll"), Params);
-`
+```
 
 ### Sweep Queries — FCollisionShape (from `CollisionShape.h`)
 
-`cpp
+```cpp
 FCollisionShape Sphere  = FCollisionShape::MakeSphere(30.f);
 FCollisionShape Box     = FCollisionShape::MakeBox(FVector(50.f, 50.f, 50.f));
 FCollisionShape Capsule = FCollisionShape::MakeCapsule(34.f, 88.f); // radius, half-height
@@ -110,11 +114,11 @@ GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Pawn, Sph
 GetWorld()->SweepMultiByChannel(Hits, Start, End, FQuat::Identity, ECC_Pawn, Sphere, Params);
 GetWorld()->SweepSingleByObjectType(Hit, Start, End, FQuat::Identity, ObjParams, Sphere, Params);
 GetWorld()->SweepSingleByProfile(Hit, Start, End, FQuat::Identity, TEXT("Pawn"), Sphere, Params);
-`
+```
 
 ### Overlap Queries
 
-`cpp
+```cpp
 TArray<FOverlapResult> Overlaps;
 GetWorld()->OverlapMultiByObjectType(Overlaps, Center, FQuat::Identity,
     FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeSphere(500.f), Params);
@@ -124,11 +128,11 @@ for (const FOverlapResult& R : Overlaps) { AActor* A = R.GetActor(); }
 GetWorld()->OverlapMultiByChannel(
     Overlaps, Center, FQuat::Identity, ECC_Pawn,
     FCollisionShape::MakeSphere(Radius), QueryParams);
-`
+```
 
 ### FHitResult — Key Fields
 
-`cpp
+```cpp
 Hit.bBlockingHit;          // true if blocking
 Hit.ImpactPoint;           // world space contact point
 Hit.ImpactNormal;          // surface normal
@@ -139,11 +143,11 @@ Hit.GetComponent();
 // Physical material (requires bReturnPhysicalMaterial=true):
 if (UPhysicalMaterial* M = Hit.PhysMaterial.Get())
     EPhysicalSurface S = UPhysicalMaterial::DetermineSurfaceType(M);
-`
+```
 
 ### Blueprint-Layer Traces (UKismetSystemLibrary)
 
-`cpp
+```cpp
 #include "Kismet/KismetSystemLibrary.h"
 TArray<AActor*> Ignore = { this };
 // LineTrace with debug draw (ETraceTypeQuery maps to ECollisionChannel)
@@ -155,27 +159,29 @@ UKismetSystemLibrary::SphereTraceSingle(this, Start, End, 50.f,
 // By profile
 UKismetSystemLibrary::LineTraceSingleByProfile(this, Start, End,
     TEXT("BlockAll"), false, Ignore, EDrawDebugTrace::None, Hit, true);
-`
+```
 
 ### Async Traces
 
-`cpp
+```cpp
 FTraceHandle Handle = GetWorld()->AsyncLineTraceByChannel(
     EAsyncTraceType::Single, Start, End, ECC_Visibility, Params);
 // Read next frame:
 FTraceDatum Datum;
 if (GetWorld()->QueryTraceData(Handle, Datum) && Datum.OutHits.Num() > 0)
     FHitResult& Hit = Datum.OutHits[0];
-`
+```
 
 ### Debug Visualization
 
-`cpp
+```cpp
 #if ENABLE_DRAW_DEBUG
 DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
 DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 12, FColor::Green, false, 2.f);
 #endif
-DrawDebugLine` / `DrawDebugSphere` are from `DrawDebugHelpers.h`. Wrap in `ENABLE_DRAW_DEBUG` so they compile out in shipping builds. The bool param is `bPersistentLines`; the float param is `LifeTime` in seconds.
+```
+
+`DrawDebugLine` / `DrawDebugSphere` are from `DrawDebugHelpers.h`. Wrap in `ENABLE_DRAW_DEBUG` so they compile out in shipping builds. The bool param is `bPersistentLines`; the float param is `LifeTime` in seconds.
 
 See `references/trace-patterns.md` for full gameplay patterns (hitscan, melee sweep, AoE, ground detection, async sensors).
 
@@ -186,7 +192,9 @@ See `references/trace-patterns.md` for full gameplay patterns (hitscan, melee sw
 Delegate declarations from `PrimitiveComponent.h`:
 - `OnComponentHit` — `(HitComp, OtherActor, OtherComp, NormalImpulse, FHitResult)` — physics collision
 - `OnComponentBeginOverlap` — `(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult)`
-- `OnComponentEndOverlap` — `(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex)cpp
+- `OnComponentEndOverlap` — `(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex)`
+
+```cpp
 // Hit events (physics collision)
 MyMesh->SetNotifyRigidBodyCollision(true);  // "Simulation Generates Hit Events"
 MyMesh->OnComponentHit.AddDynamic(this, &AMyActor::OnHit);
@@ -207,7 +215,7 @@ void AMyActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 UFUNCTION()
 void AMyActor::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {}
-`
+```
 
 **Requirements:** Hit: `QueryAndPhysics`, `ECR_Block` on both, `SetNotifyRigidBodyCollision(true)`. Overlap: `ECR_Overlap` on both, `SetGenerateOverlapEvents(true)` on both.
 
@@ -215,7 +223,7 @@ void AMyActor::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 
 ## Physics Bodies
 
-`cpp
+```cpp
 // Enable simulation (PrimitiveComponent.h / BodyInstanceCore.h)
 MyMesh->SetSimulatePhysics(true);
 MyMesh->SetEnableGravity(true);
@@ -230,7 +238,7 @@ MyMesh->AddImpulseAtLocation(FVector(500,0,0), HitPoint);      // adds torque
 MyMesh->AddForce(FVector(0,0,9800), NAME_None, false);          // continuous (per tick)
 MyMesh->AddRadialImpulse(Center, 500.f, 2000.f, RIF_Linear, false);
 MyMesh->SetPhysicsLinearVelocity(FVector(0,0,300));             // use sparingly
-`
+```
 
 **FBodyInstanceCore key flags** (set via UPROPERTY/editor): `bSimulatePhysics`, `bOverrideMass`, `bEnableGravity`, `bAutoWeld`, `bStartAwake`, `bGenerateWakeEvents`, `bUpdateKinematicFromSimulation`.
 
@@ -238,7 +246,7 @@ MyMesh->SetPhysicsLinearVelocity(FVector(0,0,300));             // use sparingly
 
 ### Physics Constraints
 
-`cpp
+```cpp
 UPhysicsConstraintComponent* C = NewObject<UPhysicsConstraintComponent>(this);
 C->SetupAttachment(RootComponent);
 C->SetConstrainedComponents(MeshA, NAME_None, MeshB, NAME_None);
@@ -246,7 +254,7 @@ C->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Limited, 45.f);
 C->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Free, 0.f);
 C->SetLinearXLimit(ELinearConstraintMotion::LCM_Locked, 0.f);
 C->RegisterComponent();
-`
+```
 
 **Named constraint presets** (set via `ConstraintProfile` or editor Preset dropdown):
 
@@ -263,7 +271,7 @@ C->RegisterComponent();
 
 From `PhysicalMaterials/PhysicalMaterial.h`:
 
-`cpp
+```cpp
 float Friction;       // kinetic (0 = frictionless)
 float StaticFriction; // before sliding starts
 float Restitution;    // 0 (no bounce) to 1 (elastic)
@@ -280,7 +288,7 @@ if (UPhysicalMaterial* M = Hit.PhysMaterial.Get())
     EPhysicalSurface S = UPhysicalMaterial::DetermineSurfaceType(M);
     switch (S) { case SurfaceType1: /* Metal */ break; }
 }
-`
+```
 
 ---
 
@@ -293,14 +301,14 @@ UE5 uses **Chaos** by default (PhysX removed). Key architecture:
 - **Async physics**: runs simulation on a separate thread with one-frame latency. Enable via `UPhysicsSettings::bTickPhysicsAsync`. Use `UAsyncPhysicsInputComponent` on components that need physics-thread input callbacks.
 
 Key `UPhysicsSettingsCore` fields (`PhysicsSettingsCore.h`):
-`cpp
+```cpp
 float DefaultGravityZ;         // -980 cm/s^2 default
 float BounceThresholdVelocity; // min velocity to bounce
 float MaxAngularVelocity;      // rad/s cap
 float MaxDepenetrationVelocity;
 float ContactOffsetMultiplier; // contact shell size
 FChaosSolverConfiguration SolverOptions;
-`
+```
 
 **EPhysicalSurface**: 62 configurable slots (`SurfaceType1..SurfaceType62`) mapped in Project Settings > Physics > Physical Surface.
 
@@ -310,7 +318,7 @@ FChaosSolverConfiguration SolverOptions;
 
 ### Cloth Simulation
 
-`cpp
+```cpp
 // Cloth uses UClothingAssetBase attached to USkeletalMeshComponent
 // Enable in Mesh asset: Clothing → Add Clothing Data
 // C++ access:
@@ -320,13 +328,13 @@ if (UClothingSimulationInteractor* Cloth = Mesh->GetClothingSimulationInteractor
     Cloth->PhysicsAssetUpdated();             // re-sync after physics asset change
     Cloth->SetAnimDriveSpringStiffness(10.f); // blend anim ↔ cloth
 }
-`
+```
 
 ### Field System
 
 Field System actors apply forces, strain, and anchors to Chaos destruction and cloth:
 
-`cpp
+```cpp
 // Place AFieldSystemActor in level, add field nodes:
 // URadialFalloff — distance-based falloff
 // URadialVector — directional force from center
@@ -340,7 +348,7 @@ Falloff->SetRadialFalloff(1000000.f, 0.8f, 1.f, 0.f, 500.f, FVector::ZeroVector,
 UFieldSystemMetaDataFilter* Meta = NewObject<UFieldSystemMetaDataFilter>(FieldActor);
 Meta->SetMetaDataFilterType(EFieldFilterType::Field_Filter_All, EFieldObjectType::Field_Object_All, EFieldPositionType::Field_Position_CenterOfMass);
 FieldActor->GetFieldSystemComponent()->ApplyPhysicsField(true, EFieldPhysicsType::Field_ExternalClusterStrain, Meta, Falloff);
-`
+```
 
 ---
 
@@ -368,14 +376,14 @@ In multiplayer, physics simulation runs on the server. Collision events (`OnComp
 
 ## Required Module Dependencies
 
-`csharp
+```csharp
 // Build.cs
 PublicDependencyModuleNames.AddRange(new string[] {
     "Core", "CoreUObject",
     "Engine",      // UPrimitiveComponent, FHitResult, UWorld trace API
     "PhysicsCore", // UPhysicalMaterial, FCollisionShape, FBodyInstanceCore
 });
-`
+```
 
 ---
 

@@ -5,9 +5,9 @@ description: Covers Mass Entity, MassEntity, Mass AI, MassProcessor, MassFragmen
 
 # UE Mass Entity Framework
 
+
 ## Context Check
 
-Before proceeding, read  to determine:
 - Whether the MassEntity plugin is enabled (and MassAI, MassCrowd, MassGameplay if needed)
 - The target entity count and performance budget
 - Whether MassCrowd lane navigation or ZoneGraph is in use
@@ -45,7 +45,7 @@ Mass Entity uses an archetype ECS model where entity composition determines memo
 
 All types require `USTRUCT()` with `GENERATED_BODY()`:
 
-`cpp
+```cpp
 // Per-entity mutable data
 USTRUCT()
 struct FHealthFragment : public FMassFragment
@@ -69,7 +69,7 @@ struct FTeamSharedFragment : public FMassSharedFragment
     GENERATED_BODY()
     int32 TeamID = 0;
 };
-`
+```
 
 **Chunk fragments** (`FMassChunkFragment`) store per-memory-chunk state shared across all entities in a chunk. Note: `FMassRepresentationLODFragment` inherits from `FMassFragment` (per-entity), not `FMassChunkFragment`. **Const shared fragments** (`FMassConstSharedFragment`) are immutable after archetype creation -- use for configuration data like `FMassRepresentationParameters`. See `references/mass-fragment-reference.md` for built-in types.
 
@@ -79,15 +79,15 @@ struct FTeamSharedFragment : public FMassSharedFragment
 
 The entity manager is NOT a `UObject` -- it is a struct (`TSharedFromThis<FMassEntityManager>`, `FGCObject`). Access it through `UMassEntitySubsystem` (a `UWorldSubsystem`):
 
-`cpp
+```cpp
 UMassEntitySubsystem* MassSubsystem = GetWorld()->GetSubsystem<UMassEntitySubsystem>();
 FMassEntityManager& EntityManager = MassSubsystem->GetMutableEntityManager();
 // const ref: MassSubsystem->GetEntityManager()
-`
+```
 
 ### Entity Lifecycle
 
-`cpp
+```cpp
 // One-shot creation
 FMassEntityHandle Entity = EntityManager.CreateEntity(ArchetypeHandle);
 
@@ -109,27 +109,27 @@ TSharedRef<FEntityCreationContext> CreationContext =
 // Destruction
 EntityManager.DestroyEntity(Handle);
 EntityManager.BatchDestroyEntities(EntityArray);
-`
+```
 
 ### Validity Checks
 
 `FMassEntityHandle::IsSet()` (aliased as `IsValid()`) only checks non-zero Index/SerialNumber -- it does NOT verify the entity exists. Always use the entity manager:
 
-`cpp
+```cpp
 EntityManager.IsEntityValid(Handle)   // entity exists
 EntityManager.IsEntityBuilt(Handle)   // fully constructed
 EntityManager.IsEntityActive(Handle)  // active in simulation
-`
+```
 
 ### Direct Fragment/Tag Mutations (Outside Processors)
 
-`cpp
+```cpp
 EntityManager.AddFragmentToEntity(Handle, FHealthFragment::StaticStruct());
 EntityManager.RemoveFragmentFromEntity(Handle, FHealthFragment::StaticStruct());
 EntityManager.AddTagToEntity(Handle, FDeadTag::StaticStruct());
 EntityManager.RemoveTagFromEntity(Handle, FDeadTag::StaticStruct());
 EntityManager.SwapTagsForEntity(Handle, FOldTag::StaticStruct(), FNewTag::StaticStruct());
-`
+```
 
 ---
 
@@ -137,7 +137,7 @@ EntityManager.SwapTagsForEntity(Handle, FOldTag::StaticStruct(), FNewTag::Static
 
 Processors iterate over entities matching a query each frame. Subclass `UMassProcessor` (abstract), override `ConfigureQueries()` and `Execute()`:
 
-`cpp
+```cpp
 UCLASS()
 class UMyMovementProcessor : public UMassProcessor
 {
@@ -151,11 +151,11 @@ protected:
 private:
     FMassEntityQuery MovementQuery;
 };
-`
+```
 
 ### Constructor Configuration
 
-`cpp
+```cpp
 UMyMovementProcessor::UMyMovementProcessor()
 {
     ProcessingPhase = EMassProcessingPhase::PrePhysics;
@@ -166,7 +166,7 @@ UMyMovementProcessor::UMyMovementProcessor()
     ExecutionOrder.ExecuteAfter.Add(TEXT("UMassApplyVelocityProcessor"));
     bRequiresGameThreadExecution = false; // true if accessing UObjects
 }
-`
+```
 
 **`EMassProcessingPhase`:** `PrePhysics`, `StartPhysics`, `DuringPhysics`, `EndPhysics`, `PostPhysics`, `FrameEnd`
 
@@ -180,7 +180,7 @@ UMyMovementProcessor::UMyMovementProcessor()
 
 Queries define which entities a processor operates on. Configure in `ConfigureQueries()`, then call `RegisterQuery()`:
 
-`cpp
+```cpp
 void UMyMovementProcessor::ConfigureQueries(const TSharedRef<FMassEntityManager>& EntityManager)
 {
     MovementQuery.AddRequirement<FTransformFragment>(
@@ -200,7 +200,7 @@ void UMyMovementProcessor::ConfigureQueries(const TSharedRef<FMassEntityManager>
         EMassFragmentAccess::ReadWrite);
     RegisterQuery(MovementQuery);
 }
-`
+```
 
 | `EMassFragmentAccess` | Usage |
 |----------------------|-------|
@@ -217,14 +217,14 @@ void UMyMovementProcessor::ConfigureQueries(const TSharedRef<FMassEntityManager>
 
 ### Fragment-Based Chunk Filtering
 
-`cpp
+```cpp
 // FMassRepresentationLODFragment is a per-entity fragment, not a chunk fragment.
 // Filter using a regular fragment view within the iteration lambda.
 MovementQuery.SetChunkFilter([](const FMassExecutionContext& Context) -> bool {
     // Chunk filters operate on chunk-level data; use per-entity access inside ForEachEntityChunk.
     return true;
 });
-`
+```
 
 ---
 
@@ -232,7 +232,7 @@ MovementQuery.SetChunkFilter([](const FMassExecutionContext& Context) -> bool {
 
 Inside `ForEachEntityChunk`, the context provides typed views into chunk data:
 
-`cpp
+```cpp
 void UMyMovementProcessor::Execute(FMassEntityManager& EntityManager,
                                    FMassExecutionContext& Context)
 {
@@ -254,7 +254,7 @@ void UMyMovementProcessor::Execute(FMassEntityManager& EntityManager,
         }
     });
 }
-`
+```
 
 **Parallel execution:** `MovementQuery.ParallelForEachEntityChunk(Context, Lambda)` for thread-safe processors.
 
@@ -268,7 +268,7 @@ void UMyMovementProcessor::Execute(FMassEntityManager& EntityManager,
 
 **CRITICAL:** Inside `ForEachEntityChunk`, never call entity manager mutations directly. Structural changes during iteration invalidate archetype memory layouts, causing undefined behavior. Use `Context.Defer()`:
 
-`cpp
+```cpp
 MovementQuery.ForEachEntityChunk(Context,
     [](FMassExecutionContext& Context)
 {
@@ -283,7 +283,7 @@ MovementQuery.ForEachEntityChunk(Context,
         }
     }
 });
-`
+```
 
 Deferred command execution order: **Create -> Add -> Remove -> ChangeComposition -> Set -> Destroy**. This guarantees fragments exist before being written, and entities exist before being modified.
 
@@ -295,7 +295,7 @@ Deferred command execution order: **Create -> Add -> Remove -> ChangeComposition
 
 Observers react to structural changes -- when a fragment or tag is added to or removed from an entity. They fire automatically:
 
-`cpp
+```cpp
 UCLASS()
 class UHealthAddedObserver : public UMassObserverProcessor
 {
@@ -311,7 +311,7 @@ protected:
     virtual void Execute(FMassEntityManager& EntityManager,
                          FMassExecutionContext& Context) override;
 };
-`
+```
 
 The observer `Execute` runs only for entities that just had the observed type added/removed. Use observers for initialization, cleanup, and state-change responses instead of per-frame polling.
 
@@ -321,7 +321,7 @@ The observer `Execute` runs only for entities that just had the observed type ad
 
 For single-entity access outside processor iteration, use `FMassEntityView`. It is transient -- never store across frames because archetype memory can relocate:
 
-`cpp
+```cpp
 if (EntityManager.IsEntityValid(Handle))
 {
     FMassEntityView View(EntityManager, Handle);
@@ -332,7 +332,7 @@ if (EntityManager.IsEntityValid(Handle))
     }
     bool bDead = View.HasTag<FDeadTag>();
 }
-`
+```
 
 ---
 
@@ -406,7 +406,7 @@ Mass Entity processors can trigger State Tree evaluations for entity AI. State T
 
 **Direct mutations inside ForEachEntityChunk:**
 
-`cpp
+```cpp
 // WRONG: direct mutation during iteration — undefined behavior
 Query.ForEachEntityChunk(Context,
     [&EntityManager](FMassExecutionContext& Context) {
@@ -418,7 +418,7 @@ Query.ForEachEntityChunk(Context,
     [](FMassExecutionContext& Context) {
     Context.Defer().AddFragment<FHealthFragment>(Context.GetEntities()[0]);
 });
-`
+```
 
 **Storing FMassEntityView across frames:** Entity views are transient. Archetype memory may relocate between frames, invalidating stored views. Create a fresh `FMassEntityView` each time.
 

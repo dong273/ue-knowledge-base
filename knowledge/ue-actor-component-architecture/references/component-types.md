@@ -6,7 +6,7 @@ Complete reference for UE's built-in component types with inheritance hierarchy,
 
 ## Inheritance Hierarchy
 
-`
+```
 UObject
   └── UActorComponent                 Logic-only; no transform
         └── USceneComponent           Adds transform + attachment
@@ -24,7 +24,7 @@ UObject
                           ├── UPointLightComponent
                           ├── USpotLightComponent
                           └── UDirectionalLightComponent
-`
+```
 
 ---
 
@@ -35,7 +35,7 @@ UObject
 **What it is**: The base class for all components. Has no transform, no position in the world. Pure behavior and data.
 
 **Key properties from source**:
-`cpp
+```cpp
 // Tick function — must set bCanEverTick = true to use
 struct FActorComponentTickFunction PrimaryComponentTick;
 
@@ -50,10 +50,10 @@ uint8 bReplicates : 1;
 
 // Tags for grouping, accessible from Blueprint
 TArray<FName> ComponentTags;
-`
+```
 
 **Key virtual functions to override**:
-`cpp
+```cpp
 virtual void InitializeComponent();     // One-time setup; requires bWantsInitializeComponent=true
 virtual void BeginPlay();               // Game starts
 virtual void EndPlay(EEndPlayReason);   // Cleanup
@@ -63,7 +63,7 @@ virtual void Deactivate();
 virtual bool ShouldActivate() const;    // Return false to block activation
 virtual void OnRegister();              // Component registered with world
 virtual void OnUnregister();            // Component unregistered
-`
+```
 
 **When to use**:
 - Health/stamina/mana tracking
@@ -75,14 +75,14 @@ virtual void OnUnregister();            // Component unregistered
 - Save game data aggregation per actor
 
 **Creation pattern**:
-`cpp
+```cpp
 // Constructor
 HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 
 // Runtime
 UHealthComponent* HC = NewObject<UHealthComponent>(this, UHealthComponent::StaticClass());
 HC->RegisterComponent();
-`
+```
 
 ---
 
@@ -93,7 +93,7 @@ HC->RegisterComponent();
 **What it is**: A `UActorComponent` that has a `FTransform` (`RelativeLocation`, `RelativeRotation`, `RelativeScale3D`). Can attach to and from other `USceneComponent`s, building a hierarchical transform tree.
 
 **Key properties from source**:
-`cpp
+```cpp
 // Transform (private — use accessors)
 FVector RelativeLocation;
 FRotator RelativeRotation;
@@ -120,10 +120,10 @@ uint8 bHiddenInGame : 1;
 uint8 bAbsoluteLocation : 1;
 uint8 bAbsoluteRotation : 1;
 uint8 bAbsoluteScale : 1;
-`
+```
 
 **Key transform API**:
-`cpp
+```cpp
 // Position
 void SetRelativeLocation(FVector);
 void SetWorldLocation(FVector);
@@ -145,10 +145,10 @@ FTransform GetComponentTransform() const; // = ComponentToWorld
 // Movement with sweep (collision-aware)
 bool MoveComponent(const FVector& Delta, const FQuat& NewRotation, bool bSweep,
     FHitResult* Hit, EMoveComponentFlags Flags, ETeleportType Teleport);
-`
+```
 
 **Attachment API**:
-`cpp
+```cpp
 // Constructor-time parent declaration (no world required)
 Child->SetupAttachment(Parent);
 Child->SetupAttachment(Parent, SocketName);
@@ -161,7 +161,7 @@ Child->AttachToComponent(Parent, FAttachmentTransformRules::SnapToTargetNotInclu
 // Detach
 Child->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 Child->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
-`
+```
 
 **`FAttachmentTransformRules` options**:
 
@@ -177,7 +177,7 @@ Child->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
 - Spawn location markers (invisible reference points)
 - Grouping components that should move together under one transform
 
-`cpp
+```cpp
 // Common pattern: scene component as a group pivot
 GroupPivot = CreateDefaultSubobject<USceneComponent>(TEXT("GroupPivot"));
 GroupPivot->SetupAttachment(RootComponent);
@@ -185,7 +185,7 @@ GroupPivot->SetupAttachment(RootComponent);
 MeshA->SetupAttachment(GroupPivot);
 MeshB->SetupAttachment(GroupPivot);
 // Rotate GroupPivot to rotate both meshes together
-`
+```
 
 ---
 
@@ -200,7 +200,7 @@ MeshB->SetupAttachment(GroupPivot);
 - Overlap/hit events
 
 **Key collision API**:
-`cpp
+```cpp
 void SetCollisionEnabled(ECollisionEnabled::Type);
 // ECollisionEnabled::NoCollision
 // ECollisionEnabled::QueryOnly      — overlaps and line traces, no physics
@@ -219,17 +219,17 @@ FComponentEndOverlapSignature OnComponentEndOverlap;
 
 // Hit events (blocking collision)
 FComponentHitSignature OnComponentHit;
-`
+```
 
 **Physics simulation**:
-`cpp
+```cpp
 void SetSimulatePhysics(bool bSimulate);
 void SetEnableGravity(bool bGravityEnabled);
 void AddForce(FVector Force, FName BoneName = NAME_None, bool bAccelChange = false);
 void AddImpulse(FVector Impulse, FName BoneName = NAME_None, bool bVelChange = false);
 void SetPhysicsLinearVelocity(FVector NewVel, bool bAddToCurrent = false);
 FVector GetPhysicsLinearVelocity(FName BoneName = NAME_None);
-`
+```
 
 ---
 
@@ -241,7 +241,7 @@ FVector GetPhysicsLinearVelocity(FName BoneName = NAME_None);
 
 A rendered mesh with pre-baked lighting. The mesh geometry does not deform. The workhorse for environment art — buildings, props, weapons, projectiles.
 
-`cpp
+```cpp
 UStaticMeshComponent* Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 SetRootComponent(Mesh);
 
@@ -261,7 +261,7 @@ Mesh->SetMaterial(0, MaterialInstance);
 
 // Mobility — set in constructor for performance
 Mesh->SetMobility(EComponentMobility::Movable);
-`
+```
 
 ### USkeletalMeshComponent
 
@@ -269,7 +269,7 @@ Mesh->SetMobility(EComponentMobility::Movable);
 
 A mesh with a skeleton (bone hierarchy) that drives deformation. Required for characters, creatures, and anything that needs animation. Supports AnimBP, montages, sockets, morph targets.
 
-`cpp
+```cpp
 USkeletalMeshComponent* CharMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharMesh"));
 CharMesh->SetupAttachment(RootComponent);
 
@@ -282,7 +282,7 @@ FTransform SocketTransform = CharMesh->GetSocketTransform(TEXT("WeaponSocket"));
 // Bone manipulation at runtime — SetBoneLocationByName is on UPoseableMeshComponent,
 // not USkeletalMeshComponent. For driven bone transforms, use UPoseableMeshComponent:
 // PoseableMesh->SetBoneLocationByName(TEXT("spine_01"), NewLocation, EBoneSpaces::WorldSpace);
-`
+```
 
 ### UInstancedStaticMeshComponent (ISMC)
 
@@ -290,7 +290,7 @@ FTransform SocketTransform = CharMesh->GetSocketTransform(TEXT("WeaponSocket"));
 
 Renders many instances of the same static mesh in a single draw call using GPU instancing. Essential for foliage, crowds, spawned duplicates (e.g. bullet casings on the ground).
 
-`cpp
+```cpp
 UInstancedStaticMeshComponent* ISMC = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("ISMC"));
 ISMC->SetStaticMesh(TreeMesh);
 
@@ -306,7 +306,7 @@ ISMC->UpdateInstanceTransform(InstanceIndex, NewTransform, /*bWorldSpace=*/true)
 
 // Remove instance
 ISMC->RemoveInstance(InstanceIndex);
-`
+```
 
 ---
 
@@ -320,7 +320,7 @@ These are invisible collision volumes used for overlap detection, trigger zones,
 
 The standard root component for `ACharacter`. The vertical capsule shape is ideal for characters because it slides over small bumps and provides stable physics interaction.
 
-`cpp
+```cpp
 // ACharacter already creates this as its root — you rarely create it manually
 // Access via ACharacter::GetCapsuleComponent()
 
@@ -330,7 +330,7 @@ Capsule->InitCapsuleSize(42.f, 96.f); // Radius, HalfHeight
 
 // Collision profile
 Capsule->SetCollisionProfileName(TEXT("Pawn"));
-`
+```
 
 ### UBoxComponent
 
@@ -338,13 +338,13 @@ Capsule->SetCollisionProfileName(TEXT("Pawn"));
 
 An axis-aligned box. Common for trigger zones, room boundaries, button hitboxes, and rectangular objects.
 
-`cpp
+```cpp
 UBoxComponent* TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerZone"));
 TriggerBox->SetupAttachment(RootComponent);
 TriggerBox->SetBoxExtent(FVector(200.f, 200.f, 100.f)); // Half extents
 TriggerBox->SetCollisionProfileName(TEXT("Trigger"));
 TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AMyActor::OnOverlapBegin);
-`
+```
 
 ### USphereComponent
 
@@ -352,12 +352,12 @@ TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AMyActor::OnOverlapBegin);
 
 A sphere. Common for explosion radius checks, audio area triggers, and simple interactable zones.
 
-`cpp
+```cpp
 USphereComponent* DetectionRadius = CreateDefaultSubobject<USphereComponent>(TEXT("Detection"));
 DetectionRadius->SetupAttachment(RootComponent);
 DetectionRadius->SetSphereRadius(500.f);
 DetectionRadius->SetCollisionProfileName(TEXT("Trigger"));
-`
+```
 
 ---
 
@@ -369,7 +369,7 @@ DetectionRadius->SetCollisionProfileName(TEXT("Trigger"));
 
 Implements a "boom" arm with collision-aware retraction. Positions the camera behind a character with automatic obstruction avoidance. The standard third-person camera rig.
 
-`cpp
+```cpp
 SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 SpringArmComp->SetupAttachment(RootComponent);
 SpringArmComp->TargetArmLength = 400.f;          // Boom length in cm
@@ -379,7 +379,7 @@ SpringArmComp->CameraLagSpeed = 8.f;
 
 // Socket name for camera attachment
 // SpringArmComp has a built-in socket: USpringArmComponent::SocketName
-`
+```
 
 ### UCameraComponent
 
@@ -387,7 +387,7 @@ SpringArmComp->CameraLagSpeed = 8.f;
 
 Defines a camera view. When the owning actor is the ViewTarget, this component supplies the `FMinimalViewInfo` used for rendering.
 
-`cpp
+```cpp
 CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 CameraComp->bUsePawnControlRotation = false; // Spring arm handles it
@@ -398,7 +398,7 @@ CameraComp->FieldOfView = 90.f;
 // Cinematic settings
 CameraComp->PostProcessSettings.bOverride_DepthOfFieldFstop = true;
 CameraComp->PostProcessSettings.DepthOfFieldFstop = 1.4f;
-`
+```
 
 ---
 
@@ -410,13 +410,13 @@ CameraComp->PostProcessSettings.DepthOfFieldFstop = 1.4f;
 
 Editor-only visualization arrow. Marks spawn points, projectile directions, patrol waypoints, and any directional reference that needs to be visible in the editor viewport but not in-game.
 
-`cpp
+```cpp
 ArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 ArrowComp->SetupAttachment(RootComponent);
 ArrowComp->ArrowColor = FColor::Yellow;
 ArrowComp->ArrowSize = 2.f;
 ArrowComp->bHiddenInGame = true; // Not visible during play — editor only
-`
+```
 
 ### UChildActorComponent
 
@@ -424,14 +424,14 @@ ArrowComp->bHiddenInGame = true; // Not visible during play — editor only
 
 Embeds another actor inside this actor's component tree. The child actor lives at the component's world transform and moves with it. Useful for modular actors (building blocks, vehicle parts) and Blueprint actor graphs.
 
-`cpp
+```cpp
 UChildActorComponent* ChildActorComp = CreateDefaultSubobject<UChildActorComponent>(TEXT("ChildActor"));
 ChildActorComp->SetupAttachment(RootComponent);
 ChildActorComp->SetChildActorClass(AMyChildActor::StaticClass());
 
 // Access the child actor at runtime (after BeginPlay)
 AMyChildActor* Child = Cast<AMyChildActor>(ChildActorComp->GetChildActor());
-`
+```
 
 **Warning**: Child actor BeginPlay is called after the parent's `PostInitializeComponents` but the exact timing relative to the parent's `BeginPlay` depends on whether the parent was spawned or level-placed. Always access child actors in or after `BeginPlay`, never in `PostInitializeComponents`.
 
@@ -441,7 +441,7 @@ AMyChildActor* Child = Cast<AMyChildActor>(ChildActorComp->GetChildActor());
 
 Renders a `UUserWidget` as a 3D object in the world. Used for 3D UI on characters (health bars over enemies), interactive surfaces, and world-space HUDs.
 
-`cpp
+```cpp
 // Module dependency: add "UMG" to PublicDependencyModuleNames in .Build.cs
 
 UWidgetComponent* HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
@@ -456,7 +456,7 @@ if (Widget)
 {
     Widget->SetHealthPercent(0.75f);
 }
-`
+```
 
 ---
 
@@ -468,7 +468,7 @@ if (Widget)
 
 Plays a sound (USoundBase, USoundCue, USoundWave) at the component's world location with 3D spatialization.
 
-`cpp
+```cpp
 UAudioComponent* AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 AudioComp->SetupAttachment(RootComponent);
 AudioComp->SetSound(IdleLoopSound);
@@ -481,7 +481,7 @@ AudioComp->FadeIn(2.0f);          // 2-second fade in
 AudioComp->FadeOut(1.0f, 0.f);   // 1-second fade to silence then stop
 AudioComp->SetVolumeMultiplier(0.5f);
 AudioComp->SetPitchMultiplier(1.2f);
-`
+```
 
 ### UNiagaraComponent
 
@@ -489,7 +489,7 @@ AudioComp->SetPitchMultiplier(1.2f);
 
 Instances a Niagara particle system at the component's location. Use for persistent effects (fire, smoke, shields) that live on the actor.
 
-`cpp
+```cpp
 // Module dependency: add "Niagara" to PublicDependencyModuleNames
 
 UNiagaraComponent* FireFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FireEffect"));
@@ -502,7 +502,7 @@ FireFX->Activate();
 FireFX->Deactivate();
 FireFX->SetVariableFloat(TEXT("EmitterRate"), 100.f);
 FireFX->SetVariableLinearColor(TEXT("FlameColor"), FLinearColor::Red);
-`
+```
 
 ---
 
@@ -514,7 +514,7 @@ FireFX->SetVariableLinearColor(TEXT("FlameColor"), FLinearColor::Red);
 
 A joint constraint between two physics bodies or between a body and the world. Used for hinges (doors, flaps), ball sockets (ragdoll joints), prismatic sliders (elevators), and breakable constraints.
 
-`cpp
+```cpp
 UPhysicsConstraintComponent* HingeConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("HingeConstraint"));
 HingeConstraint->SetupAttachment(RootComponent);
 
@@ -525,7 +525,7 @@ HingeConstraint->SetConstrainedComponents(BodyA, NAME_None, BodyB, NAME_None);
 HingeConstraint->SetAngularSwing1Limit(ACM_Locked, 0.f);
 HingeConstraint->SetAngularSwing2Limit(ACM_Locked, 0.f);
 HingeConstraint->SetAngularTwistLimit(ACM_Free, 0.f);
-`
+```
 
 ---
 
@@ -553,7 +553,7 @@ HingeConstraint->SetAngularTwistLimit(ACM_Free, 0.f);
 
 ## Finding Components at Runtime
 
-`cpp
+```cpp
 // Get a component by class — returns first match
 UHealthComponent* Health = Actor->FindComponentByClass<UHealthComponent>();
 
@@ -570,7 +570,7 @@ UActorComponent* Named = Actor->GetDefaultSubobjectByName(TEXT("HealthComponent"
 
 // Blueprint component query
 Actor->FindComponentByInterface(UInteractable::StaticClass());
-`
+```
 
 ---
 
@@ -578,7 +578,7 @@ Actor->FindComponentByInterface(UInteractable::StaticClass());
 
 `EComponentMobility` must be set in the constructor. It cannot be changed at runtime for static lighting to be valid.
 
-`cpp
+```cpp
 // Static — fully baked lighting; cannot move at runtime
 Mesh->SetMobility(EComponentMobility::Static);
 
@@ -587,6 +587,6 @@ Mesh->SetMobility(EComponentMobility::Stationary);
 
 // Movable — dynamic lighting; can translate/rotate at runtime
 Mesh->SetMobility(EComponentMobility::Movable);
-`
+```
 
 Performance implication: `Movable` components cast dynamic shadows (expensive). Use `Static` for anything that never moves. Use `Movable` only when the component actually needs to translate, rotate, or scale at runtime.

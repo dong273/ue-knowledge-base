@@ -13,7 +13,7 @@ Install third-party UE plugins into a project. Two levels: **Project plugin** (`
 
 Check via GitHub API (fast, no full page load):
 
-`bash
+```bash
 # Repo metadata — stars, license, last update, description
 curl -sL "https://api.github.com/repos/<owner>/<repo>"
 
@@ -25,7 +25,7 @@ curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<Name>.uplug
 
 # Check submodules requirement
 curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/.gitmodules"
-`
+```
 
 **Key signals:**
 - Stars: >50 = community tested; >300 = well-vetted
@@ -38,20 +38,20 @@ curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/.gitmodules"
 
 When `https://github.com/` downloads are slow, prefix with gh-proxy:
 
-`bash
+```bash
 curl -sL -o plugin.zip "https://gh-proxy.com/https://github.com/<owner>/<repo>/archive/refs/heads/main.zip"
-`
+```
 
 For tagged releases:
-`bash
+```bash
 curl -sL -o plugin.zip "https://gh-proxy.com/https://github.com/<owner>/<repo>/archive/refs/tags/v1.0.0.zip"
-`
+```
 
 ### 3. Handle Submodules
 
 Check `.gitmodules` in the repo for submodule dependencies. Download each separately:
 
-`bash
+```bash
 # For each submodule: url + path
 curl -sL -o submodule.zip "https://gh-proxy.com/https://github.com/<owner>/<subrepo>/archive/refs/heads/main.zip"
 unzip -qo submodule.zip
@@ -61,38 +61,38 @@ if [ -d "Source/SubRepo/SubRepo-main" ]; then
   mv Source/SubRepo/SubRepo-main/* Source/SubRepo/
   rmdir Source/SubRepo/SubRepo-main
 fi
-`
+```
 
 ### 4. Install to Project
 
-`bash
+```bash
 # Extract to project Plugins/
 unzip -qo plugin.zip -d /tmp/plugin-tmp
 mv /tmp/plugin-tmp/Repo-BranchOrTag/ Plugins/<PluginName>/
 rm -rf /tmp/plugin-tmp plugin.zip
-`
+```
 
 **Naming:** The directory name doesn't matter for UE — it resolves by .uplugin filename. But keep it clean (repo name or friendly name).
 
 ### 5. Register in .uproject
 
-`json
+```json
 {
   "Plugins": [
     {"Name": "<UPluginFilename>", "Enabled": true}
   ]
 }
-`
+```
 
 The `Name` must match the `.uplugin` filename (without extension). Patch the existing .uproject using `patch` tool — add the entry in the `Plugins` array.
 
 ### 6. Build to Verify
 
-`bash
+```bash
 cd "<ProjectDir>"
 "<EngineDir>/Engine/Build/BatchFiles/Build.bat" <ProjectName>Editor Win64 Development \
   -Project="<ProjectDir>/<Project>.uproject" -Progress 2>&1 | tail -10
-`
+```
 
 **Signs of success:**
 - `Compile [x64] <Module>.cpp` entries for the plugin's modules
@@ -106,9 +106,24 @@ cd "<ProjectDir>"
 - `Target is up to date` with 0 new compilations — plugin may not have been detected (check .uproject entry, file paths)
 
 If "Target is up to date" but plugin was just added, touch the .uplugin to force re-evaluation:
-`bash
+```bash
 touch "Plugins/<Name>/<Name>.uplugin"
-`
+```
+
+### 7. (Optional) Hermes MCP Registration
+
+If the plugin provides an MCP server (e.g. FlopAI UnrealMCP), register it with Hermes:
+
+```bash
+hermes mcp add <server-name> \
+  --command <command> \
+  --args --directory "<PythonDir>" run <script.py>
+
+# Handle interactive "Enable all N tools?" prompt by piping Y
+echo "Y" | hermes mcp add ...
+```
+
+The server must be running before Hermes can use its tools.
 
 ## Pitfalls
 

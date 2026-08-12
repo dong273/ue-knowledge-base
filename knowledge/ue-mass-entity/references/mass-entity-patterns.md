@@ -6,7 +6,7 @@ Code templates for Mass Entity framework. All signatures source-verified from UE
 
 ## Custom Fragment and Tag Definitions
 
-`cpp
+```cpp
 #include "MassEntityTypes.h"
 
 // Per-entity mutable fragment
@@ -56,13 +56,13 @@ struct FChunkLODFragment : public FMassChunkFragment
     GENERATED_BODY()
     int32 CurrentLOD = 0;
 };
-`
+```
 
 ---
 
 ## UMassProcessor Subclass Template
 
-`cpp
+```cpp
 // MyMovementProcessor.h
 #pragma once
 #include "MassProcessor.h"
@@ -127,13 +127,13 @@ void UMyMovementProcessor::Execute(FMassEntityManager& EntityManager,
         }
     });
 }
-`
+```
 
 ---
 
 ## Observer Processor Template
 
-`cpp
+```cpp
 // HealthAddedObserver.h
 #pragma once
 #include "MassObserverProcessor.h"
@@ -182,13 +182,13 @@ void UHealthAddedObserver::Execute(FMassEntityManager& EntityManager,
         }
     });
 }
-`
+```
 
 ---
 
 ## FMassEntityView Usage
 
-`cpp
+```cpp
 void ApplyDamage(FMassEntityManager& EntityManager,
                  FMassEntityHandle Target, float Damage)
 {
@@ -214,7 +214,7 @@ void ApplyDamage(FMassEntityManager& EntityManager,
         EntityManager.AddTagToEntity(Target, FDeadTag::StaticStruct());
     }
 }
-`
+```
 
 **Important:** Never store `FMassEntityView` across frames. Create a fresh view each time.
 
@@ -224,7 +224,7 @@ void ApplyDamage(FMassEntityManager& EntityManager,
 
 Use inside `ForEachEntityChunk` -- never mutate entities directly during iteration:
 
-`cpp
+```cpp
 Query.ForEachEntityChunk(Context,
     [](FMassExecutionContext& Context)
 {
@@ -251,7 +251,7 @@ Query.ForEachEntityChunk(Context,
         }
     }
 });
-`
+```
 
 **Execution order:** Create -> Add -> Remove -> ChangeComposition -> Set -> Destroy
 
@@ -259,7 +259,7 @@ Query.ForEachEntityChunk(Context,
 
 ## Custom Trait Template
 
-`cpp
+```cpp
 // MyHealthTrait.h
 #pragma once
 #include "MassEntityTraitBase.h"
@@ -290,7 +290,7 @@ protected:
         BuildContext.AddTag<FAliveTag>();
     }
 };
-`
+```
 
 Assign traits to `UMassEntityConfigAsset` in the editor. `AMassSpawner` references the config asset and controls spawn count and spatial distribution.
 
@@ -307,11 +307,13 @@ Key configuration on the trait:
 
 Force game-thread execution for processors touching ISM:
 
-`cpp
+```cpp
 // In your processor's shared fragment traits specialization:
 template<>
 struct TMassSharedFragmentTraits<FMyVisualizationFragment>
 {
     static constexpr bool GameThreadOnly = true;
 };
-UMassRepresentationSubsystem` manages ISM component pools and handles LOD transitions between `StaticMeshInstance`, `HighResSpawnedActor`, and `LowResSpawnedActor` representation types.
+```
+
+`UMassRepresentationSubsystem` manages ISM component pools and handles LOD transitions between `StaticMeshInstance`, `HighResSpawnedActor`, and `LowResSpawnedActor` representation types.

@@ -8,7 +8,7 @@ Source of truth: `Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h` �
 
 ## Complete Lifecycle Diagram
 
-`
+```
   SPAWN / LEVEL LOAD
   ──────────────────────────────────────────────────────────────────────────
   AActor::AActor()
@@ -103,7 +103,7 @@ Source of truth: `Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h` �
     The actor is about to be handed to the garbage collector.
 
   [GC pass — memory freed]
-`
+```
 
 ---
 
@@ -111,7 +111,7 @@ Source of truth: `Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h` �
 
 Declared in `Engine/EngineTypes.h`:
 
-`cpp
+```cpp
 namespace EEndPlayReason
 {
     enum Type : int
@@ -123,7 +123,7 @@ namespace EEndPlayReason
         Quit,               // The game application is shutting down
     };
 }
-`
+```
 
 ### Decision matrix for EndPlay cleanup
 
@@ -137,13 +137,13 @@ namespace EEndPlayReason
 
 Always clear timers in EndPlay regardless of reason:
 
-`cpp
+```cpp
 void AMyActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
     Super::EndPlay(EndPlayReason); // Required
 }
-`
+```
 
 ---
 
@@ -151,7 +151,7 @@ void AMyActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 Tick groups are defined in `Engine/Source/Runtime/Engine/Classes/Engine/EngineBaseTypes.h`:
 
-`
+```
 Frame start
   │
   ├─ TG_PrePhysics       (default for actors and components)
@@ -171,11 +171,11 @@ Frame start
   └─ TG_PostUpdateWork   (last tick group)
        Final state queries, rendering preparation
 Frame end
-`
+```
 
 Setting the tick group:
 
-`cpp
+```cpp
 AMyActor::AMyActor()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -187,7 +187,7 @@ UMyComponent::UMyComponent()
     PrimaryComponentTick.bCanEverTick = true;
     PrimaryComponentTick.TickGroup = TG_PostPhysics;
 }
-`
+```
 
 ---
 
@@ -211,14 +211,14 @@ Key consequence: never assume that `BeginPlay` on the client sees the same initi
 
 ### Replicated actor spawn sequence (client side)
 
-`
+```
 Net driver receives actor channel data
   → UActorComponent::OnComponentCreated() [native components]
   → AActor::PostActorCreated()
   → AActor::PostInitializeComponents()
   → PostNetReceive() / OnRep_* calls for initial property batch
   → AActor::BeginPlay()
-`
+```
 
 ### Child actors in multiplayer
 
@@ -230,7 +230,7 @@ Net driver receives actor channel data
 
 `SpawnActorDeferred` pauses the lifecycle between construction and initialization, giving you a window to configure the actor before `BeginPlay` fires.
 
-`
+```
 SpawnActorDeferred<T>() called
   → AActor::AActor()                  Constructor runs
   → CreateDefaultSubobject calls      Components created
@@ -245,7 +245,7 @@ Actor->FinishSpawning(Transform)
   → UActorComponent::InitializeComponent()
   → AActor::PostInitializeComponents()
   → AActor::BeginPlay()               Now fires
-`
+```
 
 This pattern is essential when:
 - The actor's `BeginPlay` reads configuration data that must be set before it runs
@@ -258,7 +258,7 @@ This pattern is essential when:
 
 Each `UActorComponent` has its own parallel lifecycle that mirrors the actor's:
 
-`
+```
 UActorComponent constructed (via CreateDefaultSubobject or NewObject)
   → OnComponentCreated()          [first time, not on level-placed actors]
   → RegisterComponent()           [gets world presence]
@@ -277,7 +277,9 @@ UActorComponent constructed (via CreateDefaultSubobject or NewObject)
   → DestroyRenderState_Concurrent()
   → OnDestroyPhysicsState()
   → DestroyComponent()            [marks for GC]
-bHasBegunPlay`, `bHasBeenInitialized`, `bHasBeenCreated` are the runtime flags you can check on a `UActorComponent` instance to know where it is in this sequence.
+```
+
+`bHasBegunPlay`, `bHasBeenInitialized`, `bHasBeenCreated` are the runtime flags you can check on a `UActorComponent` instance to know where it is in this sequence.
 
 ---
 

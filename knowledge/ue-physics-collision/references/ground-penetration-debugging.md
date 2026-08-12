@@ -10,13 +10,13 @@ When a character (ACharacter / CMC) jumps and occasionally falls through the gro
 ## Systematic Debugging Flow
 
 ### Step 1: Enable CMC debug display
-`cpp
+```cpp
 GetCharacterMovement()->bShowDebug = true;
-`
+```
 Watch the HUD for `MovementMode: Falling/Walking` and `Floor Z` values.
 
 ### Step 2: Check floor detection
-`cpp
+```cpp
 void UMyCMC::FindFloor(const FVector& CapsuleLocation,
     FFindFloorResult& OutFloorResult, bool bCanUseCachedLocation,
     const FHitResult* DownwardSweepResult)
@@ -27,13 +27,13 @@ void UMyCMC::FindFloor(const FVector& CapsuleLocation,
         OutFloorResult.FloorDist, OutFloorResult.bBlockingHit,
         OutFloorResult.bWalkableFloor);
 }
-`
+```
 
 ### Step 3: Console commands
-`
+```
 ShowDebug MOVEMENT       # Real-time movement mode, velocity, floor
 p.KillZ -1000000          # Prevent death from falling through
-`
+```
 
 ## Root Cause Reference
 

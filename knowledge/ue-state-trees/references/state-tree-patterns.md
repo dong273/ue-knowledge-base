@@ -6,7 +6,7 @@ Complete code templates for custom State Tree nodes. All signatures are source-v
 
 ## Custom Task Template
 
-`cpp
+```cpp
 // MyTimedTask.h
 #pragma once
 #include "StateTreeTaskBase.h"
@@ -71,11 +71,11 @@ struct FMyTimedTask : public FStateTreeTaskBase
         // Cleanup if needed (stop audio, cancel async ops, etc.)
     }
 };
-`
+```
 
 ### Task with External Data
 
-`cpp
+```cpp
 USTRUCT(meta=(DisplayName="Move To Target"))
 struct FMoveToTargetTask : public FStateTreeTaskBase
 {
@@ -122,13 +122,13 @@ struct FMoveToTargetTask : public FStateTreeTaskBase
             ? EStateTreeRunStatus::Succeeded : EStateTreeRunStatus::Running;
     }
 };
-`
+```
 
 ---
 
 ## Custom Condition Template
 
-`cpp
+```cpp
 USTRUCT()
 struct FHealthCheckConditionInstanceData
 {
@@ -156,7 +156,7 @@ struct FHealthBelowThresholdCondition : public FStateTreeConditionBase
         return Data.CurrentHealth < Threshold;
     }
 };
-`
+```
 
 ---
 
@@ -164,7 +164,7 @@ struct FHealthBelowThresholdCondition : public FStateTreeConditionBase
 
 Evaluators run every tick before transitions. Use them to inject world data into the tree via property bindings.
 
-`cpp
+```cpp
 USTRUCT()
 struct FNearestEnemyEvaluatorInstanceData
 {
@@ -229,7 +229,7 @@ struct FNearestEnemyEvaluator : public FStateTreeEvaluatorBase
         Data.NearestEnemy = nullptr;
     }
 };
-`
+```
 
 ---
 
@@ -237,7 +237,7 @@ struct FNearestEnemyEvaluator : public FStateTreeEvaluatorBase
 
 Use `FStateTreeReference` for linked assets and runtime parameter overrides:
 
-`cpp
+```cpp
 // In your component or controller
 UPROPERTY(EditAnywhere, Category = "StateTree")
 FStateTreeReference StateTreeRef;
@@ -260,7 +260,7 @@ void SwitchToCombatVariant(FStateTreeReference& CombatRef)
     TreeOverrides.AddOverride(
         FGameplayTag::RequestGameplayTag("Variant.Combat"), CombatRef);
 }
-`
+```
 
 ---
 
@@ -268,7 +268,7 @@ void SwitchToCombatVariant(FStateTreeReference& CombatRef)
 
 ### Sending Events from External Systems
 
-`cpp
+```cpp
 // From perception callback
 void AMyAIController::OnTargetPerceived(AActor* Target)
 {
@@ -281,11 +281,11 @@ void AMyAIController::OnTargetPerceived(AActor* Target)
         FConstStructView::Make(Payload),
         TEXT("Perception"));
 }
-`
+```
 
 ### Consuming Events in Tasks
 
-`cpp
+```cpp
 virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context,
     const FStateTreeTransitionResult& Transition) const override
 {
@@ -302,7 +302,7 @@ virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context,
     });
     return EStateTreeRunStatus::Running;
 }
-`
+```
 
 ---
 

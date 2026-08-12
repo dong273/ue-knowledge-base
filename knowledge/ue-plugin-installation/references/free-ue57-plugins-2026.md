@@ -1,6 +1,6 @@
 # Free UE5.7 Plugins Survey (July 2026)
 
-Surveyed during a [REDACTED] project session. GitHub API + README + uplugin + build verification.
+Surveyed during a Baihechubu project session. GitHub API + README + uplugin + build verification.
 
 ## Confirmed Free/Open-Source, UE5.7 Compatible
 
@@ -30,9 +30,9 @@ Surveyed during a [REDACTED] project session. GitHub API + README + uplugin + bu
 
 Used for all GitHub downloads during this session (user on mobile hotspot with 40KB/s–1.8MB/s):
 
-`
+```
 https://gh-proxy.com/https://github.com/<owner>/<repo>/...
-`
+```
 
 ## Submodule Dependencies (UEToolbox)
 

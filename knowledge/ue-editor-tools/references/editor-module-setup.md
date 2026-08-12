@@ -8,7 +8,7 @@ Complete boilerplate and registration patterns for Unreal Engine editor modules.
 
 ### .uproject Module Entries
 
-`json
+```json
 {
   "Modules": [
     {
@@ -23,7 +23,7 @@ Complete boilerplate and registration patterns for Unreal Engine editor modules.
     }
   ]
 }
-`
+```
 
 **LoadingPhase guidance**:
 
@@ -37,7 +37,7 @@ Complete boilerplate and registration patterns for Unreal Engine editor modules.
 
 ## Directory Layout
 
-`
+```
 MyProject/
   Source/
     MyGame/                         ← Runtime module
@@ -63,13 +63,13 @@ MyProject/
           MyEditorMode.cpp
         AssetTypes/
           FMyAssetTypeActions.cpp
-`
+```
 
 ---
 
 ## Build.cs
 
-`csharp
+```csharp
 // MyGameEditor.Build.cs
 using UnrealBuildTool;
 
@@ -133,13 +133,13 @@ public class MyGameEditor : ModuleRules
         }
     }
 }
-`
+```
 
 ---
 
 ## Module Header
 
-`cpp
+```cpp
 // MyGameEditor.h
 #pragma once
 
@@ -167,13 +167,13 @@ private:
     // Keep alive references for registered asset type actions
     TArray<TSharedPtr<class IAssetTypeActions>> RegisteredAssetTypeActions;
 };
-`
+```
 
 ---
 
 ## Module Implementation
 
-`cpp
+```cpp
 // MyGameEditorModule.cpp
 #include "MyGameEditor.h"
 
@@ -343,7 +343,7 @@ void FMyGameEditorModule::RegisterMenuExtensions()
         );
     }
 }
-`
+```
 
 ---
 
@@ -351,7 +351,7 @@ void FMyGameEditorModule::RegisterMenuExtensions()
 
 If a Runtime module needs to reference editor-only functionality (uncommon but valid for things like editor hints):
 
-`cpp
+```cpp
 // SomeRuntimeClass.h
 UCLASS()
 class MYGAME_API UMyRuntimeClass : public UObject
@@ -391,7 +391,7 @@ bool UMyRuntimeClass::CanEditChange(const FProperty* InProperty) const
     return true;
 }
 #endif
-`
+```
 
 ---
 
@@ -399,7 +399,7 @@ bool UMyRuntimeClass::CanEditChange(const FProperty* InProperty) const
 
 Required to support "right-click > Create" in the Content Browser for a custom asset type:
 
-`cpp
+```cpp
 // MyCustomAssetFactory.h
 #pragma once
 #include "Factories/Factory.h"
@@ -445,7 +445,7 @@ UObject* UMyCustomAssetFactory::FactoryCreateNew(
 {
     return NewObject<UMyCustomAsset>(InParent, Class, Name, Flags);
 }
-`
+```
 
 The factory is auto-discovered by the editor; no explicit registration is needed. The `UFactory` subclass must be in the editor module.
 
@@ -453,7 +453,7 @@ The factory is auto-discovered by the editor; no explicit registration is needed
 
 ## Module Dependency Graph
 
-`
+```
 MyGameEditor (Type: Editor)
     depends on → MyGame (Type: Runtime)
     depends on → PropertyEditor, UnrealEd, Blutility, ToolMenus, AssetTools
@@ -462,7 +462,7 @@ MyGameEditor (Type: Editor)
 MyGame (Type: Runtime)
     no editor dependencies
     uses WITH_EDITOR guards for PostEditChangeProperty etc.
-`
+```
 
 ---
 

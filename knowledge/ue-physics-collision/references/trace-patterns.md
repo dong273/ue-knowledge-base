@@ -8,7 +8,7 @@ Common trace query patterns for gameplay mechanics in Unreal Engine 5. All patte
 
 Single line trace from camera or muzzle, returning the first blocking hit. Reports impact point, surface normal, hit actor, and physical surface type for decal/sound selection.
 
-`cpp
+```cpp
 // MyWeaponComponent.h
 UFUNCTION()
 void FireHitscan(const FVector& MuzzleLocation, const FVector& AimDirection, float Range);
@@ -65,7 +65,7 @@ void UMyWeaponComponent::FireHitscan(const FVector& MuzzleLocation,
     if (bHit) DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 5.f, 8, FColor::Green, false, 1.f);
 #endif
 }
-`
+```
 
 ---
 
@@ -73,7 +73,7 @@ void UMyWeaponComponent::FireHitscan(const FVector& MuzzleLocation,
 
 Sweeps a sphere along an arc for melee hit detection. Captures multiple targets in one call with `SweepMultiByChannel`. Avoids hitting the same actor twice.
 
-`cpp
+```cpp
 void UMeleeComponent::PerformMeleeSwing(const FVector& SwingStart,
                                          const FVector& SwingEnd,
                                          float AttackRadius)
@@ -114,7 +114,7 @@ void UMeleeComponent::PerformMeleeSwing(const FVector& SwingStart,
     DrawDebugSphere(GetWorld(), SwingEnd, AttackRadius, 12, FColor::Orange, false, 0.5f);
 #endif
 }
-`
+```
 
 ---
 
@@ -122,7 +122,7 @@ void UMeleeComponent::PerformMeleeSwing(const FVector& SwingStart,
 
 Player looks at an object and presses interact. Uses a trace channel dedicated to interaction so non-interactable geometry is filtered automatically by the Interactable object type's channel response.
 
-`cpp
+```cpp
 // In PlayerController or Character
 
 void AMyCharacter::TryInteract()
@@ -160,7 +160,7 @@ void AMyCharacter::TryInteract()
         }
     }
 }
-`
+```
 
 ---
 
@@ -168,7 +168,7 @@ void AMyCharacter::TryInteract()
 
 Character or physics object checks whether it is on the ground. Uses a short downward line trace against WorldStatic and WorldDynamic. Common for jump/fall logic without relying on `CharacterMovementComponent`.
 
-`cpp
+```cpp
 bool UMyMovementComponent::IsGrounded() const
 {
     const FVector Start = GetOwner()->GetActorLocation();
@@ -207,7 +207,7 @@ FVector UMyMovementComponent::GetGroundNormal() const
     }
     return FVector::UpVector;
 }
-`
+```
 
 ---
 
@@ -215,7 +215,7 @@ FVector UMyMovementComponent::GetGroundNormal() const
 
 Instant radial check at detonation point. Finds all Pawns and PhysicsBodies within radius. Applies damage with falloff.
 
-`cpp
+```cpp
 void AExplosiveActor::Detonate(const FVector& ExplosionCenter, float Radius, float MaxDamage)
 {
     FCollisionShape Sphere = FCollisionShape::MakeSphere(Radius);
@@ -286,7 +286,7 @@ void AExplosiveActor::Detonate(const FVector& ExplosionCenter, float Radius, flo
     DrawDebugSphere(GetWorld(), ExplosionCenter, Radius, 16, FColor::Orange, false, 2.f);
 #endif
 }
-`
+```
 
 ---
 
@@ -294,7 +294,7 @@ void AExplosiveActor::Detonate(const FVector& ExplosionCenter, float Radius, flo
 
 Test whether a target actor is visible from the camera position, blocked by world geometry. Common for AI perception fallback or UI visibility indicators.
 
-`cpp
+```cpp
 bool AMyAIController::HasLineOfSightTo(AActor* Target) const
 {
     if (!Target) return false;
@@ -321,7 +321,7 @@ bool AMyAIController::HasLineOfSightTo(AActor* Target) const
 
     return !bBlocked; // no blocking hit means clear line of sight
 }
-`
+```
 
 ---
 
@@ -329,7 +329,7 @@ bool AMyAIController::HasLineOfSightTo(AActor* Target) const
 
 Before moving a character or vehicle to a new position, sweep a capsule to detect blocking geometry. Returns the first blocking hit to adjust the path.
 
-`cpp
+```cpp
 bool UMyMovementComponent::CanMoveToLocation(const FVector& TargetLocation) const
 {
     const FVector CurrentLocation = GetOwner()->GetActorLocation();
@@ -361,7 +361,7 @@ bool UMyMovementComponent::CanMoveToLocation(const FVector& TargetLocation) cons
 
     return true;
 }
-`
+```
 
 ---
 
@@ -369,7 +369,7 @@ bool UMyMovementComponent::CanMoveToLocation(const FVector& TargetLocation) cons
 
 For sensors that fire every frame on many actors (AI perception, grass interaction, liquid detection), synchronous traces stall the game thread. Use async traces queued this frame and read next frame.
 
-`cpp
+```cpp
 // .h
 FTraceHandle PendingTraceHandle;
 bool         bHasPendingTrace = false;
@@ -414,13 +414,13 @@ void UMySensorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
         bHasPendingTrace = true;
     }
 }
-`
+```
 
 ---
 
 ## FCollisionQueryParams Quick Reference
 
-`cpp
+```cpp
 FCollisionQueryParams Params(
     TEXT("TraceName"),    // tag for profiling / debug drawing
     false,                // bTraceComplex — true for per-poly, false for simple hull
@@ -436,7 +436,7 @@ Params.MobilityType = EQueryMobilityType::Any; // Any, Static, Dynamic
 Params.AddIgnoredActor(SomeActor);
 Params.AddIgnoredActors(ArrayOfActors);
 Params.AddIgnoredComponent(SomeComponent);
-`
+```
 
 ---
 
@@ -444,7 +444,7 @@ Params.AddIgnoredComponent(SomeComponent);
 
 All shapes from `CollisionShape.h`:
 
-`cpp
+```cpp
 // Line — default, no volume (same as calling LineTrace functions directly)
 FCollisionShape Line; // default constructor
 
@@ -464,18 +464,18 @@ float Radius  = Sphere.GetSphereRadius();
 float CHH     = Capsule.GetCapsuleHalfHeight();         // full half-height
 float CAxisHL = Capsule.GetCapsuleAxisHalfLength();     // shaft only (HalfHeight - Radius)
 FVector Ext   = Box.GetBox();                           // returns half-extents as FVector
-`
+```
 
 ---
 
 ## EDrawDebugTrace Reference (UKismetSystemLibrary)
 
-`cpp
+```cpp
 EDrawDebugTrace::None         // No debug drawing
 EDrawDebugTrace::ForOneFrame  // Draw for one frame only
 EDrawDebugTrace::ForDuration  // Draw for specified duration (DrawTime parameter)
 EDrawDebugTrace::Persistent   // Draw until explicitly cleared
-`
+```
 
 ---
 

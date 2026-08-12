@@ -39,9 +39,9 @@ Common material parameter patterns, performance notes, and API quick-reference f
 | `ForceReturnToDefaultValues` | `void ForceReturnToDefaultValues()` | Resets all overrides to collection defaults |
 
 Obtain the instance via:
-`cpp
+```cpp
 UMaterialParameterCollectionInstance* Inst = GetWorld()->GetParameterCollectionInstance(CollectionAsset);
-`
+```
 
 ### UPrimitiveComponent — Material Slot API (PrimitiveComponent.h)
 
@@ -82,7 +82,7 @@ Parameter updates are low-cost individually. The overhead is:
 
 For very high parameter counts (50+ parameters changed per frame per instance), use the index-based API to skip name lookup:
 
-`cpp
+```cpp
 // One-time initialization
 int32 AlphaIdx = -1;
 int32 ColorIdx = -1;
@@ -92,7 +92,7 @@ MyMID->InitializeVectorParameterAndGetIndex(TEXT("TintColor"), FLinearColor::Whi
 // Per-frame update — no FName hash lookup
 MyMID->SetScalarParameterByIndex(AlphaIdx, NewAlpha);
 MyMID->SetVectorParameterByIndex(ColorIdx, NewColor);
-`
+```
 
 ### MPC vs MID — When to Use Which
 
@@ -127,7 +127,7 @@ Choose the smallest format that meets precision needs:
 - Post-process applied to capture
 
 Optimization options:
-`cpp
+```cpp
 // Disable capture every frame; call manually when needed
 SceneCapture->bCaptureEveryFrame = false;
 SceneCapture->CaptureScene(); // trigger manually
@@ -143,7 +143,7 @@ SceneCapture->ShowFlags.SetContactShadows(false);
 SceneCapture->HiddenActors.Add(PlayerActor);
 
 // Use a low-resolution render target for distant/offscreen views
-`
+```
 
 ---
 

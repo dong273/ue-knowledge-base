@@ -40,7 +40,7 @@ Complete reference for UPROPERTY(), UFUNCTION(), UCLASS(), USTRUCT(), and UENUM(
 | `NotReplicated` | Explicitly marks as not replicated (for structs inheriting replicated struct) |
 
 All replicated properties require `GetLifetimeReplicatedProps` override:
-`cpp
+```cpp
 void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -48,7 +48,7 @@ void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
     DOREPLIFETIME_CONDITION(AMyActor, bIsAiming, COND_SkipOwner);
     DOREPLIFETIME_CONDITION(AMyActor, PersonalScore, COND_OwnerOnly);
 }
-`
+```
 
 **Replication Conditions (COND_*):**
 
@@ -86,7 +86,7 @@ void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 
 Meta goes inside `meta=(...)` after the main specifiers:
 
-`cpp
+```cpp
 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats",
     meta=(
         ClampMin="0.0",
@@ -100,7 +100,7 @@ UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats",
         AllowPrivateAccess="true"
     ))
 float Health;
-`
+```
 
 | Meta Key | Effect |
 |----------|--------|
@@ -140,7 +140,7 @@ float Health;
 | `BlueprintCosmetic` | Only callable on clients (cosmetic-only) |
 
 **BlueprintNativeEvent pattern:**
-`cpp
+```cpp
 // .h
 UFUNCTION(BlueprintNativeEvent, Category="Events")
 FVector GetSpawnLocation();
@@ -151,7 +151,7 @@ FVector AMyActor::GetSpawnLocation_Implementation()
 {
     return GetActorLocation() + FVector(0.f, 0.f, 200.f);
 }
-`
+```
 
 ### Networking RPCs
 
@@ -164,7 +164,7 @@ FVector AMyActor::GetSpawnLocation_Implementation()
 | `Unreliable` | Best effort, no ordering | — |
 | `WithValidation` | Requires `_Validate` function | — |
 
-`cpp
+```cpp
 // Client RPC: runs on the owning client
 UFUNCTION(Client, Reliable)
 void ClientShowKillFeed(const FString& KillerName, const FString& VictimName);
@@ -180,7 +180,7 @@ bool ServerRequestInteract_Validate(AActor* Target) { return IsValid(Target); }
 UFUNCTION(NetMulticast, Unreliable)
 void MulticastSpawnBloodDecal(FVector Location, FRotator Rotation);
 void MulticastSpawnBloodDecal_Implementation(FVector Location, FRotator Rotation);
-`
+```
 
 ### Other Function Specifiers
 
@@ -256,7 +256,7 @@ void MulticastSpawnBloodDecal_Implementation(FVector Location, FRotator Rotation
 | `Hidden` | Hide this value from Blueprint picker |
 | `ToolTip="text"` | Tooltip in editor |
 
-`cpp
+```cpp
 UENUM(BlueprintType)
 enum class EGamePhase : uint8
 {
@@ -265,7 +265,7 @@ enum class EGamePhase : uint8
     PostGame   UMETA(DisplayName="Post-Game"),
     MAX        UMETA(Hidden)   // sentinel; hidden from pickers
 };
-`
+```
 
 Enums used in replication must be `uint8` and fit in 8 bits. For larger enums use `TEnumAsByte<EMyEnum>` (UE4) or keep as `uint8`-backed enum class (UE5).
 
@@ -273,7 +273,7 @@ Enums used in replication must be `uint8` and fit in 8 bits. For larger enums us
 
 ## UINTERFACE() & IInterface
 
-`cpp
+```cpp
 // .h
 UINTERFACE(MinimalAPI, Blueprintable)
 class UDamageable : public UInterface
@@ -303,4 +303,4 @@ if (SomeActor->Implements<UDamageable>())
 {
     IDamageable::Execute_TakeDamage(SomeActor, 25.f, this);
 }
-`
+```

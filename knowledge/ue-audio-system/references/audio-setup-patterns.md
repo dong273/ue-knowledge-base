@@ -13,7 +13,7 @@ A persistent music manager that crossfades between tracks using two `UAudioCompo
 
 ### MusicManager.h
 
-`cpp
+```cpp
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -63,11 +63,11 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Audio|Music")
     TObjectPtr<USoundSubmix> MusicSubmix;
 };
-`
+```
 
 ### MusicManager.cpp
 
-`cpp
+```cpp
 #include "MusicManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundSubmix.h"
@@ -145,7 +145,7 @@ void AMusicManager::OnTrackFinished()
     // Looping tracks should have a looping SoundCue or SoundWave —
     // this callback fires only for one-shot music tracks.
 }
-`
+```
 
 ---
 
@@ -156,7 +156,7 @@ distance-based crossfading driven by the player's position relative to defined z
 
 ### AmbientSoundscape.h
 
-`cpp
+```cpp
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -206,11 +206,11 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Audio|Ambient")
     TObjectPtr<USoundAttenuation> AmbientAttenuation;
 };
-`
+```
 
 ### AmbientSoundscape.cpp
 
-`cpp
+```cpp
 #include "AmbientSoundscape.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -293,7 +293,7 @@ void AAmbientSoundscape::FadeInAll(float FadeDuration)
         }
     }
 }
-`
+```
 
 ---
 
@@ -304,7 +304,7 @@ state sounds. Demonstrates proper server guarding and concurrency usage.
 
 ### WeaponAudioComponent.h
 
-`cpp
+```cpp
 #pragma once
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
@@ -367,11 +367,11 @@ private:
     bool bIsOnServer() const;
     FVector GetOwnerLocation() const;
 };
-`
+```
 
 ### WeaponAudioComponent.cpp
 
-`cpp
+```cpp
 #include "WeaponAudioComponent.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
@@ -478,7 +478,7 @@ FVector UWeaponAudioComponent::GetOwnerLocation() const
     const AActor* Owner = GetOwner();
     return Owner ? Owner->GetActorLocation() : FVector::ZeroVector;
 }
-`
+```
 
 ---
 
@@ -487,7 +487,7 @@ FVector UWeaponAudioComponent::GetOwnerLocation() const
 An engine sound that uses a `UMetaSoundSource` with a `RPM` float input and `Engaged` bool input,
 driven from a vehicle's tick.
 
-`cpp
+```cpp
 // In vehicle header:
 UPROPERTY(EditDefaultsOnly, Category = "Audio")
 TObjectPtr<UMetaSoundSource> EngineSoundAsset;   // UMetaSoundSource derives USoundBase
@@ -538,7 +538,7 @@ void AMyVehicle::OnGearShift(int32 NewGear)
         EngineAudioComp->SetTriggerParameter(FName("OnGearShift"));
     }
 }
-`
+```
 
 ---
 
@@ -546,7 +546,7 @@ void AMyVehicle::OnGearShift(int32 NewGear)
 
 Typical volume slider implementation using `USoundSubmix::SetSubmixOutputVolume`.
 
-`cpp
+```cpp
 // In game settings subsystem or GameUserSettings subclass:
 
 UPROPERTY(config)
@@ -593,7 +593,7 @@ void UMyGameUserSettings::SetMasterVolume(float NewVolume)
     ApplyAudioSettings();
     SaveConfig();
 }
-`
+```
 
 ---
 
@@ -601,7 +601,7 @@ void UMyGameUserSettings::SetMasterVolume(float NewVolume)
 
 Drive a material parameter or visual effect from submix spectral analysis.
 
-`cpp
+```cpp
 // In an actor that reacts to music beats:
 
 void ABeaconLight::BeginPlay()
@@ -675,7 +675,7 @@ void ABeaconLight::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
     Super::EndPlay(EndPlayReason);
 }
-`
+```
 
 ---
 

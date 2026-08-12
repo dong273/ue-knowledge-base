@@ -5,11 +5,11 @@ description: Use when the user is working with material, shader, MID, dynamic ma
 
 # UE Materials and Rendering
 
+
 ---
 
 ## Step 1: Read Project Context
 
-Read  before giving advice. From it, extract:
 
 - **Engine version** — UE5.0–5.4 APIs differ (e.g., `SetNaniteOverride` added in 5.x; `CopyScalarAndVectorParameters` signature changed in 5.7)
 - **Target platforms** — Mobile requires forward rendering; many post-process features are desktop-only
@@ -43,7 +43,7 @@ Multiple areas can be combined.
 
 **Pattern A — from UMaterialInterface (standalone, not tied to a component slot):**
 
-`cpp
+```cpp
 // Header
 UPROPERTY()
 TObjectPtr<UMaterialInstanceDynamic> MyMID;
@@ -53,11 +53,11 @@ UMaterialInterface* BaseMat = LoadObject<UMaterialInterface>(
     nullptr, TEXT("/Game/Materials/M_MyBase.M_MyBase"));
 
 MyMID = UMaterialInstanceDynamic::Create(BaseMat, this);
-`
+```
 
 **Pattern B — via component slot (preferred for meshes):**
 
-`cpp
+```cpp
 // UMeshComponent::CreateDynamicMaterialInstance creates a MID for the given
 // element index and assigns it to the slot automatically.
 // Signature: CreateDynamicMaterialInstance(int32 ElementIndex,
@@ -69,32 +69,32 @@ UMaterialInstanceDynamic* MID = MeshComponent->CreateDynamicMaterialInstance(
     nullptr,      // nullptr = use the slot's current material as parent
     TEXT("MyMID") // optional debug name
 );
-`
+```
 
 Source: `MaterialInstanceDynamic.h`, `PrimitiveComponent.h`. Build.cs: `"Engine"`.
 
 #### Setting Parameters
 
-`cpp
+```cpp
 MyMID->SetScalarParameterValue(TEXT("Opacity"), 0.5f);
 MyMID->SetVectorParameterValue(TEXT("BaseColor"), FLinearColor(1.f, 0.2f, 0.1f, 1.f));
 MyMID->SetVectorParameterValue(TEXT("Offset"), FLinearColor(0.f, 0.f, 100.f, 0.f)); // XYZ via FLinearColor
 MyMID->SetTextureParameterValue(TEXT("DamageMask"), MyTexture);
 MyMID->SetTextureParameterValue(TEXT("SecurityFeed"), RenderTargetAsset); // RT as texture
-`
+```
 
 Full setter signatures from `MaterialInstanceDynamic.h`:
-`cpp
+```cpp
 void SetScalarParameterValue(FName ParameterName, float Value);
 void SetVectorParameterValue(FName ParameterName, FLinearColor Value);  // Pass FLinearColor; no implicit conversion from FVector
 void SetTextureParameterValue(FName ParameterName, UTexture* Value);
-`
+```
 
 #### High-Frequency Updates — Index-Based API
 
 When setting dozens of parameters per frame (rare but valid), use index caching:
 
-`cpp
+```cpp
 // In BeginPlay or initialization — call once per parameter name:
 int32 OpacityIndex = -1;
 MyMID->InitializeScalarParameterAndGetIndex(TEXT("Opacity"), 1.0f, OpacityIndex);
@@ -104,7 +104,7 @@ if (OpacityIndex >= 0)
 {
     MyMID->SetScalarParameterByIndex(OpacityIndex, NewOpacity);
 }
-`
+```
 
 Index is invalidated if the parent material changes. Do not share indices across different MID instances.
 
@@ -112,23 +112,23 @@ Index is invalidated if the parent material changes. Do not share indices across
 
 MIDs are `UObject`s — they are garbage collected when unreferenced. To keep a MID alive:
 
-`cpp
+```cpp
 // In your class header — must be UPROPERTY to prevent GC
 UPROPERTY()
 TObjectPtr<UMaterialInstanceDynamic> CachedMID;
-`
+```
 
 Never store MIDs in raw pointers or local variables across frames.
 
 #### Additional MID Operations
 
-`cpp
+```cpp
 // Lerp between two instances' scalar/vector params
 MyMID->K2_InterpolateMaterialInstanceParams(InstanceA, InstanceB, Alpha);
 
 // Assign Nanite-compatible override material (UE5)
 MyMID->SetNaniteOverride(NaniteCompatibleMaterial);
-`
+```
 
 ---
 
@@ -138,7 +138,7 @@ MyMID->SetNaniteOverride(NaniteCompatibleMaterial);
 
 #### Setting Parameters at Runtime
 
-`cpp
+```cpp
 // MyCollection is a UPROPERTY(EditAnywhere) pointing to the MPC asset.
 UPROPERTY(EditAnywhere, Category="Rendering")
 TObjectPtr<UMaterialParameterCollection> GlobalRenderingCollection;
@@ -155,7 +155,7 @@ void AMyActor::UpdateGlobalWeather(float RainIntensity, FLinearColor FogColor)
         Instance->SetVectorParameterValue(TEXT("FogColor"), FogColor);
     }
 }
-`
+```
 
 Both setters return `false` if the parameter name is not found. Names are case-sensitive. Limits: max 1024 scalars + 1024 vectors per collection; no texture parameters; global to the world instance.
 
@@ -166,18 +166,18 @@ Both setters return `false` if the parameter name is not found. Names are case-s
 `APostProcessVolume` wraps `FPostProcessSettings` and controls how the camera is rendered when inside (or globally when `bUnbound = true`).
 
 From `PostProcessVolume.h`:
-`cpp
+```cpp
 struct FPostProcessSettings Settings; // The settings payload
 float Priority;      // Higher priority wins on overlap (undefined order when equal)
 float BlendRadius;   // World-space blend distance in cm (only when bUnbound = false)
 float BlendWeight;   // 0 = no effect, 1 = full effect
 uint32 bEnabled:1;
 uint32 bUnbound:1;   // true = applies globally regardless of camera position
-`
+```
 
 #### Modifying a Post-Process Volume from C++
 
-`cpp
+```cpp
 // Assume PostProcessVolume is assigned or found:
 APostProcessVolume* PPV = /* find or spawn */;
 
@@ -215,20 +215,20 @@ PPV->Settings.bOverride_ColorSaturation = true;
 PPV->Settings.ColorSaturation = FVector4(1.2f, 1.0f, 0.8f, 1.0f); // per-channel RGBA
 PPV->Settings.bOverride_FilmSlope = true;
 PPV->Settings.FilmSlope = 0.88f; // 0–1 (default 0.88)
-`
+```
 
 Every field in `FPostProcessSettings` has a corresponding `bOverride_*` bool that must be set to `true` for the value to take effect. See `references/post-process-settings.md` for a full field reference.
 
 #### Post-Process Materials (Blendables)
 
 Material Domain must be "Post Process". Add via:
-`cpp
+```cpp
 PPV->AddOrUpdateBlendable(PostProcessMaterial, 1.0f); // weight 0.0–1.0
-`
+```
 
 #### UPostProcessComponent (Actor-Owned)
 
-`cpp
+```cpp
 // Constructor
 PostProcessComp = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcess"));
 PostProcessComp->bUnbound = true;
@@ -237,7 +237,7 @@ PostProcessComp->Priority = 5.0f;
 // Runtime
 PostProcessComp->Settings.bOverride_BloomIntensity = true;
 PostProcessComp->Settings.BloomIntensity = 1.5f;
-`
+```
 
 Includes: `"Components/PostProcessComponent.h"`, `"Engine/PostProcessVolume.h"`, `"Engine/Scene.h"`.
 
@@ -247,7 +247,7 @@ Includes: `"Components/PostProcessComponent.h"`, `"Engine/PostProcessVolume.h"`,
 
 #### Creating a Render Target in C++
 
-`cpp
+```cpp
 #include "Engine/TextureRenderTarget2D.h"
 #include "Kismet/KismetRenderingLibrary.h"
 
@@ -265,7 +265,9 @@ UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(
 UTextureRenderTarget2D* RT = NewObject<UTextureRenderTarget2D>(this);
 RT->InitCustomFormat(512, 512, PF_FloatRGBA, /*bInForceLinearGamma=*/true);
 RT->UpdateResourceImmediate(/*bClearRenderTarget=*/true);
-ETextureRenderTargetFormat` values from `TextureRenderTarget2D.h`:
+```
+
+`ETextureRenderTargetFormat` values from `TextureRenderTarget2D.h`:
 | Format | Channels | Bits/Channel | Use Case |
 |--------|----------|-------------|----------|
 | `RTF_RGBA8` | RGBA | 8 fixed | LDR color, UI |
@@ -277,7 +279,7 @@ ETextureRenderTargetFormat` values from `TextureRenderTarget2D.h`:
 
 #### Scene Capture (Security Camera / Minimap)
 
-`cpp
+```cpp
 #include "Components/SceneCaptureComponent2D.h"
 
 // In actor constructor
@@ -293,11 +295,11 @@ SceneCapture->TextureTarget = MyRenderTargetAsset;
 // Limit what's captured for performance
 SceneCapture->ShowFlags.SetAtmosphere(false);
 SceneCapture->ShowFlags.SetFog(false);
-`
+```
 
 #### Drawing a Material to a Render Target
 
-`cpp
+```cpp
 // Renders a full-screen quad with Material applied to TextureTarget.
 // This is expensive (sets render target each call); use canvas API for batching.
 UKismetRenderingLibrary::DrawMaterialToRenderTarget(
@@ -305,11 +307,11 @@ UKismetRenderingLibrary::DrawMaterialToRenderTarget(
     RT,           // UTextureRenderTarget2D*
     MyMaterial    // UMaterialInterface*
 );
-`
+```
 
 #### Canvas Drawing (Batched)
 
-`cpp
+```cpp
 UCanvas* Canvas;
 FVector2D CanvasSize;
 FDrawToRenderTargetContext Context;
@@ -320,19 +322,19 @@ UKismetRenderingLibrary::BeginDrawCanvasToRenderTarget(this, RT, Canvas, CanvasS
 Canvas->K2_DrawMaterial(MyMaterial, FVector2D(0, 0), CanvasSize, FVector2D(0, 0), FVector2D(1, 1));
 
 UKismetRenderingLibrary::EndDrawCanvasToRenderTarget(this, Context);
-`
+```
 
 **`UCanvasRenderTarget2D`** — subclass of `UTextureRenderTarget2D` with a built-in `OnCanvasRenderTargetUpdate` delegate. Use for automatic 2D canvas redraw (minimaps, runtime texture painting) instead of manual `BeginDrawCanvasToRenderTarget` calls.
 
 #### Reading Pixels (GPU Stall — Offline Only)
 
-`cpp
+```cpp
 // WARNING: stalls GPU pipeline. Editor tools / screenshot only, never per-frame.
 FColor Pixel = UKismetRenderingLibrary::ReadRenderTargetPixel(this, RT, X, Y);
 TArray<FColor> Pixels;
 UKismetRenderingLibrary::ReadRenderTarget(this, RT, Pixels);               // whole RT, 8-bit sRGB
 FLinearColor Raw = UKismetRenderingLibrary::ReadRenderTargetRawPixel(this, RT, X, Y);
-`
+```
 
 ---
 
@@ -340,7 +342,7 @@ FLinearColor Raw = UKismetRenderingLibrary::ReadRenderTargetRawPixel(this, RT, X
 
 `UDecalComponent` projects a material onto surfaces. Key API from `DecalComponent.h`:
 
-`cpp
+```cpp
 void SetDecalMaterial(UMaterialInterface* NewDecalMaterial);
 UMaterialInstanceDynamic* CreateDynamicMaterialInstance(); // MID on the decal
 void SetFadeOut(float StartDelay, float Duration, bool DestroyOwnerAfterFade = true);
@@ -348,11 +350,11 @@ void SetFadeIn(float StartDelay, float Duration);
 void SetSortOrder(int32 Value);  // higher = draws on top
 void SetLifeSpan(float LifeSpan);
 FVector DecalSize; // local-space extent (not component scale)
-`
+```
 
 #### Spawning Decals at Runtime
 
-`cpp
+```cpp
 // 0.0f lifespan = persistent; >0.0f = auto-destroy after N seconds
 UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(
     this, DecalMaterial, FVector(200.f), HitLocation, HitNormal.Rotation(), 0.0f);
@@ -360,7 +362,7 @@ UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(
 // Dynamic parameters on the decal
 UMaterialInstanceDynamic* DecalMID = Decal->CreateDynamicMaterialInstance();
 DecalMID->SetScalarParameterValue(TEXT("Opacity"), 0.8f);
-`
+```
 
 #### DBuffer vs Non-DBuffer Decals
 
@@ -388,21 +390,21 @@ Nanite is UE5's virtualized geometry system. Material compatibility rules:
 | Custom vertex normals via shader | Limited |
 
 Check at runtime:
-`cpp
+```cpp
 // Check if a static mesh component is using Nanite (IsNaniteEnabled is on UStaticMesh, not on the component)
 bool bIsNanite = StaticMeshComponent->GetStaticMesh() && StaticMeshComponent->GetStaticMesh()->IsNaniteEnabled();
-`
+```
 
 Override material for Nanite path:
-`cpp
+```cpp
 MyMID->SetNaniteOverride(NaniteCompatibleMaterial);
-`
+```
 
 #### Lumen
 
 Lumen is UE5's dynamic GI and reflections system. Emissive surfaces can act as lights. Translucent surfaces are not traced by default. Control quality via post-process settings:
 
-`cpp
+```cpp
 PPV->Settings.bOverride_LumenReflectionQuality = true;
 PPV->Settings.LumenReflectionQuality = 1.0f;         // 0–4
 
@@ -411,7 +413,7 @@ PPV->Settings.LumenSceneDetail = 1.0f;               // surface cache resolution
 
 PPV->Settings.bOverride_LumenSceneLightingQuality = true;
 PPV->Settings.LumenSceneLightingQuality = 1.0f;
-`
+```
 
 Performance: `r.Lumen.SurfaceCache.UpdateDownsampleFactor` controls cache update rate.
 
@@ -429,11 +431,11 @@ Performance: `r.Lumen.SurfaceCache.UpdateDownsampleFactor` controls cache update
 
 #### Custom Depth / Stencil (Outlines and Effects)
 
-`cpp
+```cpp
 MeshComponent->SetRenderCustomDepth(true);
 MeshComponent->SetCustomDepthStencilValue(1); // 0–255
 // Sample CustomDepth / CustomStencil nodes in a post-process material for outlines, X-ray, highlight effects.
-`
+```
 
 Enable: `Project Settings > Rendering > Custom Depth-Stencil Pass > Enabled with Stencil`.
 
@@ -443,13 +445,13 @@ Enable: `Project Settings > Rendering > Custom Depth-Stencil Pass > Enabled with
 
 **Creating MIDs every frame** — Each `CreateDynamicMaterialInstance` call allocates a new GPU resource. Create once in `BeginPlay`, cache, update in `Tick`:
 
-`cpp
+```cpp
 // BeginPlay
 CachedMID = MeshComponent->CreateDynamicMaterialInstance(0);
 
 // Tick
 if (CachedMID) { CachedMID->SetScalarParameterValue(TEXT("Time"), GetWorld()->TimeSeconds); }
-`
+```
 
 **Not caching MID as UPROPERTY** — Raw `UMaterialInstanceDynamic*` is invisible to GC and collected on the next GC pass. Use `UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> CachedMID;`.
 
@@ -469,7 +471,7 @@ if (CachedMID) { CachedMID->SetScalarParameterValue(TEXT("Time"), GetWorld()->Ti
 
 ## Required Build.cs Dependencies
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[]
 {
     "Engine",           // Materials, render targets, UTextureRenderTarget2D
@@ -479,7 +481,7 @@ PublicDependencyModuleNames.AddRange(new string[]
 
 // For UKismetRenderingLibrary:
 // Already available via "Engine" — no separate module needed.
-`
+```
 
 ---
 

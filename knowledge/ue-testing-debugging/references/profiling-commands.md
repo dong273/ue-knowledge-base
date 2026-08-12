@@ -59,23 +59,23 @@ All `stat` commands are typed into the in-game console (`~`) or passed via `-Exe
 
 ### .uestats Capture (Legacy)
 
-`
+```
 # In-game console
 stat startfile          # starts recording to Saved/Profiling/
 stat stopfile           # stops and writes the .uestats file
 
 # Open in: UnrealEditor > Window > Session Frontend > Profiler tab
 # Or use deprecated StatsViewer commandlet
-`
+```
 
 ### Command-Line Automated Capture
 
-`bash
+```bash
 # Capture for 10 seconds then exit
 UnrealEditor-Cmd MyGame -game \
     -ExecCmds="stat startfile, delay 10, stat stopfile, quit" \
     -log
-`
+```
 
 ---
 
@@ -85,7 +85,7 @@ Unreal Insights replaces the legacy profiler for CPU, GPU, memory, and network t
 
 ### Starting a Trace
 
-`bash
+```bash
 # Attach Insights at launch (preferred for full coverage)
 UnrealEditor MyGame \
     -trace=cpu,gpu,frame,memory,loadtime,log,bookmark \
@@ -102,11 +102,11 @@ UnrealEditor MyGame \
 #   bookmark   — UE_TRACE_BOOKMARK calls
 #   task       — Task Graph tasks
 #   rhicommands — RHI command list
-`
+```
 
 ### Runtime Console Commands
 
-`
+```
 # Start trace mid-session
 Trace.Start cpu,frame,gpu
 
@@ -115,17 +115,17 @@ Trace.Stop
 
 # Bookmark (appears as vertical line in Insights timeline)
 Trace.Bookmark "LevelLoaded"
-`
+```
 
 ### Opening Insights
 
-`bash
+```bash
 # Launch the standalone Insights app
 Engine/Binaries/Win64/UnrealInsights.exe
 
 # Open a .utrace file directly
 UnrealInsights.exe MyCapture.utrace
-`
+```
 
 Key Insights views:
 
@@ -142,7 +142,7 @@ Key Insights views:
 
 Links to the stat system (visible in `stat MyGame` overlay and Insights).
 
-`cpp
+```cpp
 // In a .cpp file — one DECLARE per stat, referenced anywhere in the module
 DECLARE_STATS_GROUP(TEXT("MyGame"), STATGROUP_MyGame, STATCAT_Advanced);
 DECLARE_CYCLE_STAT(TEXT("InventoryTick"),  STAT_InventoryTick,  STATGROUP_MyGame);
@@ -155,13 +155,13 @@ void UInventoryComponent::TickComponent(float DeltaTime, ...)
     SCOPE_CYCLE_COUNTER(STAT_InventoryTick);
     // ...
 }
-`
+```
 
 ### SCOPED_NAMED_EVENT
 
 Shows as a colored block in Insights without stat overhead.
 
-`cpp
+```cpp
 #include "HAL/PlatformMisc.h"
 
 void UMySystem::ProcessBatch()
@@ -173,17 +173,17 @@ void UMySystem::ProcessBatch()
         Process(Item);
     }
 }
-`
+```
 
 ### UE_TRACE_BOOKMARK
 
 Places a labelled vertical marker in the Insights timeline.
 
-`cpp
+```cpp
 #include "ProfilingDebugging/TraceAuxiliary.h"  // or use Trace.Bookmark in console
 
 UE_TRACE_BOOKMARK(TEXT("WaveStarted_%d"), WaveNumber);
-`
+```
 
 ---
 
@@ -191,7 +191,7 @@ UE_TRACE_BOOKMARK(TEXT("WaveStarted_%d"), WaveNumber);
 
 CSV profiling writes lightweight, always-on telemetry to `Saved/Profiling/CSVStats/`. Enable with `-csvstatfile` or the auto-started profiler.
 
-`cpp
+```cpp
 #include "ProfilingDebugging/CsvProfiler.h"
 
 // Declare category once per module
@@ -213,16 +213,16 @@ void UMySystem::PostSpawn()
 
 // Named event (segment in CSV timeline)
 CSV_EVENT(MyGame, TEXT("LevelLoaded"));
-`
+```
 
 ### Launching with CSV Capture
 
-`bash
+```bash
 UnrealEditor-Cmd MyGame -game \
     -csvstatfile=MySession.csv \
     -csvCaptureFrames=1000 \     # capture 1000 frames then stop
     -log
-`
+```
 
 Open `.csv` output with Python / Excel or the **PerfReportTool** (`Engine/Extras/PerfReportTool/`).
 
@@ -232,7 +232,7 @@ Open `.csv` output with Python / Excel or the **PerfReportTool** (`Engine/Extras
 
 LLM categorises allocations for memory profiling in Insights.
 
-`cpp
+```cpp
 #include "HAL/LowLevelMemTracker.h"
 
 // Push/pop a custom LLM scope
@@ -247,13 +247,13 @@ LLM_DEFINE_TAG(MyGame_Inventory, TEXT("MyGame/Inventory"), TEXT("MyGame"));
     LLM_SCOPE_BYTAG(MyGame_Inventory);
     InventoryData = new FInventoryData();
 }
-`
+```
 
 Activate LLM at launch:
 
-`bash
+```bash
 UnrealEditor MyGame -LLM -trace=memory -tracehost=127.0.0.1
-`
+```
 
 ---
 
@@ -261,10 +261,10 @@ UnrealEditor MyGame -LLM -trace=memory -tracehost=127.0.0.1
 
 ### 1. Identify the Bottleneck
 
-`
+```
 stat unit          # Is Frame time dominated by Game, Draw, or GPU?
 stat fps           # Confirm frame rate
-`
+```
 
 - **Game > 33ms** → CPU game thread (tick, AI, physics logic)
 - **Draw > 33ms** → Render thread (draw calls, visibility)
@@ -272,29 +272,29 @@ stat fps           # Confirm frame rate
 
 ### 2. Drill Down on CPU
 
-`
+```
 stat game          # Which game-thread category?
 stat engine        # Is it engine overhead?
 stat tasks         # Async task contention?
-`
+```
 
 Then capture with Insights (`-trace=cpu,frame`) and look at the flame chart.
 
 ### 3. Drill Down on GPU
 
-`
+```
 stat gpu           # Per-pass timings
 ProfileGPU         # Single-frame breakdown
 r.ProfileGPU.Pattern BasePass    # isolate specific pass
-`
+```
 
 ### 4. Memory Pressure
 
-`
+```
 stat memory
 memreport -full
 obj list class=Texture2D sortby=size
-`
+```
 
 Insights memory view shows allocation spikes over time.
 
@@ -302,7 +302,7 @@ Insights memory view shows allocation spikes over time.
 
 Always capture a baseline before any optimization. Use CSV profiling for production telemetry:
 
-`bash
+```bash
 # Baseline run
 UnrealEditor-Cmd MyGame -game -csvstatfile=Baseline.csv -csvCaptureFrames=600
 
@@ -310,19 +310,19 @@ UnrealEditor-Cmd MyGame -game -csvstatfile=Baseline.csv -csvCaptureFrames=600
 UnrealEditor-Cmd MyGame -game -csvstatfile=Optimized.csv -csvCaptureFrames=600
 
 # Diff with PerfReportTool or a Python script
-`
+```
 
 ---
 
 ## GPU Profiling with RenderDoc
 
-`bash
+```bash
 # Launch with RenderDoc capture support
 UnrealEditor MyGame -AttachRenderDoc
 
 # In-game console
 renderdoc.CaptureFrame    # capture next frame
-`
+```
 
 Or attach RenderDoc externally and use **F12** to capture. Open `.rdc` in the RenderDoc UI for draw-call-level inspection.
 
@@ -330,7 +330,7 @@ Or attach RenderDoc externally and use **F12** to capture. Open `.rdc` in the Re
 
 ## Profiling on Device (Mobile / Console)
 
-`bash
+```bash
 # iOS / Android — tunnel Insights over USB
 UnrealInsights.exe -RecorderAddress=127.0.0.1:1980
 
@@ -339,7 +339,7 @@ UnrealInsights.exe -RecorderAddress=127.0.0.1:1980
 
 # Console-specific profiling tools (e.g. PlayStation Razor / Xbox PIX)
 # integrate via platform-specific plugin; SCOPE_CYCLE_COUNTER feeds into them automatically
-`
+```
 
 ---
 

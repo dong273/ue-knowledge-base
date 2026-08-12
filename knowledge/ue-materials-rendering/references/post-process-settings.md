@@ -8,14 +8,14 @@ Source: `Engine/Source/Runtime/Engine/Classes/Engine/Scene.h`
 
 ## Usage Pattern
 
-`cpp
+```cpp
 // Always set the override bool alongside the value:
 PPV->Settings.bOverride_BloomIntensity = true;
 PPV->Settings.BloomIntensity = 1.5f;
 
 // Setting the value without the override has no effect.
 PPV->Settings.BloomIntensity = 1.5f; // silent no-op if bOverride_BloomIntensity is false
-`
+```
 
 ---
 
@@ -62,13 +62,13 @@ Controls how the camera adapts to scene brightness.
 | `AutoExposureHighPercent` | float | 98.3 | Histogram high percentile for metering (0–100) |
 
 **Fixed exposure (override eye adaptation):**
-`cpp
+```cpp
 // Lock exposure to a fixed EV100 value — disables adaptation
 PPV->Settings.bOverride_AutoExposureMethod = true;
 PPV->Settings.AutoExposureMethod = AEM_Manual;
 PPV->Settings.bOverride_AutoExposureBias = true;
 PPV->Settings.AutoExposureBias = 0.0f; // EV100 = 0 is "neutral" daylight
-`
+```
 
 **Visual effect:** `AutoExposureBias` of +1 doubles perceived brightness; -1 halves it. Narrowing the Min/Max range prevents wild brightness swings in high-contrast scenes.
 
@@ -126,7 +126,7 @@ Adjusts the final image colors. Applied in linear light before tonemapping.
 | `bOverride_ColorSaturationHighlights` | bool | Highlight-region saturation |
 | `ColorSaturationHighlights` | FVector4 | Affects only highlights |
 
-`cpp
+```cpp
 // Desaturate shadows (classic film noir / horror look)
 PPV->Settings.bOverride_ColorSaturationShadows = true;
 PPV->Settings.ColorSaturationShadows = FVector4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -136,7 +136,7 @@ PPV->Settings.bOverride_ColorOffsetShadows = true;
 PPV->Settings.ColorOffsetShadows = FVector4(0.0f, 0.01f, 0.02f, 0.0f); // slight blue push in shadows
 PPV->Settings.bOverride_ColorGainHighlights = true;
 PPV->Settings.ColorGainHighlights = FVector4(1.05f, 0.98f, 0.9f, 1.0f);  // warm highlights
-`
+```
 
 **Visual effect:** `ColorSaturation = FVector4(0,0,0,1)` produces full greyscale. The W (alpha) component of these vectors is a master scale applied equally to RGB.
 
@@ -293,7 +293,7 @@ Simulates lens color fringing (RGB channel separation at screen edges).
 
 Post-process materials are added via the volume's blendable array:
 
-`cpp
+```cpp
 // Material Domain must be set to "Post Process" in material editor.
 PPV->AddOrUpdateBlendable(PostProcessMaterial, 1.0f);
 
@@ -302,7 +302,7 @@ PPV->Settings.AddBlendable(PostProcessMaterial, 0.5f);
 
 // Weighted blend — weight 0 = invisible, 1 = full effect
 // Multiple blendables are composited in array order.
-`
+```
 
 Blendable priorities within the post-process pipeline:
 1. Scene Color (before tone mapping) — use `Blendable Location: Before Tonemapping`
@@ -320,13 +320,13 @@ Multiple overlapping volumes blend based on:
 3. **BlendRadius** — world-space distance from volume boundary where blend transitions.
 4. **bUnbound** — if true, volume applies everywhere (lowest effective priority among unbounded volumes unless Priority is set high).
 
-`cpp
+```cpp
 // Two volumes overlapping: the one with Priority = 10 overrides Priority = 1
 // for all properties both have bOverride set.
 
 PPVBackground->Priority = 1;
 PPVDanger->Priority = 10;
-`
+```
 
 Blend order from source documentation: the camera's final post-process settings are accumulated from lowest to highest priority, with each higher-priority volume blending over lower-priority settings according to BlendWeight.
 
@@ -336,7 +336,7 @@ Blend order from source documentation: the camera's final post-process settings 
 
 ### Horror / Dark Atmosphere
 
-`cpp
+```cpp
 auto& S = PPV->Settings;
 
 S.bOverride_BloomIntensity = true;       S.BloomIntensity = 0.2f;
@@ -345,11 +345,11 @@ S.bOverride_ColorSaturation = true;      S.ColorSaturation = FVector4(0.6f, 0.6f
 S.bOverride_AutoExposureMinBrightness = true; S.AutoExposureMinBrightness = 0.01f;
 S.bOverride_AutoExposureMaxBrightness = true; S.AutoExposureMaxBrightness = 1.0f;
 S.bOverride_FilmGrainIntensity = true;   S.FilmGrainIntensity = 0.8f;
-`
+```
 
 ### High-Contrast Cinematic
 
-`cpp
+```cpp
 auto& S = PPV->Settings;
 
 S.bOverride_BloomIntensity = true;       S.BloomIntensity = 0.5f;
@@ -358,11 +358,11 @@ S.bOverride_ColorSaturation = true;      S.ColorSaturation = FVector4(1.2f, 1.2f
 S.bOverride_DepthOfFieldFstop = true;    S.DepthOfFieldFstop = 2.0f;
 S.bOverride_DepthOfFieldFocalDistance = true; S.DepthOfFieldFocalDistance = 500.0f;
 S.bOverride_MotionBlurAmount = true;     S.MotionBlurAmount = 0.4f;
-`
+```
 
 ### Sci-Fi / Tech UI Overlay
 
-`cpp
+```cpp
 auto& S = PPV->Settings;
 
 S.bOverride_BloomIntensity = true;      S.BloomIntensity = 2.0f;
@@ -370,14 +370,14 @@ S.bOverride_SceneFringeIntensity = true; S.SceneFringeIntensity = 2.0f;
 S.bOverride_ColorSaturationHighlights = true;
 S.ColorSaturationHighlights = FVector4(0.7f, 1.2f, 1.4f, 1.0f); // teal highlights
 S.bOverride_VignetteIntensity = true;   S.VignetteIntensity = 0.6f;
-`
+```
 
 ### Disable All Post-Process (Performance / Mobile)
 
-`cpp
+```cpp
 // Set BlendWeight to 0 to suppress all post-process from a volume
 PPV->BlendWeight = 0.0f;
 
 // Or disable entirely
 PPV->bEnabled = false;
-`
+```

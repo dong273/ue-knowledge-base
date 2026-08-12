@@ -1,13 +1,13 @@
 ---
 title: ue-async-threading
-description: Covers Unreal Engine async operations, threading, parallel execution, or concurrency. Also covers 'FRunnable', 'FAsyncTask', 'TaskGraph', 'UE::Tasks', 'ParallelFor', 'TFuture', 'TPromise', 'Async()', 'thread safety', 'FCriticalSection', 'FRWLock', 'background thread', 'game thread dispatch', or 'thread pool'. For networking async (RPCs, replication), see ue-networking-replication. For asset streaming, see ue-data-assets-tables.
+description: Covers Unreal Engine async operations, threading, parallel execution, or concurrency. Also use when the user mentions 'FRunnable', 'FAsyncTask', 'TaskGraph', 'UE::Tasks', 'ParallelFor', 'TFuture', 'TPromise', 'Async()', 'thread safety', 'FCriticalSection', 'FRWLock', 'background thread', 'game thread dispatch', or 'thread pool'. For networking async (RPCs, replication), see ue-networking-replication. For asset streaming, see ue-data-assets-tables.
 ---
 
 # UE Async and Threading
 
+
 ## Context Check
 
-Read  before proceeding. Engine version matters: `UE::Tasks::Launch` is the modern preferred API (UE 5.0+), while `FAsyncTask` and TaskGraph remain fully supported. Determine: What work needs to be offloaded? Is UObject access required? What latency/throughput tradeoff is acceptable?
 
 ## Information Gathering
 
@@ -68,7 +68,7 @@ See `references/threading-patterns.md` for a complete `FRunnable` subclass templ
 
 For **reusable work units** on the engine thread pool (`GThreadPool`). Subclass `FNonAbandonableTask` and implement `DoWork()` + `GetStatId()`.
 
-`cpp
+```cpp
 class FMyComputeTask : public FNonAbandonableTask
 {
     friend class FAsyncTask<FMyComputeTask>;
@@ -87,11 +87,11 @@ class FMyComputeTask : public FNonAbandonableTask
         RETURN_QUICK_DECLARE_CYCLE_STAT(FMyComputeTask, STATGROUP_ThreadPoolAsyncTasks);
     }
 };
-`
+```
 
 **Usage:**
 
-`cpp
+```cpp
 // Reusable — you manage lifetime
 auto* Task = new FAsyncTask<FMyComputeTask>(MoveTemp(Data));
 Task->StartBackgroundTask();          // dispatches to GThreadPool
@@ -101,7 +101,9 @@ delete Task;
 
 // Fire-and-forget — auto-deletes on completion
 (new FAutoDeleteAsyncTask<FMyComputeTask>(MoveTemp(Data)))->StartBackgroundTask();
-IsWorkDone()` is the non-blocking completion check. `Cancel()` prevents execution if not yet started. `StartSynchronousTask()` runs inline on the calling thread.
+```
+
+`IsWorkDone()` is the non-blocking completion check. `Cancel()` prevents execution if not yet started. `StartSynchronousTask()` runs inline on the calling thread.
 
 ---
 
@@ -109,7 +111,7 @@ IsWorkDone()` is the non-blocking completion check. `Cancel()` prevents executio
 
 For work with **complex dependency chains**. Each task declares prerequisites; the scheduler handles ordering.
 
-`cpp
+```cpp
 class FMyGraphTask
 {
 public:
@@ -130,11 +132,11 @@ public:
 private:
     int32 Value;
 };
-`
+```
 
 **Dispatching with prerequisites:**
 
-`cpp
+```cpp
 FGraphEventArray Prerequisites;  // TArray<FGraphEventRef, TInlineAllocator<4>>
 Prerequisites.Add(SomePriorEvent);
 
@@ -142,16 +144,16 @@ FGraphEventRef TaskEvent = TGraphTask<FMyGraphTask>::CreateTask(&Prerequisites)
     .ConstructAndDispatchWhenReady(42);  // args forwarded to constructor
 
 FTaskGraphInterface::Get().WaitUntilTaskCompletes(TaskEvent, ENamedThreads::GameThread);
-`
+```
 
 **Quick dispatch** (no custom class needed):
 
-`cpp
+```cpp
 AsyncTask(ENamedThreads::GameThread, [this]()
 {
     MyActor->UpdateHealth(NewValue); // safe — runs on game thread
 });
-`
+```
 
 ---
 
@@ -159,7 +161,7 @@ AsyncTask(ENamedThreads::GameThread, [this]()
 
 Recommended for new code (UE 5.0+). Simpler syntax than TaskGraph, automatic thread pool dispatch, built-in chaining.
 
-`cpp
+```cpp
 #include "Tasks/Task.h"
 
 UE::Tasks::TTask<int32> Task = UE::Tasks::Launch(
@@ -176,7 +178,7 @@ UE::Tasks::TTask<void> TaskB = UE::Tasks::Launch(UE_SOURCE_LOCATION,
     [&TaskA]() { ProcessPosition(TaskA.GetResult()); },
     UE::Tasks::Prerequisites(TaskA)
 );
-`
+```
 
 **TTask<T> API:** `GetResult()` blocks and returns result. `IsCompleted()` non-blocking. `Wait()` / `Wait(FTimespan)` for timed blocking. `TryRetractAndExecute()` runs inline if not yet started (work stealing).
 
@@ -188,13 +190,13 @@ UE::Tasks::TTask<void> TaskB = UE::Tasks::Launch(UE_SOURCE_LOCATION,
 
 `Async()` is the most flexible one-shot dispatch. Returns `TFuture<T>` with execution context control.
 
-`cpp
+```cpp
 TFuture<FMyResult> Future = Async(EAsyncExecution::ThreadPool,
     []() -> FMyResult { return ComputeResult(); },
     []() { /* completion callback — runs on unspecified thread */ }
 );
 FMyResult R = Future.Get(); // blocks, does NOT invalidate (unlike std::future)
-`
+```
 
 **EAsyncExecution modes:**
 
@@ -221,7 +223,7 @@ Key difference from `std::future`: `Get()` does **not** invalidate. Call it mult
 
 For producer-consumer patterns where producing and consuming sides are decoupled.
 
-`cpp
+```cpp
 TPromise<FMyData> Promise;
 TFuture<FMyData> Future = Promise.GetFuture(); // call once
 
@@ -231,7 +233,7 @@ Async(EAsyncExecution::ThreadPool, [P = MoveTemp(Promise)]() mutable
 });
 
 FMyData Result = Future.Get(); // blocks on game thread
-`
+```
 
 ---
 
@@ -239,7 +241,7 @@ FMyData Result = Future.Get(); // blocks on game thread
 
 For **data-parallel loops** where each iteration is independent. The calling thread participates -- `ParallelFor` blocks until all iterations complete.
 
-`cpp
+```cpp
 ParallelFor(Meshes.Num(), [&Meshes](int32 Index)
 {
     ProcessMesh(Meshes[Index]);
@@ -249,7 +251,7 @@ ParallelFor(Meshes.Num(), [&Meshes](int32 Index)
 ParallelFor(TEXT("ProcessMeshes"), Meshes.Num(), 64,
     [&Meshes](int32 Index) { ProcessMesh(Meshes[Index]); }
 );
-`
+```
 
 **EParallelForFlags:**
 
@@ -277,7 +279,7 @@ Threading bugs in UE are **silent** -- they corrupt state, cause GC races, and p
 
 ### Safe Dispatch Pattern
 
-`cpp
+```cpp
 AsyncTask(ENamedThreads::GameThread, [WeakActor = TWeakObjectPtr<AActor>(MyActor)]()
 {
     if (AActor* Actor = WeakActor.Get()) // nullptr if GC'd
@@ -285,7 +287,7 @@ AsyncTask(ENamedThreads::GameThread, [WeakActor = TWeakObjectPtr<AActor>(MyActor
         Actor->UpdateFromBackgroundWork(NewData);
     }
 });
-`
+```
 
 **Always capture `TWeakObjectPtr`**, never raw `UObject*`. For non-UObject shared data, use `TSharedPtr<T, ESPMode::ThreadSafe>` -- the default `ESPMode::NotThreadSafe` has non-atomic refcounting.
 
@@ -297,34 +299,36 @@ AsyncTask(ENamedThreads::GameThread, [WeakActor = TWeakObjectPtr<AActor>(MyActor
 
 `FCriticalSection` is `UE::FPlatformRecursiveMutex`. Same thread can lock multiple times without deadlocking.
 
-`cpp
+```cpp
 FCriticalSection DataLock;
 void AddPosition(const FVector& Pos)
 {
     FScopeLock Lock(&DataLock);  // RAII — unlocks on scope exit
     SharedPositions.Add(Pos);
 }
-`
+```
 
 ### FRWLock (Read-Write Lock)
 
 Multiple readers OR one exclusive writer. `FRWLock` is **not** recursive -- do not nest.
 
-`cpp
+```cpp
 FRWLock CacheLock;
 FVector Read(FName Key)  { FReadScopeLock  RL(CacheLock); return Cache.FindRef(Key); }
 void Write(FName K, FVector V) { FWriteScopeLock WL(CacheLock); Cache.Add(K, V); }
-`
+```
 
 ### FEventRef and Atomics
 
 `FEventRef` is the RAII wrapper for thread signaling. Prefer over raw `FEvent*`.
 
-`cpp
+```cpp
 FEventRef WorkReady(EEventMode::AutoReset);
 WorkReady->Trigger(); // producer signals
 WorkReady->Wait();    // consumer blocks
-FThreadSafeCounter` and `FThreadSafeBool` are deprecated -- use `std::atomic<int32>` and `std::atomic<bool>` directly.
+```
+
+`FThreadSafeCounter` and `FThreadSafeBool` are deprecated -- use `std::atomic<int32>` and `std::atomic<bool>` directly.
 
 ---
 
@@ -332,7 +336,7 @@ FThreadSafeCounter` and `FThreadSafeBool` are deprecated -- use `std::atomic<int
 
 Thread-safe queue for producer-consumer without locks.
 
-`cpp
+```cpp
 TQueue<FMyMessage, EQueueMode::Mpsc> MessageQueue;
 
 // Producer (any thread)
@@ -341,14 +345,16 @@ MessageQueue.Enqueue(FMyMessage{...});
 // Consumer (game thread tick)
 FMyMessage Msg;
 while (MessageQueue.Dequeue(Msg)) { ProcessMessage(Msg); }
-Spsc` -- single-producer, single-consumer (slightly faster). `Mpsc` -- multiple-producer, single-consumer (most common). `Peek()` reads without dequeuing.
+```
+
+`Spsc` -- single-producer, single-consumer (slightly faster). `Mpsc` -- multiple-producer, single-consumer (most common). `Peek()` reads without dequeuing.
 
 ---
 
 ## Common Mistakes
 
 **Accessing UObject from background thread -- dispatch results back:**
-`cpp
+```cpp
 // WRONG — UObject access off game thread
 Async(EAsyncExecution::ThreadPool, [this]()
 { MyActor->Health = ComputeNewHealth(); });
@@ -360,26 +366,26 @@ Async(EAsyncExecution::ThreadPool, [WeakActor = TWeakObjectPtr<AActor>(MyActor)]
     AsyncTask(ENamedThreads::GameThread, [WeakActor, NewHealth]()
     { if (AActor* A = WeakActor.Get()) { A->SetHealth(NewHealth); } });
 });
-`
+```
 
 **TSharedPtr with default ESPMode across threads:**
-`cpp
+```cpp
 // WRONG — non-atomic refcount
 auto Data = MakeShared<FMyData>();
 // RIGHT
 auto Data = MakeShared<FMyData, ESPMode::ThreadSafe>();
-`
+```
 
 **FRWLock nested acquisition -- deadlock:**
-`cpp
+```cpp
 // WRONG — FRWLock is NOT recursive
 FReadScopeLock Outer(Lock);
 FReadScopeLock Inner(Lock);  // DEADLOCK on some platforms
 // RIGHT — acquire once, do all reads, release
-`
+```
 
 **ParallelFor with shared mutable state:**
-`cpp
+```cpp
 // WRONG — concurrent writes
 int32 Total = 0;
 ParallelFor(Data.Num(), [&](int32 i) { Total += Data[i]; });
@@ -387,7 +393,7 @@ ParallelFor(Data.Num(), [&](int32 i) { Total += Data[i]; });
 std::atomic<int32> Total{0};
 ParallelFor(Data.Num(), [&](int32 i)
 { Total.fetch_add(Data[i], std::memory_order_relaxed); });
-`
+```
 
 ---
 

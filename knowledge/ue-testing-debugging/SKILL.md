@@ -1,13 +1,13 @@
 ---
 title: ue-testing-debugging
-description: Use when writing automation tests, functional tests, or any test in Unreal Engine. Also applies when the user asks about "UE_LOG", logging, log categories, assertion, check, ensure, verify, DrawDebug, debug draw, console command, profiling, Unreal Insights, stat commands, or debugging techniques. See ue-module-build-system for test module setup, and ue-cpp-foundations for general C++ logging patterns.
+description: Use when writing automation tests, functional tests, or any test in Unreal Engine. Also use when the user asks about "UE_LOG", logging, log categories, assertion, check, ensure, verify, DrawDebug, debug draw, console command, profiling, Unreal Insights, stat commands, or debugging techniques. See ue-module-build-system for test module setup, and ue-cpp-foundations for general C++ logging patterns.
 ---
 
 # UE Testing & Debugging
 
+
 ## Context
 
-Read  for engine version, existing log categories, test infrastructure (automation modules, test maps), and project-specific conventions before providing guidance.
 
 ## Before You Start
 
@@ -27,7 +27,7 @@ Automation tests live in a dedicated module (e.g., `MyGameTests`) that depends o
 
 ### Simple Tests
 
-`cpp
+```cpp
 // Source/MyGameTests/Private/MyFeature.spec.cpp
 #include "Misc/AutomationTest.h"
 // Must specify one application context flag AND exactly one filter flag
@@ -44,13 +44,13 @@ bool FMyInventoryTest::RunTest(const FString& Parameters)
     TestNotNull(TEXT("Inv valid"), Inv);
     return true;
 }
-`
+```
 
 ### Complex / Parameterized Tests
 
 `IMPLEMENT_COMPLEX_AUTOMATION_TEST` requires overriding `GetTests()` to populate the parameter list, and `RunTest(Parameters)` receives each entry in turn.
 
-`cpp
+```cpp
 IMPLEMENT_COMPLEX_AUTOMATION_TEST(FMyAssetLoadTest, "MyGame.Assets.LoadByPath",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
 
@@ -68,11 +68,11 @@ bool FMyAssetLoadTest::RunTest(const FString& Parameters)
     TestTrue(TEXT("Is DataAsset"), Asset->IsA<UPrimaryDataAsset>());
     return true;
 }
-`
+```
 
 ### Test Assertion Methods
 
-`cpp
+```cpp
 // Equality — overloaded for int32, int64, float, double, FVector, FRotator,
 //            FTransform, FColor, FLinearColor, FString, FStringView, FText, FName
 TestEqual(TEXT("Label"), Actual, Expected);
@@ -93,7 +93,7 @@ AddWarning(TEXT("Deprecated path hit"));
 
 // Add error and bail — returns false from RunTest if condition fails
 UE_RETURN_ON_ERROR(Ptr != nullptr, TEXT("Ptr must not be null"));
-`
+```
 
 ### Test Flags Reference
 
@@ -110,13 +110,13 @@ UE_RETURN_ON_ERROR(Ptr != nullptr, TEXT("Ptr must not be null"));
 
 Use latent commands when the test must wait for an async operation. `Update()` returns `true` when done, `false` to retry next frame.
 
-`cpp
+```cpp
 DEFINE_LATENT_AUTOMATION_COMMAND_ONE_PARAMETER(FWaitSecondsCommand, float, Duration);
 bool FWaitSecondsCommand::Update() { return GetCurrentRunTime() >= Duration; }
 
 // Enqueue inside RunTest; commands drain sequentially after RunTest returns
 ADD_LATENT_AUTOMATION_COMMAND(FWaitSecondsCommand(2.0f));
-`
+```
 
 See `references/automation-test-patterns.md` for delegate-wait, timeout, and post-async assertion patterns.
 
@@ -125,7 +125,7 @@ See `references/automation-test-patterns.md` for delegate-wait, timeout, and pos
 
 `AFunctionalTest` is a `UCLASS` actor placed in a test map. Override `StartTest()` and call `FinishTest()` when done.
 
-`cpp
+```cpp
 // MyFunctionalTest.h
 UCLASS()
 class MYGAMETESTS_API AMyFunctionalTest : public AFunctionalTest
@@ -153,27 +153,27 @@ void AMyFunctionalTest::OnTimerExpired()
                        : EFunctionalTestResult::Failed,
                TEXT("Timer-based check"));
 }
-`
+```
 
 Place actors in `Maps/Test_MyFeature.umap`. Run via `RunAutomationTest "MyGame.Functional.MyFeature"` or the Session Frontend.
 
 ### TimeLimit
 
-`cpp
+```cpp
 // Timeout — auto-fail if test exceeds time limit
 void AMyFunctionalTest::PrepareTest()
 {
     Super::PrepareTest();
     TimeLimit = 10.0f;  // seconds; 0 = no timeout (default)
 }
-`
+```
 
 ---
 ## Logging
 
 ### Declaring and Defining a Category
 
-`cpp
+```cpp
 // MyModule.h  — visible across the module
 DECLARE_LOG_CATEGORY_EXTERN(LogMyModule, Log, All);
 //                           ^Name       ^Default  ^CompileTime max
@@ -183,11 +183,11 @@ DEFINE_LOG_CATEGORY(LogMyModule);
 
 // Single-file static category (no extern needed)
 DEFINE_LOG_CATEGORY_STATIC(LogMyHelper, Warning, All);
-`
+```
 
 ### UE_LOG Usage
 
-`cpp
+```cpp
 // UE_LOG(CategoryName, Verbosity, Format, ...)
 UE_LOG(LogMyModule, Log,        TEXT("Player spawned: %s"), *PlayerName);
 UE_LOG(LogMyModule, Warning,    TEXT("Inventory full, dropping item %s"), *ItemName);
@@ -197,7 +197,7 @@ UE_LOG(LogMyModule, Fatal,      TEXT("Unrecoverable save corruption")); // crash
 
 // Conditional log — condition evaluated only if category/verbosity is active
 UE_CLOG(Health <= 0.f, LogMyModule, Warning, TEXT("Actor %s has zero health"), *GetName());
-`
+```
 
 ### Verbosity Levels (highest to lowest severity)
 
@@ -213,17 +213,17 @@ UE_CLOG(Health <= 0.f, LogMyModule, Warning, TEXT("Actor %s has zero health"), *
 
 ### Structured Logging (UE 5.2+)
 
-`cpp
+```cpp
 #include "Logging/StructuredLog.h"
 // Named fields — order does not matter; extra fields beyond the format string are allowed
 UE_LOGFMT(LogMyModule, Warning,
     "Loading '{Name}' failed with error {Error}",
     ("Name", AssetName), ("Error", ErrorCode), ("Flags", LoadFlags));
-`
+```
 
 ### Runtime Log Filtering
 
-`
+```
 # Command line: set a category to Verbose at startup
 -LogCmds="LogMyModule Verbose, LogAI Warning"
 
@@ -231,7 +231,7 @@ UE_LOGFMT(LogMyModule, Warning,
 Log LogMyModule Verbose
 Log LogAI Warning
 Log reset          # restore defaults
-`
+```
 
 ---
 ## Assertions
@@ -240,7 +240,7 @@ Assertions are defined in `Misc/AssertionMacros.h`. Understand the build-configu
 
 ### check / checkf
 
-`cpp
+```cpp
 // Active in Debug, Development, Test. REMOVED in Shipping (expression not evaluated).
 check(Ptr != nullptr);
 checkf(Index >= 0 && Index < Array.Num(),
@@ -254,11 +254,11 @@ checkNoEntry();
 
 // Marks code that must only execute once
 checkNoReentry();
-`
+```
 
 ### ensure / ensureMsgf
 
-`cpp
+```cpp
 // Non-fatal. Logs callstack and submits crash report. Execution continues.
 // Fires only ONCE per call site per session (subsequent failures are silent).
 if (ensure(Component != nullptr))
@@ -273,16 +273,16 @@ ensureMsgf(Health > 0.f, TEXT("Actor %s has non-positive health %.1f"),
 // Always fires (not just once per session)
 ensureAlways(bInitialized);
 ensureAlwaysMsgf(bInitialized, TEXT("System not initialized before use"));
-`
+```
 
 ### verify / verifyf
 
-`cpp
+```cpp
 // Expression ALWAYS evaluated (even in Shipping), but only halts in non-Shipping.
 // Use when expression has side effects you always need.
 verify(Manager->Init());
 verifyf(Count++ < MaxCount, TEXT("Exceeded max count %d"), MaxCount);
-`
+```
 
 ### Decision Guide
 
@@ -299,7 +299,7 @@ verifyf(Count++ < MaxCount, TEXT("Exceeded max count %d"), MaxCount);
 
 Debug draw functions from `DrawDebugHelpers.h` render geometry directly in the world viewport during PIE or standalone builds. They are stripped by `#if ENABLE_DRAW_DEBUG` in Shipping.
 
-`cpp
+```cpp
 #include "DrawDebugHelpers.h"
 
 // Duration > 0 = seconds visible; bPersistentLines = true for permanent.
@@ -320,14 +320,14 @@ FlushPersistentDebugLines(World);
 
 // Guard persistent draws for shipping: #if ENABLE_DRAW_DEBUG ... #endif
 // UKismetSystemLibrary::DrawDebugSphere (and siblings) auto-gate behind ENABLE_DRAW_DEBUG
-`
+```
 
 ---
 ## Console Commands
 
 ### Exec Functions
 
-`cpp
+```cpp
 // AMyPlayerController.h
 UFUNCTION(Exec)
 void ToggleGodMode();
@@ -338,13 +338,13 @@ void AMyPlayerController::ToggleGodMode()
     bGodMode = !bGodMode;
     UE_LOG(LogMyModule, Display, TEXT("GodMode: %s"), bGodMode ? TEXT("ON") : TEXT("OFF"));
 }
-`
+```
 
 Exec functions work when typed in the console (~) if on a `PlayerController`, `Pawn`, `HUD`, `GameMode`, `GameState`, `CheatManager`, or `GameInstance`.
 
 ### FAutoConsoleCommand and CVars
 
-`cpp
+```cpp
 // Registers at static init; no world context needed
 static FAutoConsoleCommand GDumpStatsCmd(
     TEXT("MyGame.DumpStats"), TEXT("Dump gameplay stats"),
@@ -370,11 +370,11 @@ float GDrawDistance = 5000.0f;
 static FAutoConsoleVariableRef CVarDrawDistance(
     TEXT("MyGame.DrawDistance"), GDrawDistance,
     TEXT("Draw distance for gameplay objects"), ECVF_Default);
-`
+```
 
 ### Runtime Command Registration
 
-`cpp
+```cpp
 // Runtime registration — call from StartupModule, Initialize, or BeginPlay
 IConsoleCommand* Cmd = IConsoleManager::Get().RegisterConsoleCommand(
     TEXT("MyGame.ReloadConfig"),
@@ -382,14 +382,14 @@ IConsoleCommand* Cmd = IConsoleManager::Get().RegisterConsoleCommand(
     FConsoleCommandDelegate::CreateUObject(this, &UMySubsystem::ReloadConfig));
 // Unregister when the owning object is destroyed:
 IConsoleManager::Get().UnregisterConsoleObject(Cmd);
-`
+```
 
 Unlike `FAutoConsoleCommand` (static init registration), `RegisterConsoleCommand` registers at runtime and returns a handle for explicit cleanup.
 
 ---
 ## Custom Stat Groups & Profiling Markers
 
-`cpp
+```cpp
 // Declare in a .cpp — feeds stat commands and Unreal Insights
 DECLARE_STATS_GROUP(TEXT("MyGame"), STATGROUP_MyGame, STATCAT_Advanced);
 DECLARE_CYCLE_STAT(TEXT("MySystem Tick"), STAT_MySystemTick, STATGROUP_MyGame);
@@ -406,36 +406,36 @@ void UMySystem::HeavyOperation() { SCOPED_NAMED_EVENT(MyHeavyOp, FColor::Orange)
 #include "ProfilingDebugging/CsvProfiler.h"
 CSV_DEFINE_CATEGORY(MyGame, true);
 void UMySystem::Tick(float DeltaTime) { CSV_SCOPED_TIMING_STAT(MyGame, SystemTick); }
-`
+```
 
 ---
 ## Debugging Techniques
 
 ### Visual Logger
 
-`cpp
+```cpp
 #include "VisualLogger/VisualLogger.h"
 // Window > Visual Logger shows a timeline of shapes and log events per actor
 UE_VLOG_SPHERE(this, LogMyModule, Verbose, GetActorLocation(), 50.0f, FColor::Green, TEXT("Patrol point"));
 UE_VLOG_SEGMENT(this, LogMyModule, Log, From, To, FColor::Red, TEXT("Path"));
 UE_VLOG(this, LogMyModule, Log, TEXT("State: %s"), *StateName);
-`
+```
 
 ### Gameplay Debugger
 
 Press `'` (apostrophe) in PIE to open the Gameplay Debugger. It shows AI, EQS, Ability System, and custom categories. Register a custom category in module startup:
 
-`cpp
+```cpp
 IGameplayDebugger::Get().RegisterCategory("MySystem",
     IGameplayDebugger::FOnGetCategory::CreateStatic(&FMyDebugCategory::MakeInstance),
     EGameplayDebuggerCategoryState::EnabledInGame);
-`
+```
 
 ### IDE Breakpoint Debugging
 
 Attach Visual Studio or Rider to the running `UnrealEditor` process (Debug > Attach to Process). Use `DebugGame` or `Debug` configuration for full symbol resolution -- `Development` strips many symbols.
 
-`cpp
+```cpp
 // Break on assertion failures -- set breakpoints on these functions:
 // FDebug::AssertFailed       (check/checkf)
 // FDebug::EnsureFailed       (ensure/ensureMsgf)
@@ -444,7 +444,7 @@ Attach Visual Studio or Rider to the running `UnrealEditor` process (Debug > Att
 // Conditional breakpoint example (VS/Rider):
 // Condition: Actor->GetName().Contains(TEXT("Enemy"))
 // Hit count: break on 5th hit
-`
+```
 
 For `check()` and `ensure()` failures, set breakpoints on the handler functions above -- they fire before crash/log, letting you inspect the call stack.
 

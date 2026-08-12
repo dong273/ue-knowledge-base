@@ -10,7 +10,7 @@ Detailed patterns, performance notes, and advanced usage for TArray, TMap, TSet,
 
 ### Core Operations
 
-`cpp
+```cpp
 TArray<int32> Numbers;
 
 // Construction
@@ -32,11 +32,11 @@ Numbers.Empty(64);            // Clear + hint future capacity
 int32 Count  = Numbers.Num();
 bool  bEmpty = Numbers.IsEmpty();
 int32 MaxCap = Numbers.Max();       // Current allocation capacity
-`
+```
 
 ### Adding Elements
 
-`cpp
+```cpp
 TArray<FString> Names;
 
 // Add — copies or moves
@@ -60,11 +60,11 @@ Names.Append({ TEXT("P"), TEXT("Q") });  // Initializer list
 // Push/Pop (stack semantics)
 Names.Push(TEXT("Top"));
 FString Top = Names.Pop();       // Removes and returns last element
-`
+```
 
 ### Removal
 
-`cpp
+```cpp
 TArray<int32> V = { 1, 2, 3, 2, 4, 2 };
 
 // Remove — removes all occurrences; order-preserving; O(n)
@@ -93,11 +93,11 @@ if (V.Num() > 0)
 {
     int32 Last = V.Pop();
 }
-`
+```
 
 ### Search & Query
 
-`cpp
+```cpp
 TArray<FString> Names = { TEXT("Alpha"), TEXT("Beta"), TEXT("Gamma") };
 
 // Find — returns INDEX_NONE if not found
@@ -134,11 +134,11 @@ TArray<FString> Long = Names.FilterByPredicate([](const FString& S)
 
 // IsValidIndex
 bool bValid = Names.IsValidIndex(5);  // false
-`
+```
 
 ### Sorting
 
-`cpp
+```cpp
 TArray<int32> Numbers = { 5, 3, 1, 4, 2 };
 
 // Sort with operator< (modifies in-place)
@@ -159,11 +159,11 @@ Weapons.Sort([](const FWeaponStats* A, const FWeaponStats* B)
 
 // HeapSort (O(n log n), not stable, slightly faster than Sort)
 Numbers.HeapSort();
-`
+```
 
 ### Iteration Patterns
 
-`cpp
+```cpp
 TArray<AActor*> Actors;
 
 // Ranged-for (do NOT add/remove during iteration)
@@ -195,7 +195,7 @@ for (auto It = Actors.CreateConstIterator(); It; ++It)
 {
     UE_LOG(LogTemp, Log, TEXT("%s"), *(*It)->GetName());
 }
-`
+```
 
 ### Memory & Performance Notes
 
@@ -208,14 +208,14 @@ for (auto It = Actors.CreateConstIterator(); It; ++It)
 
 ### Fixed-Size Inline Allocation
 
-`cpp
+```cpp
 // TArray with inline storage for up to N elements (avoids heap for small arrays)
 TArray<int32, TInlineAllocator<8>> SmallList;
 SmallList.Add(1);  // Stored inline; no heap alloc if <= 8 elements
 
 // Fixed max size (compile-time assertion on overflow)
 TArray<int32, TFixedAllocator<16>> FixedList;
-`
+```
 
 ---
 
@@ -225,7 +225,7 @@ TArray<int32, TFixedAllocator<16>> FixedList;
 
 ### Core Operations
 
-`cpp
+```cpp
 TMap<FName, float> WeaponDamage;
 
 // Add — overwrites if key exists
@@ -259,11 +259,11 @@ int32 NumRemoved = WeaponDamage.Remove(FName("Pistol"));  // 1
 // Num / IsEmpty
 int32 Count = WeaponDamage.Num();
 bool  bEmpty = WeaponDamage.IsEmpty();
-`
+```
 
 ### Iteration
 
-`cpp
+```cpp
 TMap<FName, int32> ItemCounts;
 
 // Iterate all pairs
@@ -300,7 +300,7 @@ for (auto It = ItemCounts.CreateIterator(); It; ++It)
         It.RemoveCurrent();
     }
 }
-`
+```
 
 ### Memory & Performance Notes
 
@@ -313,7 +313,7 @@ for (auto It = ItemCounts.CreateIterator(); It; ++It)
 
 ### Custom Key Hashing
 
-`cpp
+```cpp
 // For custom struct keys, provide GetTypeHash and operator==
 struct FItemKey
 {
@@ -332,7 +332,7 @@ inline uint32 GetTypeHash(const FItemKey& Key)
 }
 
 TMap<FItemKey, float> ItemValues;
-`
+```
 
 ---
 
@@ -342,7 +342,7 @@ TMap<FItemKey, float> ItemValues;
 
 ### Core Operations
 
-`cpp
+```cpp
 TSet<FName> Tags;
 
 // Add
@@ -361,11 +361,11 @@ int32 Count = Tags.Num();
 
 // Reserve
 Tags.Reserve(32);
-`
+```
 
 ### Set Operations
 
-`cpp
+```cpp
 TSet<FName> A = { FName("Fire"), FName("Ice"), FName("Wind") };
 TSet<FName> B = { FName("Ice"), FName("Wind"), FName("Earth") };
 
@@ -374,11 +374,11 @@ TSet<FName> Union        = A.Union(B);      // { Fire, Ice, Wind, Earth }
 TSet<FName> Difference   = A.Difference(B); // { Fire }
 
 bool bSubset = B.Includes(A);  // false (A has Fire which B doesn't)
-`
+```
 
 ### Iteration
 
-`cpp
+```cpp
 TSet<FName> Tags;
 
 for (const FName& Tag : Tags)
@@ -394,7 +394,7 @@ for (auto It = Tags.CreateIterator(); It; ++It)
         It.RemoveCurrent();
     }
 }
-`
+```
 
 ---
 
@@ -402,7 +402,7 @@ for (auto It = Tags.CreateIterator(); It; ++It)
 
 `TOptional<T>` represents a value that may or may not be present. Avoids sentinel values like `-1` or `nullptr`.
 
-`cpp
+```cpp
 TOptional<int32> MaybeLevel;
 
 // Check and access
@@ -437,7 +437,7 @@ if (TOptional<FVector> Pt = FindSpawnPoint(TEXT("Start")))
 {
     SpawnAt(Pt.GetValue());
 }
-`
+```
 
 ---
 
@@ -445,7 +445,7 @@ if (TOptional<FVector> Pt = FindSpawnPoint(TEXT("Start")))
 
 `TVariant<T1, T2, ...>` is a type-safe discriminated union (like `std::variant`).
 
-`cpp
+```cpp
 #include "Misc/TVariant.h"
 
 TVariant<int32, float, FString> Val;
@@ -462,7 +462,7 @@ if (Val.IsType<FString>())
 
 // Visit pattern — UE5 provides Visit() via TVariantHelper
 Visit([](auto& V) { /* handle each type */ }, Val);
-`
+```
 
 ---
 
@@ -472,22 +472,22 @@ Visit([](auto& V) { /* handle each type */ }, Val);
 
 Used internally by TSet and TMap. Elements can have "holes" (removed indices remain allocated but invalid). Access by `FSetElementId`.
 
-`cpp
+```cpp
 // Rarely used directly — prefer TSet/TMap
 TSparseArray<FMyStruct> SparseData;
 FSparseArrayAllocationInfo AllocInfo = SparseData.AddUninitialized();
 new (AllocInfo.Pointer) FMyStruct();
-`
+```
 
 ### TIndirectArray
 
 Holds heap-allocated objects; owns and deletes them on removal.
 
-`cpp
+```cpp
 TIndirectArray<FMyNonCopyable> Objects;
 Objects.Add(new FMyNonCopyable());
 // Objects deletes all entries on destruction
-`
+```
 
 ---
 
@@ -502,7 +502,7 @@ When containers are UPROPERTY members:
 - `TArray<TArray<T>>` — **not supported** as UPROPERTY (use a wrapper struct)
 - Containers of raw pointers **without UPROPERTY** are invisible to GC
 
-`cpp
+```cpp
 // Correct: TArray of TObjectPtr for UE5 GC-tracked arrays
 UPROPERTY()
 TArray<TObjectPtr<UMyObject>> ManagedObjects;
@@ -521,7 +521,7 @@ struct FIntRow { GENERATED_BODY() UPROPERTY() TArray<int32> Values; };
 
 UPROPERTY()
 TArray<FIntRow> Matrix;
-`
+```
 
 ---
 

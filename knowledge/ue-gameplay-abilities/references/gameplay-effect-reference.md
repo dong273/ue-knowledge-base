@@ -23,9 +23,9 @@ do not (they work through aggregators on the current value).
 ## Modifier Operations (`EGameplayModOp`)
 
 The modifier equation is evaluated in this order across all active modifiers:
-`
+```
 Final = ((BaseValue + AddBase) * MultiplyAdditive / DivideAdditive * MultiplyCompound) + AddFinal
-`
+```
 
 | Op | Enum | Effect |
 |----|------|--------|
@@ -41,23 +41,27 @@ Final = ((BaseValue + AddBase) * MultiplyAdditive / DivideAdditive * MultiplyCom
 ### ScalableFloat (most common)
 A constant or level-scaled float. Supply a `FScalableFloat` backed optionally by a CurveTable:
 
-`
+```
 Modifier: Health
 Operation: Additive
 Magnitude Type: ScalableFloat
 Scalable Float Magnitude: -50.0  (or reference a CurveTable row for level scaling)
-`
+```
 
 ### AttributeBased
 Derives magnitude from another attribute. Formula:
-`
+```
 (Coefficient * (PreMultiplyAdditive + [Attribute Value])) + PostMultiplyAdditive
+```
 
+```
 Magnitude Type: AttributeBased
 Backing Attribute: SourceObject.AttackPower  (capture from Source or Target)
 Attribute Calculation Type: AttributeMagnitude  (final evaluated value)
 Coefficient: 1.0
-EAttributeBasedFloatCalculationType` options:
+```
+
+`EAttributeBasedFloatCalculationType` options:
 - `AttributeMagnitude`: Final current value (includes active modifiers)
 - `AttributeBaseValue`: Permanent base value only
 - `AttributeBonusMagnitude`: Final - Base (modifier contribution only)
@@ -65,7 +69,7 @@ EAttributeBasedFloatCalculationType` options:
 ### CustomCalculationClass
 Runs a `UGameplayModMagnitudeCalculation` subclass for arbitrary logic:
 
-`cpp
+```cpp
 UCLASS()
 class UMyDamageMagnitudeCalc : public UGameplayModMagnitudeCalculation
 {
@@ -102,24 +106,24 @@ float UMyDamageMagnitudeCalc::CalculateBaseMagnitude_Implementation(
     GetCapturedAttributeMagnitude(AttackPowerDef, Spec, EvalParams, AttackPower);
     return AttackPower * 1.5f; // Example: 150% of attack power
 }
-`
+```
 
 ### SetByCaller
 The caller sets the magnitude at spec creation time using a tag as the key.
 
 In the GE asset:
-`
+```
 Magnitude Type: SetByCaller
 DataTag: SetByCaller.Damage
-`
+```
 
 In ability/code:
-`cpp
+```cpp
 FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, Level);
 SpecHandle.Data->SetSetByCallerMagnitude(
     FGameplayTag::RequestGameplayTag("SetByCaller.Damage"), 75.f);
 ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, SpecHandle, TargetASC);
-`
+```
 
 ---
 
@@ -128,7 +132,7 @@ ApplyGameplayEffectSpecToTarget(Handle, ActorInfo, ActivationInfo, SpecHandle, T
 Executions are for complex damage formulas that modify multiple attributes at once.
 They run on instant GEs and fire `PostGameplayEffectExecute` on the AttributeSet.
 
-`cpp
+```cpp
 UCLASS()
 class UMyDamageExecution : public UGameplayEffectExecutionCalculation
 {
@@ -188,7 +192,7 @@ void UMyDamageExecution::Execute_Implementation(
         EGameplayModOp::Additive,
         -Damage));
 }
-`
+```
 
 In the GE asset, add this class to `Executions` array (replaces individual Modifiers for complex
 calculations).
@@ -227,7 +231,7 @@ Set `StackLimitCount` in the GE asset. A value of 0 means unlimited.
 
 ### Reading Stack Count at Runtime
 
-`cpp
+```cpp
 // By active handle:
 int32 StackCount = AbilitySystemComponent->GetCurrentStackCount(ActiveHandle);
 
@@ -241,28 +245,30 @@ AbilitySystemComponent->UpdateActiveGameplayEffectSetByCallerMagnitude(
     ActiveHandle,
     FGameplayTag::RequestGameplayTag("SetByCaller.StackDamage"),
     NewDamageValue);
-`
+```
 
 ---
 
 ## Periodic Effects (Damage Over Time)
 
 Set in the GE asset:
-`
+```
 Duration Policy: HasDuration
 Duration Magnitude: 10.0  (total duration in seconds)
 Period: 1.0               (execute every 1 second)
 Execute Periodic Effect on Application: true/false
-EGameplayEffectStackingPeriodPolicy` controls what happens to the period timer on stack add:
+```
+
+`EGameplayEffectStackingPeriodPolicy` controls what happens to the period timer on stack add:
 - `ResetOnSuccessfulApplication`: Timer resets to full period on each stack
 - `NeverReset`: Timer continues uninterrupted
 
 Period callbacks on the ASC:
-`cpp
+```cpp
 // Called on server when a periodic GE executes on self:
 AbilitySystemComponent->OnPeriodicGameplayEffectExecuteDelegateOnSelf.AddUObject(
     this, &AMyCharacter::OnPeriodicEffectExecuted);
-`
+```
 
 ---
 
@@ -270,13 +276,13 @@ AbilitySystemComponent->OnPeriodicGameplayEffectExecuteDelegateOnSelf.AddUObject
 
 Apply secondary effects only when a primary execution succeeds:
 
-`cpp
+```cpp
 // In GE asset, set up Executions[0].ConditionalGameplayEffects:
 FConditionalGameplayEffect ConditionalEntry;
 ConditionalEntry.EffectClass = UMyBurnEffect::StaticClass();
 ConditionalEntry.RequiredSourceTags.AddTag(
     FGameplayTag::RequestGameplayTag("Ability.FireType")); // Source must have this tag
-`
+```
 
 The conditional effect is applied to the same target as the parent execution.
 
@@ -293,7 +299,7 @@ New code should use `UImmunityGameplayEffectComponent` in the GE component list 
 When an ASC has this GE active, any incoming GE matching the immunity query is blocked.
 The `OnImmunityBlockGameplayEffectDelegate` fires on the ASC when a block occurs:
 
-`cpp
+```cpp
 AbilitySystemComponent->OnImmunityBlockGameplayEffectDelegate.AddUObject(
     this, &AMyCharacter::OnImmunityBlockGE);
 
@@ -303,13 +309,13 @@ void AMyCharacter::OnImmunityBlockGE(
 {
     // Log or trigger "immune" visual feedback
 }
-`
+```
 
 ---
 
 ## Querying Active Effects
 
-`cpp
+```cpp
 // Get all active effect handles matching a query:
 FGameplayEffectQuery Query;
 Query.EffectTagQuery = FGameplayTagQuery::MakeQuery_MatchAnyTags(
@@ -331,13 +337,13 @@ AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(
 // Remove those with specific applied source tags:
 AbilitySystemComponent->RemoveActiveEffectsWithSourceTags(
     FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Effect.Poison")));
-`
+```
 
 ---
 
 ## Effect Application Callbacks
 
-`cpp
+```cpp
 // Any GE applied to self (server-side):
 AbilitySystemComponent->OnGameplayEffectAppliedDelegateToSelf.AddUObject(
     this, &AMyCharacter::OnEffectApplied);
@@ -369,7 +375,7 @@ void AMyCharacter::OnEffectRemoved(const FGameplayEffectRemovalInfo& RemovalInfo
     // RemovalInfo.ActiveEffect holds the effect that was removed
     // RemovalInfo.bPrematureRemoval is true if removed before natural expiry
 }
-`
+```
 
 ---
 

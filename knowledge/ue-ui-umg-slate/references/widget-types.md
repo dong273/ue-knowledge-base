@@ -22,7 +22,7 @@
 
 ### Key Methods
 
-`cpp
+```cpp
 void SetStyle(const FButtonStyle& InStyle);
 const FButtonStyle& GetStyle() const;
 void SetColorAndOpacity(FLinearColor InColorAndOpacity);
@@ -34,7 +34,7 @@ void SetClickMethod(EButtonClickMethod::Type InClickMethod);
 void SetTouchMethod(EButtonTouchMethod::Type InTouchMethod);
 void SetPressMethod(EButtonPressMethod::Type InPressMethod);
 void SetAllowDragDrop(bool bInAllowDragDrop);
-`
+```
 
 ### Click Methods
 
@@ -51,14 +51,14 @@ Direct property access (`WidgetStyle`, `ColorAndOpacity`, `BackgroundColor`, `Cl
 
 ### BindWidget Example
 
-`cpp
+```cpp
 UPROPERTY(meta=(BindWidget))
 TObjectPtr<UButton> ConfirmButton;
 
 // In NativeConstruct:
 ConfirmButton->OnClicked.AddDynamic(this, &UMyWidget::HandleConfirm);
 ConfirmButton->SetColorAndOpacity(FLinearColor(0.2f, 0.8f, 0.2f, 1.f));
-`
+```
 
 ---
 
@@ -84,7 +84,7 @@ ConfirmButton->SetColorAndOpacity(FLinearColor(0.2f, 0.8f, 0.2f, 1.f));
 
 ### Key Methods
 
-`cpp
+```cpp
 FText GetText() const;
 void SetText(FText InText);                                   // Wipes Blueprint binding!
 void SetColorAndOpacity(FSlateColor InColorAndOpacity);
@@ -101,11 +101,11 @@ void SetFontMaterial(UMaterialInterface* InMaterial);
 void SetFontOutlineMaterial(UMaterialInterface* InMaterial);
 UMaterialInstanceDynamic* GetDynamicFontMaterial();
 UMaterialInstanceDynamic* GetDynamicOutlineMaterial();
-`
+```
 
 ### Common Patterns
 
-`cpp
+```cpp
 // Simple string (avoid — prefer FText for localization)
 ScoreLabel->SetText(FText::FromString(TEXT("Score: 100")));
 
@@ -127,7 +127,7 @@ ScoreLabel->SetTextOverflowPolicy(ETextOverflowPolicy::Ellipsis);
 FSlateFontInfo FontInfo = FCoreStyle::GetDefaultFont();
 FontInfo.Size = 32;
 ScoreLabel->SetFont(FontInfo);
-`
+```
 
 ---
 
@@ -147,7 +147,7 @@ ScoreLabel->SetFont(FontInfo);
 
 ### Key Methods
 
-`cpp
+```cpp
 void SetColorAndOpacity(FLinearColor InColorAndOpacity);
 void SetOpacity(float InOpacity);
 void SetBrush(const FSlateBrush& InBrush);
@@ -164,11 +164,11 @@ void SetBrushTintColor(FSlateColor TintColor);
 void SetBrushResourceObject(UObject* ResourceObject);
 UMaterialInstanceDynamic* GetDynamicMaterial();
 void SetFlipForRightToLeftFlowDirection(bool bFlip);
-`
+```
 
 ### Common Patterns
 
-`cpp
+```cpp
 // Static texture
 AvatarImage->SetBrushFromTexture(LoadObject<UTexture2D>(nullptr, TEXT("/Game/UI/T_Avatar")));
 
@@ -186,7 +186,7 @@ AvatarImage->SetDesiredSizeOverride(FVector2D(64.f, 64.f));
 
 // Tint without touching the brush
 AvatarImage->SetColorAndOpacity(FLinearColor(1.f, 0.5f, 0.5f, 1.f));
-`
+```
 
 ---
 
@@ -208,7 +208,7 @@ AvatarImage->SetColorAndOpacity(FLinearColor(1.f, 0.5f, 0.5f, 1.f));
 
 ### Key Methods
 
-`cpp
+```cpp
 float GetPercent() const;
 void SetPercent(float InPercent);                  // Primary runtime update
 void SetFillColorAndOpacity(FLinearColor InColor);
@@ -218,7 +218,7 @@ bool UseMarquee() const;
 void SetBarFillType(EProgressBarFillType::Type InBarFillType);
 void SetBarFillStyle(EProgressBarFillStyle::Type InBarFillStyle);
 void SetBorderPadding(FVector2D InBorderPadding);
-`
+```
 
 ### Fill Types
 
@@ -234,7 +234,7 @@ void SetBorderPadding(FVector2D InBorderPadding);
 
 ### Common Patterns
 
-`cpp
+```cpp
 // Health bar
 HealthBar->SetPercent(Health / MaxHealth);
 HealthBar->SetFillColorAndOpacity(Health > MaxHealth * 0.3f
@@ -247,7 +247,7 @@ LoadingBar->SetIsMarquee(true);
 // Experience bar filling right-to-left
 XPBar->SetBarFillType(EProgressBarFillType::LeftToRight);
 XPBar->SetPercent(XP / XPToNextLevel);
-`
+```
 
 ---
 
@@ -271,7 +271,7 @@ The list is virtualized: only visible entry widgets exist. Items are data object
 
 ### Key Methods
 
-`cpp
+```cpp
 // Add / remove items
 void AddItem(UObject* Item);
 void RemoveItem(UObject* Item);
@@ -303,11 +303,11 @@ bool BP_IsItemVisible(UObject* Item) const;
 
 // Entry widget retrieval (only valid when the entry is visible)
 RowWidgetT* GetEntryWidgetFromItem(const UObject* Item) const; // Template
-`
+```
 
 ### IUserObjectListEntry (entry widget interface)
 
-`cpp
+```cpp
 // Entry widget header:
 UCLASS()
 class UMyEntryWidget : public UUserWidget, public IUserObjectListEntry
@@ -330,7 +330,7 @@ UMyData* Data = GetListItem<UMyData>();
 // int32 GetListItemIndex(...)
 // bool IsFirstWidget(...)
 // bool IsLastWidget(...)
-`
+```
 
 ### UTileView
 
@@ -343,33 +343,35 @@ Works identically to `UListView` but arranges entries in a 2D grid. Entry height
 **Header:** `Components/ScrollBox.h`
 **Base class:** `UPanelWidget` (multiple children)
 
-`cpp
+```cpp
 // Programmatic scroll
 MyScrollBox->ScrollToStart();
 MyScrollBox->ScrollToEnd();
 MyScrollBox->ScrollWidgetIntoView(ChildWidget, /*bAnimateScroll=*/true);
 MyScrollBox->SetScrollOffset(200.f);
 float Offset = MyScrollBox->GetScrollOffset();
-`
+```
 
 ---
 
 ## UWidgetSwitcher
 
-**Header:** `Components/WidgetSwitcher.hcpp
+**Header:** `Components/WidgetSwitcher.h`
+
+```cpp
 // Only one child is visible at a time (zero-based index)
 MySwitcher->SetActiveWidgetIndex(1);
 MySwitcher->SetActiveWidget(MyChildWidget);
 int32 Index = MySwitcher->GetActiveWidgetIndex();
 UWidget* Active = MySwitcher->GetActiveWidget();
 int32 Count = MySwitcher->GetNumWidgets();
-`
+```
 
 ---
 
 ## UCheckBox
 
-`cpp
+```cpp
 // State
 bool bChecked = MyCheckBox->IsChecked();
 MyCheckBox->SetIsChecked(true);
@@ -379,13 +381,13 @@ ECheckBoxState State = MyCheckBox->GetCheckedState();
 // Delegate
 MyCheckBox->OnCheckStateChanged.AddDynamic(this, &UMyWidget::HandleCheckChanged);
 // Signature: void HandleCheckChanged(bool bIsChecked)
-`
+```
 
 ---
 
 ## UEditableTextBox
 
-`cpp
+```cpp
 FText Text = MyInput->GetText();
 MyInput->SetText(FText::FromString(TEXT("Default")));
 MyInput->SetHintText(NSLOCTEXT("UI", "SearchHint", "Search..."));
@@ -397,13 +399,13 @@ MyInput->OnTextChanged.AddDynamic(this, &UMyWidget::HandleTextChanged);
 MyInput->OnTextCommitted.AddDynamic(this, &UMyWidget::HandleTextCommitted);
 // Committed signature: void(const FText& Text, ETextCommit::Type CommitMethod)
 // ETextCommit: OnEnter, OnUserMovedFocus, OnCleared, Default
-`
+```
 
 ---
 
 ## USlider
 
-`cpp
+```cpp
 float Value = MySlider->GetValue();       // 0.0 – 1.0
 MySlider->SetValue(0.5f);
 MySlider->SetMinValue(0.f);
@@ -413,13 +415,13 @@ MySlider->SetOrientation(EOrientation::Orient_Horizontal);
 
 MySlider->OnValueChanged.AddDynamic(this, &UMyWidget::HandleSliderChanged);
 // Signature: void(float Value)
-`
+```
 
 ---
 
 ## UComboBoxString
 
-`cpp
+```cpp
 MyCombo->AddOption(TEXT("Option A"));
 MyCombo->AddOption(TEXT("Option B"));
 MyCombo->SetSelectedOption(TEXT("Option A"));
@@ -430,7 +432,7 @@ MyCombo->RefreshOptions();
 
 MyCombo->OnSelectionChanged.AddDynamic(this, &UMyWidget::HandleComboChanged);
 // Signature: void(FString SelectedItem, ESelectInfo::Type SelectionType)
-`
+```
 
 ---
 
@@ -444,11 +446,11 @@ MyCombo->OnSelectionChanged.AddDynamic(this, &UMyWidget::HandleComboChanged);
 | `HitTestInvisible` | Yes | Yes | No (passes through) |
 | `SelfHitTestInvisible` | Yes | Yes | Children only |
 
-`cpp
+```cpp
 Widget->SetVisibility(ESlateVisibility::Collapsed);
 ESlateVisibility V = Widget->GetVisibility();
 bool bVisible = V == ESlateVisibility::Visible;
-`
+```
 
 ---
 
@@ -456,7 +458,7 @@ bool bVisible = V == ESlateVisibility::Visible;
 
 All UMG widgets inherit from `UWidget`:
 
-`cpp
+```cpp
 // Enable/disable (grays out and blocks input)
 Widget->SetIsEnabled(false);
 bool bEnabled = Widget->GetIsEnabled();
@@ -482,4 +484,4 @@ bool bHasFocus = Widget->HasKeyboardFocus();
 
 // Slate widget access (for Slate-only APIs)
 TSharedPtr<SWidget> SlateWidget = Widget->GetCachedWidget();
-`
+```

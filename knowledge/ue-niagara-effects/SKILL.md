@@ -5,9 +5,9 @@ description: Covers Niagara particle systems, VFX, effects, emitter, Niagara com
 
 # UE Niagara Effects
 
+
 ## Context Check
 
-Read  before proceeding. Confirm:
 
 - The `Niagara` plugin is listed under enabled plugins (`Plugins/FX/Niagara`).
 - The target module's `Build.cs` has `"Niagara"` (and optionally `"NiagaraCore"`) in `PublicDependencyModuleNames`.
@@ -29,7 +29,7 @@ Before writing Niagara C++ code, clarify:
 
 ## System Structure (UE Concept Map)
 
-`
+```
 UNiagaraSystem  (asset: UNiagaraSystem)
   └── UNiagaraEmitter[]         (per-emitter asset, referenced via FNiagaraEmitterHandle)
         └── UNiagaraScript[]   (Spawn / Update / Event scripts; authored in Niagara editor)
@@ -38,7 +38,7 @@ UNiagaraSystem  (asset: UNiagaraSystem)
 Runtime instances:
   UNiagaraComponent             (scene component that drives one UNiagaraSystem instance)
     └── FNiagaraSystemInstance  (internal runtime state; access via GetSystemInstanceController())
-`
+```
 
 **Key rule**: authors expose parameters to C++ by setting their namespace to `User.` in the Niagara
 editor. Only `User.*` parameters can be overridden at runtime from C++.
@@ -49,7 +49,7 @@ editor. Only `User.*` parameters can be overridden at runtime from C++.
 
 ### Fire-and-Forget (One-Shot) at World Location
 
-`cpp
+```cpp
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 
@@ -72,11 +72,11 @@ if (NiagaraComp)
     NiagaraComp->SetVariableVec3(FName("User.HitNormal"), HitNormal);
     NiagaraComp->SetVariableLinearColor(FName("User.HitColor"), DamageColor);
 }
-`
+```
 
 ### Attached to a Component (Persistent / Looping)
 
-`cpp
+```cpp
 // Attaches to a socket and stays active until manually deactivated.
 UNiagaraComponent* TrailComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
     TrailVFXSystem,
@@ -90,11 +90,11 @@ UNiagaraComponent* TrailComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
     ENCPoolMethod::ManualRelease,
     /*bPreCullCheck=*/ true
 );
-`
+```
 
 ### Persistent Component on an Actor (Preferred for Repeated Use)
 
-`cpp
+```cpp
 // In header:
 UPROPERTY(VisibleAnywhere)
 TObjectPtr<UNiagaraComponent> EngineTrailVFX;
@@ -107,11 +107,11 @@ EngineTrailVFX->SetAutoActivate(false);   // start inactive; activate via gamepl
 // In gameplay code:
 EngineTrailVFX->SetAsset(EngineTrailSystem);    // swap asset without destroying component
 EngineTrailVFX->Activate(/*bReset=*/ true);
-`
+```
 
 ### Lifecycle Control
 
-`cpp
+```cpp
 NiagaraComp->Activate(/*bReset=*/ false);       // activate; resume if paused
 NiagaraComp->Activate(/*bReset=*/ true);        // activate with full reset
 NiagaraComp->Deactivate();                      // stop spawning, let particles drain
@@ -120,7 +120,7 @@ NiagaraComp->ResetSystem();                     // restart from time 0
 NiagaraComp->ReinitializeSystem();              // full re-init + restart (expensive; prefer ResetSystem)
 NiagaraComp->SetPaused(true);                   // pause simulation
 NiagaraComp->SetAutoDestroy(true);              // destroy component when system finishes
-`
+```
 
 ---
 
@@ -129,7 +129,7 @@ NiagaraComp->SetAutoDestroy(true);              // destroy component when system
 All setter variants accept the parameter name as `FName` prefixed with its namespace.
 User-exposed parameters use the `User.` prefix.
 
-`cpp
+```cpp
 // Scalar types
 NiagaraComp->SetVariableFloat(FName("User.DamageAmount"), 150.f);
 NiagaraComp->SetVariableInt(FName("User.ProjectileCount"), 12);
@@ -156,16 +156,16 @@ NiagaraComp->SetVariableTexture(FName("User.FlowMap"), FlowTexture);
 // Read a float parameter back (returns bIsValid=false when name not found)
 bool bIsValid = false;
 float CurrentValue = NiagaraComp->GetVariableFloat(FName("User.EmitRate"), bIsValid);
-`
+```
 
 ### Blueprint-Accessible Legacy Signatures (prefer FName variants above)
 
-`cpp
+```cpp
 // Old FString signatures still work but are slower due to FName conversion.
 NiagaraComp->SetNiagaraVariableFloat(TEXT("User.SpeedScale"), 2.f);
 NiagaraComp->SetNiagaraVariableVec3(TEXT("User.ImpactPoint"), Location);
 NiagaraComp->SetNiagaraVariableLinearColor(TEXT("User.Color"), FLinearColor::Blue);
-`
+```
 
 ### Parameter Namespaces Reference
 
@@ -188,7 +188,7 @@ at runtime via `SetVariableObject` or the specialized function library helpers.
 
 ### Binding Skeletal Mesh DI
 
-`cpp
+```cpp
 #include "NiagaraFunctionLibrary.h"
 
 // Override the "User.SourceMesh" skeletal mesh DI on a running component.
@@ -211,11 +211,11 @@ UNiagaraFunctionLibrary::SetSkeletalMeshDataInterfaceSamplingRegions(
     TEXT("User.SourceMesh"),
     { FName("HeadRegion") }
 );
-`
+```
 
 ### Binding Static Mesh DI
 
-`cpp
+```cpp
 // Override via component reference.
 UNiagaraFunctionLibrary::OverrideSystemUserVariableStaticMeshComponent(
     NiagaraComp,
@@ -229,11 +229,11 @@ UNiagaraFunctionLibrary::OverrideSystemUserVariableStaticMesh(
     TEXT("User.ScatterMesh"),
     LoadedStaticMesh
 );
-`
+```
 
 ### Reading / Modifying an Array DI at Runtime
 
-`cpp
+```cpp
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
 
 // Push a new float array into the effect (e.g., damage heatmap values).
@@ -250,11 +250,11 @@ UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayFloatValue(
 // Other strongly-typed array setters available:
 // SetNiagaraArrayVector, SetNiagaraArrayVector4, SetNiagaraArrayColor,
 // SetNiagaraArrayQuat, SetNiagaraArrayInt32, SetNiagaraArrayBool, etc.
-`
+```
 
 ### Direct DI Object Access (Advanced)
 
-`cpp
+```cpp
 // Retrieve the actual DI UObject to mutate its properties directly.
 // Template variant resolves the cast automatically.
 UNiagaraDataInterfaceCurve* CurveDI =
@@ -280,7 +280,7 @@ UNiagaraDataInterface* GenericDI =
         NiagaraComp,
         FName("User.ImpactMesh")
     );
-`
+```
 
 See `references/niagara-data-interfaces.md` for the full built-in DI catalogue.
 
@@ -293,7 +293,7 @@ This enables game-specific data (inventory, terrain) to feed directly into Niaga
 
 ## Completion Callbacks
 
-`cpp
+```cpp
 // Bind a C++ delegate to fire when the Niagara system finishes all particles.
 // FOnNiagaraSystemFinished is DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(, UNiagaraComponent*)
 NiagaraComp->OnSystemFinished.AddDynamic(this, &UMyComponent::OnVFXFinished);
@@ -309,7 +309,7 @@ void UMyComponent::OnVFXFinished(UNiagaraComponent* FinishedComponent)
 
 // Unbind when the owner is destroyed to avoid stale delegates.
 NiagaraComp->OnSystemFinished.RemoveDynamic(this, &UMyComponent::OnVFXFinished);
-`
+```
 
 ---
 
@@ -322,7 +322,7 @@ NiagaraComp->OnSystemFinished.RemoveDynamic(this, &UMyComponent::OnVFXFinished);
 - `ManualRelease` — you control when the component returns; call `ReleaseToPool()` to reclaim.
 - `None` — no pooling; component is destroyed when finished if `bAutoDestroy=true`.
 
-`cpp
+```cpp
 // AutoRelease: most common for one-shots (explosions, impacts).
 UNiagaraComponent* Comp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
     this, ExplosionSystem, Location, FRotator::ZeroRotator,
@@ -339,7 +339,7 @@ if (FNiagaraWorldManager* NiagaraWorldMan = FNiagaraWorldManager::Get(GetWorld()
 {
     NiagaraWorldMan->GetComponentPool()->PrimePool(ExplosionSystem, GetWorld());
 }
-`
+```
 
 Pool capacity is configured per-system in the `UNiagaraSystem` pooling settings (not a global CVar).
 Relevant global pool CVars: `FX.NiagaraComponentPool.Enable` (1/0) and
@@ -349,7 +349,7 @@ Relevant global pool CVars: `FX.NiagaraComponentPool.Enable` (1/0) and
 
 ## Performance: Scalability and LOD
 
-`cpp
+```cpp
 // Allow the scalability manager to cull this component based on distance and budget.
 NiagaraComp->SetAllowScalability(true);   // default true; disable for gameplay-critical VFX
 
@@ -357,7 +357,7 @@ NiagaraComp->SetAllowScalability(true);   // default true; disable for gameplay-
 // ENiagaraTickBehavior::UsePrereqs  — default; ticks after its prerequisites
 // ENiagaraTickBehavior::ForceTickFirst — useful for VFX that leads all tick groups
 NiagaraComp->SetTickBehavior(ENiagaraTickBehavior::UsePrereqs);
-`
+```
 
 Scalability per platform is configured in the `UNiagaraEffectType` asset assigned to the
 `UNiagaraSystem`. The effect type defines quality tiers (Low / Medium / High / Epic) and which
@@ -378,11 +378,11 @@ effects should spawn client-side only — skip them on dedicated servers entirel
 ## Warm-Up, Server Handling, and Events
 
 **Pre-simulation (warm-up)**: seek to a desired age before the effect is visible.
-`cpp
+```cpp
 NiagaraComp->SetDesiredAge(2.5f);    // age in seconds
 NiagaraComp->SeekToDesiredAge(2.5f); // perform seek immediately (skips simulation steps)
 // FFXSystemSpawnParameters (used by SpawnSystemAtLocationWithParams) also exposes DesiredAge.
-`
+```
 
 **Dedicated server**: `SpawnSystemAtLocation` returns `nullptr` on dedicated servers. Always null-check
 the returned component and guard VFX spawns with `!IsRunningDedicatedServer()` where needed.
@@ -390,17 +390,17 @@ the returned component and guard VFX spawns with `!IsRunningDedicatedServer()` w
 **Gameplay events to Niagara**: Niagara's internal event system (Location Events, Death Events,
 Collision Events) is configured in the Niagara editor between emitters. From C++, trigger a
 gameplay-driven burst by updating a User bool parameter that the spawn script reads:
-`cpp
+```cpp
 NiagaraComp->SetVariableBool(FName("User.bJustDied"), true);
 // Niagara reads this flag on the next spawn script tick and fires the burst.
 // There is no C++ API to inject raw Niagara events directly — use User parameters as the bridge.
-`
+```
 
 ---
 
 ## Required Build.cs
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[]
 {
     "Core",
@@ -409,14 +409,14 @@ PublicDependencyModuleNames.AddRange(new string[]
     "Niagara",         // UNiagaraComponent, UNiagaraFunctionLibrary, UNiagaraSystem
     "NiagaraCore",     // UNiagaraDataInterface base (NiagaraCore module)
 });
-`
+```
 
 ---
 
 ## Common Mistakes and Anti-Patterns
 
 **Spawning a new system component every tick**
-`cpp
+```cpp
 // BAD: Creates a new UNiagaraComponent each frame. Destroys performance.
 void AMyActor::Tick(float DeltaTime)
 {
@@ -424,48 +424,48 @@ void AMyActor::Tick(float DeltaTime)
 }
 
 // GOOD: Create the component once in BeginPlay or constructor; activate/deactivate as needed.
-`
+```
 
 **Wrong parameter namespace**
-`cpp
+```cpp
 // BAD: "Emitter.Speed" is an internal emitter parameter; cannot be set from C++.
 NiagaraComp->SetVariableFloat(FName("Emitter.Speed"), 300.f);
 
 // GOOD: The Niagara author must expose the parameter under "User.*".
 NiagaraComp->SetVariableFloat(FName("User.Speed"), 300.f);
-`
+```
 
 **Type mismatch between C++ and Niagara**
-`cpp
+```cpp
 // BAD: Calling SetVariableVec3 on a parameter that is typed as "Color" in Niagara.
 // Silently fails — no runtime error, parameter is just not updated.
 NiagaraComp->SetVariableVec3(FName("User.TintColor"), FVector(1, 0, 0));
 
 // GOOD: Match the C++ call to the Niagara parameter type.
 NiagaraComp->SetVariableLinearColor(FName("User.TintColor"), FLinearColor::Red);
-`
+```
 
 **Setting parameters after system completes**
-`cpp
+```cpp
 // The component is valid but the system instance may be inactive. Check before setting.
 if (NiagaraComp && NiagaraComp->IsActive())
 {
     NiagaraComp->SetVariableFloat(FName("User.Intensity"), NewIntensity);
 }
-`
+```
 
 **Forgetting to check nullptr on spawn (especially on server)**
-`cpp
+```cpp
 UNiagaraComponent* Comp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(...);
 // Comp can be nullptr on dedicated server or when bPreCullCheck rejects the spawn.
 if (Comp)
 {
     Comp->SetVariableFloat(FName("User.Scale"), 2.f);
 }
-`
+```
 
 **Not removing delegates before destruction**
-`cpp
+```cpp
 // BAD: OnSystemFinished fires after owner is garbage collected → crash.
 // GOOD: Always RemoveDynamic in BeginDestroy or EndPlay.
 void AMyActor::EndPlay(const EEndPlayReason::Type Reason)
@@ -476,7 +476,7 @@ void AMyActor::EndPlay(const EEndPlayReason::Type Reason)
     }
     Super::EndPlay(Reason);
 }
-`
+```
 
 **Niagara Fluids (experimental)**: The Niagara Fluids plugin provides GPU-based fluid and gas
 simulations. It is experimental, GPU-only, and carries a high performance cost — profile carefully

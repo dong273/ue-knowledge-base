@@ -13,7 +13,7 @@ then restores control.
 
 ### Header
 
-`cpp
+```cpp
 // MyCutsceneManager.h
 #pragma once
 #include "GameFramework/Actor.h"
@@ -53,11 +53,11 @@ private:
 
     void RestorePlayerControl();
 };
-`
+```
 
 ### Implementation
 
-`cpp
+```cpp
 // MyCutsceneManager.cpp
 #include "MyCutsceneManager.h"
 #include "LevelSequencePlayer.h"
@@ -149,7 +149,7 @@ void AMyCutsceneManager::RestorePlayerControl()
     PC->SetIgnoreMoveInput(false);
     PC->SetIgnoreLookInput(false);
 }
-`
+```
 
 ---
 
@@ -158,7 +158,7 @@ void AMyCutsceneManager::RestorePlayerControl()
 A background camera sequence that plays without hiding the HUD or disabling input — for
 scripted gameplay moments (e.g. a crane shot during a boss encounter).
 
-`cpp
+```cpp
 // In a GameMode or GameplayComponent
 void AMyGameMode::TriggerBossArrivalCamera()
 {
@@ -212,7 +212,7 @@ void AMyGameMode::OnBossArrivalCameraFinished()
     BossArrivalPlayer        = nullptr;
     BossArrivalSequenceActor = nullptr;
 }
-`
+```
 
 ---
 
@@ -230,7 +230,7 @@ interaction authored in Sequencer with tag-based bindings).
 
 ### C++ Runtime Binding
 
-`cpp
+```cpp
 // ScriptedEventTrigger.cpp
 
 void AScriptedEventTrigger::TriggerHandshakeSequence(
@@ -278,7 +278,7 @@ void AScriptedEventTrigger::OnHandshakeFinished()
     HandshakePlayer        = nullptr;
     HandshakeSequenceActor = nullptr;
 }
-`
+```
 
 ---
 
@@ -287,7 +287,7 @@ void AScriptedEventTrigger::OnHandshakeFinished()
 A sequence that loops indefinitely to drive ambient elements (foliage sway, light flicker,
 water ripple) without affecting player state.
 
-`cpp
+```cpp
 void AAtmosphereManager::BeginPlay()
 {
     Super::BeginPlay();
@@ -322,7 +322,7 @@ void AAtmosphereManager::EndPlay(const EEndPlayReason::Type Reason)
     }
     Super::EndPlay(Reason);
 }
-`
+```
 
 ---
 
@@ -330,7 +330,7 @@ void AAtmosphereManager::EndPlay(const EEndPlayReason::Type Reason)
 
 Spawning and configuring a `ACineCameraActor` then handing it to a sequence.
 
-`cpp
+```cpp
 #include "CineCameraActor.h"
 #include "CineCameraComponent.h"
 #include "CineCameraSettings.h"   // FCameraFilmbackSettings, FCameraLensSettings, FCameraFocusSettings
@@ -384,7 +384,7 @@ ACineCameraActor* AMyDirector::SpawnCineCamera(
 
     return Camera;
 }
-`
+```
 
 ---
 
@@ -393,7 +393,7 @@ ACineCameraActor* AMyDirector::SpawnCineCamera(
 Play only a portion of a sequence (e.g. frames 0-60 for an intro, then frames 61-120 for the
 main loop).
 
-`cpp
+```cpp
 void AMySequenceController::PlayIntroSegment()
 {
     if (!FullSequence) { return; }
@@ -428,7 +428,7 @@ void AMySequenceController::OnIntroFinished()
     ActivePlayer->SetFrameRange(61, 59);   // start=61, duration=59 frames
     ActivePlayer->PlayLooping(-1);         // -1 = infinite
 }
-`
+```
 
 ---
 
@@ -436,7 +436,7 @@ void AMySequenceController::OnIntroFinished()
 
 Read the current shot name from a master sequence containing multiple sub-sequences (shots).
 
-`cpp
+```cpp
 void AMyHUD::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -467,7 +467,7 @@ void AMyHUD::Tick(float DeltaTime)
     DrawDebugString(GetWorld(), FVector::ZeroVector, ShotInfo, nullptr,
                     FColor::White, 0.0f, true);
 }
-`
+```
 
 ---
 
@@ -475,7 +475,7 @@ void AMyHUD::Tick(float DeltaTime)
 
 Play a cutscene on all clients synchronized via server authority.
 
-`cpp
+```cpp
 // Server-side: spawn and configure the sequence actor with replication enabled
 void AMyNetworkGameMode::Server_PlayCutscene_Implementation(
     ULevelSequence* Sequence)
@@ -529,23 +529,23 @@ void AMyNetworkGameMode::Multicast_RestorePlayerInput()
         }
     }
 }
-`
+```
 
 ---
 
 ## API Quick Reference
 
 ### ULevelSequencePlayer::CreateLevelSequencePlayer
-`
+```
 static ULevelSequencePlayer* CreateLevelSequencePlayer(
     UObject* WorldContextObject,
     ULevelSequence* LevelSequence,
     FMovieSceneSequencePlaybackSettings Settings,
     ALevelSequenceActor*& OutActor)
-`
+```
 
 ### FMovieSceneSequencePlaybackSettings fields
-`
+```
 bool  bAutoPlay             -- auto-play on BeginPlay
 float PlayRate              -- 1.0 = normal, 2.0 = 2x, -1.0 = reverse
 float StartTime             -- offset in seconds from sequence start
@@ -557,10 +557,10 @@ bool  bHideHud              -- hides HUD widgets
 bool  bDisableCameraCuts    -- prevents sequence from overriding camera
 bool  bPauseAtEnd           -- pauses (not stops) at last frame
 EMovieSceneCompletionModeOverride FinishCompletionStateOverride
-`
+```
 
 ### ALevelSequenceActor binding methods
-`
+```
 void SetBinding(FMovieSceneObjectBindingID, TArray<AActor*>, bAllowFromAsset)
 void SetBindingByTag(FName Tag, TArray<AActor*>, bAllowFromAsset)
 void AddBinding(FMovieSceneObjectBindingID, AActor*, bAllowFromAsset)
@@ -571,10 +571,10 @@ void ResetBinding(FMovieSceneObjectBindingID)
 void ResetBindings()
 FMovieSceneObjectBindingID FindNamedBinding(FName Tag) const
 const TArray<FMovieSceneObjectBindingID>& FindNamedBindings(FName Tag) const
-`
+```
 
 ### UMovieSceneSequencePlayer playback control
-`
+```
 void Play()
 void PlayReverse()
 void PlayLooping(int32 NumLoops = -1)
@@ -597,10 +597,10 @@ FQualifiedFrameTime GetCurrentTime() const
 FQualifiedFrameTime GetDuration() const
 int32 GetFrameDuration() const
 TArray<UObject*> GetBoundObjects(FMovieSceneObjectBindingID)
-`
+```
 
 ### UCineCameraComponent key properties/methods
-`
+```
 FCameraFilmbackSettings Filmback             -- SensorWidth, SensorHeight (mm)
 FCameraLensSettings     LensSettings         -- MinFocalLength, MaxFocalLength, MinFStop, MaxFStop
 FCameraFocusSettings    FocusSettings        -- FocusMethod, ManualFocusDistance (cm)
@@ -615,10 +615,10 @@ void SetCurrentFocalLength(float)
 void SetCurrentAperture(float)
 float GetHorizontalFieldOfView() const
 float GetVerticalFieldOfView() const
-`
+```
 
 ### ULevelSequencePlayer additional delegates/events
-`
+```
 FOnLevelSequencePlayerCameraCutEvent OnCameraCut   -- fires on every camera cut
 FOnMovieSceneSequencePlayerEvent     OnPlay
 FOnMovieSceneSequencePlayerEvent     OnPlayReverse
@@ -626,4 +626,4 @@ FOnMovieSceneSequencePlayerEvent     OnStop
 FOnMovieSceneSequencePlayerEvent     OnPause
 FOnMovieSceneSequencePlayerEvent     OnFinished
 FOnMovieSceneSequencePlayerNativeEvent OnNativeFinished
-`
+```

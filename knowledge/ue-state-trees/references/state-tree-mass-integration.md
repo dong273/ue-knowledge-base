@@ -23,7 +23,7 @@ Select this schema when creating a `UStateTree` intended for Mass Entity process
 
 Extends `FStateTreeTaskBase` with Mass fragment dependency declarations:
 
-`cpp
+```cpp
 USTRUCT(meta=(DisplayName="My Mass Task"))
 struct FMyMassTask : public FMassStateTreeTaskBase
 {
@@ -49,13 +49,13 @@ struct FMyMassTask : public FMassStateTreeTaskBase
         return EStateTreeRunStatus::Running;
     }
 };
-`
+```
 
 ### FMassStateTreeConditionBase
 
 Same pattern — extends `FStateTreeConditionBase`, adds `GetDependencies()`:
 
-`cpp
+```cpp
 USTRUCT(meta=(DisplayName="My Mass Condition"))
 struct FMyMassCondition : public FMassStateTreeConditionBase
 {
@@ -73,7 +73,7 @@ struct FMyMassCondition : public FMassStateTreeConditionBase
         return true;
     }
 };
-`
+```
 
 ### FMassStateTreeEvaluatorBase
 
@@ -87,10 +87,10 @@ Extends `FStateTreeEvaluatorBase` with the same `GetDependencies(UE::MassBehavio
 
 Add `UMassStateTreeTrait` to a `UMassEntityConfigAsset` to assign a State Tree to entities of that archetype:
 
-`cpp
+```cpp
 // In Mass Entity Config asset (data-driven):
 // Add StateTree Trait → assign UStateTree asset with UMassStateTreeSchema
-`
+```
 
 The trait adds required fragments to the archetype:
 - `FMassStateTreeInstanceFragment` — per-entity instance data handle
@@ -109,7 +109,7 @@ The trait adds required fragments to the archetype:
 
 Manages pooled State Tree instance data for Mass entities. Pooling avoids per-entity allocation overhead.
 
-`cpp
+```cpp
 // Allocate instance data for an entity
 FMassStateTreeInstanceHandle Handle =
     MassStateTreeSubsystem->AllocateInstanceData(StateTree);
@@ -119,7 +119,7 @@ FStateTreeInstanceData* Data = MassStateTreeSubsystem->GetInstanceData(Handle);
 
 // Free when entity is destroyed
 MassStateTreeSubsystem->FreeInstanceData(Handle);
-`
+```
 
 The subsystem handles allocation/deallocation automatically through the trait lifecycle. Manual calls are only needed for custom processors.
 
@@ -129,14 +129,16 @@ The subsystem handles allocation/deallocation automatically through the trait li
 
 Wraps `FStateTreeExecutionContext` with entity access:
 
-`cpp
+```cpp
 // 4-param constructor (UE 5.5+): Owner, StateTree, InstanceData, MassExecutionContext
 FMassStateTreeExecutionContext MassContext(
     Owner, *StateTree, InstanceData, MassExecContext);
 
 MassContext.SetEntity(EntityHandle);    // set current entity before Tick
 FMassEntityHandle Entity = MassContext.GetEntity();  // access in tasks
-MassExecContext` is the `FMassExecutionContext&` available inside a Mass processor's `Execute()` method. The old 6-param form `(Owner, *StateTree, InstanceData, EntityManager, SignalSubsystem, MassExecContext)` is deprecated since UE 5.6.
+```
+
+`MassExecContext` is the `FMassExecutionContext&` available inside a Mass processor's `Execute()` method. The old 6-param form `(Owner, *StateTree, InstanceData, EntityManager, SignalSubsystem, MassExecContext)` is deprecated since UE 5.6.
 
 The processor calls `SetEntity()` before ticking each entity's tree, making the entity handle available to all tasks and conditions via the context.
 
@@ -166,9 +168,9 @@ Mass signals coordinate State Tree execution with other Mass processors:
 | `DelayedTransitionWakeup` | Wakes an entity for a delayed transition check |
 
 Send signals via `UMassSignalSubsystem`:
-`cpp
+```cpp
 SignalSubsystem.SignalEntity(Entity, UE::Mass::Signals::StateTreeActivate);
-`
+```
 
 ---
 

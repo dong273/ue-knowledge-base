@@ -10,17 +10,17 @@ Complete C++ pattern for a third-person character with camera, Enhanced Input, a
 
 ## Component Layout
 
-`
+```
 CapsuleComponent (root)
 ├─ CameraBoom (SpringArmComponent, attach to capsule)
 │   └─ FollowCamera (CameraComponent, attach to boom socket)
 └─ Mesh (SkeletalMeshComponent — inherited from ACharacter)
 CharacterMovementComponent (inherited from ACharacter)
-`
+```
 
 ### Constructor pattern
 
-`cpp
+```cpp
 //—— 旋转模式 ——
 bUseControllerRotationPitch = false;
 bUseControllerRotationYaw = false;
@@ -50,23 +50,23 @@ MoveComp->GravityScale = 1.75f;
 MoveComp->AirControl = 0.35f;
 MoveComp->MaxAcceleration = 2048.f;
 MoveComp->BrakingDecelerationWalking = 2048.f;
-`
+```
 
 ### Dependencies (Build.cs)
 
-`csharp
+```csharp
 PrivateDependencyModuleNames.AddRange(new string[]
 {
     "EnhancedInput",
     "InputCore",
 });
-`
+```
 
 ## Inline Enhanced Input (No Asset Files)
 
 Create 6 separate Boolean InputActions + 1 MappingContext. Each direction is independent — no modifier chain needed.
 
-`cpp
+```cpp
 #include "InputMappingContext.h"
 
 // In constructor:
@@ -100,11 +100,11 @@ IMC->MapKey(IA_Jump,         EKeys::SpaceBar);
 IMC->MapKey(IA_Jump,         EKeys::Gamepad_FaceButton_Bottom);
 IMC->MapKey(IA_Sprint,       EKeys::LeftShift);
 IMC->MapKey(IA_Sprint,       EKeys::Gamepad_RightTrigger);
-`
+```
 
 ### Input binding in SetupPlayerInputComponent
 
-`cpp
+```cpp
 void ATPCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -122,11 +122,11 @@ void ATPCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     EIC->BindAction(IA_Sprint, ETriggerEvent::Started,   this, &ATPCharacter::OnSprintStarted);
     EIC->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &ATPCharacter::OnSprintReleased);
 }
-`
+```
 
 ### Register mapping context in BeginPlay
 
-`cpp
+```cpp
 void ATPCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -138,13 +138,13 @@ void ATPCharacter::BeginPlay()
         }
     }
 }
-`
+```
 
 ## Input Callbacks
 
 Each direction has its own function — direction from camera rotation, sign from callback.
 
-`cpp
+```cpp
 void ATPCharacter::OnMoveForward()
 {
     if (Controller)
@@ -184,14 +184,14 @@ void ATPCharacter::OnMoveLeft()
         AddMovementInput(Dir, -1.f);
     }
 }
-`
+```
 
 ### Sprint (speed toggle)
 
-`cpp
+```cpp
 void ATPCharacter::OnSprintStarted() { GetCharacterMovement()->MaxWalkSpeed = SprintSpeed; }
 void ATPCharacter::OnSprintReleased() { GetCharacterMovement()->MaxWalkSpeed = WalkSpeed; }
-`
+```
 
 ## UnrealMCP Caveats (Blueprint-from-C++)
 

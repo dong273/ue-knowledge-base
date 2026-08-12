@@ -26,7 +26,7 @@ the exact lifecycle hook order. Cross-reference with SKILL.md for code examples.
 
 ## Class Ownership Chain
 
-`
+```
 UGameInstance  [persists across all level loads]
   |
   +-- UWorld
@@ -50,7 +50,7 @@ UGameInstance  [persists across all level loads]
                                     +-- UCharacterMovementComponent
                                     +-- UCapsuleComponent  (root)
                                     +-- USkeletalMeshComponent
-`
+```
 
 ---
 
@@ -73,7 +73,7 @@ UGameInstance  [persists across all level loads]
 
 ## Player Join Sequence (Server Side)
 
-`
+```
 1. PreLogin(Options, Address, UniqueId, ErrorMessage)
       Set ErrorMessage != "" to reject.
 
@@ -94,18 +94,18 @@ UGameInstance  [persists across all level loads]
       Calls FindPlayerStart() -> ChoosePlayerStart()
       Calls SpawnDefaultPawnFor()
       Calls NewPlayer->Possess(Pawn)
-`
+```
 
 ---
 
 ## Player Logout Sequence
 
-`
+```
 1. Logout(Exiting)            -- GameMode notified (server only)
 2. GameState->RemovePlayerState(PS)  -- PlayerArray updated
 3. PlayerController destroyed
 4. PlayerState destroyed (after ReplicationTimeout or immediately if non-seamless)
-`
+```
 
 ---
 
@@ -147,7 +147,7 @@ When `bUseSeamlessTravel = true`, the travel happens in two legs:
 
 ### AGameModeBase Classes
 
-`cpp
+```cpp
 TSubclassOf<APawn>              DefaultPawnClass;
 TSubclassOf<AGameStateBase>     GameStateClass;
 TSubclassOf<APlayerController>  PlayerControllerClass;
@@ -158,21 +158,21 @@ TSubclassOf<AGameSession>       GameSessionClass;
 uint32                          bUseSeamlessTravel : 1;
 uint32                          bStartPlayersAsSpectators : 1;
 uint32                          bPauseable : 1;
-`
+```
 
 ### AGameStateBase Replicated Properties
 
-`cpp
+```cpp
 TSubclassOf<AGameModeBase>   GameModeClass;       // ReplicatedUsing=OnRep_GameModeClass
 TSubclassOf<ASpectatorPawn>  SpectatorClass;      // ReplicatedUsing=OnRep_SpectatorClass
 TArray<APlayerState*>        PlayerArray;         // Always relevant
 bool                         bReplicatedHasBegunPlay; // ReplicatedUsing=OnRep_ReplicatedHasBegunPlay
 double                       ReplicatedWorldTimeSecondsDouble; // server clock sync
-`
+```
 
 ### APlayerController Notable Members
 
-`cpp
+```cpp
 TObjectPtr<APawn>                 AcknowledgedPawn;        // server-confirmed possession
 TObjectPtr<APlayerCameraManager>  PlayerCameraManager;
 TObjectPtr<AHUD>                  MyHUD;
@@ -181,11 +181,11 @@ uint32                            bShowMouseCursor : 1;
 uint32                            bEnableClickEvents : 1;
 uint32                            bEnableStreamingSource : 1;
 uint16                            SeamlessTravelCount;
-`
+```
 
 ### ACharacter Notable Members
 
-`cpp
+```cpp
 // Components (access via getters)
 USkeletalMeshComponent*        GetMesh()
 UCharacterMovementComponent*   GetCharacterMovement()
@@ -198,13 +198,13 @@ float   JumpMaxHoldTime;       // Replicated — variable jump height
 int32   JumpMaxCount;          // Replicated — multi-jump count
 int32   JumpCurrentCount;      // current jump count this airtime
 uint8   ReplicatedMovementMode; // Replicated — movement mode for simulated proxies
-`
+```
 
 ---
 
 ## NetMode Cheat Sheet
 
-`cpp
+```cpp
 GetNetMode() == NM_Standalone      // single player, no network
 GetNetMode() == NM_DedicatedServer // server process, no local player
 GetNetMode() == NM_ListenServer    // server + local player (host)
@@ -213,13 +213,13 @@ GetNetMode() == NM_Client          // remote client
 HasAuthority()  // true on server (NM_Standalone, NM_DedicatedServer, NM_ListenServer)
 IsLocalController()  // true if this PlayerController belongs to the local machine's player
 IsLocallyControlled()  // true on Pawn if its controller is a local player
-`
+```
 
 ---
 
 ## Class Selection Decision Tree
 
-`
+```
 Need to store game-wide rules or control who can join?
   --> AGameMode (server-only, authoritative)
 
@@ -240,4 +240,4 @@ Need a custom vehicle, drone, or non-humanoid body?
 
 Need data that survives level transitions?
   --> UGameInstance (singleton per process, never destroyed)
-`
+```

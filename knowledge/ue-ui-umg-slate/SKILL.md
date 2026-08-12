@@ -5,9 +5,9 @@ description: Covers UMG, UI, widget, UserWidget, Slate, HUD, BindWidget, Common 
 
 # UE UI: UMG, Slate, and Common UI
 
+
 ## Context Check
 
-Read  to determine: which UI plugins are enabled (CommonUI, MVVM), target platforms (affects input method), whether this is multiplayer (widget ownership per player), and existing UI base class conventions.
 
 ## Information Gathering
 
@@ -17,7 +17,7 @@ Before writing UI code, confirm: UI type (HUD, full-screen menu, modal, in-world
 
 ## 1. UUserWidget in C++
 
-`cpp
+```cpp
 // MyWidget.h
 UCLASS()
 class MYGAME_API UMyWidget : public UUserWidget
@@ -36,11 +36,11 @@ void UMyWidget::NativeConstruct()
     if (PlayButton)
         PlayButton->OnClicked.AddDynamic(this, &UMyWidget::HandlePlayClicked);
 }
-`
+```
 
 ### Lifecycle and GC
 
-`cpp
+```cpp
 // Creation — always pass the owning PlayerController for player-UI
 UMyWidget* Widget = CreateWidget<UMyWidget>(GetOwningPlayer(), MyWidgetClass);
 Widget->AddToViewport(0);          // ZOrder: higher = on top. Roots the widget (won't GC).
@@ -54,13 +54,13 @@ Widget->SetVisibility(ESlateVisibility::Collapsed); // Not drawn, takes no space
 Widget->SetVisibility(ESlateVisibility::Hidden);    // Not drawn, takes space
 Widget->SetVisibility(ESlateVisibility::Visible);   // Drawn, receives input
 // HitTestInvisible: drawn, passes input through; SelfHitTestInvisible: children receive input
-`
+```
 
 ---
 
 ## 2. BindWidget Pattern
 
-`cpp
+```cpp
 UCLASS()
 class MYGAME_API UMyWidget : public UUserWidget
 {
@@ -81,7 +81,7 @@ protected:
     UPROPERTY(meta=(BindWidget)) TObjectPtr<UListView> ItemList;
     UPROPERTY(meta=(BindWidget)) TObjectPtr<UScrollBox> ContentScroll; // Scrollable container
 };
-`
+```
 
 Name must match the UMG Blueprint widget name exactly (case-sensitive). Always null-check optional bindings.
 
@@ -91,59 +91,59 @@ Name must match the UMG Blueprint widget name exactly (case-sensitive). Always n
 
 ### UButton (Button.h)
 
-`cpp
+```cpp
 // Delegates: OnClicked, OnPressed, OnReleased, OnHovered, OnUnhovered
 PlayButton->OnClicked.AddDynamic(this, &UMyWidget::HandlePlayClicked);
 PlayButton->OnHovered.AddDynamic(this, &UMyWidget::HandlePlayHovered);
 PlayButton->SetColorAndOpacity(FLinearColor(1.f, 0.8f, 0.f, 1.f));
 PlayButton->SetIsEnabled(false);
 // UE5.2+: WidgetStyle, ColorAndOpacity, ClickMethod direct access deprecated — use setters
-`
+```
 
 ### UTextBlock (TextBlock.h)
 
-`cpp
+```cpp
 // SetText wipes any Blueprint binding on Text
 ScoreText->SetText(FText::Format(NSLOCTEXT("HUD", "ScoreFmt", "Score: {0}"), FText::AsNumber(Score)));
 ScoreText->SetColorAndOpacity(FSlateColor(FLinearColor::White));
 ScoreText->SetTextTransformPolicy(ETextTransformPolicy::ToUpper);
 ScoreText->SetTextOverflowPolicy(ETextOverflowPolicy::Ellipsis);
-`
+```
 
 ### UImage (Image.h)
 
-`cpp
+```cpp
 PlayerAvatar->SetBrushFromTexture(AvatarTexture, /*bMatchSize=*/false);
 PlayerAvatar->SetBrushFromMaterial(IconMaterial);
 UMaterialInstanceDynamic* MID = PlayerAvatar->GetDynamicMaterial();
 MID->SetScalarParameterValue(TEXT("Opacity"), 0.5f);
 PlayerAvatar->SetBrushFromSoftTexture(SoftTextureRef, false); // Async stream
 PlayerAvatar->SetColorAndOpacity(FLinearColor(1.f, 1.f, 1.f, 0.5f));
-`
+```
 
 ### UProgressBar (ProgressBar.h)
 
-`cpp
+```cpp
 HealthBar->SetPercent(CurrentHealth / MaxHealth); // 0.0–1.0
 HealthBar->SetFillColorAndOpacity(FLinearColor(0.f, 1.f, 0.f, 1.f));
 LoadingBar->SetIsMarquee(true); // Indeterminate animation
-`
+```
 
 ### UScrollBox (ScrollBox.h)
 
 `UScrollBox` is a BindWidget-compatible container for scrollable content. Supports vertical and horizontal scroll. Add child widgets in Blueprint; query or modify scroll offset in C++:
 
-`cpp
+```cpp
 ContentScroll->ScrollToEnd();
 ContentScroll->SetScrollOffset(0.f);
 ContentScroll->SetOrientation(Orient_Vertical); // default
-`
+```
 
 ### UListView + UTileView + IUserObjectListEntry (ListView.h, TileView.h, IUserObjectListEntry.h)
 
 `UListView` — virtualised vertical list. `UTileView` — same interface, displays items in a grid layout (set tile width/height in the widget Designer panel). Both use `IUserObjectListEntry`.
 
-`cpp
+```cpp
 // Entry widget must implement the interface
 UCLASS()
 class UItemEntryWidget : public UUserWidget, public IUserObjectListEntry
@@ -171,13 +171,13 @@ for (const FItemInfo& Info : Items)
 // For C++: override NativeOnItemClicked in a UListView subclass, or bind
 // OnItemClickedInternal (protected delegate on UListViewBase).
 UItemData* Selected = ItemList->GetSelectedItem<UItemData>();
-`
+```
 
 ---
 
 ## 4. Input Mode Management
 
-`cpp
+```cpp
 // UI-only — full-screen menus. Game input blocked.
 FInputModeUIOnly UIMode;
 UIMode.SetWidgetToFocus(Widget->TakeWidget());
@@ -193,7 +193,7 @@ FInputModeGameAndUI GameUIMode;
 GameUIMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
 GetOwningPlayer()->SetInputMode(GameUIMode);
 GetOwningPlayer()->SetShowMouseCursor(true);
-`
+```
 
 Set input mode from calling code (HUD/GameMode) after `AddToViewport`, not from `NativeConstruct`.
 
@@ -205,7 +205,7 @@ See `references/common-ui-setup.md` for full plugin setup, GameViewportClient co
 
 ### UCommonActivatableWidget (CommonActivatableWidget.h)
 
-`cpp
+```cpp
 UCLASS()
 class MYGAME_API UMyMenuScreen : public UCommonActivatableWidget
 {
@@ -231,7 +231,7 @@ void UMyMenuScreen::NativeOnDeactivated()
     CloseButton->OnClicked().RemoveAll(this);
     Super::NativeOnDeactivated(); // Always call Super
 }
-`
+```
 
 ### Widget Containers (CommonActivatableWidgetContainerBase.h)
 
@@ -240,7 +240,7 @@ void UMyMenuScreen::NativeOnDeactivated()
 - **`UCommonActivatableWidgetStack`** — shows only the topmost widget; deactivating reveals the previous one (stack behaviour). This is the correct stack class — do NOT use `UCommonActivatableWidgetSwitcher` here, which inherits from `UCommonAnimatedSwitcher`/`UWidgetSwitcher` and is a different widget entirely.
 - **`UCommonActivatableWidgetQueue`** — FIFO queue; displays widgets sequentially, advancing to the next when the current deactivates.
 
-`cpp
+```cpp
 UPROPERTY(meta=(BindWidget)) TObjectPtr<UCommonActivatableWidgetStack> MenuLayer;
 UPROPERTY(meta=(BindWidget)) TObjectPtr<UCommonActivatableWidgetQueue> NotificationQueue;
 
@@ -253,26 +253,26 @@ Screen->DeactivateWidget();
 
 // Queue a notification — plays after the current one finishes
 NotificationQueue->AddWidget(UMyNotificationWidget::StaticClass());
-`
+```
 
 ### UCommonButtonBase
 
 Uses `FCommonButtonEvent` (declared via `DECLARE_EVENT`) — use `AddUObject`, not `AddDynamic`:
-`cpp
+```cpp
 MyButton->OnClicked().AddUObject(this, &UMyScreen::HandleClick);
 MyButton->OnClicked().RemoveAll(this); // In NativeOnDeactivated
-`
+```
 
 ### UCommonUIActionRouter
 
 Handles input routing between game and UI layers; Common UI drives it automatically via `GetDesiredInputConfig`. Access directly when you need to query the current input mode:
 
-`cpp
+```cpp
 #include "Input/CommonUIActionRouterBase.h"
 // Get() takes a const UWidget& — call from within a widget (or pass any valid UWidget in scope):
 UCommonUIActionRouterBase* Router = UCommonUIActionRouterBase::Get(*ContextWidget); // ContextWidget: const UWidget&
 if (Router) { /* query active input config */ }
-`
+```
 
 ### Gamepad / Keyboard Navigation
 
@@ -291,7 +291,7 @@ Use Slate for editor extensions, custom renderers, or when UMG doesn't expose re
 
 `SWidget` is the abstract base of all Slate widgets. `SCompoundWidget` (shown below) is the typical subclass for custom widgets.
 
-`cpp
+```cpp
 // Custom widget — SMyWidget.h
 class SMyWidget : public SCompoundWidget
 {
@@ -325,7 +325,7 @@ void SMyWidget::Construct(const FArguments& InArgs)
 TSharedRef<SMyWidget> W = SNew(SMyWidget).LabelText(NSLOCTEXT("UI", "Btn", "Go"));
 TSharedPtr<SButton> Btn;
 SAssignNew(Btn, SButton).OnClicked(FOnClicked::CreateUObject(this, &UMyClass::Handle));
-`
+```
 
 **Common Slate widgets:** `STextBlock`, `SButton`, `SVerticalBox`, `SHorizontalBox`, `SOverlay`, `SBorder`, `SBox`, `SScrollBox`, `SImage`, `SEditableTextBox`.
 
@@ -335,7 +335,7 @@ SAssignNew(Btn, SButton).OnClicked(FOnClicked::CreateUObject(this, &UMyClass::Ha
 
 ## 7. MVVM (UE 5.1+, ModelViewViewModel plugin)
 
-`cpp
+```cpp
 // ViewModel — MyGameViewModel.h
 UCLASS()
 class MYGAME_API UMyGameViewModel : public UMVVMViewModelBase
@@ -356,7 +356,7 @@ private:
 
 // From game code — UI updates automatically via field notifications:
 void AMyPlayerState::OnScoreChanged(int32 NewScore) { ViewModel->SetScore(NewScore); }
-`
+```
 
 To bind a ViewModel at runtime: create with `NewObject<UMyGameViewModel>(this)`, then configure in the widget Blueprint's Bindings panel. The `UMVVMView` component on the widget handles one-way and two-way property bindings automatically once the ViewModel class is set.
 
@@ -381,12 +381,12 @@ To bind a ViewModel at runtime: create with `NewObject<UMyGameViewModel>(this)`,
 
 ## Build.cs
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[] { "UMG", "Slate", "SlateCore" });
 PrivateDependencyModuleNames.Add("CommonUI");      // If using CommonUI
 PrivateDependencyModuleNames.Add("CommonInput");   // If using CommonInput
 PrivateDependencyModuleNames.Add("ModelViewViewModel"); // If using MVVM
-`
+```
 
 ---
 

@@ -1,13 +1,13 @@
 ---
 title: ue-input-system
-description: Covers implementing player input with Unreal Engine's Enhanced Input system. Also covers 'Enhanced Input', 'input', 'input action', 'InputAction', 'mapping context', 'InputMappingContext', 'input binding', 'key binding', 'input trigger', 'input modifier', 'gamepad', or 'keyboard'. Covers ETriggerEvent, built-in triggers (Hold, Tap, Pulse, ChordAction, Combo), built-in modifiers (DeadZone, Scalar, Negate, SwizzleAxis), and custom trigger/modifier authoring. See references/input-action-reference.md for the full catalogue. For UI input modes, see ue-ui-umg-slate.
+description: Covers implementing player input with Unreal Engine's Enhanced Input system. Also use when the user mentions 'Enhanced Input', 'input', 'input action', 'InputAction', 'mapping context', 'InputMappingContext', 'input binding', 'key binding', 'input trigger', 'input modifier', 'gamepad', or 'keyboard'. Covers ETriggerEvent, built-in triggers (Hold, Tap, Pulse, ChordAction, Combo), built-in modifiers (DeadZone, Scalar, Negate, SwizzleAxis), and custom trigger/modifier authoring. See references/input-action-reference.md for the full catalogue. For UI input modes, see ue-ui-umg-slate.
 ---
 
 # UE Enhanced Input System
 
+
 ## Context Check
 
-Read  before proceeding. Confirm:
 
 - `EnhancedInput` plugin is listed as enabled
 - Target platforms (affects which modifiers are needed per platform)
@@ -16,8 +16,6 @@ Read  before proceeding. Confirm:
 
 ## Information Gathering
 
-## 需求收集
-确定需要的动作及值类型（Bool/Axis1D/Axis2D/Axis3D）、目标平台、复杂输入需求（长按充能、双击、组合键、和弦快捷键）、以及输入模式（gameplay / UI / vehicle）。
 
 ---
 
@@ -30,17 +28,17 @@ Read  before proceeding. Confirm:
 `Build.cs`: add `"EnhancedInput"` to `PublicDependencyModuleNames`.
 
 `DefaultInput.ini`:
-`ini
+```ini
 [/Script/Engine.InputSettings]
 DefaultPlayerInputClass=/Script/EnhancedInput.EnhancedPlayerInput
 DefaultInputComponentClass=/Script/EnhancedInput.EnhancedInputComponent
-`
+```
 
 ### UInputAction Asset
 
 `UInputAction : UDataAsset`. Create one per logical player action. Key properties (from `InputAction.h`):
 
-`cpp
+```cpp
 EInputActionValueType ValueType = EInputActionValueType::Boolean;
 // Boolean | Axis1D (float) | Axis2D (FVector2D) | Axis3D (FVector)
 
@@ -53,7 +51,7 @@ bool bConsumeInput = true;  // blocks lower-priority Enhanced Input mappings to 
 
 TArray<TObjectPtr<UInputTrigger>> Triggers;   // applied AFTER per-mapping triggers
 TArray<TObjectPtr<UInputModifier>> Modifiers; // applied AFTER per-mapping modifiers
-`
+```
 
 ### UInputMappingContext Asset
 
@@ -69,7 +67,7 @@ TArray<TObjectPtr<UInputModifier>> Modifiers; // applied AFTER per-mapping modif
 
 ### SetupPlayerInputComponent
 
-`cpp
+```cpp
 // MyCharacter.h — declare assets and handlers
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -81,7 +79,9 @@ TObjectPtr<UInputAction> JumpAction;
 void Move(const FInputActionValue& Value);
 void StartJump();
 void StopJump();
-cpp
+```
+
+```cpp
 // MyCharacter.cpp
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -109,13 +109,13 @@ void AMyCharacter::BeginPlay()
         }
     }
 }
-`
+```
 
 ### Callback Signatures
 
 `BindAction` accepts four delegate signatures:
 
-`cpp
+```cpp
 // No params — press/release without value needed
 void AMyCharacter::StartJump() { Jump(); }
 
@@ -137,17 +137,17 @@ void AMyCharacter::OnChargeAttack(const FInputActionInstance& Instance)
 // Lambda variant
 EIC->BindActionValueLambda(InteractAction, ETriggerEvent::Triggered,
     [this](const FInputActionValue& Value) { TryInteract(); });
-`
+```
 
 Storing and removing a binding:
-`cpp
+```cpp
 FEnhancedInputActionEventBinding& B =
     EIC->BindAction(DebugAction, ETriggerEvent::Started, this, &AMyCharacter::DebugToggle);
 uint32 Handle = B.GetHandle();
 // ...
 EIC->RemoveBindingByHandle(Handle);        // remove one binding
 EIC->ClearBindingsForObject(this);         // remove all bindings for an object
-`
+```
 
 ---
 
@@ -218,7 +218,7 @@ Applied in array order. Mapping-level modifiers run before action-level modifier
 
 ## Mapping Context Priority
 
-`cpp
+```cpp
 // Higher integer = higher priority; wins key conflicts
 Subsystem->AddMappingContext(GameplayIMC, 0);
 Subsystem->AddMappingContext(VehicleIMC,  1);
@@ -230,7 +230,7 @@ Subsystem->AddMappingContext(UIIMC, 2, Opts);
 
 // Remove on mode exit
 Subsystem->RemoveMappingContext(VehicleIMC);
-`
+```
 
 When `bConsumeInput = true` on a `UInputAction` (the default), a higher-priority context that maps the same physical key will consume it, blocking all lower-priority bindings to that key from firing. This is intentional: use priority layering and `bConsumeInput` together to prevent input conflicts between modes (e.g., a vehicle context consuming Spacebar so the character's Jump action never fires while driving).
 
@@ -238,7 +238,7 @@ When `bConsumeInput = true` on a `UInputAction` (the default), a higher-priority
 
 In split-screen, each local player has their own `UEnhancedInputLocalPlayerSubsystem`. Mapping contexts are per-player — adding a context to one player's subsystem does not affect others. To target a specific player, retrieve their subsystem directly from their `ULocalPlayer`:
 
-`cpp
+```cpp
 // Access subsystem for a specific local player (e.g., player 2)
 if (ULocalPlayer* LP = PlayerController->GetLocalPlayer())
 {
@@ -247,7 +247,7 @@ if (ULocalPlayer* LP = PlayerController->GetLocalPlayer())
         Sub->AddMappingContext(PlayerTwoIMC, 0);
     }
 }
-`
+```
 
 ---
 
@@ -255,7 +255,7 @@ if (ULocalPlayer* LP = PlayerController->GetLocalPlayer())
 
 Subclass `UInputTrigger`; override `UpdateState_Implementation` returning `ETriggerState::None / Ongoing / Triggered`:
 
-`cpp
+```cpp
 UCLASS(EditInlineNew, meta=(DisplayName="Double Click"))
 class MYGAME_API UDoubleClickTrigger : public UInputTrigger
 {
@@ -287,7 +287,9 @@ ETriggerState UDoubleClickTrigger::UpdateState_Implementation(
     bWasActuated = bActuated;
     return ETriggerState::None;
 }
-UInputTriggerTimedBase` provides `HeldDuration` and `CalculateHeldDuration` for time-based triggers.
+```
+
+`UInputTriggerTimedBase` provides `HeldDuration` and `CalculateHeldDuration` for time-based triggers.
 
 ---
 
@@ -295,7 +297,7 @@ UInputTriggerTimedBase` provides `HeldDuration` and `CalculateHeldDuration` for 
 
 Subclass `UInputModifier`; override `ModifyRaw_Implementation`:
 
-`cpp
+```cpp
 UCLASS(EditInlineNew, meta=(DisplayName="Clamp Magnitude"))
 class MYGAME_API UClampMagnitudeModifier : public UInputModifier
 {
@@ -313,7 +315,7 @@ protected:
         return FInputActionValue(CurrentValue.GetValueType(), V);
     }
 };
-`
+```
 
 ---
 
@@ -333,16 +335,16 @@ protected:
 
 ## Legacy Input Migration
 
-To migrate from the legacy input system to Enhanced Input: search for `InputComponent->BindAction` and `InputComponent->BindAxis` calls and replace each with `UEnhancedInputComponent::BindAction`. Create a `UInputAction` data asset for every old action name, choosing the appropriate `ValueType` (Boolean for buttons, Axis1D for single-axis, Axis2D for stick/WASD). Create a `UInputMappingContext` asset and add key mappings corresponding to the old `DefaultInput.iniActionMappings`/`AxisMappings` entries. Set `DefaultInputComponentClass` in `DefaultInput.ini` and enable the EnhancedInput plugin.
+To migrate from the legacy input system to Enhanced Input: search for `InputComponent->BindAction` and `InputComponent->BindAxis` calls and replace each with `UEnhancedInputComponent::BindAction`. Create a `UInputAction` data asset for every old action name, choosing the appropriate `ValueType` (Boolean for buttons, Axis1D for single-axis, Axis2D for stick/WASD). Create a `UInputMappingContext` asset and add key mappings corresponding to the old `DefaultInput.ini` `ActionMappings`/`AxisMappings` entries. Set `DefaultInputComponentClass` in `DefaultInput.ini` and enable the EnhancedInput plugin.
 
 ## UI Input Mode
 
 Without CommonUI, manage input modes manually via `APlayerController::SetInputMode()`:
-`cpp
+```cpp
 PC->SetInputMode(FInputModeUIOnly());          // cursor captured by UI, no game input
 PC->SetInputMode(FInputModeGameAndUI());       // both UI and game receive input
 PC->SetInputMode(FInputModeGameOnly());        // full game input, UI events suppressed
-`
+```
 CommonUI automates input routing through `UCommonActivatableWidget` stacks and eliminates most manual `SetInputMode` calls — see `ue-ui-umg-slate`.
 
 ---

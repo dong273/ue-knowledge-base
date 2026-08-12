@@ -5,9 +5,9 @@ description: Use when extending the Unreal Editor with editor tool, editor utili
 
 # UE Editor Tools
 
+
 ## Context
 
-Read  for editor module structure, engine version, team workflows, and project-specific conventions before providing guidance.
 
 ## Before You Start
 
@@ -26,9 +26,11 @@ Ask which area the user needs if not clear:
 
 All editor-extending code must live in a module with `"Type": "Editor"`. Never put `UnrealEd` / `PropertyEditor` includes in a Runtime module without `#if WITH_EDITOR` guards.
 
-`json
+```json
 { "Name": "MyGameEditor", "Type": "Editor", "LoadingPhase": "PostEngineInit" }
-csharp
+```
+
+```csharp
 // MyGameEditor.Build.cs — key dependencies
 PrivateDependencyModuleNames.AddRange(new string[] {
     "Core", "CoreUObject", "Engine", "UnrealEd",
@@ -40,9 +42,9 @@ PrivateDependencyModuleNames.AddRange(new string[] {
     "AssetTools",       // FAssetTypeActions_Base
     "MyGame"
 });
-`
+```
 Module skeleton — every registration in `StartupModule` must be mirrored in `ShutdownModule`:
-`cpp
+```cpp
 IMPLEMENT_MODULE(FMyGameEditorModule, MyGameEditor)
 
 void FMyGameEditorModule::StartupModule()
@@ -70,7 +72,7 @@ void FMyGameEditorModule::ShutdownModule()
     UToolMenus::UnRegisterStartupCallback(this);
     if (UToolMenus* TM = UToolMenus::TryGet()) { TM->UnregisterOwner(this); }
 }
-`
+```
 
 > Full boilerplate with asset type actions, editor modes, and factory: `references/editor-module-setup.md`
 
@@ -80,7 +82,7 @@ void FMyGameEditorModule::ShutdownModule()
 
 `UEditorUtilityWidget` (from `EditorUtilityWidget.h`) extends `UUserWidget` for editor-only UMG panels. Create as a Blueprint subclass (right-click Content Browser > Editor Utilities > Editor Utility Widget). **Run**: right-click the widget asset > Run Editor Utility Widget. Or subclass in C++:
 
-`cpp
+```cpp
 #pragma once
 #include "EditorUtilityWidget.h"
 #include "MyEditorUtilityWidget.generated.h"
@@ -106,7 +108,7 @@ void UMyEditorUtilityWidget::BatchRenameSelectedAssets(const FString& Prefix)
         }
     }
 }
-`
+```
 
 Key `UEditorUtilityLibrary` functions (from `EditorUtilityLibrary.h`):
 
@@ -122,11 +124,11 @@ Key `UEditorUtilityLibrary` functions (from `EditorUtilityLibrary.h`):
 
 Open a widget programmatically:
 
-`cpp
+```cpp
 GEditor->GetEditorSubsystem<UEditorUtilitySubsystem>()
     ->SpawnAndRegisterTab(LoadObject<UEditorUtilityWidgetBlueprint>(
         nullptr, TEXT("/Game/EditorWidgets/BP_MyTool")));
-`
+```
 
 ---
 
@@ -136,7 +138,7 @@ GEditor->GetEditorSubsystem<UEditorUtilitySubsystem>()
 
 Any `UFUNCTION(CallInEditor)` on a `UAssetActionUtility` subclass appears in the Content Browser context menu. Set `SupportedClasses` in Class Defaults to filter by asset type.
 
-`cpp
+```cpp
 #pragma once
 #include "AssetActionUtility.h"   // Engine/Source/Editor/Blutility/Classes/AssetActionUtility.h
 #include "MyAssetActionUtility.generated.h"
@@ -160,7 +162,7 @@ public:
         }
     }
 };
-`
+```
 
 ### UActorActionUtility — Actor Right-Click Actions
 
@@ -172,7 +174,7 @@ Same pattern for level actors. Both `UAssetActionUtility` and `UActorActionUtili
 
 ### Class Customization — IDetailCustomization
 
-`cpp
+```cpp
 class FMyDataAssetCustomization : public IDetailCustomization
 {
 public:
@@ -186,11 +188,11 @@ private:
 // In CustomizeDetails: EditCategory, AddProperty, AddCustomRow, HideCategory
 // Register: PropMod.RegisterCustomClassLayout(UMyClass::StaticClass()->GetFName(), ...MakeInstance)
 // Unregister in ShutdownModule: PropMod.UnregisterCustomClassLayout(...)
-`
+```
 
 ### Struct Customization — IPropertyTypeCustomization
 
-`cpp
+```cpp
 class FMyStructCustomization : public IPropertyTypeCustomization
 {
 public:
@@ -201,7 +203,7 @@ public:
         IDetailChildrenBuilder& ChildBuilder, IPropertyTypeCustomizationUtils& Utils) override;
 };
 // Register: PropMod.RegisterCustomPropertyTypeLayout(FMyStruct::StaticStruct()->GetFName(), ...MakeInstance)
-`
+```
 
 > Full implementations, Slate row patterns, IPropertyHandle read/write, NameContent/ValueContent: `references/detail-customization-patterns.md`
 
@@ -211,7 +213,7 @@ public:
 
 `FEdMode` (from `EdMode.h`) provides specialized viewport interaction. Register globally; only one active per viewport at a time.
 
-`cpp
+```cpp
 // MyEditorMode.h
 class FMyEditorMode : public FEdMode
 {
@@ -262,17 +264,17 @@ void FMyEditorMode::Render(const FSceneView* View, FViewport* Viewport,
     FEdMode::Render(View, Viewport, PDI);
     DrawWireSphere(PDI, FVector::ZeroVector, FLinearColor::Green, 50.f, 16, SDPG_World);
 }
-`
+```
 
 Register/unregister in module lifecycle:
 
-`cpp
+```cpp
 // StartupModule
 FEditorModeRegistry::Get().RegisterMode<FMyEditorMode>(
     FMyEditorMode::EM_MyMode, FText::FromString("My Mode"), FSlateIcon(), true);
 // ShutdownModule
 FEditorModeRegistry::Get().UnregisterMode(FMyEditorMode::EM_MyMode);
-`
+```
 
 ---
 
@@ -280,7 +282,7 @@ FEditorModeRegistry::Get().UnregisterMode(FMyEditorMode::EM_MyMode);
 
 `FAssetTypeActions_Base` (from `AssetTypeActions_Base.h`) controls Content Browser appearance and context menu for custom asset types.
 
-`cpp
+```cpp
 class FMyAssetTypeActions : public FAssetTypeActions_Base
 {
 public:
@@ -298,13 +300,13 @@ public:
                     EToolkitMode::Standalone, EditWithinLevelEditor, Asset);
     }
 };
-`
+```
 
 Register in `StartupModule`, keep reference, unregister in `ShutdownModule`.
 
 ### FAssetEditorToolkit — Tab-Based Asset Editor Window
 
-`cpp
+```cpp
 class FMyAssetEditor : public FAssetEditorToolkit
 {
 public:
@@ -315,21 +317,21 @@ public:
     virtual void UnregisterTabSpawners(const TSharedRef<FTabManager>& TabMgr) override;
 };
 // Call InitAssetEditor() inside InitMyEditor to set up the tab layout via FTabManager::NewLayout
-`
+```
 
 Query open editors programmatically via `IAssetEditorInstance`:
 
-`cpp
+```cpp
 IAssetEditorInstance* Editor = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()
     ->FindEditorForAsset(MyAsset, /*bFocusIfOpen=*/false);
 if (Editor) Editor->FocusWindow(MyAsset);  // CloseWindow(EAssetEditorCloseReason::AssetEditorHostClosed) — no-arg form deprecated 5.3
-`
+```
 
 ### Asset Factories
 
 `UFactory` subclasses allow the Content Browser's "Add" menu to create new custom assets:
 
-`cpp
+```cpp
 UCLASS()
 class UMyDataFactory : public UFactory
 {
@@ -348,11 +350,11 @@ public:
         return NewObject<UMyDataAsset>(InParent, InClass, InName, Flags);
     }
 };
-`
+```
 
 ### Custom Thumbnails
 
-`cpp
+```cpp
 UCLASS()
 class UMyThumbnailRenderer : public UThumbnailRenderer
 {
@@ -363,7 +365,7 @@ class UMyThumbnailRenderer : public UThumbnailRenderer
 // Register in module startup:
 UThumbnailManager::Get().RegisterCustomRenderer(UMyDataAsset::StaticClass(),
     UMyThumbnailRenderer::StaticClass());
-`
+```
 
 ---
 
@@ -371,7 +373,7 @@ UThumbnailManager::Get().RegisterCustomRenderer(UMyDataAsset::StaticClass(),
 
 `UEditorSubsystem` (from `EditorSubsystem.h`) — editor-lifetime singletons, auto-discovered (no registration needed). Access via `GEditor->GetEditorSubsystem<T>()`.
 
-`cpp
+```cpp
 UCLASS()
 class MYGAMEEDITOR_API UMyEditorSubsystem : public UEditorSubsystem
 {
@@ -388,7 +390,7 @@ public:
         Super::Deinitialize();
     }
 };
-`
+```
 
 Built-in subsystems:
 
@@ -405,7 +407,7 @@ Built-in subsystems:
 
 UToolMenus (UE5+) replaces `FExtender`. Register inside the startup callback so Slate is ready:
 
-`cpp
+```cpp
 void FMyGameEditorModule::RegisterMenus()
 {
     FToolMenuOwnerScoped OwnerScoped(this);
@@ -429,13 +431,13 @@ void FMyGameEditorModule::RegisterMenus()
             FText::FromString("My Tool"), FText::GetEmpty(),
             FSlateIcon(FAppStyle::GetAppStyleSetName(), "Icons.Toolbar.Settings")));
 }
-`
+```
 
 Always unregister: `UToolMenus::UnRegisterStartupCallback(this)` + `TryGet()->UnregisterOwner(this)`.
 
 ### Command Registration — TCommands Pattern
 
-`cpp
+```cpp
 class FMyCommands : public TCommands<FMyCommands>
 {
 public:
@@ -449,13 +451,13 @@ void FMyCommands::RegisterCommands()
 }
 // In StartupModule: FMyCommands::Register(); bind via CommandList->MapAction(...)
 // In ShutdownModule: FMyCommands::Unregister();
-`
+```
 
 ---
 
 ## Data Validation
 
-`cpp
+```cpp
 // UEditorValidatorBase — auto-discovered by Editor > Tools > Validate Assets
 UCLASS()
 class UMyValidator : public UEditorValidatorBase
@@ -467,7 +469,7 @@ class UMyValidator : public UEditorValidatorBase
         const FAssetData& InAssetData, UObject* InAsset, FDataValidationContext& Context) override;
 };
 // Also runnable via commandlet: UnrealEditor-Cmd -run=DataValidation
-`
+```
 
 ---
 

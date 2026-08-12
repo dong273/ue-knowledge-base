@@ -6,7 +6,7 @@ Common algorithmic patterns for runtime mesh and content generation in Unreal En
 
 ## Component Setup Boilerplate
 
-`cpp
+```cpp
 // Header — MyProceduralActor.h
 #pragma once
 #include "GameFramework/Actor.h"
@@ -50,7 +50,7 @@ AMyProceduralActor::AMyProceduralActor()
     Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
     Spline->SetupAttachment(RootComponent);
 }
-`
+```
 
 ---
 
@@ -58,7 +58,7 @@ AMyProceduralActor::AMyProceduralActor()
 
 Generates a simple flat or height-mapped mesh from a 2D grid of vertices.
 
-`cpp
+```cpp
 // GridSize = number of cells per side. Vertex count = (GridSize+1)^2.
 // Preallocate for performance.
 void ATerrainActor::GenerateFlatGrid(int32 GridSize, float CellSize,
@@ -107,11 +107,11 @@ void ATerrainActor::GenerateFlatGrid(int32 GridSize, float CellSize,
     ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, Normals,
                                        UVs, Colors, Tangents, bCreateCollision);
 }
-`
+```
 
 ### Height-Mapped Terrain with Normal Recalculation
 
-`cpp
+```cpp
 float SampleHeight(float X, float Y, float Scale, int32 Seed)
 {
     // Seeded offset to vary noise field per-seed
@@ -142,7 +142,7 @@ void RecalculateNormals(const TArray<FVector>& Vertices, const TArray<int32>& Tr
         N = N.GetSafeNormal();
     }
 }
-`
+```
 
 ---
 
@@ -152,7 +152,7 @@ Extracts a triangulated isosurface from a 3D scalar field. Used for caves, aster
 
 ### Scalar Field Setup
 
-`cpp
+```cpp
 // Density grid: negative = solid, positive = air, zero = surface
 struct FDensityGrid
 {
@@ -173,22 +173,22 @@ struct FDensityGrid
         return FVector(X, Y, Z) * VoxelSize;
     }
 };
-`
+```
 
 ### Edge Interpolation
 
-`cpp
+```cpp
 FVector InterpolateEdge(FVector P0, float V0, FVector P1, float V1)
 {
     // Linear interpolation to find zero crossing
     float t = FMath::Clamp(-V0 / (V1 - V0 + SMALL_NUMBER), 0.f, 1.f);
     return FMath::Lerp(P0, P1, t);
 }
-`
+```
 
 ### Cube Processing
 
-`cpp
+```cpp
 // EdgeTable and TriTable are standard 256-entry lookup tables from the original
 // Lorensen & Cline (1987) paper. They map the 8-corner sign configuration
 // to which edges the surface crosses and how to form triangles.
@@ -252,11 +252,11 @@ void ProcessCube(const FDensityGrid& Grid, int32 X, int32 Y, int32 Z,
         OutTris.Add(BaseIdx); OutTris.Add(BaseIdx + 1); OutTris.Add(BaseIdx + 2);
     }
 }
-`
+```
 
 ### Full Grid March
 
-`cpp
+```cpp
 void MarchCubes(const FDensityGrid& Grid, UProceduralMeshComponent* Mesh)
 {
     TArray<FVector> Vertices, Normals;
@@ -283,7 +283,7 @@ void MarchCubes(const FDensityGrid& Grid, UProceduralMeshComponent* Mesh)
     Mesh->CreateMeshSection(0, Vertices, Triangles, Normals,
                              UVs, Colors, Tangents, /*bCreateCollision=*/true);
 }
-`
+```
 
 ---
 
@@ -293,7 +293,7 @@ BSP-based dungeon layout that partitions a rect into rooms and connects them.
 
 ### Data Structures
 
-`cpp
+```cpp
 struct FRoom
 {
     FIntRect Bounds;     // X=left, Y=top, Width, Height in grid cells
@@ -310,11 +310,11 @@ struct FDungeonLevel
     TArray<TPair<FIntPoint, FIntPoint>> Corridors; // pairs of cell coords
     TArray<TArray<uint8>> Tiles; // 0=wall, 1=floor, 2=corridor
 };
-`
+```
 
 ### BSP Split
 
-`cpp
+```cpp
 void SplitRect(const FIntRect& Rect, FRandomStream& Rand,
                int32 MinSize, TArray<FIntRect>& OutLeaves)
 {
@@ -345,11 +345,11 @@ void SplitRect(const FIntRect& Rect, FRandomStream& Rand,
         OutLeaves.Add(Rect);
     }
 }
-`
+```
 
 ### Room Placement and Corridor Carving
 
-`cpp
+```cpp
 FDungeonLevel GenerateDungeon(int32 MapW, int32 MapH, int32 Seed,
                                int32 MinRoomSize = 5, int32 Padding = 1)
 {
@@ -413,11 +413,11 @@ FDungeonLevel GenerateDungeon(int32 MapW, int32 MapH, int32 Seed,
 
     return Level;
 }
-`
+```
 
 ### Tile-to-Mesh Conversion
 
-`cpp
+```cpp
 void ADungeonActor::BuildMeshFromTiles(const FDungeonLevel& Level, float TileSize)
 {
     TArray<FVector>       Vertices;
@@ -461,7 +461,7 @@ void ADungeonActor::BuildMeshFromTiles(const FDungeonLevel& Level, float TileSiz
     ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, Normals,
                                        UVs, Colors, Tangents, /*bCreateCollision=*/true);
 }
-`
+```
 
 ---
 
@@ -471,7 +471,7 @@ L-systems expand a string through production rules and interpret characters as 3
 
 ### Axiom and Rules
 
-`cpp
+```cpp
 struct FLSystemRules
 {
     FString Axiom = "F";
@@ -503,11 +503,11 @@ FString ExpandLSystem(const FLSystemRules& Rules)
     }
     return Current;
 }
-`
+```
 
 ### Turtle Interpreter to HISM
 
-`cpp
+```cpp
 struct FTurtleState
 {
     FVector   Position  = FVector::ZeroVector;
@@ -570,7 +570,7 @@ void InterpretLSystem(const FString& LString, const FLSystemRules& Rules,
         }
     }
 }
-`
+```
 
 ---
 
@@ -580,7 +580,7 @@ WFC fills a grid by choosing tiles that satisfy adjacency constraints. Suitable 
 
 ### Tile and Constraint Definition
 
-`cpp
+```cpp
 // Each tile has a set of valid neighbor tile IDs per direction
 struct FWFCTile
 {
@@ -602,11 +602,11 @@ struct FWFCCell
     bool IsContradiction() const { return PossibleTiles.Num() == 0 && !bCollapsed; }
     float Entropy() const { return (float)PossibleTiles.Num(); } // Simplified (no weights)
 };
-`
+```
 
 ### WFC Iteration
 
-`cpp
+```cpp
 bool WFCStep(TArray<TArray<FWFCCell>>& Grid,
              const TArray<FWFCTile>& Tiles,
              FRandomStream& Rand,
@@ -692,11 +692,11 @@ bool WFCStep(TArray<TArray<FWFCCell>>& Grid,
 
     return true;
 }
-`
+```
 
 ### Grid Initialization and Run
 
-`cpp
+```cpp
 void RunWFC(int32 Width, int32 Height, const TArray<FWFCTile>& Tiles,
              FRandomStream& Rand, TArray<TArray<FWFCCell>>& OutGrid)
 {
@@ -725,7 +725,7 @@ void RunWFC(int32 Width, int32 Height, const TArray<FWFCTile>& Tiles,
         if (bDone) { bSuccess = true; break; }
     }
 }
-`
+```
 
 ---
 
@@ -733,7 +733,7 @@ void RunWFC(int32 Width, int32 Height, const TArray<FWFCTile>& Tiles,
 
 For large meshes, compute vertex data on a background thread then apply on the game thread.
 
-`cpp
+```cpp
 void AProceduralTerrain::GenerateAsync(int32 GridSize, float CellSize)
 {
     // Capture data needed on background thread
@@ -768,7 +768,7 @@ void AProceduralTerrain::GenerateAsync(int32 GridSize, float CellSize)
         });
     });
 }
-`
+```
 
 Note: `UProceduralMeshComponent::CreateMeshSection` must be called on the **game thread**. Only the data computation can be parallelized.
 
@@ -778,7 +778,7 @@ Note: `UProceduralMeshComponent::CreateMeshSection` must be called on the **game
 
 Generates a road mesh by extruding a cross-section profile along a `USplineComponent`.
 
-`cpp
+```cpp
 void ARoadMeshActor::BuildRoad(float RoadWidth, float SegmentLength)
 {
     TArray<FVector>       Vertices;
@@ -831,7 +831,7 @@ void ARoadMeshActor::BuildRoad(float RoadWidth, float SegmentLength)
                                        UVs, Colors, Tangents, /*bCreateCollision=*/true);
     ProceduralMesh->SetMaterial(0, RoadMaterial);
 }
-`
+```
 
 ---
 
@@ -855,7 +855,7 @@ void ARoadMeshActor::BuildRoad(float RoadWidth, float SegmentLength)
 
 Generates uniformly distributed points with minimum separation distance (Bridson 2007). Use for natural-looking placement (trees, rocks, enemies) without clumping.
 
-`cpp
+```cpp
 // Poisson disc sampling — Bridson's fast algorithm
 TArray<FVector2D> PoissonDiscSample(FVector2D Min, FVector2D Max,
     float MinDist, int32 MaxAttempts, FRandomStream& Rand)
@@ -920,11 +920,11 @@ TArray<FVector2D> PoissonDiscSample(FVector2D Min, FVector2D Max,
     }
     return Points;
 }
-`
+```
 
 **Usage with ISM placement:**
 
-`cpp
+```cpp
 FRandomStream Stream(MySeed);
 TArray<FVector2D> Placements = PoissonDiscSample(
     FVector2D(0, 0), FVector2D(10000, 10000), 200.f, 30, Stream);
@@ -935,6 +935,6 @@ for (const FVector2D& Pos : Placements)
         FVector(Pos.X, Pos.Y, GetGroundHeight(Pos)));
     TreeISM->AddInstance(T);
 }
-`
+```
 
 Key properties: O(n) time complexity, guaranteed minimum separation, deterministic with `FRandomStream` seed. Increase `MaxAttempts` (default 30) for denser packing; decrease for faster generation.

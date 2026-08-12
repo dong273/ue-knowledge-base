@@ -134,13 +134,13 @@ tags: [ue, code-review, cpp, unreal, security, quality]
 
 每次完成 UE C++ 代码后运行：
 
-`bash
+```bash
 # 获取改动
 git diff --cached
 
 # 或针对特定文件
 git diff HEAD -- Source/MyProject/Character/MyCharacter.cpp
-`
+```
 
 然后逐项检查上面的 6 个维度，报告发现的问题。
 

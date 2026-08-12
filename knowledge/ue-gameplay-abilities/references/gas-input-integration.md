@@ -8,7 +8,7 @@ UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，容�
 
 ## 方案：三层分离架构
 
-`
+```
 ┌──────────────────────────────────────────┐
 │          能力层 (GAS)                      │
 │  GA_Sprint(耐力/标签) GA_Jump(冷却)      │
@@ -31,7 +31,7 @@ UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，容�
 │  Jump 物理 → CharacterMovement 原生       │
 │  MaxWalkSpeed ← 桥接层写入                │
 └──────────────────────────────────────────┘
-`
+```
 
 ### 各层职责
 
@@ -45,7 +45,7 @@ UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，容�
 
 ### 输入绑定 (Enhanced Input → GAS)
 
-`cpp
+```cpp
 // .h
 void OnJumpStarted();      // Space → GAS
 void OnJumpReleased();      // Space release (空)
@@ -60,11 +60,11 @@ EIC->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyChar::OnJumpStarted);
 // Sprint: GAS 能力层
 EIC->BindAction(IA_Sprint, ETriggerEvent::Started, this, &AMyChar::OnSprintStarted);
 EIC->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &AMyChar::OnSprintReleased);
-`
+```
 
 ### Jump — GAS 即时技能
 
-`cpp
+```cpp
 void AMyCharacter::OnJumpStarted()
 {
     if (AbilitySystem)
@@ -84,13 +84,13 @@ void UGA_Jump::ActivateAbility(...)
     if (Char) Char->LaunchCharacter(FVector(0,0,JumpVelocity), false, true);
     EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
-`
+```
 
 **关键决策**：使用 `LaunchCharacter`（非 `bPressedJump`）的原因是 GAS 不需要依赖 CharacterMovement 下一帧的 Tick 消费 `bPressedJump`。`LaunchCharacter` 立刻生效，适合即时技能。
 
 ### Sprint — GAS 维持技能（Input Release 取消）
 
-`cpp
+```cpp
 void AMyCharacter::OnSprintStarted()
 {
     if (AbilitySystem)
@@ -117,11 +117,11 @@ void AMyCharacter::OnSprintReleased()
 // 1. 停止耐力消耗定时器
 // 2. RemoveActiveGameplayEffect(SpeedBoostHandle) → MovementSpeed 恢复
 // 3. 检查耐力 ≤ 0 → Apply GE_Exhaustion (State.Exhausted 标签 1.5s)
-`
+```
 
 ### 桥接层 — MovementSpeed → MaxWalkSpeed
 
-`cpp
+```cpp
 // PlayerCharacterBase.h
 UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 float BaseWalkSpeed = 500.f;  // 基础走速，桥接层引用
@@ -143,11 +143,11 @@ void AMyCharacter::OnMovementSpeedChanged(const FOnAttributeChangeData& Data)
         MoveComp->MaxWalkSpeed = BaseWalkSpeed * Data.NewValue;
     }
 }
-`
+```
 
 ## 属性集设计示意
 
-`cpp
+```cpp
 UCLASS()
 class UBAttributeSet_Stamina : public UAttributeSet
 {
@@ -157,47 +157,47 @@ class UBAttributeSet_Stamina : public UAttributeSet
     UPROPERTY(Replicated) FGameplayAttributeData MovementSpeed;    // 速度倍率(1.0→1.8)
     // GE_SprintSpeedBoost 用 Multiplicitive op 修改 MovementSpeed
 };
-`
+```
 
 ## 扩展模式
 
 ### 加速 BUFF（拾取道具）
 
-`
+```
 拾取加速道具 → ApplyGE: GE_SpeedBoost(Infinite, MovementSpeed *= 1.5)
              → 桥接层自动更新 MaxWalkSpeed = 500 * 1.5 = 750
              → 3 秒后 RemoveActiveGameplayEffect → MovementSpeed 恢复 1.0
              → 桥接层更新 MaxWalkSpeed = 500
-`
+```
 
 只需一个 GE，不需要碰任何 `MaxWalkSpeed` 代码。
 
 ### 减速 DEBUFF（冰冻/泥沼）
 
-`
+```
 触发冰冻 → ApplyGE: GE_Freeze(HasDuration, MovementSpeed *= 0.3)
          → 桥接层自动更新 MaxWalkSpeed = 500 * 0.3 = 150
          → 解冻时 Effect 过期 → 自动恢复
-`
+```
 
 ### 眩晕（全技能阻断）
 
-`
+```
 触发眩晕 → ASC->AddLooseGameplayTag("State.Stunned")
          → GA_Jump::ActivationBlockedTags 包含 "State.Stunned" → 无法跳跃
          → GA_Sprint::ActivationBlockedTags 包含 "State.Stunned" → 无法冲刺
          → 眩晕结束时 RemoveLooseGameplayTag
-`
+```
 
 ## 常见陷阱
 
 ### 1. `CancelAbilities` 签名 (UE 5.7)
 
 UE 5.7 中方法名是 `CancelAbilities`（不是 `CancelAbilitiesByTag`），参数是指针（不是引用）：
-`cpp
+```cpp
 ASC->CancelAbilities(&TagContainer);                      // 正确: 指针
 ASC->CancelAbilities(&TagContainer, nullptr, Instance);   // 跳过某个实例
-`
+```
 
 ### 2. `CancelAbilities` 匹配的是 AbilityTags, 不是 ActivationOwnedTags
 
@@ -205,12 +205,12 @@ ASC->CancelAbilities(&TagContainer, nullptr, Instance);   // 跳过某个实例
 
 ### 3. `FGameplayTagContainer` 变量名避免与 `AActor::Tags` 冲突
 
-`cpp
+```cpp
 // ❌ 编译错误: 与 AActor::Tags 冲突
 FGameplayTagContainer Tags;
 // ✅ 加前缀避免
 FGameplayTagContainer SprintCancelTags;
-`
+```
 
 ### 4. BaseWalkSpeed 应该放在基类
 

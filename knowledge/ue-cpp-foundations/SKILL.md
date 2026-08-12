@@ -1,13 +1,13 @@
 ---
 title: ue-cpp-foundations
-description: Use when writing Unreal Engine C++ code involving UPROPERTY, UFUNCTION, UCLASS, TArray, TMap, delegates, FString, garbage collection, or smart pointers. Also applies when the user asks about "UE C++", USTRUCT, UENUM, FName, FText, TObjectPtr, TWeakObjectPtr, UObject lifetime, UE_LOG, or UE subsystems. For module build configuration, see ue-module-build-system. For Actor/Component architecture, see ue-actor-component-architecture.
+description: Use when writing Unreal Engine C++ code involving UPROPERTY, UFUNCTION, UCLASS, TArray, TMap, delegates, FString, garbage collection, or smart pointers. Also use when the user asks about "UE C++", USTRUCT, UENUM, FName, FText, TObjectPtr, TWeakObjectPtr, UObject lifetime, UE_LOG, or UE subsystems. For module build configuration, see ue-module-build-system. For Actor/Component architecture, see ue-actor-component-architecture.
 ---
 
 # UE C++ Foundations
 
+
 ## Context
 
-Read  for engine version, coding conventions, and project-specific rules. Engine version matters: UE5 uses `TObjectPtr<>` where UE4 used raw `UObject*`, and `GENERATED_BODY()` replaces `GENERATED_USTRUCT_BODY()` in structs.
 
 ## Before You Start
 
@@ -38,7 +38,7 @@ All UE reflection macros require `GENERATED_BODY()` inside the class/struct and 
 | `Transient` | Not saved/serialized |
 | `Within=<OuterClass>` | Outer must be of given type |
 
-`cpp
+```cpp
 UCLASS(Blueprintable, BlueprintType)
 class MYGAME_API UMyDataObject : public UObject
 {
@@ -46,13 +46,13 @@ class MYGAME_API UMyDataObject : public UObject
 public:
     UMyDataObject();
 };
-`
+```
 
 Full specifier list: [references/property-specifiers.md](references/property-specifiers.md).
 
 ### UPROPERTY()
 
-`cpp
+```cpp
 UCLASS(Blueprintable)
 class MYGAME_API AMyCharacter : public ACharacter
 {
@@ -86,11 +86,11 @@ public:
     virtual void GetLifetimeReplicatedProps(
         TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
-`
+```
 
 ### UFUNCTION()
 
-`cpp
+```cpp
 UFUNCTION(BlueprintCallable, Category="Actions")
 void PerformAttack(float Damage);
 
@@ -119,11 +119,11 @@ void MulticastPlayEffect_Implementation(FVector Location);
 
 UFUNCTION(Exec)                                    // Console command (~ in-game)
 void DebugResetStats();                            // Works on PC, Pawn, HUD, GM, GI, CheatManager
-`
+```
 
 ### USTRUCT() and UENUM()
 
-`cpp
+```cpp
 // UE5: always GENERATED_BODY() — never GENERATED_USTRUCT_BODY()
 USTRUCT(BlueprintType)
 struct MYGAME_API FWeaponStats
@@ -149,7 +149,7 @@ enum class EWeaponState : uint8
     Firing    UMETA(DisplayName="Firing"),
     Reloading UMETA(DisplayName="Reloading"),
 };
-`
+```
 
 ---
 
@@ -159,7 +159,7 @@ See [references/container-patterns.md](references/container-patterns.md) for ful
 
 ### TArray — Ordered Dynamic Array
 
-`cpp
+```cpp
 TArray<FString> Names;
 Names.Add(TEXT("Alpha"));
 Names.Emplace(TEXT("Beta"));       // Construct in-place (avoids copy)
@@ -176,11 +176,11 @@ Names.RemoveAtSwap(0);             // Fast O(1), destroys order
 
 for (const FString& N : Names) { /* do NOT add/remove during ranged-for */ }
 for (int32 i = Names.Num()-1; i >= 0; --i) { if (Names[i].IsEmpty()) Names.RemoveAt(i); }
-`
+```
 
 ### TMap — Hash Map
 
-`cpp
+```cpp
 TMap<FName, int32> ItemCounts;
 ItemCounts.Add(FName("Sword"), 3);
 
@@ -190,31 +190,31 @@ bool   bHas = ItemCounts.Contains(FName("Shield"));
 ItemCounts.Remove(FName("Shield"));
 
 for (const TPair<FName, int32>& Pair : ItemCounts) { /* ... */ }
-`
+```
 
 ### TSet — Hash Set
 
-`cpp
+```cpp
 TSet<FName> Tags;
 Tags.Add(FName("Flying"));
 bool bFlying          = Tags.Contains(FName("Flying"));
 TSet<FName> Intersect = Tags.Intersect(OtherTags);
 TSet<FName> Union     = Tags.Union(OtherTags);
-`
+```
 
 ### TOptional
 
-`cpp
+```cpp
 TOptional<float> MaybeHP;
 if (MaybeHP.IsSet()) { float H = MaybeHP.GetValue(); }
 float Safe = MaybeHP.Get(0.f);  // Default if not set
 MaybeHP = 75.f;
 MaybeHP.Reset();
-`
+```
 
 ### TVariant
 
-`cpp
+```cpp
 // Type-safe tagged union — avoids unsafe casts
 TVariant<int32, float, FString> Value;
 Value.Set<FString>(TEXT("Hello"));
@@ -230,7 +230,7 @@ Visit(TOverloaded{
     [](float  V) { UE_LOG(LogTemp, Log, TEXT("%f"), V); },
     [](const FString& V) { UE_LOG(LogTemp, Log, TEXT("%s"), *V); },
 }, Value);
-`
+```
 
 ---
 
@@ -249,7 +249,7 @@ See [references/delegate-patterns.md](references/delegate-patterns.md) for all d
 
 ### Declaration, Binding, Invocation
 
-`cpp
+```cpp
 // File scope (before UCLASS)
 DECLARE_DELEGATE_OneParam(FOnItemPickedUp, AActor*);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, float);
@@ -277,7 +277,7 @@ HealthDelegate.Remove(H);
 OnHealthChanged.AddDynamic(this, &AMyCharacter::HandleHealthChange);
 OnHealthChanged.RemoveDynamic(this, &AMyCharacter::HandleHealthChange);
 OnHealthChanged.Broadcast(75.f, 100.f);
-`
+```
 
 ---
 
@@ -289,7 +289,7 @@ OnHealthChanged.Broadcast(75.f, 100.f);
 | `FString` | General-purpose strings, file paths | O(n) | Yes |
 | `FText` | Player-visible display strings | — | No |
 
-`cpp
+```cpp
 // FName — global name table, case-insensitive O(1) compare
 FName Tag("WeaponTag_Rifle");
 FString S = Tag.ToString();
@@ -307,7 +307,7 @@ FText Label = LOCTEXT("Key", "Assault Rifle");
 FText Fmt   = FText::Format(LOCTEXT("HP", "HP: {0}/{1}"),
                              FText::AsNumber(Cur), FText::AsNumber(Max));
 #undef LOCTEXT_NAMESPACE  // Or: NSLOCTEXT("MyGame", "Key", "...") without a define
-`
+```
 
 **Conversion:** `Name.ToString()` → FString, `FName(*Str)` ← FString, `FText::FromString(Str)`, `Text.ToString()`.
 
@@ -317,7 +317,7 @@ FText Fmt   = FText::Format(LOCTEXT("HP", "HP: {0}/{1}"),
 
 UE's GC tracks every `UObject*` reachable from a root. Unreachable objects are destroyed.
 
-`cpp
+```cpp
 // UE5: TObjectPtr<> for UPROPERTY member UObject pointers
 UPROPERTY()
 TObjectPtr<UStaticMeshComponent> MeshComp;       // GC-tracked, lazy-load aware
@@ -349,13 +349,13 @@ public:
 private:
     TObjectPtr<UMyObject> ManagedObject = nullptr;
 };
-`
+```
 
 ---
 
 ## Logging
 
-`cpp
+```cpp
 // MyGameLog.h / .cpp
 DECLARE_LOG_CATEGORY_EXTERN(LogMyGame, Log, All);
 DEFINE_LOG_CATEGORY(LogMyGame);
@@ -366,7 +366,7 @@ UE_LOG(LogMyGame, Log,     TEXT("Loaded: %s"), *LevelName);
 UE_LOG(LogMyGame, Warning, TEXT("HP low: %.1f"), Health);
 UE_LOG(LogMyGame, Error,   TEXT("Spawn failed: %s"), *ClassName);
 UE_CLOG(Health < 0.f, LogMyGame, Error, TEXT("Negative HP: %.1f"), Health);
-`
+```
 
 | Verbosity | Visible | When |
 |-----------|---------|------|
@@ -389,7 +389,7 @@ Auto-registered singletons — no manual `AddToRoot` needed.
 | `ULocalPlayerSubsystem` | `ULocalPlayer` | Yes | Yes |
 | `UEngineSubsystem` | `UEngine` | Yes (whole session) | No |
 
-`cpp
+```cpp
 UCLASS()
 class MYGAME_API UInventorySubsystem : public UGameInstanceSubsystem
 {
@@ -408,7 +408,7 @@ UInventorySubsystem* Inv = GetGameInstance()->GetSubsystem<UInventorySubsystem>(
 USpawnSubsystem*     Sp  = GetWorld()->GetSubsystem<USpawnSubsystem>();
 UUIStateSubsystem*   UI  = GetLocalPlayer()->GetSubsystem<UUIStateSubsystem>();
 UMyEngineSubsystem*  ES  = GEngine->GetEngineSubsystem<UMyEngineSubsystem>();
-`
+```
 
 Subsystems have `Initialize()` and `Deinitialize()` -- override for setup/teardown. `UGameInstanceSubsystem` persists across map changes; `UWorldSubsystem` reinitializes per world. Call `GetSubsystem<T>()` via the owning context (`GetGameInstance()`, `GetWorld()`, `GetLocalPlayer()`).
 
@@ -418,7 +418,7 @@ Subsystems have `Initialize()` and `Deinitialize()` -- override for setup/teardo
 
 Both `UPROPERTY` specifier AND `GetLifetimeReplicatedProps` are required:
 
-`cpp
+```cpp
 UPROPERTY(ReplicatedUsing = OnRep_Health)
 float Health;
 
@@ -431,13 +431,13 @@ void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutProps) c
     DOREPLIFETIME_CONDITION(AMyActor, Health, COND_OwnerOnly);
     // COND_None, COND_OwnerOnly, COND_SkipOwner, COND_SimulatedOnly, COND_InitialOnly
 }
-`
+```
 
 ---
 
 ## Conditional Compilation Guards
 
-`cpp
+```cpp
 #if WITH_EDITOR
 // Editor-only properties — stripped from shipping builds
 UPROPERTY(EditAnywhere, Category="Debug")
@@ -450,46 +450,46 @@ virtual void PostEditChangeProperty(FPropertyChangedEvent& E) override;
 // Available in Development + Debug, stripped from Shipping
 void DrawDebugInfo();
 #endif
-`
+```
 
 ---
 
 ## Common Mistakes
 
 **Raw UObject* member without UPROPERTY — dangling pointer:**
-`cpp
+```cpp
 UMyObject* Obj;  // BAD — GC invisible
 UPROPERTY() TObjectPtr<UMyObject> Obj;  // GOOD
-`
+```
 
 **Modify TArray during ranged-for — undefined behavior:**
-`cpp
+```cpp
 for (const AActor* A : Actors) { Actors.Remove(A); }  // CRASH
 for (int32 i = Actors.Num()-1; i >= 0; --i) { if (ShouldRemove(Actors[i])) Actors.RemoveAt(i); }
-`
+```
 
 **TSharedPtr on a UObject — GC + refcount conflict:**
-`cpp
+```cpp
 TSharedPtr<UMyObject> P = MakeShared<UMyObject>();  // BAD — leaks or double-free
 UPROPERTY() TObjectPtr<UMyObject> P;                 // GOOD
-`
+```
 
 **Missing GetLifetimeReplicatedProps:**
-`cpp
+```cpp
 void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AMyActor, ReplicatedHealth);
     DOREPLIFETIME_CONDITION(AMyActor, TeamScore, COND_OwnerOnly);
 }
-`
+```
 
 **GENERATED_USTRUCT_BODY() in UE5 structs — use GENERATED_BODY() instead.**
 
 **AddDynamic with a non-UFUNCTION — compile error or crash at runtime.**
 
 **`#ifndef`/`#define`/`#endif` include guards wrapping UCLASS/USTRUCT/UPROPERTY — UHT error in UE 5.7+:**
-`cpp
+```cpp
 // BAD — UHT rejects: "UCLASS must not be inside preprocessor blocks"
 #ifndef MY_GUARD_H
 #define MY_GUARD_H
@@ -499,11 +499,11 @@ UCLASS() class MYGAME_API UMyClass : public UObject { GENERATED_BODY() };
 // GOOD — use pragma once
 #pragma once
 UCLASS() class MYGAME_API UMyClass : public UObject { GENERATED_BODY() };
-`
+```
 The only exception is `WITH_EDITORONLY_DATA` blocks. All other preprocessor guards around UE reflection macros cause UHT parse errors. This applies to `UCLASS`, `USTRUCT`, `UENUM`, `UPROPERTY`, `UFUNCTION`, and `GENERATED_BODY()`.
 
 **`FLinearColor::Cyan` / `::Magenta` / `::Orange` 等命名常量在 UE 5.7 中不存在** — 用 RGBA 构造函数：
-`cpp
+```cpp
 // BAD — compile error C2039
 FLinearColor::Cyan;
 
@@ -511,7 +511,7 @@ FLinearColor::Cyan;
 FLinearColor(0.0f, 1.0f, 1.0f);   // Cyan
 FLinearColor(1.0f, 0.0f, 1.0f);   // Magenta
 FLinearColor(1.0f, 0.5f, 0.0f);   // Orange
-`
+```
 可用的命名常量只有：`White`, `Black`, `Red`, `Green`, `Blue`, `Yellow`, `Transparent`。其他颜色必须用 RGBA 构造。
 
 ---

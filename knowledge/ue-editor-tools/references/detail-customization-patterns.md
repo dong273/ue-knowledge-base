@@ -8,7 +8,7 @@ Reference for common `IDetailCustomization` and `IPropertyTypeCustomization` pat
 
 From `DetailLayoutBuilder.h` (`IDetailLayoutBuilder`):
 
-`cpp
+```cpp
 // Edit or create a category
 IDetailCategoryBuilder& EditCategory(
     FName CategoryName,
@@ -35,7 +35,7 @@ void ForceRefreshDetails();
 
 // Add a property to its auto-detected category (preserves original category)
 IDetailPropertyRow& AddPropertyToCategory(TSharedPtr<IPropertyHandle> InPropertyHandle);
-`
+```
 
 ---
 
@@ -52,12 +52,12 @@ IDetailPropertyRow& AddPropertyToCategory(TSharedPtr<IPropertyHandle> InProperty
 | `Default` | Standard |
 | `Uncommon` | Bottom |
 
-`cpp
+```cpp
 IDetailCategoryBuilder& CoreCat =
     DetailBuilder.EditCategory("Core", FText::GetEmpty(), ECategoryPriority::Important);
 IDetailCategoryBuilder& AdvancedCat =
     DetailBuilder.EditCategory("Advanced", FText::GetEmpty(), ECategoryPriority::Uncommon);
-`
+```
 
 ---
 
@@ -65,7 +65,7 @@ IDetailCategoryBuilder& AdvancedCat =
 
 From `IDetailPropertyRow.h`. Methods return `IDetailPropertyRow&` for chaining:
 
-`cpp
+```cpp
 IDetailCategoryBuilder& Category = DetailBuilder.EditCategory("Settings");
 IDetailPropertyRow& Row = Category.AddProperty(
     DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(UMyClass, MyFloat)));
@@ -85,7 +85,7 @@ Row.DisplayName(FText::FromString("Speed"))
    {
        return EVisibility::Visible;
    }));
-`
+```
 
 ---
 
@@ -93,7 +93,7 @@ Row.DisplayName(FText::FromString("Speed"))
 
 ### Full Custom Widget Row
 
-`cpp
+```cpp
 Category.AddCustomRow(FText::FromString("SearchFilter"))
 [
     SNew(SHorizontalBox)
@@ -117,13 +117,13 @@ Category.AddCustomRow(FText::FromString("SearchFilter"))
         }))
     ]
 ];
-`
+```
 
 ### NameContent / ValueContent Split Row
 
 The detail panel uses a two-column layout. Use `NameContent()` and `ValueContent()` to align with standard property rows:
 
-`cpp
+```cpp
 Category.AddCustomRow(FText::FromString("MyCustomProp"))
 .NameContent()
 [
@@ -142,11 +142,11 @@ Category.AddCustomRow(FText::FromString("MyCustomProp"))
         // handle commit
     })
 ];
-`
+```
 
 ### Override Default Property Widget While Keeping Children
 
-`cpp
+```cpp
 TSharedRef<IPropertyHandle> Handle =
     DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(UMyClass, MyProp));
 IDetailPropertyRow& Row = Category.AddProperty(Handle);
@@ -172,7 +172,7 @@ Row.CustomWidget(/*bShowChildren=*/true)
         .Text(FText::FromString("..."))
     ]
 ];
-`
+```
 
 ---
 
@@ -184,7 +184,7 @@ From `IPropertyTypeCustomization.h`. `CustomizeHeader` sets up the collapsed/inl
 
 Show all struct fields inline in the header, no expansion needed:
 
-`cpp
+```cpp
 void FMyVectorCustomization::CustomizeHeader(
     TSharedRef<IPropertyHandle> PropertyHandle,
     FDetailWidgetRow& HeaderRow,
@@ -223,11 +223,11 @@ void FMyVectorCustomization::CustomizeChildren(
 {
     // Leave empty to suppress expanded child rows
 }
-`
+```
 
 ### Summary Text in Header, Children in Expansion
 
-`cpp
+```cpp
 void FMyRangeCustomization::CustomizeHeader(
     TSharedRef<IPropertyHandle> PropertyHandle,
     FDetailWidgetRow& HeaderRow,
@@ -272,7 +272,7 @@ void FMyRangeCustomization::CustomizeChildren(
         ChildBuilder.AddProperty(PropertyHandle->GetChildHandle(i).ToSharedRef());
     }
 }
-`
+```
 
 ---
 
@@ -280,7 +280,7 @@ void FMyRangeCustomization::CustomizeChildren(
 
 `IPropertyHandle` provides type-safe access to property values across one or more selected objects:
 
-`cpp
+```cpp
 TSharedRef<IPropertyHandle> Handle =
     DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(UMyClass, Speed));
 
@@ -309,7 +309,7 @@ Handle->EnumerateRawData([](void* RawData, const int32 DataIndex, const int32 Nu
 
 // Notify post-change
 Handle->NotifyPostChange(EPropertyChangeType::ValueSet);
-`
+```
 
 ---
 
@@ -317,7 +317,7 @@ Handle->NotifyPostChange(EPropertyChangeType::ValueSet);
 
 Always use `IDetailLayoutBuilder` or `IPropertyTypeCustomizationUtils` static helpers for fonts to stay visually consistent with the details panel:
 
-`cpp
+```cpp
 FAppStyle::GetFontStyle(TEXT("PropertyWindow.NormalFont"))   // regular body
 FAppStyle::GetFontStyle(TEXT("PropertyWindow.BoldFont"))     // bold label
 FAppStyle::GetFontStyle(TEXT("PropertyWindow.ItalicFont"))   // italic/dimmed
@@ -328,7 +328,7 @@ IDetailLayoutBuilder::GetDetailFontBold()
 IDetailLayoutBuilder::GetDetailFontItalic()
 IPropertyTypeCustomizationUtils::GetRegularFont()
 IPropertyTypeCustomizationUtils::GetBoldFont()
-`
+```
 
 ---
 
@@ -336,7 +336,7 @@ IPropertyTypeCustomizationUtils::GetBoldFont()
 
 All registrations go in `StartupModule`; all unregistrations in `ShutdownModule`.
 
-`cpp
+```cpp
 // In StartupModule
 FPropertyEditorModule& PropertyModule =
     FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
@@ -364,7 +364,7 @@ if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
     PM.UnregisterCustomClassLayout(UMyClass::StaticClass()->GetFName());
     PM.UnregisterCustomPropertyTypeLayout(FMyStruct::StaticStruct()->GetFName());
 }
-`
+```
 
 ---
 
@@ -372,7 +372,7 @@ if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
 
 Register a property type customization for a specific details panel instance only, not globally. Useful when you want different presentation in different contexts:
 
-`cpp
+```cpp
 void FMyClassCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
     // Register a type customization only within this details panel
@@ -381,7 +381,7 @@ void FMyClassCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder
         FOnGetPropertyTypeCustomizationInstance::CreateStatic(
             &FMyStructInContextCustomization::MakeInstance));
 }
-`
+```
 
 ---
 

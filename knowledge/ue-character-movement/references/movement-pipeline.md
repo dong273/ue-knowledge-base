@@ -6,7 +6,7 @@ Detailed breakdown of CMC's internal movement execution, floor detection, and ro
 
 ## Phys* Function Flow
 
-`
+```
 TickComponent(DeltaTime)
   |
   v
@@ -35,7 +35,7 @@ StartNewPhysics(DeltaTime, Iterations)
     |
     +-- MoveUpdatedComponent()        [actual primitive move]
     +-- ResolvePenetration()          [if overlapping after move]
-`
+```
 
 Each `Phys*` function may iterate multiple times within a single tick (up to `MaxSimulationIterations`) when sub-stepping is required, for example when a sweep hit blocks movement partway through the delta.
 
@@ -43,7 +43,7 @@ Each `Phys*` function may iterate multiple times within a single tick (up to `Ma
 
 ## Floor Detection Chain
 
-`
+```
 FindFloor(CapsuleLocation, OutFloorResult, bCanUseCached, DownwardSweepResult)
   |
   v
@@ -66,7 +66,9 @@ FFindFloorResult populated:
   FloorDist      = distance from capsule bottom to floor (sweep)
   LineDist       = distance from line trace
   HitResult      = full FHitResult
-IsWalkableFloor()` returns `true` only when both `bBlockingHit` and `bWalkableFloor` are set. A blocking hit on a steep surface (above `WalkableFloorAngle`) returns `bBlockingHit = true` but `bWalkableFloor = false`.
+```
+
+`IsWalkableFloor()` returns `true` only when both `bBlockingHit` and `bWalkableFloor` are set. A blocking hit on a steep surface (above `WalkableFloorAngle`) returns `bBlockingHit = true` but `bWalkableFloor = false`.
 
 ---
 
@@ -74,7 +76,7 @@ IsWalkableFloor()` returns `true` only when both `bBlockingHit` and `bWalkableFl
 
 When `PhysWalking` encounters a blocking hit during `SafeMoveUpdatedComponent`, it attempts a step-up if the obstacle height is within `MaxStepHeight`:
 
-`
+```
 1. Hit blocking surface during horizontal move
 2. Check obstacle height <= MaxStepHeight
 3. Move capsule UP by MaxStepHeight
@@ -86,7 +88,7 @@ When `PhysWalking` encounters a blocking hit during `SafeMoveUpdatedComponent`, 
 7. If no walkable floor found or obstacle too tall:
      - Revert to pre-step-up position
      - Slide along the wall or transition to falling
-`
+```
 
 Step-up only triggers during walking mode. Characters in `MOVE_Falling` do not step up -- they slide along surfaces.
 
@@ -94,7 +96,7 @@ Step-up only triggers during walking mode. Characters in `MOVE_Falling` do not s
 
 ## PhysWalking Flow
 
-`
+```
 PhysWalking(deltaTime, Iterations)
   |
   +-- CalcVelocity(dt, GroundFriction, false, BrakingDecelerationWalking)
@@ -114,7 +116,7 @@ PhysWalking(deltaTime, Iterations)
         |
         +-- Snap capsule to floor within tolerance
         +-- Prevents floating or sinking between frames
-`
+```
 
 The `Iterations` parameter limits how many sub-steps occur if the character hits multiple surfaces in one frame. Each slide or step-up consumes an iteration.
 
@@ -122,7 +124,7 @@ The `Iterations` parameter limits how many sub-steps occur if the character hits
 
 ## PhysFalling Flow
 
-`
+```
 PhysFalling(deltaTime, Iterations)
   |
   +-- GetFallingLateralAcceleration()
@@ -146,7 +148,7 @@ PhysFalling(deltaTime, Iterations)
   |           +-- SlideAlongSurface(Delta, 1-Hit.Time, Hit.Normal, Hit)
   |
   +-- If no hit: continue falling next frame
-`
+```
 
 Air control: `AirControl` (0-1) scales the player's lateral input while falling. At 0, the character follows a pure ballistic arc. At 1, the character has full lateral control in air (feels unrealistic but common in platformers).
 
@@ -156,7 +158,7 @@ Air control: `AirControl` (0-1) scales the player's lateral input while falling.
 
 Root motion from `FRootMotionSource` replicates through the CMC's network prediction system.
 
-`
+```
 [Server]
   ApplyRootMotionSource(Source)
     |
@@ -177,7 +179,7 @@ Root motion from `FRootMotionSource` replicates through the CMC's network predic
     |
     +-- Smoothing applied via NetworkSmoothingMode
     +-- Root motion baked into final position/velocity
-`
+```
 
 Key points:
 - Root motion sources with `Duration < 0` run infinitely until explicitly removed with `RemoveRootMotionSource(InstanceName)`

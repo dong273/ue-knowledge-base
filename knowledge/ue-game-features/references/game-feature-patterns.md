@@ -6,7 +6,7 @@ Complete code templates for Game Feature plugin setup, custom actions, and compo
 
 ## GameFeature .uplugin Template
 
-`json
+```json
 {
     "FileVersion": 3,
     "Version": 1,
@@ -28,13 +28,15 @@ Complete code templates for Game Feature plugin setup, custom actions, and compo
         { "Name": "ModularGameplay", "Enabled": true }
     ]
 }
-BuiltInInitialFeatureState` options: `"Installed"` (on disk, not registered), `"Registered"` (registered with Asset Manager, activated by code), `"Active"` (fully active on startup).
+```
+
+`BuiltInInitialFeatureState` options: `"Installed"` (on disk, not registered), `"Registered"` (registered with Asset Manager, activated by code), `"Active"` (fully active on startup).
 
 ---
 
 ## Custom UGameFeatureAction Subclass
 
-`cpp
+```cpp
 // MyGameFeatureAction_SpawnManagers.h
 #pragma once
 #include "GameFeatureAction.h"
@@ -60,7 +62,9 @@ private:
     UPROPERTY(EditAnywhere, Category = "Spawn")
     TSubclassOf<AActor> ManagerClass;
 };
-cpp
+```
+
+```cpp
 // MyGameFeatureAction_SpawnManagers.cpp
 #include "MyGameFeatureAction_SpawnManagers.h"
 #include "Engine/GameInstance.h"
@@ -127,7 +131,7 @@ void UMyGameFeatureAction_SpawnManagers::HandleGameInstanceStart(UGameInstance* 
         }
     }
 }
-`
+```
 
 **Key pattern:** Iterate `GEngine->GetWorldContexts()` and check `Context.ShouldApplyToWorldContext()` to support PIE with multiple worlds. Store per-world state with `FObjectKey` as map key.
 
@@ -135,7 +139,7 @@ void UMyGameFeatureAction_SpawnManagers::HandleGameInstanceStart(UGameInstance* 
 
 ## Actor Receiver Setup
 
-`cpp
+```cpp
 // MyModularCharacter.h — registers for component injection
 #include "GameFrameworkComponentManager.h"
 
@@ -150,7 +154,7 @@ void AMyModularCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
     UGameFrameworkComponentManager::RemoveGameFrameworkComponentReceiver(this);
     Super::EndPlay(EndPlayReason);
 }
-`
+```
 
 Call `RemoveGameFrameworkComponentReceiver` before `Super::EndPlay` to ensure cleanup occurs while the actor is still valid.
 
@@ -158,7 +162,7 @@ Call `RemoveGameFrameworkComponentReceiver` before `Super::EndPlay` to ensure cl
 
 ## Extension Handler Registration
 
-`cpp
+```cpp
 // In a custom UGameFeatureAction or subsystem
 void UMyAction::OnGameFeatureActivating(FGameFeatureActivatingContext& Context)
 {
@@ -196,13 +200,13 @@ void UMyAction::OnGameFeatureDeactivating(FGameFeatureDeactivatingContext& Conte
 
 // Member variable — RAII handle
 TSharedPtr<FComponentRequestHandle> ExtensionHandle;
-`
+```
 
 ---
 
 ## FComponentRequestHandle RAII Lifecycle
 
-`cpp
+```cpp
 // Store handles as member variables for lifetime management
 // Note: TSharedPtr is not supported by UE reflection — no UPROPERTY() here
 TArray<TSharedPtr<FComponentRequestHandle>> ComponentRequests;
@@ -228,13 +232,13 @@ void UMyAction::OnGameFeatureDeactivating(FGameFeatureDeactivatingContext& Conte
     // Empty the array — shared pointers destruct — components removed automatically
     ComponentRequests.Empty();
 }
-`
+```
 
 ---
 
 ## Custom Action with Async Deactivation
 
-`cpp
+```cpp
 UCLASS(MinimalAPI, meta = (DisplayName = "Save Progress On Deactivate"))
 class UMyAction_SaveProgress : public UGameFeatureAction
 {
@@ -263,7 +267,7 @@ private:
     UPROPERTY()
     TObjectPtr<USaveGame> SaveGameObject;
 };
-`
+```
 
 **Critical:** Always invoke the resume delegate, even on error paths. If the async operation can fail silently (timeout, crash), wrap with a safety timer.
 
@@ -271,7 +275,7 @@ private:
 
 ## Project Policies Subclass
 
-`cpp
+```cpp
 UCLASS()
 class UMyProjectPolicies : public UGameFeaturesProjectPolicies
 {
@@ -295,10 +299,10 @@ public:
         bLoadServerData = true;
     }
 };
-`
+```
 
 Register in `DefaultGame.ini`:
-`ini
+```ini
 [/Script/GameFeatures.GameFeaturesSubsystemSettings]
 GameFeaturesManagerClassName=/Script/MyProject.UMyProjectPolicies
-`
+```

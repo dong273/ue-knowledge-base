@@ -90,7 +90,7 @@ Single-element setters exist for in-place updates without replacing the full arr
 storage (single-precision). The public API accepts double-precision UE types and converts internally.
 For non-BP code using `TConstArrayView<FVector3f>`, use the non-templated C++-only overloads:
 
-`cpp
+```cpp
 // Non-BP overloads accepting single-precision directly (avoids conversion overhead):
 // SetNiagaraArrayFloat(Component, Name, TConstArrayView<double>)
 // SetNiagaraArrayVector(Component, Name, TConstArrayView<FVector3f>)
@@ -99,7 +99,7 @@ For non-BP code using `TConstArrayView<FVector3f>`, use the non-templated C++-on
 // SetNiagaraArrayMatrix(Component, Name, TConstArrayView<FMatrix44f>)
 // SetNiagaraArrayUInt8(Component, Name, TConstArrayView<uint8>)
 // SetNiagaraArrayInt32(Component, Name, TConstArrayView<int64>)
-`
+```
 
 ---
 
@@ -108,7 +108,7 @@ For non-BP code using `TConstArrayView<FVector3f>`, use the non-templated C++-on
 These exist on `UNiagaraComponent` for Blueprint compatibility. Prefer the `FName` variants above
 in C++ as they avoid a string-to-FName conversion on every call.
 
-`cpp
+```cpp
 // All FString setters — equivalent in behavior, slower in C++.
 SetNiagaraVariableFloat(const FString&, float)
 SetNiagaraVariableInt(const FString&, int32)
@@ -122,13 +122,13 @@ SetNiagaraVariableMatrix(const FString&, FMatrix)    // legacy FString variant; 
 SetNiagaraVariableObject(const FString&, UObject*)
 SetNiagaraVariableActor(const FString&, AActor*)
 SetNiagaraVariablePosition(const FString&, FVector)
-`
+```
 
 ---
 
 ## ENCPoolMethod Values
 
-Used in `SpawnSystemAtLocation` and `SpawnSystemAttachedPoolingMethod` parameter.
+Used in `SpawnSystemAtLocation` and `SpawnSystemAttached` `PoolingMethod` parameter.
 
 | Value | Behavior |
 |---|---|

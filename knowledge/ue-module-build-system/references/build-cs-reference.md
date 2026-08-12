@@ -6,7 +6,7 @@ This reference covers every significant `ModuleRules` property used in Unreal En
 
 ## Class Structure
 
-`csharp
+```csharp
 using UnrealBuildTool;
 using System.IO;             // for Path.Combine
 using System.Collections.Generic;
@@ -18,7 +18,9 @@ public class MyModule : ModuleRules
         // All fields are set here
     }
 }
-ReadOnlyTargetRules Target` gives you read access to everything about the build target: platform, configuration, build type, editor flag, etc.
+```
+
+`ReadOnlyTargetRules Target` gives you read access to everything about the build target: platform, configuration, build type, editor flag, etc.
 
 ---
 
@@ -26,7 +28,7 @@ ReadOnlyTargetRules Target` gives you read access to everything about the build 
 
 ### PublicDependencyModuleNames
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[]
 {
     "Core",           // FString, TArray, TMap, logging
@@ -34,7 +36,7 @@ PublicDependencyModuleNames.AddRange(new string[]
     "Engine",         // AActor, UWorld, UGameInstance
     "InputCore",      // FKey, EKeys — needed when using Enhanced Input
 });
-`
+```
 
 Adds modules whose **public headers** are re-exported through your own public headers. Any module that depends on yours will also inherit these include paths transitively.
 
@@ -45,7 +47,7 @@ Use this when a type from the dependency appears in:
 
 ### PrivateDependencyModuleNames
 
-`csharp
+```csharp
 PrivateDependencyModuleNames.AddRange(new string[]
 {
     "Slate",          // SWidget, SCompoundWidget
@@ -55,19 +57,19 @@ PrivateDependencyModuleNames.AddRange(new string[]
     "Json",           // FJsonObject, FJsonSerializer
     "HTTP",           // FHttpModule, IHttpRequest
 });
-`
+```
 
 Adds modules used only inside `Private/` implementation files. These are not inherited by downstream modules. Prefer private for anything you can — it minimizes transitive compilation overhead.
 
 ### DynamicallyLoadedModuleNames
 
-`csharp
+```csharp
 DynamicallyLoadedModuleNames.AddRange(new string[]
 {
     "OnlineSubsystem",
     "OnlineSubsystemSteam",
 });
-`
+```
 
 Tells UBT the module may be loaded at runtime via `FModuleManager::LoadModule()`, but does not create a compile-time link dependency. Use this when you load plugins or platform-specific backends conditionally.
 
@@ -77,39 +79,39 @@ Tells UBT the module may be loaded at runtime via `FModuleManager::LoadModule()`
 
 ### PublicIncludePaths
 
-`csharp
+```csharp
 // Expose subdirectories to downstream modules
 PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public", "Interfaces"));
 PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public", "Subsystems"));
-`
+```
 
 UBT automatically adds `ModuleDirectory/Public` — only add this when you have headers in subdirectories that downstream modules need to include without a path prefix.
 
 ### PrivateIncludePaths
 
-`csharp
+```csharp
 // Only visible inside this module
 PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private", "Helpers"));
 PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private", "Internal"));
-`
+```
 
 Only accessible to this module's own source files.
 
 ### PublicSystemIncludePaths
 
-`csharp
+```csharp
 // For third-party C headers — suppresses warnings
 PublicSystemIncludePaths.Add(Path.Combine(ThirdPartyPath, "include"));
-`
+```
 
 Treated as system include paths. Compiler warnings are suppressed for headers in these paths.
 
 ### PrivateIncludePathModuleNames
 
-`csharp
+```csharp
 // Access headers from another module's Public/ without creating a link dependency
 PrivateIncludePathModuleNames.AddRange(new string[] { "AssetRegistry" });
-`
+```
 
 Adds include paths from a module without linking against it. Use when you only need type-forward declarations or data structures, not exported symbols.
 
@@ -119,7 +121,7 @@ Adds include paths from a module without linking against it. Use when you only n
 
 ### PCHUsage
 
-`csharp
+```csharp
 // UE5 default — IWYU, each file includes what it uses
 PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -131,25 +133,25 @@ PCHUsage = PCHUsageMode.NoPCHs;
 
 // Each module uses its own private PCH (slower build, maximum isolation)
 PCHUsage = PCHUsageMode.NoSharedPCHs;
-`
+```
 
 Always use `UseExplicitOrSharedPCHs` for new UE5 modules.
 
 ### PrivatePCHHeaderFile
 
-`csharp
+```csharp
 // When you want to define your own PCH header
 PrivatePCHHeaderFile = "Private/MyModulePCH.h";
-`
+```
 
 Specifies a custom PCH for this module. The referenced file is compiled as the PCH and prepended to all translation units in the module.
 
 ### bEnforceIWYU
 
-`csharp
+```csharp
 // Enforce Include What You Use — each file must include every header it directly uses
 bEnforceIWYU = true;
-`
+```
 
 When true, UBT checks that no source file relies on transitive includes. Strongly recommended for new modules; required when `PCHUsage = UseExplicitOrSharedPCHs`.
 
@@ -159,54 +161,54 @@ When true, UBT checks that no source file relies on transitive includes. Strongl
 
 ### bEnableExceptions
 
-`csharp
+```csharp
 // Enable C++ exception handling (try/catch/throw)
 // Default: false — most UE code uses ensure/check/UE_LOG instead
 bEnableExceptions = true;
-`
+```
 
 Only enable when integrating third-party code that throws exceptions. UE's own code does not use exceptions.
 
 ### bUseRTTI
 
-`csharp
+```csharp
 // Enable runtime type information (typeid, dynamic_cast)
 // Default: false
 bUseRTTI = true;
-`
+```
 
 Only enable when third-party code requires it. UE uses its own reflection system instead.
 
 ### bUseAVX
 
-`csharp
+```csharp
 // Allow AVX instruction set on supported platforms
 bUseAVX = true;
-`
+```
 
 ### OptimizeCode
 
-`csharp
+```csharp
 // Force optimization on or off regardless of build configuration
 OptimizeCode = CodeOptimization.Always;   // even in Debug
 OptimizeCode = CodeOptimization.Never;    // even in Shipping (debugging)
 OptimizeCode = CodeOptimization.Default;  // follow build config (normal)
-`
+```
 
 ### bDisableStaticAnalysis
 
-`csharp
+```csharp
 // Disable static analysis for this module (use sparingly)
 bDisableStaticAnalysis = true;
-`
+```
 
 ### CppStandard
 
-`csharp
+```csharp
 // Override C++ standard for this module
 CppStandard = CppStandardVersion.Cpp20;
 CppStandard = CppStandardVersion.Cpp17;   // UE default
-`
+```
 
 ---
 
@@ -214,42 +216,42 @@ CppStandard = CppStandardVersion.Cpp17;   // UE default
 
 ### AddEngineThirdPartyPrivateStaticDependencies
 
-`csharp
+```csharp
 // Link a third-party static library shipped with the engine
 AddEngineThirdPartyPrivateStaticDependencies(Target,
     "zlib",
     "OpenSSL",
     "libcurl"
 );
-`
+```
 
 This is the preferred way to consume engine-bundled third-party libraries. UBT looks up the library definition in `Engine/Source/ThirdParty/`.
 
 ### PublicAdditionalLibraries / PublicDelayLoadDLLs
 
-`csharp
+```csharp
 // Link against an external static library
 PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyDir, "Win64", "MyLib.lib"));
 
 // Delay-load a DLL (Windows only)
 PublicDelayLoadDLLs.Add("MyLib.dll");
 RuntimeDependencies.Add(Path.Combine(ThirdPartyDir, "Win64", "MyLib.dll"));
-`
+```
 
 ### RuntimeDependencies
 
-`csharp
+```csharp
 // Copy files to the output directory when packaging
 RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/MyLib.dll");
 RuntimeDependencies.Add(new RuntimeDependency(
     Path.Combine(PluginDirectory, "Content", "MyData.bin")));
-`
+```
 
 ---
 
 ## Platform-Conditional Patterns
 
-`csharp
+```csharp
 public MyModule(ReadOnlyTargetRules Target) : base(Target)
 {
     PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
@@ -288,7 +290,7 @@ public MyModule(ReadOnlyTargetRules Target) : base(Target)
         PublicDefinitions.Add("ENABLE_MY_DEBUG_FEATURES=0");
     }
 }
-`
+```
 
 ### Target.Platform Values
 
@@ -314,19 +316,19 @@ public MyModule(ReadOnlyTargetRules Target) : base(Target)
 
 ## Preprocessor Definitions
 
-`csharp
+```csharp
 // Add a preprocessor definition to all compilation units in this module
 PublicDefinitions.Add("MY_FEATURE_ENABLED=1");
 
 // Private definitions only visible inside this module
 PrivateDefinitions.Add("INTERNAL_BUILD_VERSION=42");
-`
+```
 
 ---
 
 ## TargetRules Reference (Target.cs)
 
-`csharp
+```csharp
 public class MyGameTarget : TargetRules
 {
     public MyGameTarget(TargetInfo Target) : base(Target)
@@ -353,7 +355,7 @@ public class MyGameTarget : TargetRules
         bAllowLTCG = Target.Configuration == UnrealTargetConfiguration.Shipping;
     }
 }
-`
+```
 
 ### TargetType Values
 

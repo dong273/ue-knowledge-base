@@ -5,11 +5,11 @@ description: Use when working with DataAsset, DataTable, soft reference, hard re
 
 # UE Data Assets and Tables
 
+
 ---
 
 ## Context
 
-Read  for project-specific data patterns, module layout, plugin dependencies, and any custom AssetManager subclass or DataAsset conventions the project has established.
 
 ---
 
@@ -46,7 +46,7 @@ Before generating code or advice, ask:
 
 `UDataAsset` (declared in `Engine/DataAsset.h`) is the base class. Assets are only loaded when directly referenced or explicitly loaded. Subclass it with typed UPROPERTY fields:
 
-`cpp
+```cpp
 UCLASS(BlueprintType)
 class MYGAME_API UMyItemData : public UDataAsset
 {
@@ -57,7 +57,7 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item") TSoftObjectPtr<UStaticMesh> Mesh;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item") TSoftClassPtr<AActor> SpawnClass;
 };
-`
+```
 
 In the editor: right-click in Content Browser > Miscellaneous > Data Asset, select `UMyItemData`.
 
@@ -65,7 +65,7 @@ In the editor: right-click in Content Browser > Miscellaneous > Data Asset, sele
 
 `UPrimaryDataAsset` overrides `GetPrimaryAssetId()` so the Asset Manager can track, scan, and load it. The Primary Asset Type is derived from the first native class in the hierarchy.
 
-`cpp
+```cpp
 // PrimaryAssetType == native class name; PrimaryAssetName == asset name.
 UCLASS(BlueprintType)
 class MYGAME_API UWeaponDefinition : public UPrimaryDataAsset
@@ -87,7 +87,7 @@ public:
               meta = (AssetBundles = "Game"))
     TSoftObjectPtr<USkeletalMesh> WorldMesh;
 };
-`
+```
 
 ---
 
@@ -97,7 +97,7 @@ public:
 
 `FTableRowBase` is declared in `Engine/DataTable.h`. Every row struct must inherit it and use `USTRUCT(BlueprintType)`.
 
-`cpp
+```cpp
 // ItemTableRow.h
 #pragma once
 #include "Engine/DataTable.h"
@@ -125,13 +125,13 @@ struct FItemTableRow : public FTableRowBase
                                   const FName InRowName,
                                   TArray<FString>& OutCollectedImportProblems) override;
 };
-`
+```
 
 In the editor: right-click > Miscellaneous > Data Table, assign `FItemTableRow` as the row struct.
 
 ### Querying DataTables at Runtime
 
-`cpp
+```cpp
 UPROPERTY(EditDefaultsOnly, Category = "Data")
 TObjectPtr<UDataTable> ItemTable;
 
@@ -150,11 +150,11 @@ ItemTable->ForeachRow<FItemTableRow>(
     {
         UE_LOG(LogTemp, Log, TEXT("Row %s: weight=%.2f"), *Key.ToString(), Value.Weight);
     });
-`
+```
 
 ### Runtime Modification and Row Handles
 
-`cpp
+```cpp
 // AddRow/RemoveRow do not persist to disk.
 FItemTableRow NewRow;
 NewRow.DisplayName = FText::FromString(TEXT("Runtime Sword"));
@@ -177,7 +177,7 @@ FDataTableRowHandle StartingWeaponHandle;
 
 const FItemTableRow* Row = StartingWeaponHandle.GetRow<FItemTableRow>(
     TEXT("StartingWeapon lookup"));
-`
+```
 
 ---
 
@@ -185,12 +185,12 @@ const FItemTableRow* Row = StartingWeaponHandle.GetRow<FItemTableRow>(
 
 ### Hard References
 
-`cpp
+```cpp
 // Hard ref: loaded when the referencing asset loads. Causes the mesh/material
 // to be in memory as long as this object is alive.
 UPROPERTY(EditDefaultsOnly, Category = "Art")
 TObjectPtr<UStaticMesh> Mesh;          // UE5 TObjectPtr preferred over raw ptr
-`
+```
 
 Use hard references only for assets that are always needed while this object exists (e.g., a character's skeleton).
 
@@ -198,7 +198,7 @@ Use hard references only for assets that are always needed while this object exi
 
 Soft references store a path string. The asset is NOT loaded until explicitly resolved.
 
-`cpp
+```cpp
 // TSoftObjectPtr<T>: soft ref to an asset instance.
 UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Art")
 TSoftObjectPtr<UStaticMesh> MeshSoft;
@@ -209,26 +209,26 @@ TSoftClassPtr<AActor> SpawnableSoft;
 
 // FSoftObjectPath: untyped path, useful for generic systems.
 FSoftObjectPath MeshPath = MeshSoft.ToSoftObjectPath();
-`
+```
 
 #### Synchronous Resolution (avoid on game thread for large assets)
 
-`cpp
+```cpp
 UStaticMesh* Mesh = MeshSoft.LoadSynchronous();   // Blocks until loaded.
 
 // FSoftObjectPath::TryLoad — returns nullptr if not on disk, does not assert.
 UObject* Loaded = MeshPath.TryLoad();
-`
+```
 
 #### Checking State Without Loading
 
-`cpp
+```cpp
 if (MeshSoft.IsNull())    { /* no path set */ }
 if (MeshSoft.IsValid())   { /* path set AND asset is loaded in memory */ }
 if (MeshSoft.IsPending()) { /* path set, async load started, not complete */ }
 
 UStaticMesh* MeshPtr = MeshSoft.Get(); // Returns nullptr if not loaded.
-`
+```
 
 ---
 
@@ -238,13 +238,13 @@ UStaticMesh* MeshPtr = MeshSoft.Get(); // Returns nullptr if not loaded.
 
 `FStreamableManager` is declared in `Engine/StreamableManager.h`. Access it via `UAssetManager::GetStreamableManager()`.
 
-`cpp
+```cpp
 FStreamableManager& SM = UAssetManager::GetStreamableManager();
-`
+```
 
 #### RequestAsyncLoad — Single Asset
 
-`cpp
+```cpp
 void AMyActor::LoadWeaponMeshAsync()
 {
     FStreamableManager& SM = UAssetManager::GetStreamableManager();
@@ -268,11 +268,11 @@ void AMyActor::OnWeaponMeshLoaded()
 
 // Member:
 TSharedPtr<FStreamableHandle> StreamableHandle;
-`
+```
 
 #### RequestAsyncLoad — Multiple Assets
 
-`cpp
+```cpp
 // All paths fire one callback when every asset is loaded.
 TArray<FSoftObjectPath> PathsToLoad = {
     IconSoft.ToSoftObjectPath(), MeshSoft.ToSoftObjectPath() };
@@ -282,18 +282,18 @@ StreamableHandle = SM.RequestAsyncLoad(
     {
         // Both guaranteed loaded; IconSoft.Get() and MeshSoft.Get() are valid.
     }));
-`
+```
 
 #### FStreamableHandle State and Control
 
-`cpp
+```cpp
 Handle->HasLoadCompleted();   // true when all assets finished.
 Handle->IsLoadingInProgress();// true while still loading.
 Handle->WasCanceled();        // true if CancelHandle() was called.
 Handle->GetLoadProgress();    // 0.0 to 1.0.
 Handle->WaitUntilComplete();  // blocks game thread — use only on loading screens.
 Handle->ReleaseHandle();      // allow GC of loaded assets.
-`
+```
 
 Priority: pass higher values to `RequestAsyncLoad` for urgent loads (default is 0).
 Use `AsyncLoadHighPriority` (100) from `StreamableManager.h` for gameplay-critical assets.
@@ -306,7 +306,7 @@ Use `AsyncLoadHighPriority` (100) from `StreamableManager.h` for gameplay-critic
 
 ### Setup — DefaultGame.ini
 
-`ini
+```ini
 [/Script/Engine.AssetManagerSettings]
 +PrimaryAssetTypesToScan=(PrimaryAssetType="WeaponDefinition",
     AssetBaseClass=/Script/MyGame.WeaponDefinition,
@@ -314,20 +314,20 @@ Use `AsyncLoadHighPriority` (100) from `StreamableManager.h` for gameplay-critic
     bIsEditorOnly=False,
     Directories=((Path="/Game/Data/Weapons")),
     Rules=(Priority=1,bApplyRecursively=True))
-`
+```
 
 ### Custom AssetManager Subclass
 
 Subclass `UAssetManager`, override `StartInitialLoading()` for startup logic, register in `DefaultEngine.ini`:
 
-`ini
+```ini
 [/Script/Engine.Engine]
 AssetManagerClassName=/Script/MyGame.UMyAssetManager
-`
+```
 
 ### Loading Primary Assets
 
-`cpp
+```cpp
 UAssetManager& AM = UAssetManager::Get();
 
 // List all registered IDs of a type.
@@ -353,13 +353,13 @@ TSharedPtr<FStreamableHandle> AllHandle = AM.LoadPrimaryAssetsWithType(
 
 // Unload when no longer needed.
 AM.UnloadPrimaryAsset(WeaponId);
-`
+```
 
 ### Asset Bundles
 
 Bundles group soft references for selective loading. Decorate UPROPERTY fields with `meta = (AssetBundles = "BundleName")`. The Asset Manager will load only the requested bundle's assets.
 
-`cpp
+```cpp
 // "UI" bundle: loaded in menus for icon display.
 UPROPERTY(EditDefaultsOnly, meta = (AssetBundles = "UI"))
 TSoftObjectPtr<UTexture2D> Icon;
@@ -373,7 +373,7 @@ AM.ChangeBundleStateForPrimaryAssets(
     { WeaponId },
     { TEXT("Game") },   // AddBundles
     { TEXT("UI") });    // RemoveBundles
-`
+```
 
 ---
 
@@ -381,7 +381,7 @@ AM.ChangeBundleStateForPrimaryAssets(
 
 `IAssetRegistry` allows querying asset metadata without loading assets. Access it via `IAssetRegistry::GetChecked()` or `FAssetRegistryModule::GetRegistry()`.
 
-`cpp
+```cpp
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/IAssetRegistry.h"
 
@@ -412,14 +412,14 @@ for (const FAssetData& Data : AssetDataList)
 TMultiMap<FName, FString> TagFilter;
 TagFilter.Add(TEXT("WeaponType"), TEXT("Melee"));
 AR.GetAssetsByTagValues(TagFilter, AssetDataList);
-`
+```
 
 ### Making Properties Searchable
 
-`cpp
+```cpp
 UPROPERTY(EditDefaultsOnly, AssetRegistrySearchable)
 FName WeaponType;
-`
+```
 
 ---
 
@@ -427,7 +427,7 @@ FName WeaponType;
 
 ### Hard Referencing Everything
 
-`cpp
+```cpp
 // BAD: This UPROPERTY loads ALL 50 particle effects when this data asset loads.
 UPROPERTY(EditDefaultsOnly)
 TObjectPtr<UParticleSystem> HitEffect;
@@ -435,11 +435,11 @@ TObjectPtr<UParticleSystem> HitEffect;
 // GOOD: Soft reference — only load when the gameplay effect actually triggers.
 UPROPERTY(EditDefaultsOnly)
 TSoftObjectPtr<UParticleSystem> HitEffect;
-`
+```
 
 ### Loading on the Game Thread
 
-`cpp
+```cpp
 // BAD: LoadSynchronous on a large skeletal mesh stalls the render thread.
 USkeletalMesh* Mesh = MeshSoft.LoadSynchronous();
 
@@ -447,11 +447,11 @@ USkeletalMesh* Mesh = MeshSoft.LoadSynchronous();
 UAssetManager::GetStreamableManager().RequestAsyncLoad(
     MeshSoft.ToSoftObjectPath(),
     FStreamableDelegate::CreateUObject(this, &AMyActor::OnMeshLoaded));
-`
+```
 
 ### Forgetting to Keep the Handle Alive
 
-`cpp
+```cpp
 // BAD: Handle is a local — destroyed when function returns, assets may be unloaded.
 void LoadStuff()
 {
@@ -460,7 +460,7 @@ void LoadStuff()
 
 // GOOD: Store handle as a member until assets are no longer needed.
 TSharedPtr<FStreamableHandle> LoadHandle; // member variable
-`
+```
 
 ### Not Registering Primary Asset Types
 

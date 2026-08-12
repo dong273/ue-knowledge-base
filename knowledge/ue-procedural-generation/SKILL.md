@@ -5,9 +5,9 @@ description: Covers procedural generation in Unreal Engine: PCG framework, Proce
 
 # ue-procedural-generation
 
+
 ## Context Check
 
-Before advising, read  to determine:
 - Whether the PCG plugin is enabled (plugins list)
 - Target generation type: world layout, terrain, dungeon, vegetation, runtime mesh
 - Performance constraints (mobile, console, Nanite enabled)
@@ -30,13 +30,14 @@ Node-based rule-driven world generation. Operates on point clouds with transform
 
 ### Plugin Setup
 
-`csharp
+```csharp
 // Build.cs
 PublicDependencyModuleNames.Add("PCG");
-json
+```
+```json
 // .uproject Plugins array
 { "Name": "PCG", "Enabled": true }
-`
+```
 
 ### Core Classes
 
@@ -51,7 +52,7 @@ json
 
 ### UPCGComponent Key API (from `PCGComponent.h`)
 
-`cpp
+```cpp
 // Assign graph (NetMulticast)
 void SetGraph(UPCGGraphInterface* InGraph);
 
@@ -70,7 +71,7 @@ void NotifyPropertiesChangedFromBlueprint();
 
 // Read generated output
 const FPCGDataCollection& GetGeneratedGraphOutput() const;
-`
+```
 
 Generation triggers (`EPCGComponentGenerationTrigger`):
 - `GenerateOnLoad` — one-shot on BeginPlay
@@ -79,7 +80,7 @@ Generation triggers (`EPCGComponentGenerationTrigger`):
 
 ### UPCGGraph Node API (from `PCGGraph.h`)
 
-`cpp
+```cpp
 // Add node by settings class
 UPCGNode* AddNodeOfType(TSubclassOf<UPCGSettings> InSettingsClass, UPCGSettings*& DefaultNodeSettings);
 
@@ -92,13 +93,13 @@ TValueOrError<T, EPropertyBagResult> GetGraphParameter(const FName PropertyName)
 
 template<typename T>
 EPropertyBagResult SetGraphParameter(const FName PropertyName, const T& Value);
-`
+```
 
 ### Custom Blueprint PCG Node
 
 Derive from `UPCGBlueprintBaseElement`:
 
-`cpp
+```cpp
 UCLASS(BlueprintType, Blueprintable)
 class UMyPCGNode : public UPCGBlueprintBaseElement
 {
@@ -125,7 +126,7 @@ for (const FPCGTaggedData& In : Input.GetInputsByPin(PCGPinConstants::DefaultInp
     }
     Output.TaggedData.Emplace_GetRef().Data = OutPts;
 }
-`
+```
 
 Key `UPCGBlueprintBaseElement` properties:
 - `bIsCacheable = false` — when node spawns actors or components
@@ -136,12 +137,12 @@ Key `UPCGBlueprintBaseElement` properties:
 
 PCG graphs are deterministic by default — the same seed produces identical output. Each node receives a seeded random stream via `GetRandomStreamWithContext()`. To vary output across instances, set the PCG component's `Seed` property. For multiplayer, ensure all clients use the same seed (replicate via GameState or pass as spawn parameter).
 
-`cpp
+```cpp
 // Set PCG seed at runtime for deterministic variation
 UPCGComponent* PCG = FindComponentByClass<UPCGComponent>();
 PCG->Seed = MyDeterministicSeedValue;
 PCG->Generate(); // Regenerate with new seed
-`
+```
 
 ### PCG Data Types
 
@@ -160,14 +161,14 @@ See `references/pcg-node-reference.md` for all node types, settings fields, and 
 
 ## 2. ProceduralMeshComponent
 
-`csharp
+```csharp
 // Build.cs
 PublicDependencyModuleNames.Add("ProceduralMeshComponent");
-`
+```
 
 ### Core API
 
-`cpp
+```cpp
 // Create section: vertices, triangles (CCW = front), normals, UVs, colors, tangents
 void CreateMeshSection(int32 SectionIndex,
     const TArray<FVector>& Vertices, const TArray<int32>& Triangles,
@@ -185,11 +186,11 @@ void ClearMeshSection(int32 SectionIndex);
 void ClearAllMeshSections();
 void SetMeshSectionVisible(int32 SectionIndex, bool bNewVisibility);
 void SetMaterial(int32 ElementIndex, UMaterialInterface* Material);
-`
+```
 
 ### Terrain Grid Example
 
-`cpp
+```cpp
 void ATerrainActor::Build(int32 Grid, float Cell)
 {
     TArray<FVector> Verts; TArray<int32> Tris; TArray<FVector> Norms;
@@ -213,7 +214,7 @@ void ATerrainActor::Build(int32 Grid, float Cell)
     ProceduralMesh->CreateMeshSection(0, Verts, Tris, Norms,
                                        UVs, Colors, Tangs, /*bCreateCollision=*/true);
 }
-`
+```
 
 ### Performance Notes
 
@@ -226,7 +227,7 @@ void ATerrainActor::Build(int32 Grid, float Cell)
 
 Generate vertices on a background thread, then apply on the game thread:
 
-`cpp
+```cpp
 // Background task — compute vertices
 class FMeshGenTask : public FNonAbandonableTask
 {
@@ -243,7 +244,7 @@ public:
 auto* Task = new FAsyncTask<FMeshGenTask>();
 Task->StartBackgroundTask();
 // Poll safely: if (Task->IsDone()) { /* use Task->GetTask().Vertices */ delete Task; }
-`
+```
 
 ### Collision on Procedural Meshes
 
@@ -262,7 +263,7 @@ Set `UProceduralMeshComponent::bUseComplexAsSimpleCollision = true` to use the r
 
 ### Key ISM API (from `InstancedStaticMeshComponent.h`)
 
-`cpp
+```cpp
 virtual int32 AddInstance(const FTransform& T, bool bWorldSpace = false);
 virtual TArray<int32> AddInstances(const TArray<FTransform>& Ts,
     bool bShouldReturnIndices, bool bWorldSpace = false, bool bUpdateNavigation = true);
@@ -281,13 +282,13 @@ virtual bool SetCustomDataValue(int32 Idx, int32 DataIdx, float Value,
     bool bMarkRenderStateDirty = false);
 virtual bool SetCustomData(int32 Idx, TArrayView<const float> Floats,
     bool bMarkRenderStateDirty = false);
-`
+```
 
 Culling properties: `InstanceStartCullDistance`, `InstanceEndCullDistance`, `InstanceLODDistanceScale`, `bUseGpuLodSelection`.
 
 ### Vegetation Scatter (HISM + Terrain Trace)
 
-`cpp
+```cpp
 HISM->SetStaticMesh(TreeMesh);
 HISM->SetNumCustomDataFloats(1);
 HISM->PreAllocateInstancesMemory(Count);
@@ -311,7 +312,7 @@ TArray<int32> Indices = HISM->AddInstances(Transforms, true, true);
 for (int32 i = 0; i < Indices.Num(); i++)
     HISM->SetCustomDataValue(Indices[i], 0, Rand.FRand(), false);
 HISM->MarkRenderStateDirty();
-`
+```
 
 ### Foliage System
 
@@ -325,7 +326,7 @@ The editor's Foliage paint mode uses `AInstancedFoliageActor` which internally w
 
 ## 4. Noise and Math
 
-`cpp
+```cpp
 // Built-in Perlin (all output in [-1, 1])
 float N1 = FMath::PerlinNoise1D(X * Freq);
 float N2 = FMath::PerlinNoise2D(FVector2D(X, Y) * Freq);
@@ -347,7 +348,7 @@ FRandomStream Stream(Seed);
 float R = Stream.FRandRange(Min, Max);
 int32 I = Stream.RandRange(MinI, MaxI);
 FVector Dir = Stream.VRand();
-`
+```
 
 **Height/density maps**: Sample `UTexture2D` pixel data via `FTexturePlatformData` to drive terrain height or placement density. Lock with `BulkData.Lock(LOCK_READ_ONLY)`, read, then unlock.
 
@@ -359,7 +360,7 @@ FVector Dir = Stream.VRand();
 
 ### USplineComponent API (from `SplineComponent.h`)
 
-`cpp
+```cpp
 // Build spline (always batch with bUpdateSpline=false, call UpdateSpline() once after)
 void AddSplinePoint(const FVector& Pos, ESplineCoordinateSpace::Type Space, bool bUpdate=true);
 void SetSplinePoints(const TArray<FVector>& Pts, ESplineCoordinateSpace::Type Space, bool bUpdate=true);
@@ -380,7 +381,7 @@ void   SetSplinePointType(int32 Idx, ESplinePointType::Type Type, bool bUpdate=t
 void   SetClosedLoop(bool bClosed, bool bUpdate=true);
 void   SetTangentsAtSplinePoint(int32 Idx, const FVector& Arrive, const FVector& Leave,
            ESplineCoordinateSpace::Type Space, bool bUpdate=true);
-`
+```
 
 Point types: `Linear`, `Curve`, `Constant`, `CurveClamped`, `CurveCustomTangent`.
 
@@ -390,7 +391,7 @@ Point types: `Linear`, `Curve`, `Constant`, `CurveClamped`, `CurveCustomTangent`
 
 ### Spline Placement Example
 
-`cpp
+```cpp
 // Place instances evenly along spline
 float Len = Spline->GetSplineLength();
 for (float D = 0.f; D <= Len; D += Spacing)
@@ -398,11 +399,11 @@ for (float D = 0.f; D <= Len; D += Spacing)
     FTransform T = Spline->GetTransformAtDistanceAlongSpline(D, ESplineCoordinateSpace::World);
     HISM->AddInstance(T, /*bWorldSpace=*/true);
 }
-`
+```
 
 ### USplineMeshComponent (Mesh Deformation)
 
-`cpp
+```cpp
 #include "Components/SplineMeshComponent.h"
 USplineMeshComponent* SM = NewObject<USplineMeshComponent>(this);
 SM->SetStaticMesh(PipeMesh);
@@ -413,7 +414,7 @@ Spline->GetLocationAndTangentAtSplinePoint(Seg,   SP, ST, ESplineCoordinateSpace
 Spline->GetLocationAndTangentAtSplinePoint(Seg+1, EP, ET, ESplineCoordinateSpace::Local);
 SM->SetStartAndEnd(SP, ST, EP, ET, /*bUpdateMesh=*/true);
 SM->SetForwardAxis(ESplineMeshAxis::X);
-`
+```
 
 ---
 
@@ -425,11 +426,13 @@ See `references/procedural-mesh-patterns.md` for full implementations:
 - **L-System** — string rewriting + turtle interpreter to HISM branches
 - **Wave Function Collapse** — constraint-propagation tile grid layout
 - **Async mesh generation** — background thread vertex computation, game thread `CreateMeshSection`
-- **Spline road extrusion** — cross-section profile swept along `USplineComponentcpp
+- **Spline road extrusion** — cross-section profile swept along `USplineComponent`
+
+```cpp
 // Marching Cubes result → ProceduralMesh
 ProceduralMesh->CreateMeshSection(0, MarchVerts, MarchTris, MarchNormals,
     MarchUVs, {}, {}, /*bCreateCollision=*/true);
-`
+```
 
 ---
 

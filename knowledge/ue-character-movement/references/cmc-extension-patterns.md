@@ -6,7 +6,7 @@ Complete code templates for extending `UCharacterMovementComponent` with custom 
 
 ## Custom CMC Subclass Header
 
-`cpp
+```cpp
 // MyCMC.h
 #pragma once
 #include "GameFramework/CharacterMovementComponent.h"
@@ -50,13 +50,13 @@ protected:
     void EnterWallRun(const FHitResult& WallHit);
     void ExitWallRun();
 };
-`
+```
 
 ---
 
 ## FSavedMove_Character Subclass
 
-`cpp
+```cpp
 // MySavedMove.h (can live in MyCMC.h)
 class FMySavedMove : public FSavedMove_Character
 {
@@ -136,13 +136,13 @@ public:
         return Super::CanCombineWith(NewMove, InCharacter, MaxDelta);
     }
 };
-`
+```
 
 ---
 
 ## FNetworkPredictionData_Client_Character Subclass
 
-`cpp
+```cpp
 class FMyNetworkPredictionData : public FNetworkPredictionData_Client_Character
 {
 public:
@@ -156,7 +156,7 @@ public:
         return FSavedMovePtr(new FMySavedMove());
     }
 };
-`
+```
 
 ---
 
@@ -164,7 +164,7 @@ public:
 
 Override on your CMC subclass. Uses `const_cast` because the base method is `const` but the prediction data is mutable state:
 
-`cpp
+```cpp
 FNetworkPredictionData_Client* UMyCMC::GetPredictionData_Client() const
 {
     if (ClientPredictionData == nullptr)
@@ -175,13 +175,13 @@ FNetworkPredictionData_Client* UMyCMC::GetPredictionData_Client() const
 
     return ClientPredictionData;
 }
-`
+```
 
 ---
 
 ## Wall-Run PhysCustom Implementation
 
-`cpp
+```cpp
 void UMyCMC::PhysCustom(float deltaTime, int32 Iterations)
 {
     Super::PhysCustom(deltaTime, Iterations);
@@ -270,7 +270,7 @@ void UMyCMC::ExitWallRun()
     WallRunNormal = FVector::ZeroVector;
     SetMovementMode(MOVE_Falling);
 }
-`
+```
 
 ---
 
@@ -278,7 +278,7 @@ void UMyCMC::ExitWallRun()
 
 For custom data that exceeds the four CompressedFlags bits, derive `FCharacterNetworkMoveData`:
 
-`cpp
+```cpp
 struct FMyNetworkMoveData : public FCharacterNetworkMoveData
 {
     FVector CustomWallNormal = FVector::ZeroVector;
@@ -320,16 +320,16 @@ struct FMyNetworkMoveDataContainer : public FCharacterNetworkMoveDataContainer
         OldMoveData = &CustomDefaultMoveData[2];
     }
 };
-`
+```
 
 Register the container in the CMC constructor:
 
-`cpp
+```cpp
 UMyCMC::UMyCMC()
 {
     static FMyNetworkMoveDataContainer MoveDataContainer;
     SetNetworkMoveDataContainer(MoveDataContainer);
 }
-`
+```
 
 **Important:** The container must be `static` or otherwise outlive the CMC. `SetNetworkMoveDataContainer` stores a pointer, not a copy.

@@ -10,7 +10,7 @@ Each pattern includes the header declarations, implementation, and client callba
 The most common pattern. Health is authoritative on the server. Clients receive the
 updated value and react via `OnRep_Health` (update HUD, play hurt effects).
 
-`cpp
+```cpp
 // AMyCharacter.h
 UPROPERTY(ReplicatedUsing = OnRep_Health)
 float Health;
@@ -27,7 +27,9 @@ void OnRep_MaxHealth(float PreviousMaxHealth);
 // Server RPC — clients request damage (usually called by server game logic instead)
 UFUNCTION(Server, Reliable, WithValidation)
 void ServerApplyHealing(float Amount);
-cpp
+```
+
+```cpp
 // AMyCharacter.cpp
 #include "Net/UnrealNetwork.h"
 
@@ -75,7 +77,7 @@ bool AMyCharacter::ServerApplyHealing_Validate(float Amount)
 {
     return Amount > 0.f && Amount <= 500.f; // reject absurd values
 }
-`
+```
 
 ---
 
@@ -83,7 +85,7 @@ bool AMyCharacter::ServerApplyHealing_Validate(float Amount)
 
 Split information based on who needs it. Score is public; private currency is owner-only.
 
-`cpp
+```cpp
 // AMyPlayerState.h  (PlayerState replicates to all clients)
 UPROPERTY(ReplicatedUsing = OnRep_TeamId)
 int32 TeamId;
@@ -97,7 +99,9 @@ int32 Kills;
 // Private to owning player only
 UPROPERTY(ReplicatedUsing = OnRep_Currency)
 int32 Currency;
-cpp
+```
+
+```cpp
 // AMyPlayerState.cpp
 void AMyPlayerState::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -123,7 +127,7 @@ void AMyPlayerState::OnRep_Currency()
     // Update shop UI — only fires on the owning client
     OnCurrencyChanged.Broadcast(Currency);
 }
-`
+```
 
 ---
 
@@ -132,7 +136,7 @@ void AMyPlayerState::OnRep_Currency()
 Efficient replicated inventory — only changed items are sent over the network,
 not the entire array.
 
-`cpp
+```cpp
 // InventoryTypes.h
 USTRUCT(BlueprintType)
 struct FInventoryItem : public FFastArraySerializerItem
@@ -174,7 +178,9 @@ struct TStructOpsTypeTraits<FInventoryList>
 {
     enum { WithNetDeltaSerializer = true };
 };
-cpp
+```
+
+```cpp
 // UMyInventoryComponent.h
 UCLASS()
 class UMyInventoryComponent : public UActorComponent
@@ -196,7 +202,9 @@ public:
     void AddItem_Authority(int32 ItemId, int32 Quantity);
     void RemoveItem_Authority(int32 ItemId, int32 Quantity);
 };
-cpp
+```
+
+```cpp
 // UMyInventoryComponent.cpp
 void UMyInventoryComponent::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -242,7 +250,7 @@ void FInventoryItem::PreReplicatedRemove(const FInventoryList& InArraySerializer
 {
     // Item is about to be removed — clear UI slot
 }
-`
+```
 
 ---
 
@@ -250,7 +258,7 @@ void FInventoryItem::PreReplicatedRemove(const FInventoryList& InArraySerializer
 
 Ability unlocks are set once; cooldowns and charges update dynamically.
 
-`cpp
+```cpp
 // UMyAbilityComponent.h
 // Which abilities are unlocked — sent once at spawn, never changes
 UPROPERTY(Replicated)
@@ -269,7 +277,9 @@ void OnRep_Cooldowns();
 
 UFUNCTION()
 void OnRep_ActiveFlags(uint8 PreviousFlags);
-cpp
+```
+
+```cpp
 // UMyAbilityComponent.cpp
 void UMyAbilityComponent::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -304,7 +314,7 @@ void UMyAbilityComponent::OnRep_ActiveFlags(uint8 PreviousFlags)
         }
     }
 }
-`
+```
 
 ---
 
@@ -312,7 +322,7 @@ void UMyAbilityComponent::OnRep_ActiveFlags(uint8 PreviousFlags)
 
 A `UObject` subobject with its own replicated properties, registered via the modern API.
 
-`cpp
+```cpp
 // UMyQuestData.h
 UCLASS()
 class UMyQuestData : public UObject
@@ -334,7 +344,9 @@ public:
     UPROPERTY(Replicated)
     bool bCompleted;
 };
-cpp
+```
+
+```cpp
 // AMyPlayerController.cpp — register the subobject during BeginPlay on server
 void AMyPlayerController::BeginPlay()
 {
@@ -356,7 +368,9 @@ void AMyPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
     Super::EndPlay(EndPlayReason);
 }
-cpp
+```
+
+```cpp
 // UMyQuestData.cpp
 void UMyQuestData::GetLifetimeReplicatedProps(
     TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -366,7 +380,7 @@ void UMyQuestData::GetLifetimeReplicatedProps(
     DOREPLIFETIME(UMyQuestData, Progress);
     DOREPLIFETIME(UMyQuestData, bCompleted);
 }
-`
+```
 
 ---
 
@@ -375,7 +389,7 @@ void UMyQuestData::GetLifetimeReplicatedProps(
 For actors that move but do not use `UCharacterMovementComponent`, replicate movement
 via `bReplicateMovement` and the built-in `FRepMovement` struct.
 
-`cpp
+```cpp
 // AMyVehicle.h
 AMyVehicle()
 {
@@ -387,7 +401,9 @@ AMyVehicle()
 
 // Override to apply custom interpolation when movement data arrives on simulated proxies
 virtual void OnRep_ReplicatedMovement() override;
-cpp
+```
+
+```cpp
 // AMyVehicle.cpp
 void AMyVehicle::OnRep_ReplicatedMovement()
 {
@@ -396,7 +412,7 @@ void AMyVehicle::OnRep_ReplicatedMovement()
     // Additional logic: apply physics state, snap wheels, etc.
     SyncWheelPositions();
 }
-`
+```
 
 For physics-simulated actors, set `bRepPhysics = true` on the `FRepMovement` to
 include linear and angular velocity, allowing clients to simulate physics correctly.
@@ -407,13 +423,15 @@ include linear and angular velocity, allowing clients to simulate physics correc
 
 Override `IsNetRelevantFor` to implement game-specific relevancy (team-based, zone-based, etc.).
 
-`cpp
+```cpp
 // AMyActor.h
 virtual bool IsNetRelevantFor(
     const AActor* RealViewer,
     const AActor* ViewTarget,
     const FVector& SrcLocation) const override;
-cpp
+```
+
+```cpp
 // AMyActor.cpp — only replicate to players on the same team
 bool AMyActor::IsNetRelevantFor(
     const AActor* RealViewer,
@@ -433,7 +451,7 @@ bool AMyActor::IsNetRelevantFor(
 
     return false;
 }
-`
+```
 
 ---
 
@@ -442,7 +460,7 @@ bool AMyActor::IsNetRelevantFor(
 Actors like pickups and map objectives update infrequently. Use dormancy to skip
 replication checks when nothing changes.
 
-`cpp
+```cpp
 // AMyPickup.h
 AMyPickup()
 {
@@ -452,7 +470,9 @@ AMyPickup()
 }
 
 void PickupCollected(ACharacter* Collector);
-cpp
+```
+
+```cpp
 // AMyPickup.cpp
 void AMyPickup::PickupCollected(ACharacter* Collector)
 {
@@ -477,7 +497,7 @@ void AMyPickup::Respawn_Authority()
     SetActorEnableCollision(true);
     FlushNetDormancy(); // push respawn state, then return to dormant
 }
-`
+```
 
 ---
 

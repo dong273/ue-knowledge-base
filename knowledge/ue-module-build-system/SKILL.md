@@ -5,9 +5,9 @@ description: Use when working with Build.cs, Target.cs, module creation, plugin 
 
 # UE Module & Build System
 
+
 ## Before Starting
 
-Read  if it exists — it provides module names, engine version, active plugins, and build targets that affect dependency and include configuration.
 
 Ask which situation applies:
 1. Configuring dependencies in an existing Build.cs
@@ -22,7 +22,7 @@ Ask which situation applies:
 
 Every UE module has a `ModuleName.Build.cs` file next to its `Public/` and `Private/` directories.
 
-`csharp
+```csharp
 // Source/MyModule/MyModule.Build.cs
 using UnrealBuildTool;
 
@@ -54,7 +54,7 @@ public class MyModule : ModuleRules
         DynamicallyLoadedModuleNames.Add("OnlineSubsystem");
     }
 }
-`
+```
 
 ### Public vs Private Dependencies
 
@@ -67,20 +67,20 @@ A common mistake: putting everything in `PublicDependencyModuleNames`. This bloa
 
 ### Include Paths (⚠️ UE 5.7+ Deprecated)
 
-`csharp
+```csharp
 // Expose extra paths to modules that depend on you
 PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public/Interfaces"));
 
 // Expose extra paths only to this module's own source
 PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Helpers"));
-`
+```
 
 **⚠️ UE 5.7+:** `PublicIncludePaths` and `PrivateIncludePaths` are **deprecated** and may not work. UBT ignores them in UE 5.7+. Instead:
 - For flat modules (no Public/Private split), use **relative `#include` paths** from the source file's own directory:
-  `cpp
+  ```cpp
   // GA_Sprint.cpp is in Abilities/, header is in Attributes/
   #include "../Attributes/BAttributeSet_Stamina.h"
-  `
+  ```
 - For modules with Public/Private structure, the default include paths (`ModuleDirectory`, `ModuleDirectory/Public`, `ModuleDirectory/Private`) are already set automatically.
 
 UBT automatically adds `Public/` and `Private/` as include directories — you rarely need manual paths. When you do need custom paths in UE 5.7+, consider moving the target files into your module's root include path instead.
@@ -89,7 +89,7 @@ UBT automatically adds `Public/` and `Private/` as include directories — you r
 
 UBT generates `MODULENAME_API` from the module's directory name, uppercased. Any class, function, or variable that must be visible across DLL boundaries needs this macro:
 
-`cpp
+```cpp
 // Public/MyClass.h
 #pragma once
 #include "CoreMinimal.h"
@@ -102,32 +102,32 @@ public:
 
 // Standalone exported function
 MYMODULE_API void MyFreeFunction();
-`
+```
 
 Missing `MYMODULE_API` on a class that another module references causes "unresolved external symbol" linker errors.
 
 ### PCH and IWYU
 
-`csharp
+```csharp
 // UE5 recommended — each file includes exactly what it uses
 PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 bEnforceIWYU = true;
 
 // Legacy — one monolithic PCH (avoid for new modules)
 PCHUsage = PCHUsageMode.UseSharedPCHs;
-`
+```
 
 With IWYU, every `.cpp` file includes its own `.h` first, then only what it directly uses:
 
-`cpp
+```cpp
 // Private/MyClass.cpp
 #include "MyClass.h"       // own header first
 #include "Engine/Actor.h"  // only includes this file directly uses
-`
+```
 
 ### Compiler Flags
 
-`csharp
+```csharp
 // C++ exceptions — disable unless third-party code requires them
 bEnableExceptions = false;
 
@@ -136,7 +136,7 @@ bUseRTTI = false;
 
 // Third-party static libraries shipped with the engine
 AddEngineThirdPartyPrivateStaticDependencies(Target, "zlib", "OpenSSL");
-`
+```
 
 ---
 
@@ -144,7 +144,7 @@ AddEngineThirdPartyPrivateStaticDependencies(Target, "zlib", "OpenSSL");
 
 Located at `Source/ProjectName.Target.cs` (and `Source/ProjectNameEditor.Target.cs`).
 
-`csharp
+```csharp
 // Source/MyGame.Target.cs
 using UnrealBuildTool;
 using System.Collections.Generic;
@@ -173,7 +173,7 @@ public class MyGameEditorTarget : TargetRules
         ExtraModuleNames.AddRange(new string[] { "MyGame", "MyGameEditor" });
     }
 }
-`
+```
 
 ### Target Types
 
@@ -191,7 +191,7 @@ public class MyGameEditorTarget : TargetRules
 
 ## .uproject File
 
-`json
+```json
 {
     "FileVersion": 3,
     "EngineAssociation": "5.4",
@@ -220,7 +220,7 @@ public class MyGameEditorTarget : TargetRules
         }
     ]
 }
-`
+```
 
 ### Module Types
 
@@ -259,7 +259,7 @@ public class MyGameEditorTarget : TargetRules
 
 ### Directory Structure
 
-`
+```
 Source/
   MyModule/
     Public/
@@ -269,11 +269,11 @@ Source/
       MyModule.cpp        (module registration)
       MyClass.cpp
     MyModule.Build.cs
-`
+```
 
 ### Module Interface
 
-`cpp
+```cpp
 // Public/MyModule.h
 #pragma once
 #include "Modules/ModuleManager.h"
@@ -291,7 +291,9 @@ public:
         return FModuleManager::Get().IsModuleLoaded("MyModule");
     }
 };
-cpp
+```
+
+```cpp
 // Private/MyModule.cpp
 #include "MyModule.h"
 
@@ -317,7 +319,7 @@ IMPLEMENT_MODULE(FMyModule, MyModule)
 
 // Use IMPLEMENT_PRIMARY_GAME_MODULE for the main game module
 // IMPLEMENT_PRIMARY_GAME_MODULE(FMyModule, MyGame, "MyGame")
-`
+```
 
 The `IMPLEMENT_MODULE` macro (defined in `Modules/ModuleManager.h`) registers the module's initializer function. In DLL builds it registers a static `FModuleInitializerEntry` that maps the module name to its factory function. In monolithic builds it registers a static `FStaticallyLinkedModuleRegistrant`.
 
@@ -325,13 +327,13 @@ The `IMPLEMENT_MODULE` macro (defined in `Modules/ModuleManager.h`) registers th
 
 ### Add to .uproject
 
-`json
+```json
 {
     "Name": "MyModule",
     "Type": "Runtime",
     "LoadingPhase": "Default"
 }
-`
+```
 
 ---
 
@@ -339,7 +341,7 @@ The `IMPLEMENT_MODULE` macro (defined in `Modules/ModuleManager.h`) registers th
 
 ### Directory Structure
 
-`
+```
 Plugins/
   MyPlugin/
     MyPlugin.uplugin
@@ -358,11 +360,11 @@ Plugins/
     Content/                    (optional, for content plugins)
     Resources/
       Icon128.png
-`
+```
 
 ### .uplugin File
 
-`json
+```json
 {
     "FileVersion": 3,
     "Version": 1,
@@ -391,13 +393,13 @@ Plugins/
         }
     ]
 }
-`
+```
 
 ### Plugin with Runtime + Editor Modules
 
 The runtime module must not include editor-only headers. Gate editor code:
 
-`cpp
+```cpp
 // MyPlugin.Build.cs — runtime module
 public class MyPlugin : ModuleRules
 {
@@ -414,7 +416,9 @@ public class MyPlugin : ModuleRules
         }
     }
 }
-cpp
+```
+
+```cpp
 // MyPluginEditor.Build.cs — editor module
 public class MyPluginEditor : ModuleRules
 {
@@ -426,7 +430,7 @@ public class MyPluginEditor : ModuleRules
         PrivateDependencyModuleNames.Add("MyPlugin");
     }
 }
-`
+```
 
 ### Engine vs Project Plugins
 

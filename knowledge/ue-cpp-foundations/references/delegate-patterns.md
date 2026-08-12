@@ -23,13 +23,13 @@ All delegate type declarations go at **file scope** (outside classes), except `D
 
 ### Single Delegate (No Parameters)
 
-`cpp
+```cpp
 DECLARE_DELEGATE(FOnGamePaused);
-`
+```
 
 ### Single Delegate with Parameters
 
-`cpp
+```cpp
 // One parameter
 DECLARE_DELEGATE_OneParam(FOnItemCollected, AActor* /* Item */);
 
@@ -41,35 +41,35 @@ DECLARE_DELEGATE_ThreeParams(FOnAbilityUsed, FName /* AbilityID */, int32 /* Lev
 
 // Up to nine parameters supported
 DECLARE_DELEGATE_FourParams(FOnWeaponFired, FVector /* Origin */, FVector /* Direction */, float /* Damage */, AActor* /* Shooter */);
-`
+```
 
 ### Single Delegate with Return Value
 
-`cpp
+```cpp
 DECLARE_DELEGATE_RetVal(bool, FOnShouldSpawn);
 DECLARE_DELEGATE_RetVal_OneParam(float, FOnCalculateDamage, float /* BaseDamage */);
 DECLARE_DELEGATE_RetVal_TwoParams(AActor*, FOnSelectTarget, FVector /* Origin */, float /* Range */);
-`
+```
 
 ### Multicast Delegate
 
-`cpp
+```cpp
 DECLARE_MULTICAST_DELEGATE(FOnLevelLoaded);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnActorSpawned, AActor* /* SpawnedActor */);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float /* Current */, float /* Max */);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnGameEvent, FName /* EventID */, UObject* /* Instigator */, const FString& /* Payload */);
-`
+```
 
 ### Thread-Safe Multicast
 
-`cpp
+```cpp
 // Use when broadcasting from non-game threads
 DECLARE_TS_MULTICAST_DELEGATE_OneParam(FOnAsyncDataReady, const TArray<uint8>& /* Data */);
-`
+```
 
 ### Dynamic Single Delegate
 
-`cpp
+```cpp
 // Saveable, can be assigned in Blueprint
 // Param names are required (used as Blueprint pin labels)
 DECLARE_DYNAMIC_DELEGATE(FOnSimpleEvent);
@@ -79,11 +79,11 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnTransformChanged, FVector, NewLocation, FR
 // With return value
 DECLARE_DYNAMIC_DELEGATE_RetVal(bool, FOnValidationCheck);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(float, FOnGetModifiedDamage, float, BaseDamage);
-`
+```
 
 ### Dynamic Multicast Delegate
 
-`cpp
+```cpp
 // Most common for UPROPERTY(BlueprintAssignable) events
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreChanged, int32, NewScore);
@@ -101,13 +101,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(
     FVector,    HitNormal,
     float,      Damage,
     AActor*,    HitActor);
-`
+```
 
 ---
 
 ## Declaring in a UCLASS
 
-`cpp
+```cpp
 // Forward-declare or include delegate declarations before the class
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, CurrentHealth, float, MaxHealth);
@@ -130,7 +130,7 @@ public:
     // Native-only multicast (no UPROPERTY needed, but no GC protection either)
     FOnDeathNative OnDeathNative;
 };
-`
+```
 
 ---
 
@@ -138,7 +138,7 @@ public:
 
 ### Single Static Delegate Binding
 
-`cpp
+```cpp
 FOnItemCollected Delegate;
 
 // Bind to a UObject member function (safe: auto-unbinds on UObject destruction)
@@ -174,11 +174,11 @@ Delegate.ExecuteIfBound(SomeActor);
 
 // Unbind
 Delegate.Unbind();
-`
+```
 
 ### Multicast Static Delegate Binding
 
-`cpp
+```cpp
 FOnHealthChanged HealthDelegate;
 
 // Add binding — returns a handle for later removal
@@ -208,11 +208,11 @@ HealthDelegate.RemoveAll(this);
 
 // Check if any bindings exist
 bool bHasListeners = HealthDelegate.IsBound();
-`
+```
 
 ### Dynamic Single Delegate Binding
 
-`cpp
+```cpp
 FOnActorDestroyed Delegate;
 
 // Bind to a UFUNCTION on a UObject (the function MUST be a UFUNCTION)
@@ -226,11 +226,11 @@ Delegate.ExecuteIfBound(SomeActor);
 
 // Unbind
 Delegate.Unbind();
-`
+```
 
 ### Dynamic Multicast Delegate Binding
 
-`cpp
+```cpp
 // In UCLASS that declares OnHealthChanged:
 OnHealthChanged.AddDynamic(this, &AMyHUD::HandleHealthChanged);
 
@@ -245,7 +245,7 @@ OnHealthChanged.Broadcast(NewHealth, MaxHealth);
 
 // Check
 bool bHasBindings = OnHealthChanged.IsBound();
-`
+```
 
 ---
 
@@ -253,7 +253,7 @@ bool bHasBindings = OnHealthChanged.IsBound();
 
 ### Component-based health with events
 
-`cpp
+```cpp
 // HealthComponent.h
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, CurrentHealth, float, MaxHealth);
@@ -292,7 +292,9 @@ private:
 
     virtual void BeginPlay() override;
 };
-cpp
+```
+
+```cpp
 // HealthComponent.cpp
 
 void UHealthComponent::BeginPlay()
@@ -316,7 +318,9 @@ void UHealthComponent::ApplyDamage(float DamageAmount, AActor* DamageInstigator)
         OnDeath.Broadcast(DamageInstigator);
     }
 }
-cpp
+```
+
+```cpp
 // MyCharacter.cpp — binding to the component's delegates
 
 void AMyCharacter::BeginPlay()
@@ -362,7 +366,7 @@ void AMyCharacter::HandleHealthChangedNative(float HealthFraction)
 {
     // Update UI or animation state without Blueprint overhead
 }
-`
+```
 
 ---
 
@@ -384,7 +388,7 @@ void AMyCharacter::HandleHealthChangedNative(float HealthFraction)
 ## Common Mistakes
 
 **Calling Execute() on an unbound delegate:**
-`cpp
+```cpp
 // BAD — asserts in Debug if not bound
 PickupDelegate.Execute(SomeActor);
 
@@ -392,10 +396,10 @@ PickupDelegate.Execute(SomeActor);
 PickupDelegate.ExecuteIfBound(SomeActor);
 // Or:
 if (PickupDelegate.IsBound()) { PickupDelegate.Execute(SomeActor); }
-`
+```
 
 **Binding lambda to multicast without storing the handle:**
-`cpp
+```cpp
 // BAD — cannot be removed later
 OnHealthChanged.AddLambda([this](float C, float M) { ... });
 
@@ -403,20 +407,20 @@ OnHealthChanged.AddLambda([this](float C, float M) { ... });
 FDelegateHandle Handle = OnHealthChanged.AddLambda([this](float C, float M) { ... });
 // Later:
 OnHealthChanged.Remove(Handle);
-`
+```
 
 **Using AddDynamic with a non-UFUNCTION:**
-`cpp
+```cpp
 // BAD — compile error or undefined behavior
 OnHealthChanged.AddDynamic(this, &AMyCharacter::NonUFunction);
 
 // GOOD — the function must have UFUNCTION()
 UFUNCTION()
 void HandleHealthChanged(float Current, float Max);
-`
+```
 
 **Forgetting to RemoveDynamic in EndPlay:**
-`cpp
+```cpp
 // BAD — dangling binding, crash when broadcast fires after object destruction
 void AMyActor::BeginPlay()
 {
@@ -434,17 +438,17 @@ void AMyActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
     Super::EndPlay(EndPlayReason);
 }
-`
+```
 
 **Dynamic multicast delegate not in UPROPERTY:**
-`cpp
+```cpp
 // BAD — not serialized; Blueprint bindings lost between sessions
 FOnScoreChanged OnScoreChanged;
 
 // GOOD
 UPROPERTY(BlueprintAssignable, Category="Events")
 FOnScoreChanged OnScoreChanged;
-`
+```
 
 ---
 
@@ -452,7 +456,7 @@ FOnScoreChanged OnScoreChanged;
 
 Single static delegates support return values. Multicast and dynamic delegates do not (which binding's return value would you use?).
 
-`cpp
+```cpp
 DECLARE_DELEGATE_RetVal_OneParam(bool, FOnValidatePickup, AActor* /* Item */);
 
 FOnValidatePickup ValidationDelegate;
@@ -467,7 +471,7 @@ if (ValidationDelegate.IsBound())
     bool bValid = ValidationDelegate.Execute(PotentialPickup);
     if (bValid) { CollectItem(PotentialPickup); }
 }
-`
+```
 
 ---
 
@@ -475,7 +479,7 @@ if (ValidationDelegate.IsBound())
 
 Single delegate bind methods accept up to 4 "payload" values that are forwarded after the delegate's declared parameters.
 
-`cpp
+```cpp
 DECLARE_DELEGATE_OneParam(FOnItemPickedUp, AActor* /* Item */);
 
 float BonusMultiplier = 1.5f;
@@ -490,4 +494,4 @@ void AMyCharacter::HandlePickupWithExtras(AActor* Item, float Bonus, FName Sound
 {
     // Bonus == 1.5f, Sound == "SFX_Pickup"
 }
-`
+```

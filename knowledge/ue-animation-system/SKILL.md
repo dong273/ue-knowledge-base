@@ -5,9 +5,9 @@ description: Covers Unreal Engine animation: AnimInstance, montage playback, ble
 
 # UE Animation System
 
+
 ## Context Check
 
-Read  first. Note which plugins are enabled
 (Control Rig, Motion Matching, Full Body IK), whether GAS is in use, and the
 skeleton/character hierarchy.
 
@@ -24,7 +24,7 @@ skeleton/character hierarchy.
 
 ## Architecture
 
-`
+```
 ACharacter / AActor
   └── USkeletalMeshComponent
         └── UAnimInstance subclass
@@ -33,7 +33,7 @@ ACharacter / AActor
               ├── NativeThreadSafeUpdateAnimation(dt)   [worker thread]
               ├── FAnimInstanceProxy                    [worker thread eval]
               └── Montage API / Linked Layers
-`
+```
 
 Animation updates run in two phases. Game thread: `NativeUpdateAnimation` —
 safe to read gameplay state. Worker thread: blend tree evaluation. Write all
@@ -46,7 +46,7 @@ read those cached values in `NativeThreadSafeUpdateAnimation`.
 
 ### Subclass Pattern
 
-`cpp
+```cpp
 // MyAnimInstance.h
 UCLASS()
 class MYGAME_API UMyAnimInstance : public UAnimInstance
@@ -70,7 +70,9 @@ protected:
     UPROPERTY(Transient, BlueprintReadOnly, Category="Locomotion")
     bool bIsInAir = false;
 };
-cpp
+```
+
+```cpp
 // MyAnimInstance.cpp
 void UMyAnimInstance::NativeInitializeAnimation()
 {
@@ -104,21 +106,23 @@ void UMyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
     // Only read UPROPERTY members written in NativeUpdateAnimation above.
     // Do NOT call any UObject functions not marked BlueprintThreadSafe.
 }
-`
+```
 
 ### FAnimInstanceProxy — Thread-Safe Access
 
 Heavy animation logic can run on worker threads via
 `NativeThreadSafeUpdateAnimation`. Access shared data through the proxy:
 
-`cpp
+```cpp
 void UMyAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
     FMyAnimInstanceProxy& Proxy = GetProxyOnAnyThread<FMyAnimInstanceProxy>();
     Proxy.Speed = Proxy.Velocity.Size();
     Proxy.bIsFalling = Proxy.MovementMode == EMovementMode::MOVE_Falling;
 }
-cpp
+```
+
+```cpp
 // FAnimInstanceProxy declaration — worker thread data container
 USTRUCT()
 struct FMyAnimInstanceProxy : public FAnimInstanceProxy
@@ -138,7 +142,7 @@ struct FMyAnimInstanceProxy : public FAnimInstanceProxy
 // In UMyAnimInstance: override CreateAnimInstanceProxy to return your proxy
 virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override
 { return new FMyAnimInstanceProxy(this); }
-`
+```
 
 The engine copies data between game thread and worker thread at safe sync points.
 
@@ -149,7 +153,7 @@ The engine copies data between game thread and worker thread at safe sync points
 Source: `AnimMontage.h`, `AnimInstance.h`
 
 Key API (`UAnimInstance`):
-`cpp
+```cpp
 float Montage_Play(UAnimMontage*, float PlayRate=1.f,
     EMontagePlayReturnType=MontageLength, float StartAt=0.f, bool bStopAll=true);
 void  Montage_Stop(float BlendOut, const UAnimMontage* Montage=nullptr);
@@ -161,11 +165,11 @@ bool  Montage_IsActive(const UAnimMontage*) const;
 bool  Montage_IsPlaying(const UAnimMontage*) const;
 FName Montage_GetCurrentSection(const UAnimMontage* Montage=nullptr) const;
 float Montage_GetPosition(const UAnimMontage*) const;
-`
+```
 
 ### Playing + Delegate Pattern
 
-`cpp
+```cpp
 void UMyComponent::PlayAttackMontage(UAnimMontage* Montage)
 {
     UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
@@ -186,14 +190,14 @@ void UMyComponent::PlayAttackMontage(UAnimMontage* Montage)
 
 void UMyComponent::OnAttackEnded(UAnimMontage* Montage, bool bInterrupted) { }
 void UMyComponent::OnAttackBlendingOut(UAnimMontage* Montage, bool bInterrupted) { }
-`
+```
 
 ### Dynamic Slot Montage
 
-`cpp
+```cpp
 UAnimMontage* DynMontage = AnimInst->PlaySlotAnimationAsDynamicMontage(
     SomeSequence, FName("UpperBody"), 0.25f, 0.25f, 1.f, 1);
-`
+```
 
 ### Multiplayer Replication
 
@@ -205,7 +209,7 @@ UAnimMontage* DynMontage = AnimInst->PlaySlotAnimationAsDynamicMontage(
 
 ### GAS Integration — PlayMontageAndWait
 
-`cpp
+```cpp
 // GAS ability task — PlayMontageAndWait (requires GameplayAbilities module)
 UAbilityTask_PlayMontageAndWait* Task =
     UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
@@ -213,7 +217,7 @@ UAbilityTask_PlayMontageAndWait* Task =
 Task->OnCompleted.AddDynamic(this, &UMyAbility::OnMontageCompleted);
 Task->OnInterrupted.AddDynamic(this, &UMyAbility::OnMontageInterrupted);
 Task->ReadyForActivation();  // must call to start the task
-`
+```
 
 ---
 
@@ -240,7 +244,7 @@ sample placement.
 State machines live in the AnimGraph. Bind native C++ logic to transition rules
 and state entry/exit without Blueprint:
 
-`cpp
+```cpp
 // In NativeInitializeAnimation()
 AddNativeTransitionBinding(
     FName("LocomotionSM"), FName("Idle"), FName("Walk/Run"),
@@ -250,15 +254,15 @@ AddNativeTransitionBinding(
 AddNativeStateEntryBinding(
     FName("LocomotionSM"), FName("Land"),
     FOnGraphStateChanged::CreateUObject(this, &UMyAnimInstance::OnLandEntered));
-`
+```
 
 Query state machine at runtime:
-`cpp
+```cpp
 const FAnimNode_StateMachine* SM =
     GetStateMachineInstanceFromName(FName("LocomotionSM"));
 float RunWeight = GetInstanceStateWeight(
     GetStateMachineIndex(FName("LocomotionSM")), SM->GetCurrentState());
-`
+```
 
 ### Conduit Nodes
 
@@ -276,7 +280,7 @@ Source: `AnimNotify.h`, `AnimNotifyState.h`
 
 ### UAnimNotify — Point-in-Time
 
-`cpp
+```cpp
 UCLASS(meta=(DisplayName="Footstep"))
 class MYGAME_API UFootstepNotify : public UAnimNotify
 {
@@ -290,11 +294,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Footstep")
     FName FootSocket = FName("foot_l");
 };
-`
+```
 
 ### UAnimNotifyState — Duration (Begin/Tick/End)
 
-`cpp
+```cpp
 UCLASS(meta=(DisplayName="Weapon Collision Window"))
 class MYGAME_API UWeaponCollisionState : public UAnimNotifyState
 {
@@ -305,7 +309,7 @@ public:
     virtual void NotifyEnd(USkeletalMeshComponent*, UAnimSequenceBase*,
         const FAnimNotifyEventReference&) override;
 };
-`
+```
 
 ### BranchingPoint (Synchronous)
 
@@ -316,7 +320,7 @@ other notifies are queued (fire after tick completes, safe for VFX/SFX).
 
 ### Named Notify Delegate
 
-`cpp
+```cpp
 AnimInst->OnPlayMontageNotifyBegin.AddDynamic(
     this, &UMyComponent::HandleNotifyBegin);
 
@@ -325,7 +329,7 @@ void UMyComponent::HandleNotifyBegin(FName NotifyName,
 {
     if (NotifyName == FName("EnableHitbox")) ActivateHitDetection();
 }
-`
+```
 
 See `references/anim-notify-reference.md` for built-in notify catalog and more
 custom patterns.
@@ -336,7 +340,7 @@ custom patterns.
 
 ### Foot IK with Line Traces (NativeUpdateAnimation — game thread)
 
-`cpp
+```cpp
 FVector UMyAnimInstance::GetFootTarget(FName SocketName) const
 {
     const FVector Foot = GetOwningComponent()->GetSocketLocation(SocketName);
@@ -349,7 +353,7 @@ FVector UMyAnimInstance::GetFootTarget(FName SocketName) const
         return Hit.ImpactPoint;
     return Foot;
 }
-`
+```
 
 Feed results into a Control Rig asset (UE5 recommended) or a
 **Two Bone IK** skeletal control node in the AnimGraph.
@@ -375,14 +379,14 @@ Attack montages use the `UpperBody` slot; locomotion plays uninterrupted below.
 
 ### Aim Offset
 
-`cpp
+```cpp
 // In NativeUpdateAnimation:
 const FRotator Delta = UKismetMathLibrary::NormalizedDeltaRotator(
     OwningCharacter->GetBaseAimRotation(),
     OwningCharacter->GetActorRotation());
 AimYaw   = FMath::Clamp(Delta.Yaw,   -90.f, 90.f);
 AimPitch = FMath::Clamp(Delta.Pitch, -90.f, 90.f);
-`
+```
 
 Place an Aim Offset node after the base pose in the AnimGraph, feeding
 `AimYaw` and `AimPitch`.
@@ -400,7 +404,7 @@ Source: `AnimNode_LinkedAnimGraph.h`, `AnimNode_LinkedAnimLayer.h`
 3. Separate AnimInstance subclasses implement the interface per mode.
 4. Swap at runtime:
 
-`cpp
+```cpp
 // Switch locomotion implementation
 AnimInst->LinkAnimClassLayers(UClimbingLocomotionLayer::StaticClass());
 // Reset all layers to defaults:
@@ -408,29 +412,29 @@ AnimInst->LinkAnimClassLayers(nullptr);
 // Retrieve a linked instance:
 UAnimInstance* Layer =
     AnimInst->GetLinkedAnimLayerInstanceByClass(UClimbingLocomotionLayer::StaticClass());
-`
+```
 
 ### Linked Anim Graph (by Tag)
 
-`cpp
+```cpp
 AnimInst->LinkAnimGraphByTag(FName("CombatGraph"), UMyCombatAnimInstance::StaticClass());
 UAnimInstance* Sub = AnimInst->GetLinkedAnimGraphInstanceByTag(FName("CombatGraph"));
-`
+```
 
 ### Notify Propagation
 
-`cpp
+```cpp
 AnimInst->SetReceiveNotifiesFromLinkedInstances(true);
 AnimInst->SetPropagateNotifiesToLinkedInstances(true);
 // UE5.2+: let linked layers share main instance montage evaluation:
 // AnimInst->SetUseMainInstanceMontageEvaluationData(true);
-`
+```
 
 ---
 
 ## Root Motion
 
-`cpp
+```cpp
 // Options: NoRootMotionExtraction, IgnoreRootMotion,
 //          RootMotionFromMontagesOnly, RootMotionFromEverything
 RootMotionMode = ERootMotionMode::RootMotionFromMontagesOnly;
@@ -438,7 +442,7 @@ RootMotionMode = ERootMotionMode::RootMotionFromMontagesOnly;
 // Per-montage disable
 FAnimMontageInstance* Inst = AnimInst->GetActiveInstanceForMontage(Montage);
 if (Inst) { Inst->PushDisableRootMotion(); /* ... */ Inst->PopDisableRootMotion(); }
-`
+```
 
 For networked root motion, set the movement component's smoothing mode to
 `ENetworkSmoothingMode::Exponential` and enable
@@ -462,14 +466,14 @@ The server runs root motion authoritatively; clients predict and correct via
 
 ## Build.cs
 
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[] {
     "Core", "CoreUObject", "Engine", "AnimGraphRuntime"
 });
 // Optional:
 PrivateDependencyModuleNames.Add("ControlRig");        // Control Rig IK
 PrivateDependencyModuleNames.Add("GameplayAbilities"); // GAS montage tasks
-`
+```
 
 ---
 

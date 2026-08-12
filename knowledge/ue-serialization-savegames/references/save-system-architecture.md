@@ -8,7 +8,7 @@ Complete patterns for production save systems: slot management, save metadata, a
 
 A production save system has three layers:
 
-`
+```
 ┌─────────────────────────────────────────────────────────┐
 │  Game Code (GameMode, PlayerController, Subsystems)     │
 │  -- calls SaveManager --                                │
@@ -19,7 +19,7 @@ A production save system has three layers:
 │  UGameplayStatics / ISaveGameSystem                     │
 │  -- platform-agnostic file I/O --                       │
 └─────────────────────────────────────────────────────────┘
-`
+```
 
 The save manager lives on the `UGameInstance` as a `UGameInstanceSubsystem` so it persists across level transitions and map loads.
 
@@ -29,7 +29,7 @@ The save manager lives on the `UGameInstance` as a `UGameInstanceSubsystem` so i
 
 Store a lightweight metadata object in a fixed slot so the UI can display save slot info (timestamp, player name, level, screenshot thumbnail path) without loading the full save payload.
 
-`cpp
+```cpp
 // SaveMetadata.h
 #pragma once
 #include "CoreMinimal.h"
@@ -118,13 +118,13 @@ public:
 };
 
 const FString USaveMetadataBank::SlotName = TEXT("SaveMetadataBank");
-`
+```
 
 ---
 
 ## 2. Save Manager Subsystem
 
-`cpp
+```cpp
 // SaveManager.h
 #pragma once
 #include "CoreMinimal.h"
@@ -219,7 +219,9 @@ private:
     FTimerHandle AutoSaveTimerHandle;
     int32 AutoSaveSlotIndex = 0;
 };
-cpp
+```
+
+```cpp
 // SaveManager.cpp
 #include "SaveManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -423,7 +425,7 @@ void USaveManager::StopAutoSave()
         World->GetTimerManager().ClearTimer(AutoSaveTimerHandle);
     }
 }
-`
+```
 
 ---
 
@@ -431,7 +433,7 @@ void USaveManager::StopAutoSave()
 
 Centralize all migration logic so it runs consistently on every load path (sync and async):
 
-`cpp
+```cpp
 // Add to SaveManager or to UMyGameSaveGame
 
 // Version constants
@@ -491,7 +493,7 @@ void USaveManager::RunMigrations(UMyGameSaveGame* Save)
     // Stamp new version
     Save->SaveVersion = ESaveVersion::Latest;
 }
-`
+```
 
 ---
 
@@ -499,7 +501,7 @@ void USaveManager::RunMigrations(UMyGameSaveGame* Save)
 
 For complex subsystem data that warrants manual layout control, store it as `TArray<uint8>` inside the `USaveGame` and serialize/deserialize with `FMemoryWriter`/`FMemoryReader`:
 
-`cpp
+```cpp
 // In UMyGameSaveGame:
 UPROPERTY(SaveGame)
 TArray<uint8> QuestSystemBlob;  // Manually serialized binary payload
@@ -562,7 +564,7 @@ bool UQuestSubsystem::DeserializeFromBlob(const TArray<uint8>& Blob)
 
     return !Reader.IsError();
 }
-`
+```
 
 ---
 
@@ -570,7 +572,7 @@ bool UQuestSubsystem::DeserializeFromBlob(const TArray<uint8>& Blob)
 
 Each local player gets their own save slot. Use `ULocalPlayerSaveGame` and pass the `ULocalPlayer` or `APlayerController`.
 
-`cpp
+```cpp
 // In your player controller or local player subsystem:
 void AMyPlayerController::SavePlayerData()
 {
@@ -622,11 +624,11 @@ void AMyPlayerController::OnPlayerDataLoaded(ULocalPlayerSaveGame* SaveGame)
         AbilityComponent->SetAbilityLevel(AbilityName, Level);
     }
 }
-`
+```
 
 For the save slot name per player, derive it from the player index or platform user ID so each user has isolated data:
 
-`cpp
+```cpp
 FString GetPlayerSlotName(const APlayerController* PC)
 {
     if (!PC) { return TEXT("PlayerData_0"); }
@@ -636,7 +638,7 @@ FString GetPlayerSlotName(const APlayerController* PC)
     }
     return TEXT("PlayerData_0");
 }
-`
+```
 
 ---
 
@@ -651,7 +653,7 @@ FString GetPlayerSlotName(const APlayerController* PC)
 
 To get the platform user index correctly:
 
-`cpp
+```cpp
 int32 GetUserIndex(const APlayerController* PC)
 {
     if (const ULocalPlayer* LP = PC ? PC->GetLocalPlayer() : nullptr)
@@ -660,7 +662,7 @@ int32 GetUserIndex(const APlayerController* PC)
     }
     return 0;
 }
-`
+```
 
 ---
 
@@ -668,7 +670,7 @@ int32 GetUserIndex(const APlayerController* PC)
 
 Never rely on these paths in shipping code. They are useful for wiping saves in automation tests or editor utilities:
 
-`cpp
+```cpp
 FString GetSaveGamePath(const FString& SlotName, int32 UserIndex)
 {
     // Only valid on PC / development. Do not use in shipping builds.
@@ -678,7 +680,7 @@ FString GetSaveGamePath(const FString& SlotName, int32 UserIndex)
         / TEXT("SaveGames")
         / FString::Printf(TEXT("%s.sav"), *SlotName);
 }
-`
+```
 
 ---
 
@@ -686,7 +688,7 @@ FString GetSaveGamePath(const FString& SlotName, int32 UserIndex)
 
 Register the save manager and trigger initial metadata load in `UGameInstance::Init()`:
 
-`cpp
+```cpp
 // MyGameInstance.cpp
 void UMyGameInstance::Init()
 {
@@ -698,6 +700,6 @@ void UMyGameInstance::Init()
 // In any game code:
 USaveManager* SM = GetGameInstance()->GetSubsystem<USaveManager>();
 SM->AsyncSaveToSlot(0);
-`
+```
 
 Because `USaveManager` is a `UGameInstanceSubsystem`, UE creates it automatically when the `GameInstance` initializes. `Initialize()` on the subsystem fires before the first level loads, making it the correct place to load the metadata bank.

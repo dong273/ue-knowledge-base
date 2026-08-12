@@ -5,9 +5,9 @@ description: Covers character movement, CharacterMovementComponent, CMC, movemen
 
 # UE Character Movement
 
+
 ## Context Check
 
-Read  to determine:
 - Whether the project uses `ACharacter` or a custom pawn with its own movement
 - The UE version (UE 5.4+ adds `GravityDirection` support, UE 5.5 changes `DoJump` signature)
 - Whether multiplayer is involved (affects prediction pipeline complexity)
@@ -27,12 +27,12 @@ Read  to determine:
 
 `UCharacterMovementComponent` sits at the end of a four-level class hierarchy:
 
-`
+```
 UMovementComponent
   -> UNavMovementComponent
     -> UPawnMovementComponent
       -> UCharacterMovementComponent
-`
+```
 
 CMC also implements `IRVOAvoidanceInterface` and `INetworkPredictionInterface`. It is declared `UCLASS(MinimalAPI)`.
 
@@ -73,13 +73,13 @@ Every tick, CMC processes movement through a strict pipeline. Understanding this
 Inside each `Phys*` function, two core methods do the heavy lifting:
 
 **`CalcVelocity`** computes the velocity for this frame:
-`cpp
+```cpp
 // BlueprintCallable
 void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration);
-`
+```
 
 **`SafeMoveUpdatedComponent`** moves the capsule and resolves penetration:
-`cpp
+```cpp
 virtual bool SafeMoveUpdatedComponent(
     const FVector& Delta,
     const FQuat& NewRotation,
@@ -87,7 +87,7 @@ virtual bool SafeMoveUpdatedComponent(
     FHitResult& OutHit,
     ETeleportType Teleport = ETeleportType::None
 );
-`
+```
 
 It wraps `MoveUpdatedComponent` and automatically handles depenetration if the move results in an overlap. Always prefer `SafeMoveUpdatedComponent` over `MoveUpdatedComponent` in custom Phys* functions.
 
@@ -103,7 +103,7 @@ CMC's walking mode relies on continuous floor detection to determine whether the
 
 ### FFindFloorResult
 
-`cpp
+```cpp
 struct FFindFloorResult
 {
     uint32 bBlockingHit : 1;    // Sweep hit something
@@ -115,19 +115,19 @@ struct FFindFloorResult
 
     bool IsWalkableFloor() const { return bBlockingHit && bWalkableFloor; }
 };
-`
+```
 
 ### Floor Detection Methods
 
 `FindFloor` is the primary method:
-`cpp
+```cpp
 void FindFloor(
     const FVector& CapsuleLocation,
     FFindFloorResult& OutFloorResult,
     bool bCanUseCachedLocation,
     const FHitResult* DownwardSweepResult = nullptr
 );
-`
+```
 
 It delegates to `ComputeFloorDist()`, which performs a downward capsule sweep followed by a line trace. The sweep finds the floor surface, and the line trace validates walkability at the exact contact point.
 
@@ -149,7 +149,7 @@ Set the angle, not the Z value directly. `SetWalkableFloorAngle()` updates both.
 ### Implementation Steps
 
 1. Define custom mode constants:
-`cpp
+```cpp
 UENUM(BlueprintType)
 enum class ECustomMovementMode : uint8
 {
@@ -157,22 +157,22 @@ enum class ECustomMovementMode : uint8
     Climb   = 1,
     Dash    = 2
 };
-`
+```
 
 2. Override `PhysCustom` in your CMC subclass:
-`cpp
+```cpp
 virtual void PhysCustom(float deltaTime, int32 Iterations) override;
-`
+```
 
 3. Enter the mode using `SetMovementMode`:
-`cpp
+```cpp
 SetMovementMode(MOVE_Custom, static_cast<uint8>(ECustomMovementMode::WallRun));
-`
+```
 
 4. Handle transitions in `OnMovementModeChanged`:
-`cpp
+```cpp
 virtual void OnMovementModeChanged(EMovementMode PrevMode, uint8 PrevCustomMode) override;
-`
+```
 
 Inside `PhysCustom`, dispatch on `CustomMovementMode` and implement your simulation. Call `CalcVelocity` for acceleration, `SafeMoveUpdatedComponent` for capsule movement, and `SetMovementMode` when transitioning out.
 
@@ -220,7 +220,7 @@ You get four custom bits. For more complex state, use `FCharacterNetworkMoveData
 
 Override `AllocateNewMove()` to return your custom `FSavedMove` subclass:
 
-`cpp
+```cpp
 class FMyNetworkPredictionData : public FNetworkPredictionData_Client_Character
 {
 public:
@@ -229,7 +229,7 @@ public:
 
     virtual FSavedMovePtr AllocateNewMove() override;
 };
-`
+```
 
 The CMC exposes this via `GetPredictionData_Client()`, which you override to lazy-init your custom prediction data class.
 
@@ -270,7 +270,7 @@ Base class fields:
 
 ### CMC Methods
 
-`cpp
+```cpp
 // Returns uint16 LocalID for tracking
 uint16 ApplyRootMotionSource(TSharedPtr<FRootMotionSource> Source);
 
@@ -279,17 +279,17 @@ TSharedPtr<FRootMotionSource> GetRootMotionSource(FName InstanceName);
 
 // Remove by InstanceName
 void RemoveRootMotionSource(FName InstanceName);
-`
+```
 
 Apply a constant knockback:
-`cpp
+```cpp
 auto Knockback = MakeShared<FRootMotionSource_ConstantForce>();
 Knockback->InstanceName = TEXT("Knockback");
 Knockback->Duration = 0.3f;
 Knockback->Force = KnockbackDirection * KnockbackStrength;
 Knockback->AccumulateMode = ERootMotionAccumulateMode::Override;
 CMC->ApplyRootMotionSource(Knockback);
-`
+```
 
 ---
 
@@ -325,14 +325,14 @@ CMC->ApplyRootMotionSource(Knockback);
 
 ### Gravity Direction (UE 5.4+)
 
-`cpp
+```cpp
 virtual void SetGravityDirection(const FVector& GravityDir);
 FVector GetGravityDirection() const;
 bool HasCustomGravity() const;
 // Transform helpers (fields are protected — access via accessors)
 FQuat GetWorldToGravityTransform() const;
 FQuat GetGravityToWorldTransform() const;
-`
+```
 
 Custom gravity reorients the entire movement simulation. Walking, falling, and floor detection all respect the gravity direction when `HasCustomGravity()` returns `true`.
 
@@ -344,11 +344,11 @@ Custom gravity reorients the entire movement simulation. Walking, falling, and f
 
 ### Jump
 
-`cpp
+```cpp
 void Jump();           // Sets bPressedJump, CMC handles velocity
 void StopJumping();    // Clears jump input
 bool CanJump() const;  // Checks CanJumpInternal
-`
+```
 
 Properties: `bPressedJump`, `JumpMaxHoldTime`, `JumpMaxCount`, `JumpCurrentCount`.
 
@@ -356,34 +356,36 @@ Properties: `bPressedJump`, `JumpMaxHoldTime`, `JumpMaxCount`, `JumpCurrentCount
 
 ### Crouch
 
-`cpp
+```cpp
 void Crouch(bool bClientSimulation = false);
 void UnCrouch(bool bClientSimulation = false);
-bIsCrouched` is the replicated state. CMC handles capsule resizing and checks for clearance before uncrouching. Note: `CrouchedHalfHeight` on CMC is deprecated as of UE 5.0 — use `SetCrouchedHalfHeight()` / `GetCrouchedHalfHeight()` on the CMC instead.
+```
+
+`bIsCrouched` is the replicated state. CMC handles capsule resizing and checks for clearance before uncrouching. Note: `CrouchedHalfHeight` on CMC is deprecated as of UE 5.0 — use `SetCrouchedHalfHeight()` / `GetCrouchedHalfHeight()` on the CMC instead.
 
 ### LaunchCharacter
 
-`cpp
+```cpp
 void LaunchCharacter(FVector LaunchVelocity, bool bXYOverride, bool bZOverride);
-`
+```
 
 When `bXYOverride` is `true`, replaces XY velocity entirely. When `false`, adds to existing velocity. Same logic for `bZOverride` on the Z axis. Automatically transitions to `MOVE_Falling`.
 
 ### Landed
 
-`cpp
+```cpp
 virtual void Landed(const FHitResult& Hit);
-`
+```
 
 Called when the character lands after falling. Override this for landing effects, damage, or animation triggers.
 
 ### Accessors
 
-`cpp
+```cpp
 UCharacterMovementComponent* GetCharacterMovement() const;
 UCapsuleComponent* GetCapsuleComponent() const;
 USkeletalMeshComponent* GetMesh() const;
-`
+```
 
 ---
 
@@ -406,7 +408,7 @@ Character jumping through the ground is a common bug from several compounding fa
 | 7 | **Network misprediction** (multiplayer) | Client predicts landed but server disagrees → correction pulls character through ground |
 
 **Debug step**: Override `FindFloor` in CMC subclass and log `OutFloorResult`:
-`cpp
+```cpp
 void UMyCMC::FindFloor(const FVector& CapsuleLocation,
     FFindFloorResult& OutFloorResult, bool bCanUseCachedLocation,
     const FHitResult* DownwardSweepResult)
@@ -417,7 +419,7 @@ void UMyCMC::FindFloor(const FVector& CapsuleLocation,
         OutFloorResult.FloorDist, OutFloorResult.bBlockingHit,
         OutFloorResult.bWalkableFloor);
 }
-`
+```
 If `FloorDist > 10` with a blocking hit but `bWalkableFloor = false` → walkable floor angle. If no blocking hit at all → collision channel mismatch or thin ground.
 
 **Quick fix order**: Enable physics substepping first → solves 80% of cases. Then check ground thickness → solves another 15%.
@@ -425,16 +427,16 @@ If `FloorDist > 10` with a blocking hit but `bWalkableFloor = false` → walkabl
 ---
 
 **Modifying velocity directly instead of using CalcVelocity:**
-`cpp
+```cpp
 // WRONG: Bypasses friction, braking, and acceleration curves
 Velocity = GetLastInputVector() * MaxWalkSpeed;
 
 // RIGHT: Let CMC handle physics
 CalcVelocity(DeltaTime, GroundFriction, false, BrakingDecelerationWalking);
-`
+```
 
 **Forgetting to call Super in PhysCustom:**
-`cpp
+```cpp
 // WRONG: Skips base class bookkeeping
 void UMyCMC::PhysCustom(float DT, int32 Iter)
 {
@@ -447,7 +449,7 @@ void UMyCMC::PhysCustom(float DT, int32 Iter)
     Super::PhysCustom(DT, Iter);
     MyCustomLogic(DT, Iter);
 }
-`
+```
 
 **Not saving custom state in FSavedMove:**
 Custom movement flags that are not captured in `SetMoveFor` and restored in `PrepMoveFor` will be lost during server correction replays, causing desyncs.

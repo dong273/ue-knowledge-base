@@ -23,7 +23,7 @@ Samples positions, normals, UV coordinates, and bone transforms from a live
 bones or spawn from surface regions.
 
 **Runtime binding from C++**:
-`cpp
+```cpp
 // Preferred: bind by component reference.
 UNiagaraFunctionLibrary::OverrideSystemUserVariableSkeletalMeshComponent(
     NiagaraComp, TEXT("User.SourceMesh"), SkeletalMeshComp
@@ -49,7 +49,7 @@ UNiagaraDataInterfaceSkeletalMesh* SkelDI =
     UNiagaraFunctionLibrary::GetDataInterface<UNiagaraDataInterfaceSkeletalMesh>(
         NiagaraComp, FName("User.SourceMesh")
     );
-`
+```
 
 **Key properties** (set in Niagara editor or via direct DI mutation):
 - `SourceMode` — `Default`, `Source`, `AttachParent`, `DefaultMesh`, `MeshParameterBinding`
@@ -74,7 +74,7 @@ Samples vertex positions, normals, UV coordinates, and socket transforms from a 
 Supports per-section filtering and instanced static mesh instance selection.
 
 **Runtime binding from C++**:
-`cpp
+```cpp
 // Bind by component.
 UNiagaraFunctionLibrary::OverrideSystemUserVariableStaticMeshComponent(
     NiagaraComp, TEXT("User.ScatterMesh"), StaticMeshComp
@@ -89,7 +89,7 @@ UNiagaraFunctionLibrary::OverrideSystemUserVariableStaticMesh(
 UNiagaraDataInterfaceStaticMesh::SetNiagaraStaticMeshDIInstanceIndex(
     NiagaraComp, FName("User.ScatterMesh"), InstanceIndex
 );
-`
+```
 
 **Key properties**:
 - `SourceMode` — `ENDIStaticMesh_SourceMode::Default/Source/AttachParent/DefaultMeshOnly/MeshParameterBinding`
@@ -113,7 +113,9 @@ to Niagara scripts. Internally they build a LUT (look-up table) at load time for
 ### UNiagaraDataInterfaceCurve
 **Header**: `Classes/NiagaraDataInterfaceCurve.h`
 **Niagara type**: "Curve for Floats"
-**Output**: `floatcpp
+**Output**: `float`
+
+```cpp
 // Mutate keys at runtime (rebuilds LUT).
 UNiagaraDataInterfaceCurve* CurveDI =
     UNiagaraFunctionLibrary::GetDataInterface<UNiagaraDataInterfaceCurve>(
@@ -132,20 +134,20 @@ if (CurveDI)
     CurveDI->UpdateLUT();
 #endif
 }
-`
+```
 
 ### UNiagaraDataInterfaceVectorCurve
 **Header**: `Classes/NiagaraDataInterfaceVectorCurve.h`
 **Niagara type**: "Curve for Vectors"
 **Output**: `FVector` (XYZ channels via three `FRichCurve`)
 
-`cpp
+```cpp
 UNiagaraDataInterfaceVectorCurve* VecCurveDI =
     UNiagaraFunctionLibrary::GetDataInterface<UNiagaraDataInterfaceVectorCurve>(
         NiagaraComp, FName("User.VelocityCurve")
     );
 // Properties: XCurve, YCurve, ZCurve (each FRichCurve).
-`
+```
 
 ### UNiagaraDataInterfaceColorCurve
 **Header**: `Classes/NiagaraDataInterfaceColorCurve.h`
@@ -184,17 +186,17 @@ All array DIs derive from `UNiagaraDataInterfaceArray` (`Classes/NiagaraDataInte
 | `UNiagaraDataInterfaceArrayInt32` | `int32` | `Classes/NiagaraDataInterfaceArrayInt.h` |
 
 **Runtime population from C++** (see also `niagara-parameter-types.md` for full method list):
-`cpp
+```cpp
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
 
 TArray<FVector> PositionArray = BuildPositions();
 UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(
     NiagaraComp, FName("User.SpawnPositions"), PositionArray
 );
-`
+```
 
 **Direct property access** (avoids function library overhead for large arrays):
-`cpp
+```cpp
 UNiagaraDataInterfaceArrayFloat* FloatArrayDI =
     UNiagaraFunctionLibrary::GetDataInterface<UNiagaraDataInterfaceArrayFloat>(
         NiagaraComp, FName("User.HeatData")
@@ -206,7 +208,7 @@ if (FloatArrayDI)
     // MarkRenderStateDirty() does not exist on this hierarchy.
     // The engine re-uploads array data automatically on the next simulation tick.
 }
-`
+```
 
 ---
 
@@ -218,11 +220,11 @@ if (FloatArrayDI)
 
 Samples from a `UTexture2D` or `UTextureRenderTarget2D`. Provides `SampleTexture2D(UV)`.
 
-`cpp
+```cpp
 UNiagaraFunctionLibrary::SetTextureObject(NiagaraComp, TEXT("User.FlowTexture"), MyTexture2D);
 // or via SetVariableTexture:
 NiagaraComp->SetVariableTexture(FName("User.FlowTexture"), MyTexture);
-`
+```
 
 ### UNiagaraDataInterface2DArrayTexture
 **Header**: `Classes/NiagaraDataInterface2DArrayTexture.h`
@@ -230,9 +232,9 @@ NiagaraComp->SetVariableTexture(FName("User.FlowTexture"), MyTexture);
 
 Samples from a `UTexture2DArray`.
 
-`cpp
+```cpp
 UNiagaraFunctionLibrary::SetTexture2DArrayObject(NiagaraComp, TEXT("User.TexArray"), MyTexArray);
-`
+```
 
 ### UNiagaraDataInterfaceVolumeTexture
 **Header**: `Classes/NiagaraDataInterfaceVolumeTexture.h`
@@ -240,9 +242,9 @@ UNiagaraFunctionLibrary::SetTexture2DArrayObject(NiagaraComp, TEXT("User.TexArra
 
 Samples from a `UVolumeTexture`.
 
-`cpp
+```cpp
 UNiagaraFunctionLibrary::SetVolumeTextureObject(NiagaraComp, TEXT("User.DensityVol"), MyVolumeTexture);
-`
+```
 
 ### UNiagaraDataInterfaceCubeTexture
 **Header**: `Classes/NiagaraDataInterfaceCubeTexture.h`
@@ -302,7 +304,7 @@ Allows Niagara particles to perform physics collision traces. CPU mode executes 
 traces; GPU mode uses hardware ray tracing (HWRT) when available.
 
 For GPU HWRT, manage collision groups from C++:
-`cpp
+```cpp
 // Assign a collision group to a primitive so GPU particles can filter against it.
 UNiagaraFunctionLibrary::SetComponentNiagaraGPURayTracedCollisionGroup(
     this, MyPrimitiveComp, CollisionGroupIndex
@@ -312,7 +314,7 @@ UNiagaraFunctionLibrary::SetComponentNiagaraGPURayTracedCollisionGroup(
 int32 GroupIdx = UNiagaraFunctionLibrary::AcquireNiagaraGPURayTracedCollisionGroup(this);
 // ... assign and use ...
 UNiagaraFunctionLibrary::ReleaseNiagaraGPURayTracedCollisionGroup(this, GroupIdx);
-`
+```
 
 ### UNiagaraDataInterfaceAsyncGpuTrace
 **Header**: `Classes/NiagaraDataInterfaceAsyncGpuTrace.h`
@@ -412,7 +414,7 @@ without direct C++ coupling. Writers push data into a named channel; readers con
 Allows Niagara to export particle attributes back to C++ via an interface callback. Implement
 `INiagaraParticleCallbackHandler` on your UObject to receive per-particle data:
 
-`cpp
+```cpp
 // Your class must implement INiagaraParticleCallbackHandler.
 #include "NiagaraDataInterfaceExport.h"
 
@@ -425,7 +427,7 @@ public:
         UNiagaraSystem* NiagaraSystem,
         const FVector& SimulationPositionOffset) override;
 };
-`
+```
 
 ---
 

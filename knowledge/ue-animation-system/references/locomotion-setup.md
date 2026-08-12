@@ -14,7 +14,7 @@ Source headers referenced:
 
 ## AnimInstance: Locomotion Properties
 
-`cpp
+```cpp
 // LocomotionAnimInstance.h
 #pragma once
 #include "Animation/AnimInstance.h"
@@ -79,7 +79,9 @@ private:
     float PreviousActorYaw = 0.f;
     float LeanVelocity = 0.f;
 };
-cpp
+```
+
+```cpp
 // LocomotionAnimInstance.cpp
 #include "LocomotionAnimInstance.h"
 #include "GameFramework/Character.h"
@@ -143,7 +145,7 @@ void ULocomotionAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     LeanAmount = FMath::FInterpTo(LeanAmount, TargetLean,
         DeltaSeconds, LeanInterpSpeed);
 }
-`
+```
 
 ---
 
@@ -165,12 +167,12 @@ Samples:
 | 600   | Run_Fwd         |
 
 Interpolation (from `FInterpolationParameter`):
-`
+```
 InterpolationTime = 0.15
 InterpolationType = SpringDamper
 DampingRatio      = 1.0
 MaxSpeed          = 0.0  (unclamped)
-`
+```
 
 In the AnimGraph, a **Blend Space 1D Player** node:
 - Asset: `BS_GroundLocomotion1D`
@@ -189,23 +191,23 @@ In the AnimGraph, a **Blend Space 1D Player** node:
 
 Sample layout (Direction x Speed):
 
-`
+```
 Direction\Speed |  0 (Idle) | 200 (Walk) | 600 (Run)
 ----------------+-----------+------------+-----------
      0 (Fwd)    | Idle      | Walk_Fwd   | Run_Fwd
     90 (Right)  | Idle      | Walk_Right | Run_Right
    -90 (Left)   | Idle      | Walk_Left  | Run_Left
    180 (Bwd)    | Idle      | Walk_Bwd   | Run_Bwd
-`
+```
 
 Idle is the same animation at all direction values and Speed=0; it is defined
 at four direction points so the blend falls back to it cleanly.
 
 Interpolation per axis:
-`
+```
 X (Direction): InterpolationTime=0.10, InterpolationType=SpringDamper
 Y (Speed):     InterpolationTime=0.15, InterpolationType=SpringDamper
-`
+```
 
 In the AnimGraph, a **Blend Space Player** node:
 - Asset: `BS_GroundLocomotion2D`
@@ -246,11 +248,11 @@ In the AnimGraph:
 
 ### States
 
-`
+```
 [Entry] --> [Idle] --> [Walk/Run] --> [Idle]
                  \--> [Jump Start] --> [In Air] --> [Land] --> [Idle]
                  \--> [Crouch Idle] --> [Crouch Walk] --> [Crouch Idle]
-`
+```
 
 ### State Definitions
 
@@ -308,7 +310,7 @@ nears completion.
 
 ## AnimGraph Structure
 
-`
+```
 [Output Pose]
     |
 [Layered Blend Per Bone]  <-- upper body slot for montages
@@ -318,7 +320,7 @@ nears completion.
 [Aim Offset]        <-- aim yaw/pitch additive
     |
 [Locomotion Blend Space Player]
-`
+```
 
 ### Full AnimGraph Node Order (Bottom to Top)
 
@@ -352,12 +354,12 @@ In the AnimGraph:
 
 The montage must target the `UpperBody` slot. In C++:
 
-`cpp
+```cpp
 // Play on UpperBody slot only
 AnimInst->Montage_Play(AttackMontage);
 // AttackMontage must have its anim tracks assigned to the 'UpperBody' slot
 // in the montage editor (SlotAnimTracks[0].SlotName = "UpperBody")
-`
+```
 
 ---
 
@@ -365,7 +367,7 @@ AnimInst->Montage_Play(AttackMontage);
 
 Bind C++ logic to state transitions without Blueprint:
 
-`cpp
+```cpp
 // In ULocomotionAnimInstance::NativeInitializeAnimation()
 
 // Transition rule
@@ -385,7 +387,9 @@ AddNativeStateEntryBinding(
     FOnGraphStateChanged::CreateUObject(
         this, &ULocomotionAnimInstance::OnLandStateEntered)
 );
-cpp
+```
+
+```cpp
 bool ULocomotionAnimInstance::CanStartMoving() const
 {
     return GroundSpeed > IdleSpeedThreshold && !bIsInAir;
@@ -402,7 +406,7 @@ void ULocomotionAnimInstance::OnLandStateEntered(
         // UGameplayStatics::PlayWorldCameraShake(...);
     }
 }
-`
+```
 
 ---
 
@@ -425,7 +429,7 @@ the **Output Pose** (after any additive overlays).
 
 ### Layer Implementations
 
-`cpp
+```cpp
 // GroundLocomotionLayer.h — implements LocomotionLayerInterface
 UCLASS()
 class MYGAME_API UGroundLocomotionLayer : public UAnimInstance
@@ -441,11 +445,11 @@ class MYGAME_API UClimbingLocomotionLayer : public UAnimInstance
     GENERATED_BODY()
     // Separate state machine / sequences for climbing
 };
-`
+```
 
 ### Swapping at Runtime
 
-`cpp
+```cpp
 void AMyCharacter::EnterClimbing()
 {
     if (UAnimInstance* AnimInst = GetMesh()->GetAnimInstance())
@@ -463,7 +467,7 @@ void AMyCharacter::ExitClimbing()
         // AnimInst->LinkAnimClassLayers(nullptr);
     }
 }
-`
+```
 
 The transition is automatically inertially blended when an **Inertialization**
 node is placed in the main AnimGraph.
@@ -480,10 +484,10 @@ will inertialize the transition using the blend duration configured on the
 
 To request inertialization from C++:
 
-`cpp
+```cpp
 // Request a 0.2s inertialized blend for all slots in the "DefaultGroup"
 AnimInst->RequestSlotGroupInertialization(FName("DefaultGroup"), 0.2f);
-`
+```
 
 ---
 
@@ -497,17 +501,17 @@ AnimInst->RequestSlotGroupInertialization(FName("DefaultGroup"), 0.2f);
 | `RootMotionFromEverything`  | All animations contribute root motion to component       |
 
 For typical third-person games with CharacterMovementComponent:
-`cpp
+```cpp
 // In Character BP defaults or constructor:
 GetMesh()->GetAnimInstance()->RootMotionMode =
     ERootMotionMode::RootMotionFromMontagesOnly;
-`
+```
 
 In the `AnimInstance` class default:
-`cpp
+```cpp
 // Set in class constructor or CDO:
 RootMotionMode = ERootMotionMode::RootMotionFromMontagesOnly;
-`
+```
 
 For multiplayer, pair `RootMotionFromMontagesOnly` with GAS montage replication
 so the server's `CharacterMovementComponent` processes root motion authoritatively.

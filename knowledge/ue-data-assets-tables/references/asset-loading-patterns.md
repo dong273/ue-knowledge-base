@@ -8,22 +8,22 @@ Reference guide for async loading, `FStreamableManager`, load grouping, and hand
 
 `FStreamableManager` is a member of `UAssetManager`. Do not create your own instances in game code — share the one owned by the Asset Manager.
 
-`cpp
+```cpp
 // Preferred access (UE5):
 FStreamableManager& SM = UAssetManager::GetStreamableManager();
 // Equivalent to: UAssetManager::Get().StreamableManager
-`
+```
 
 Module dependency required in `Build.cs`:
-`csharp
+```csharp
 PublicDependencyModuleNames.AddRange(new string[] { "Engine", "AssetManager" });
-`
+```
 
 ---
 
 ## Pattern 1: Single Asset, Callback on Completion
 
-`cpp
+```cpp
 // Header
 TSharedPtr<FStreamableHandle> LoadHandle;
 
@@ -50,7 +50,7 @@ void AMyCharacter::OnWeaponMeshReady()
     // Handle can now be released; assets stay in memory while referenced by component.
     LoadHandle.Reset();
 }
-`
+```
 
 ---
 
@@ -58,7 +58,7 @@ void AMyCharacter::OnWeaponMeshReady()
 
 Load a batch and receive one callback when all are ready.
 
-`cpp
+```cpp
 void UMyLoadSystem::LoadUIAssets(const TArray<TSoftObjectPtr<UTexture2D>>& IconRefs)
 {
     TArray<FSoftObjectPath> Paths;
@@ -90,7 +90,7 @@ void UMyLoadSystem::OnUIAssetsLoaded()
         if (Icon) { /* bind to widget */ }
     }
 }
-`
+```
 
 ---
 
@@ -98,7 +98,7 @@ void UMyLoadSystem::OnUIAssetsLoaded()
 
 For assets needed immediately (e.g., during level transition):
 
-`cpp
+```cpp
 // Option A: RequestSyncLoad — blocks until done.
 // Use only for small assets or during loading screens.
 TSharedPtr<FStreamableHandle> Handle = SM.RequestSyncLoad(
@@ -113,13 +113,13 @@ if (LoadHandle.IsValid() && LoadHandle->IsLoadingInProgress())
 {
     LoadHandle->WaitUntilComplete(5.f); // Timeout seconds; 0 = wait forever.
 }
-`
+```
 
 ---
 
 ## Pattern 4: Lambda Callback with Captured State
 
-`cpp
+```cpp
 FPrimaryAssetId AssetId(TEXT("WeaponDefinition"), TEXT("DA_Rifle"));
 
 TSharedPtr<FStreamableHandle> Handle = UAssetManager::Get().LoadPrimaryAsset(
@@ -134,7 +134,7 @@ TSharedPtr<FStreamableHandle> Handle = UAssetManager::Get().LoadPrimaryAsset(
             EquipWeapon(Def);
         }
     }));
-`
+```
 
 Important: Lambdas capturing `this` are not safe if the object is destroyed before the callback fires. Use `CreateUObject` (which checks object validity) or guard with `IsValid(this)`.
 
@@ -142,7 +142,7 @@ Important: Lambdas capturing `this` are not safe if the object is destroyed befo
 
 ## Pattern 5: Progress Tracking
 
-`cpp
+```cpp
 void UMyLoadingScreen::StartLoadWithProgress(const TArray<FSoftObjectPath>& Assets)
 {
     FStreamableManager& SM = UAssetManager::GetStreamableManager();
@@ -168,7 +168,7 @@ void UMyLoadingScreen::OnLoadComplete()
     LoadHandle.Reset();
     HideLoadingScreen();
 }
-`
+```
 
 ---
 
@@ -176,7 +176,7 @@ void UMyLoadingScreen::OnLoadComplete()
 
 Bundle state transitions are the recommended way to manage groups of related assets across gameplay states.
 
-`cpp
+```cpp
 UAssetManager& AM = UAssetManager::Get();
 
 // Get all weapon IDs.
@@ -198,7 +198,7 @@ AM.ChangeBundleStateForPrimaryAssets(
 AM.ChangeBundleStateForMatchingPrimaryAssets(
     { TEXT("UI") },     // NewBundles
     { TEXT("Game") });  // OldBundles (removes these)
-`
+```
 
 ---
 
@@ -217,14 +217,14 @@ AM.ChangeBundleStateForMatchingPrimaryAssets(
 - `ReleaseHandle()` is deferred if called before the completion callback fires; callback still runs.
 - `CancelHandle()` cancels immediately — completion callback is NOT called; cancel callback is called if bound.
 
-`cpp
+```cpp
 // Cancellation with a cancel callback.
 Handle->BindCancelDelegate(FStreamableDelegate::CreateLambda([]()
 {
     UE_LOG(LogTemp, Warning, TEXT("Load was canceled."));
 }));
 Handle->CancelHandle();
-`
+```
 
 ---
 
@@ -232,7 +232,7 @@ Handle->CancelHandle();
 
 When multiple independent loads should be tracked as one unit:
 
-`cpp
+```cpp
 TSharedPtr<FStreamableHandle> HandleA = SM.RequestAsyncLoad(PathA, {});
 TSharedPtr<FStreamableHandle> HandleB = SM.RequestAsyncLoad(PathB, {});
 
@@ -243,7 +243,7 @@ Merged->BindCompleteDelegate(FStreamableDelegate::CreateLambda([]()
 {
     // Both A and B are loaded.
 }));
-`
+```
 
 ---
 
@@ -251,17 +251,17 @@ Merged->BindCompleteDelegate(FStreamableDelegate::CreateLambda([]()
 
 From `Engine/StreamableManager.h` (namespace `UE::StreamableManager::Private`):
 
-`cpp
+```cpp
 constexpr TAsyncLoadPriority DefaultAsyncLoadPriority = 0;
 constexpr TAsyncLoadPriority AsyncLoadHighPriority     = 100;
-`
+```
 
 Pass priority to `RequestAsyncLoad`:
-`cpp
+```cpp
 SM.RequestAsyncLoad(
     Paths, Delegate,
     UE::StreamableManager::Private::AsyncLoadHighPriority);
-`
+```
 
 ---
 
@@ -269,7 +269,7 @@ SM.RequestAsyncLoad(
 
 ### Releasing Handle Before Using Loaded Assets
 
-`cpp
+```cpp
 // BAD: assets may be GC'd immediately after Reset().
 SM.RequestAsyncLoad(Path, [this]() {
     LoadHandle.Reset(); // released inside callback
@@ -281,11 +281,11 @@ SM.RequestAsyncLoad(Path, [this]() {
     MeshComp->SetStaticMesh(MeshSoft.Get()); // component holds the ref
     LoadHandle.Reset();                      // safe to release now
 });
-`
+```
 
 ### Calling LoadSynchronous in Tick
 
-`cpp
+```cpp
 // BAD: stalls every frame if asset not cached.
 void AMyActor::Tick(float DeltaTime)
 {
@@ -293,14 +293,14 @@ void AMyActor::Tick(float DeltaTime)
 }
 
 // GOOD: start async load once, use result only after callback.
-`
+```
 
 ### Ignoring Load Errors
 
-`cpp
+```cpp
 // Always check after callback:
 if (Handle->HasError())
 {
     UE_LOG(LogTemp, Error, TEXT("One or more assets failed to load."));
 }
-`
+```
