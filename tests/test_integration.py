@@ -5,41 +5,12 @@ Uses a deterministic fake embedder so the full ChromaDB pipeline
 without touching HuggingFace or downloading the ~100MB BGE model.
 """
 
-import hashlib
-import math
-
-import numpy as np
 import pytest
 
 from ue_knowledge.build import build_index
 from ue_knowledge.query import query
 
-DIM = 64
-
-
-class FakeEmbedder:
-    """Deterministic bag-of-words embedder: words map to fixed dimensions.
-
-    Texts sharing words get similar vectors (like a real semantic embedder),
-    so query -> hit assertions are meaningful, not random.
-    """
-
-    def __init__(self):
-        self.max_seq_length = 512
-
-    def get_sentence_embedding_dimension(self) -> int:
-        return DIM
-
-    def encode(self, texts, **kwargs):
-        out = []
-        for t in texts:
-            v = [0.0] * DIM
-            for word in t.lower().split():
-                idx = hashlib.md5(word.encode("utf-8")).digest()[0] % DIM
-                v[idx] += 1.0
-            norm = math.sqrt(sum(x * x for x in v))
-            out.append([x / norm for x in v] if norm > 0 else v)
-        return np.asarray(out, dtype=np.float32)
+from fake_embedder import FakeEmbedder
 
 
 @pytest.fixture

@@ -7,6 +7,28 @@ from . import config
 from .chunking import collect_markdown
 
 
+def _embedding_dimension(model) -> int:
+    """Resolve the embedding dimension across SentenceTransformers versions.
+
+    Newer versions expose the dimension on the transformer module
+    (``model[0].get_sentence_embedding_dimension()``); legacy versions and
+    test embedders expose ``SentenceTransformer.get_sentence_embedding_dimension()``.
+    """
+    try:
+        for module in model:
+            fn = getattr(module, "get_sentence_embedding_dimension", None)
+            if callable(fn):
+                return int(fn())
+    except (TypeError, AttributeError):
+        pass
+    fn = getattr(model, "get_sentence_embedding_dimension", None)
+    if callable(fn):
+        return int(fn())
+    raise RuntimeError(
+        f"cannot determine embedding dimension for {type(model).__name__}"
+    )
+
+
 def build_index(
     source_dir: Path | None = None,
     chroma_dir: Path | None = None,
@@ -59,7 +81,7 @@ def build_index(
 
     print(f"[*] Loading model: {model_name}")
     model = embedder
-    print(f"    Embedding dim: {model.get_sentence_embedding_dimension()}")
+    print(f"    Embedding dim: {_embedding_dimension(model)}")
 
     print(f"[*] Reading corpus: {source}")
     documents = collect_markdown(source)

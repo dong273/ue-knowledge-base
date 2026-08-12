@@ -19,7 +19,7 @@
 
 覆盖：Gameplay Ability System、角色移动、动画、AI 导航、网络/复制、UMG/Slate、
 Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模块构建系统、
-编辑器工具……（完整 31 主题见 `knowledge/`）
+编辑器工具……（完整 31 主题随包分发，见 `ue_knowledge/knowledge/`）
 
 ## 特点
 
@@ -91,8 +91,8 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb info` | 查看索引统计（文档数、目录） | `ue-kb info` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
-| `--db <dir>` | 自定义索引目录（Windows 中文路径请用纯英文目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
-| `--source <dir>` | 自定义语料目录 | `ue-kb build --source my-docs/` |
+| `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
+| `--source <dir>` | 自定义语料目录（默认：包内内置语料） | `ue-kb build --source my-docs/` |
 | `--model <name>` | 自定义 embedding 模型 | `ue-kb query "..." --model BAAI/bge-large-zh-v1.5` |
 | `--force` | 已存在索引时强制重建 | `ue-kb build --force` |
 | `--online` | 允许模型缺失时联网下载（默认离线） | `ue-kb build --online` |
@@ -118,11 +118,15 @@ for hit in query("GAS 冷却", top_k=5):
 
 ## 扩展语料
 
-语料可以自行扩充：
+内置语料随包分发，但你可以在不修改包的情况下扩充：
 
-1. 在 `knowledge/<topic>/` 下新增 Markdown 文档（用 `##`/`###` 标题，索引器按标题边界切块）；
-2. `ue-kb build --append` 把新增文档加入索引，无需全量重建；
+1. 在任意本地目录下新增 Markdown 文档（用 `##`/`###` 标题，索引器按标题边界切块）；
+2. `ue-kb build --append --source my-docs/` 把新增文档加入索引，无需全量重建；
 3. 也可以直接索引任意本地 `.md` 目录：`ue-kb build --source my-docs/`。
+
+> 源码贡献者注意：随包发布的语料位于
+> `src/ue_knowledge/knowledge/`，由 `scripts/publish_from_hermes.py` 重新生成
+> （见 `docs/sync-guide.md`）——请勿手工编辑。
 
 如需索引 **UE 引擎 C++ 头文件注释** 或 **Epic 官方文档**，参见
 `scripts/index_engine_source.py` 与 `scripts/crawl_epic_docs.py`（需要本地引擎
@@ -130,6 +134,12 @@ for hit in query("GAS 冷却", top_k=5):
 
 ## FAQ
 
+- **索引默认存在哪里？** — 向量库默认放在用户数据目录（Windows:
+  `%LOCALAPPDATA%\ue-knowledge-base\chroma_db`；macOS:
+  `~/Library/Application Support/ue-knowledge-base/chroma_db`；Linux:
+  `$XDG_DATA_HOME/ue-knowledge-base/chroma_db`），`pip install` 后绝不会
+  尝试写入 `site-packages`。可用 `ue-kb build --db <dir>` 或环境变量
+  `UE_KB_CHROMA_DIR` 覆盖。
 - **Windows 下报 `Cannot open header file`？** — hnswlib 无法在含非 ASCII 字符
   的路径（中文用户名/文件夹）下打开索引文件。CLI 会提前拒绝并给出提示：请使用
   纯英文索引目录，如 `ue-kb build --db C:/uekb/.chroma_db`。语料目录本身无限制。

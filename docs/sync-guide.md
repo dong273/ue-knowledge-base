@@ -1,15 +1,17 @@
-# Publishing Guide — keep `knowledge/` in sync with Hermes skills
+# Publishing Guide — keep `src/ue_knowledge/knowledge/` in sync with Hermes skills
 
-`knowledge/` is a **sanitized public mirror** of the local Hermes UE skill
-library. The single source of truth is:
+`src/ue_knowledge/knowledge/` is a **sanitized public mirror** of the local
+Hermes UE skill library. It ships inside the installed package (package
+data), so it is part of the published artifact — the single source of truth
+is:
 
 ```
 ~/AppData/Local/hermes/skills/ue/<topic>/
 ```
 
-**Never hand-edit files under `knowledge/`.** The previous manual pass
-corrupted the corpus (broken code fences, `.agents/` sentence leftovers,
-eaten multi-line YAML descriptions). Everything must go through
+**Never hand-edit files under `src/ue_knowledge/knowledge/`.** The previous
+manual pass corrupted the corpus (broken code fences, `.agents/` sentence
+leftovers, eaten multi-line YAML descriptions). Everything must go through
 `scripts/publish_from_hermes.py`.
 
 ## When to publish
@@ -35,18 +37,28 @@ Exclusions handled by the script:
 
 ```bash
 # Broken fences: single-backtick + language tag at line start
-grep -rnE '^`(csharp|cpp|python|bash|json|text|py|c|h|sh)$' knowledge/ | wc -l   # 0
+grep -rnE '^`(csharp|cpp|python|bash|json|text|py|c|h|sh)$' src/ue_knowledge/knowledge/ | wc -l   # 0
 # Orphan single-backtick lines
-grep -rn '^`$' knowledge/ | wc -l                                                 # 0
+grep -rn '^`$' src/ue_knowledge/knowledge/ | wc -l                                                 # 0
 # Internal project-context read directives
-grep -rn '\.agents/' knowledge/ | grep -v 'ue-project-context' | wc -l            # 0
+grep -rn '\.agents/' src/ue_knowledge/knowledge/ | grep -v 'ue-project-context' | wc -l            # 0
 # Agent persona lines
-grep -rn "You are an expert" knowledge/ | wc -l                                   # 0
+grep -rn "You are an expert" src/ue_knowledge/knowledge/ | wc -l                                   # 0
 # Fence parity with the source skill tree (per file)
 grep -c '^```' <knowledge file>  ==  grep -c '^```' <source SKILL.md/reference>
 ```
 
-### 3. Update README numbers
+### 3. Verify the package gate (must all pass)
+
+After any corpus change, the release gate must stay green (CI runs it):
+
+```bash
+python -m build                                   # build wheel + sdist
+python scripts/verify_package.py dist/*.whl       # corpus in wheel == source corpus (hashes)
+python -m pytest tests/                           # incl. default-corpus tests (86 files / 1,455 chunks)
+```
+
+### 4. Update README numbers
 
 `README.md` + `README.zh-CN.md`:
 
@@ -54,10 +66,10 @@ grep -c '^```' <knowledge file>  ==  grep -c '^```' <source SKILL.md/reference>
 - searchable chunk count only after a local `build_ue_knowledge.py` run —
   never guess it
 
-### 4. Commit & push (behind the Clash 7897 proxy)
+### 5. Commit & push (behind the Clash 7897 proxy)
 
 ```bash
-git add scripts/ knowledge/ README.md README.zh-CN.md
+git add scripts/ src/ue_knowledge/knowledge/ README.md README.zh-CN.md
 git commit -m "fix(publish): ..."
 git push origin main
 ```

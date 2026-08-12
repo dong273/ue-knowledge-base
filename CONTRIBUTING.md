@@ -2,13 +2,14 @@
 
 Thanks for considering a contribution to **ue-knowledge-base**!
 
-> **Maintainers:** `knowledge/` is regenerated from the local Hermes skill
-> library by `scripts/publish_from_hermes.py` — see
+> **Maintainers:** `src/ue_knowledge/knowledge/` is regenerated from the
+> local Hermes skill library by `scripts/publish_from_hermes.py` — see
 > [docs/sync-guide.md](docs/sync-guide.md) before touching it.
 
 ## Ways to contribute
 
-- **Content**: add or improve UE knowledge documents under `knowledge/`
+- **Content**: add or improve UE knowledge documents under
+  `src/ue_knowledge/knowledge/`
   (any topic — GAS, animation, AI, networking, UMG, Niagara, PCG, ...).
   Each doc is plain Markdown; keep headings semantic (`##` per section) since
   the index chunks on heading boundaries.

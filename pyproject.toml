@@ -1,14 +1,14 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ue-knowledge-base"
-version = "0.4.0"
+version = "0.4.1"
 description = "Offline semantic search over Unreal Engine development knowledge (BGE + ChromaDB)"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Dong" }]
 keywords = ["unreal-engine", "rag", "semantic-search", "chromadb", "knowledge-base"]
 dependencies = [
@@ -28,6 +28,16 @@ dependencies = [
 
 [project.scripts]
 ue-kb = "ue_knowledge.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+license-files = ["LICENSE"]
+
+# The bundled corpus ships inside the package: the same knowledge/ tree is
+# used by source checkouts, wheels and sdists (no build-time copying or
+# duplicate maintenance). Never exclude these from package data.
+[tool.setuptools.package-data]
+ue_knowledge = ["knowledge/**/*.md"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

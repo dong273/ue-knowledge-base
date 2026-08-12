@@ -21,5 +21,28 @@ jobs:
           cache: pip
       - name: Install
         run: pip install -e .
-      - name: Unit tests (chunking + CLI)
+      - name: Unit tests (chunking + CLI + default paths)
         run: pip install pytest && pytest tests/ -v
+
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Build wheel + sdist
+        run: |
+          pip install build
+          python -m build
+      - name: Release gate — corpus in artifact == source corpus
+        run: python scripts/verify_package.py dist/*.whl dist/*.tar.gz
+      - name: Fresh venv, install from wheel only
+        run: |
+          python -m venv fresh
+          fresh/bin/pip install dist/*.whl
+          fresh/bin/pip install pytest
+      - name: Installed-wheel suite (default corpus + new-process round trip)
+        run: fresh/bin/python -m pytest tests/ -v

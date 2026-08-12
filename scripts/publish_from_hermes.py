@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Publish Hermes UE skills -> public knowledge/ corpus (sanitized).
+"""Publish Hermes UE skills -> public package corpus (sanitized).
 
 Source of truth: ~/AppData/Local/hermes/skills/ue/<topic>/
-Output:         <repo>/knowledge/<topic>/
+Output:         <repo>/src/ue_knowledge/knowledge/<topic>/
+                (package data — the corpus ships inside the wheel/sdist)
 
 Why this exists: the previous publish pass was done by hand and corrupted the
 corpus (code fences ``` -> `, leftover ".agents/" sentence fragments, and
@@ -45,7 +46,7 @@ from pathlib import Path
 
 SKILLS_SRC = Path.home() / "AppData/Local/hermes/skills/ue"
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUT = REPO_ROOT / "knowledge"
+OUT = REPO_ROOT / "src/ue_knowledge/knowledge"
 
 # Topic where .agents/ mentions are subject matter, not internal reads
 AGENTS_IS_CONTENT = {"ue-project-context"}

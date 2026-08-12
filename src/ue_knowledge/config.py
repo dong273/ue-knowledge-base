@@ -1,6 +1,7 @@
 """Shared configuration: default paths and the embedding model name."""
 
 import os
+import sys
 from pathlib import Path
 
 # Default model — English-first corpus (81/86 docs are English), small and
@@ -8,12 +9,30 @@ from pathlib import Path
 # and rebuild for better Chinese retrieval precision.
 MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
-# Repo root (…/ue-knowledge-base)
-REPO_ROOT = Path(__file__).resolve().parents[2]
+# The corpus ships INSIDE the package as package data, so the default source
+# dir resolves identically for source checkouts, wheels and sdists — no
+# repo-root path guessing (which broke after `pip install` because the
+# installed package has no repo root).
+DEFAULT_SOURCE_DIR = Path(__file__).resolve().parent / "knowledge"
 
-# Default corpus + vector store locations inside the repo.
-DEFAULT_SOURCE_DIR = REPO_ROOT / "knowledge"
-DEFAULT_CHROMA_DIR = REPO_ROOT / ".chroma_db"
+
+def _default_chroma_dir() -> Path:
+    """User-writable data directory for the vector store.
+
+    Never inside site-packages: a wheel install must not try to write into
+    Python's Lib/ or site-packages (read-only for normal users).
+    """
+    if os.name == "nt":
+        base = os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local"
+    elif sys.platform == "darwin":
+        base = Path.home() / "Library" / "Application Support"
+    else:
+        base = os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share"
+    return Path(base) / "ue-knowledge-base" / "chroma_db"
+
+
+# Default vector store location (user data dir).
+DEFAULT_CHROMA_DIR = _default_chroma_dir()
 
 # ChromaDB collection name.
 COLLECTION_NAME = "ue_knowledge"
@@ -67,5 +86,6 @@ def check_ascii_path(p: Path, what: str) -> None:
         raise AsciiPathError(
             f"{what} 路径包含非 ASCII 字符（hnswlib 在 Windows 上无法打开此类路径）:\n"
             f"    {s}\n"
-            f"    请改用纯英文路径，例如: C:/uekb/.chroma_db"
+            f"    请改用纯英文路径，例如: C:/uekb/.chroma_db（可通过 "
+            f"--db 或 UE_KB_CHROMA_DIR 覆盖）"
         )

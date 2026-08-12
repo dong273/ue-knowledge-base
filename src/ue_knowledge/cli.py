@@ -159,9 +159,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_build = sub.add_parser("build", help="build the vector index from knowledge/")
-    p_build.add_argument("--source", help="corpus dir (default: repo knowledge/)")
-    p_build.add_argument("--db", help="chroma dir (default: repo .chroma_db/)")
+    p_build = sub.add_parser("build", help="build the vector index from the corpus")
+    p_build.add_argument("--source", help="corpus dir (default: bundled package corpus)")
+    p_build.add_argument("--db", help="chroma dir (default: user data dir)")
     p_build.add_argument("--model", default=config.MODEL_NAME, help="embedding model")
     p_build.add_argument("--force", action="store_true", help="rebuild even if index exists")
     p_build.add_argument("--append", action="store_true", help="add only new chunks (idempotent)")
