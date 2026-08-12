@@ -4,7 +4,7 @@
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> A local semantic knowledge base for UE development: 83 original Chinese
+> A local semantic knowledge base for UE development: 86 original Chinese
 > documents, indexed with BGE embeddings + ChromaDB. Download the ~100MB
 > model once, then search fully offline on a laptop CPU — no API costs.
 
@@ -12,7 +12,7 @@
 
 | Problem | Status quo | This project |
 |---|---|---|
-| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 29 topics, **83 structured original documents**, one search away |
+| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **86 structured original documents**, one search away |
 | **LLMs hallucinate UE APIs** | Generic models blur the UE 5.4 vs 5.7 differences and hand you "looks right" code | Documents are distilled from **real project work**, with **copy-pasteable C++ patterns** checked against specific engine versions |
 | **Cloud RAG costs money & leaks code** | Every query ships your game code to an API and bills you per token | **100% local, zero API cost** — code never leaves your machine |
 | **English-only docs are a tax** | Official docs are English; translation loses context and terminology | **Native Chinese corpus + Chinese-first embeddings** — Chinese queries hit best |
@@ -20,11 +20,11 @@
 Covers: Gameplay Ability System, character movement, animation, AI navigation,
 networking/replication, UMG/Slate, Niagara, Mass Entity, State Trees, PCG,
 materials/rendering, module build system, editor tools, and more
-(full 29-topic list under `knowledge/`).
+(full 31-topic list under `knowledge/`).
 
 ## Highlights
 
-- 83 original Chinese docs, indexed into **1,424 searchable chunks** — content
+- 86 original Chinese docs, indexed into **1,538 searchable chunks** — content
   distilled from actual project work
 - Real Chinese query → top-1 at **60.5% similarity** (see actual output below)
 - No API key, no tokens, no server — `pip install` and go

@@ -50,6 +50,10 @@ OUT = REPO_ROOT / "knowledge"
 # Topic where .agents/ mentions are subject matter, not internal reads
 AGENTS_IS_CONTENT = {"ue-project-context"}
 
+# Topics NEVER published (project-private). D1 decision 2026-08-12:
+# ue-baihechubu-pipeline contains internal project pipeline info.
+EXCLUDED_TOPICS = {"ue-baihechubu-pipeline"}
+
 DROP_LINE_RE = [
     re.compile(r"^You are an? .*expert.*$", re.I),
     re.compile(r"^Ask the developer.*$", re.I),
@@ -153,6 +157,9 @@ def main() -> None:
 
     stats = {"skills": 0, "refs": 0, "skipped": 0}
     for topic in sorted(p for p in SKILLS_SRC.iterdir() if p.is_dir()):
+        if topic.name in EXCLUDED_TOPICS:
+            stats["skipped"] += 1
+            continue
         if topics and topic.name not in topics:
             continue
         for src in sorted(topic.rglob("*.md")):

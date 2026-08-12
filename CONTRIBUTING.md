@@ -2,6 +2,10 @@
 
 Thanks for considering a contribution to **ue-knowledge-base**!
 
+> **Maintainers:** `knowledge/` is regenerated from the local Hermes skill
+> library by `scripts/publish_from_hermes.py` — see
+> [docs/sync-guide.md](docs/sync-guide.md) before touching it.
+
 ## Ways to contribute
 
 - **Content**: add or improve UE knowledge documents under `knowledge/`

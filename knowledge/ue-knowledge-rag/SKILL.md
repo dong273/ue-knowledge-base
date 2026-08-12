@@ -1,6 +1,6 @@
 ---
 title: ue-knowledge-rag
-description: Semantic search over the UE knowledge base (29 skills + 11 engine modules' API + Epic official docs = 9,471 chunks). Locally indexed with BAAI/bge-small-zh-v1.5 + ChromaDB. Zero API cost, fully offline. Do UE tasks → query KB first for context.
+description: Semantic search over the UE knowledge base (32 skills + 11 engine modules' API + Epic official docs). Locally indexed with BAAI/bge-small-zh-v1.5 + ChromaDB. Zero API cost, fully offline. Do UE tasks → query KB first for context.
 tags: [ue, knowledge, rag, search, semantic]
 ---
 
@@ -8,8 +8,8 @@ tags: [ue, knowledge, rag, search, semantic]
 
 ## 数据源
 ### Layer 1: UE 技能文档（Hermes Skills）
-- 29 个 UE 技能文档（SKILL.md + references/*.md）
-- 84 个 .md 文件，1,425 个知识片段
+- 32 个 UE 技能文档（SKILL.md + references/*.md）
+- 96 个 .md 文件，1,538 个知识片段
 - 范围：GAS、动画、物理、AI、UMG、网络、PCG、Niagara 等
 
 ### Layer 2: UE 引擎源码注释（Engine Source）
@@ -48,10 +48,10 @@ tags: [ue, knowledge, rag, search, semantic]
 ### 全量统计
 | 层级 | 来源 | 文档数 |
 |------|------|--------|
-| Layer 1 | 29 UE 技能文档 | 1,425 |
+| Layer 1 | 32 UE 技能文档 | 1,538 |
 | Layer 2 | 引擎 C++ API 源码注释（11 模块） | ~7,862 |
-| Layer 3 | Epic 官方文档 | ~360 |
-| **总计** | | **~9,471 文档片段** |
+| Layer 3 | Epic 官方文档 | 354 |
+| **总计** | | **9,574 文档片段** |
 
 ### 存储与模型
 - Vector DB: `~/AppData/Local/hermes/ue-knowledge/chroma_db/`
