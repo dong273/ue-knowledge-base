@@ -4,9 +4,9 @@
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> A local semantic knowledge base for UE development: 86 original Chinese
-> documents, indexed with BGE embeddings + ChromaDB. Download the ~100MB
-> model once, then search fully offline on a laptop CPU — no API costs.
+> A local semantic knowledge base for UE development: 86 original documents
+> (81 English, 5 bilingual), indexed with BGE embeddings + ChromaDB. Download
+> the ~100MB model once, then search fully offline on a laptop CPU — no API costs.
 
 ## Why this exists
 
@@ -15,7 +15,7 @@
 | **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **86 structured original documents**, one search away |
 | **LLMs hallucinate UE APIs** | Generic models blur the UE 5.4 vs 5.7 differences and hand you "looks right" code | Documents are distilled from **real project work**, with **copy-pasteable C++ patterns** checked against specific engine versions |
 | **Cloud RAG costs money & leaks code** | Every query ships your game code to an API and bills you per token | **100% local, zero API cost** — code never leaves your machine |
-| **English-only docs are a tax** | Official docs are English; translation loses context and terminology | **Native Chinese corpus + Chinese-first embeddings** — Chinese queries hit best |
+| **Docs lose fidelity in translation** | Translated or re-summarized docs blur UE terminology and drift from actual engine behavior | **Original English corpus** — written in the engine's own language, nothing lost in translation; bilingual topics keep Chinese queries working |
 
 Covers: Gameplay Ability System, character movement, animation, AI navigation,
 networking/replication, UMG/Slate, Niagara, Mass Entity, State Trees, PCG,
@@ -24,9 +24,9 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 86 original Chinese docs, indexed into **1,455 searchable chunks** — content
+- 86 original docs (81 English, 5 bilingual), indexed into **1,455 searchable chunks** — content
   distilled from actual project work
-- Real Chinese query → top-1 at **60.5% similarity** (see actual output below)
+- Real query → top-1 at **75.1% similarity** (see actual output below)
 - No API key, no tokens, no server — `pip install` and go
 - Embedding + retrieval happen locally; code never leaves your machine
 - Every command supports `--json`; patterns for Hermes / Claude Code /
@@ -43,26 +43,24 @@ pip install ue-knowledge-base   # install
 ue-kb download-model            # one-time ~100MB model (auto-falls back to hf-mirror)
 ue-kb build                     # build the index (~1 min, fully offline from here)
 ue-kb query "GAS ability cooldown"
-ue-kb query "角色移动 速度衰减" --json   # JSON output for agents
+ue-kb query "Niagara particle collision" --json   # JSON output for agents
 ```
 
 ## Real query output
 
 ```text
-$ ue-kb query "GAS 技能冷却"
-🔍 UE 知识库检索：GAS 技能冷却
+$ ue-kb query "GAS ability cooldown"
+🔍 UE 知识库检索：GAS ability cooldown
 
-[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 60.5%)
+[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 75.1%)
     ## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，
     容易陷入两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的
     事件模型，且 `CommitAbility` 的 GC 延迟影响跳跃手感 - **全直调** → 绕过 GAS，
     失去标签阻断、冷却、属性驱动的 BUFF/DEBUFF...
-[2] ue-gameplay-abilities/references/gas-input-integration.md › Jump — GAS 即时技能 (匹配度: 57.1%)
-    ### Jump — GAS 即时技能
-    `cpp void AMyCharacter::OnJumpStarted() {
-        if (AbilitySystem)
-            AbilitySystem->TryActivateAbilityByClass(UGA_Jump::StaticClass());
-    } // GA_Jump.cpp ...
+[2] ue-animation-system/SKILL.md › GAS Integration — PlayMontageAndWait (匹配度: 74.5%)
+    ### GAS Integration — PlayMontageAndWait
+    ```cpp // GAS ability task — PlayMontageAndWait (requires GameplayAbilities module)
+    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWai...
 ```
 
 Hits include usable C++ patterns, not just related text.

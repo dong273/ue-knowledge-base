@@ -3,8 +3,10 @@
 import os
 from pathlib import Path
 
-# Default model — small, multilingual (Chinese-friendly), runs on CPU.
-MODEL_NAME = "BAAI/bge-small-zh-v1.5"
+# Default model — English-first corpus (81/86 docs are English), small and
+# runs on CPU. Chinese speakers can override with --model BAAI/bge-small-zh-v1.5
+# and rebuild for better Chinese retrieval precision.
+MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
 # Repo root (…/ue-knowledge-base)
 REPO_ROOT = Path(__file__).resolve().parents[2]

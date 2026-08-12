@@ -34,8 +34,10 @@ Agent-side workflow:
 Recommendations:
 
 - `--top-k 3–5` is the sweet spot; more adds noise.
-- Query in Chinese for best results — the corpus is Chinese and
-  `bge-small-zh-v1.5` is a Chinese-first embedding model.
+- Query in English for best results — the corpus is 81/86 English and the
+  default `bge-small-en-v1.5` embedder is English-first. Chinese queries
+  still work on bilingual topics; rebuild with `--model BAAI/bge-small-zh-v1.5`
+  for Chinese-first retrieval.
 - Prefer `--json` over the human format; the human format is for terminals.
 - If the index does not exist yet: `ue-kb build` (one-time, ~1 min on CPU).
 
@@ -60,7 +62,7 @@ Query the local UE knowledge base for grounded answers.
 
 ## Procedure
 
-1. Run: `ue-kb query "<question in Chinese>" --top-k 5 --json`
+1. Run: `ue-kb query "<question>" --top-k 5 --json`
 2. If it errors with "索引不存在", run `ue-kb build` first, then retry.
 3. Ground the answer in the top hits; cite `source › heading`.
 4. If no hit scores above ~0.4, say the knowledge base has no coverage and

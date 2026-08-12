@@ -1,10 +1,10 @@
-# UE Knowledge Base — 中文 UE 开发者的本地语义知识库
+# UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
 
 [![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> 面向中文 UE 开发者的本地语义知识库：86 篇原创中文文档，
+> 面向 UE 开发者的本地语义知识库：86 篇原创文档（81 篇英文、5 篇中英混合），
 > 配合本地向量检索（BGE + ChromaDB）。模型一次下载（约 100MB）后
 > 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
@@ -12,10 +12,10 @@
 
 | 痛点 | 常见现状 | 这个项目 |
 |---|---|---|
-| **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 31 个主题、86 篇**结构化原创中文文档**，一次检索直达答案 |
+| **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 31 个主题、86 篇**结构化原创文档**，一次检索直达答案 |
 | **LLM 会幻觉 UE API** | 通用模型分不清 UE 5.4 和 5.7 的 API 差异，给你"看起来对"的代码 | 文档来自真实项目实践，包含**可直接使用的 C++ 模式**，并针对特定引擎版本校验 |
 | **云 RAG 花钱 + 泄代码** | 每次查询都把你的代码片段发给云端 API，还要按 token 计费 | **完全本地运行，零 API 成本**——游戏代码一行都不会离开你的机器 |
-| **英文文档阅读成本高** | 官方文档全是英文，翻译丢上下文，专有名词对不上 | **原生中文语料 + 中文优先的 embedding**，中文提问命中率最高 |
+| **翻译丢保真度** | 翻译/转述文档会模糊 UE 术语、偏离真实引擎行为 | **原创英文语料**（引擎本身的语言，无翻译损耗）+ 混合主题支持中文查询 |
 
 覆盖：Gameplay Ability System、角色移动、动画、AI 导航、网络/复制、UMG/Slate、
 Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模块构建系统、
@@ -23,8 +23,8 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 ## 特点
 
-- 86 篇原创中文文档，共 **1455 个检索块**，内容来自实际项目实践
-- 中文查询实测 top-1 命中 **60.5% 相似度**（见下方真实输出）
+- 86 篇原创文档（81 英文、5 中英混合），共 **1455 个检索块**，内容来自实际项目实践
+- 查询实测 top-1 命中 **75.1% 相似度**（见下方真实输出）
 - 无 API key、无 token 计费，`pip install` 后即可使用
 - embedding 与检索全部在本地完成，代码不会离开你的机器
 - 所有命令支持 `--json` 输出，可接入 Hermes / Claude Code / OpenCode 等 Agent
@@ -38,27 +38,25 @@ pip install ue-knowledge-base   # 安装
 
 ue-kb download-model            # 下载模型（约 100MB，仅一次；官方源失败自动切 hf-mirror）
 ue-kb build                     # 构建索引（约 1 分钟，之后完全离线）
-ue-kb query "GAS 技能冷却"       # 语义检索
-ue-kb query "角色移动 速度衰减" --json   # JSON 输出，给 Agent 用
+ue-kb query "GAS ability cooldown"   # 语义检索
+ue-kb query "Niagara particle collision" --json   # JSON 输出，给 Agent 用
 ```
 
 ## 真实查询示例（实测输出）
 
 ```text
-$ ue-kb query "GAS 技能冷却"
-🔍 UE 知识库检索：GAS 技能冷却
+$ ue-kb query "GAS ability cooldown"
+🔍 UE 知识库检索：GAS ability cooldown
 
-[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 60.5%)
+[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 75.1%)
     ## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，
     容易陷入两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的
     事件模型，且 `CommitAbility` 的 GC 延迟影响跳跃手感 - **全直调** → 绕过 GAS，
     失去标签阻断、冷却、属性驱动的 BUFF/DEBUFF...
-[2] ue-gameplay-abilities/references/gas-input-integration.md › Jump — GAS 即时技能 (匹配度: 57.1%)
-    ### Jump — GAS 即时技能
-    `cpp void AMyCharacter::OnJumpStarted() {
-        if (AbilitySystem)
-            AbilitySystem->TryActivateAbilityByClass(UGA_Jump::StaticClass());
-    } // GA_Jump.cpp ...
+[2] ue-animation-system/SKILL.md › GAS Integration — PlayMontageAndWait (匹配度: 74.5%)
+    ### GAS Integration — PlayMontageAndWait
+    ```cpp // GAS ability task — PlayMontageAndWait (requires GameplayAbilities module)
+    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWai...
 ```
 
 检索结果直接包含可用的 C++ 写法，不只是相关文字。
