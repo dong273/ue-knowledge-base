@@ -21,9 +21,6 @@ def chunk_markdown(text: str, source: str, min_chars: int = 100, max_chars: int 
                 "text": chunk_text,
                 "source": source,
                 "heading": buffer_heading,
-                "id": hashlib.md5(
-                    f"{source}:{buffer_heading}:{chunk_text[:50]}".encode()
-                ).hexdigest() + f":{len(chunks)}",
             })
 
     for line in lines:
@@ -44,6 +41,15 @@ def chunk_markdown(text: str, source: str, min_chars: int = 100, max_chars: int 
             merged[-1]["heading"] += " / " + c["heading"]
         else:
             merged.append(c)
+
+    # Ids are content-hash based and MUST be assigned after merging: ids
+    # computed pre-merge would not change when new content is absorbed into
+    # an existing chunk, silently breaking `--append` (new content never
+    # indexed). Hash the FULL merged text so any edit re-ids the chunk.
+    for i, c in enumerate(merged):
+        c["id"] = hashlib.md5(
+            f"{c['source']}:{c['heading']}:{c['text']}".encode()
+        ).hexdigest() + f":{i}"
 
     return merged
 

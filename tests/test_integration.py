@@ -109,9 +109,11 @@ def test_append_only_adds_new_chunks(corpus, tmp_path):
     """--append semantics: only new chunk ids are indexed; idempotent."""
     import chromadb
 
+    from ue_knowledge.config import chroma_settings
+
     db = tmp_path / "chroma"
     build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
-    client = chromadb.PersistentClient(path=str(db))
+    client = chromadb.PersistentClient(path=str(db), settings=chroma_settings())
     col = client.get_collection("ue_knowledge")
     n1 = col.count()
 
@@ -140,3 +142,39 @@ def test_append_only_adds_new_chunks(corpus, tmp_path):
         model_name="fake", embedder=FakeEmbedder(),
     )
     assert "new.md" in results[0]["source"]
+
+
+def test_append_indexes_content_merged_into_existing_chunk(corpus, tmp_path):
+    """Regression: a short new section (< 200 chars) gets merged into an
+    existing chunk; the merged chunk must be re-id'd, otherwise --append
+    silently drops the new content from the index."""
+    import chromadb
+
+    from ue_knowledge.config import chroma_settings
+
+    db = tmp_path / "chroma"
+    build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
+    client = chromadb.PersistentClient(path=str(db), settings=chroma_settings())
+    n1 = client.get_collection("ue_knowledge").count()
+
+    # ~140 chars: passes min_chars but stays under the 200-char merge threshold
+    doc = corpus / "topic" / "doc.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8")
+        + "\n## NewShort\n\nshort but meaningful addition about stamina drain "
+        + "and movement speed decay that gets absorbed into the previous chunk\n",
+        encoding="utf-8",
+    )
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake",
+        embedder=FakeEmbedder(), append=True,
+    )
+    n2 = client.get_collection("ue_knowledge").count()
+    assert n2 > n1
+
+    # the merged-in content is actually queryable
+    results = query(
+        "stamina drain movement speed", top_k=1, chroma_dir=db,
+        model_name="fake", embedder=FakeEmbedder(),
+    )
+    assert "doc.md" in results[0]["source"]

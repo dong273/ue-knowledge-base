@@ -23,7 +23,7 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 ## 特点
 
-- 86 篇原创中文文档，共 **1538 个检索块**，内容来自实际项目实践
+- 86 篇原创中文文档，共 **1455 个检索块**，内容来自实际项目实践
 - 中文查询实测 top-1 命中 **60.5% 相似度**（见下方真实输出）
 - 无 API key、无 token 计费，`pip install` 后即可使用
 - embedding 与检索全部在本地完成，代码不会离开你的机器
@@ -140,8 +140,9 @@ for hit in query("GAS 冷却", top_k=5):
 - **构建成功但查询说索引不存在？** — 索引目录被移动/删除，或 `chromadb` 升级
   改了存储格式。`ue-kb build --force` 重建即可（`chromadb>=0.5,<1.0` 已自动
   规避 1.x Rust 后端无法重载自身 HNSW 索引的问题）。
-- **stderr 有两行 telemetry 报错？** — `posthog` 与 chromadb 0.6.x 的版本
-  兼容噪音，已通过 pin `posthog<4` 消除，不影响任何功能。
+- **stderr 有 telemetry 报错？** — chromadb 0.6.x 的 telemetry 已在代码层
+  显式关闭（`anonymized_telemetry=False`），与安装的 posthog 版本无关，
+  不会再输出噪音。
 
 ## License
 

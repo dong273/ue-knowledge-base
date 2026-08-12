@@ -16,8 +16,9 @@ dependencies = [
     # chromadb 1.x 的 Rust 后端无法重新加载自己构建的 HNSW 索引
     # （Error loading hnsw index），pin 在 0.x 稳定后端
     "chromadb>=0.5,<1.0",
-    # posthog 7.x 重构了 capture() API（capture(event, **kwargs)），
-    # 与 chromadb 0.6.x 的调用不兼容（stderr 报 TypeError 噪音），pin 旧版
+    # posthog 是 chromadb 0.6.x 的 telemetry 依赖；pin 旧版避免 API 不兼容
+    # 噪音。真正的抑制在代码层（config.chroma_settings() 关闭 telemetry）：
+    # resolver 不会对已装的高版本 posthog 降级，单靠 pin 拦不住。
     "posthog>=2.4,<4",
     # transformers 5.x + tokenizers 0.23.1 组合在运行时
     # require_version 检查会失败（pip 元数据解析却通过），pin 到 4.x

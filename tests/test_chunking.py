@@ -29,3 +29,16 @@ def test_ids_unique():
     chunks = chunk_markdown(doc, source="u.md", min_chars=50)
     ids = [c["id"] for c in chunks]
     assert len(ids) == len(set(ids))
+
+
+def test_append_merge_changes_id():
+    """Regression: content absorbed into an existing chunk must re-id that
+    chunk, or --append would silently skip the new content (ids are
+    content-hash based and must be assigned AFTER merging)."""
+    base = f"# A\n\n{LONG}\n\n## B\n\n{LONG}"
+    extended = base + "\n## C\n\nshort but new content absorbed into B"
+    c1 = chunk_markdown(base, source="t.md", min_chars=10)
+    c2 = chunk_markdown(extended, source="t.md", min_chars=10)
+    assert len(c2) == 2  # C is merged into the B chunk
+    assert c2[0]["id"] == c1[0]["id"]   # unchanged chunk keeps its id
+    assert c2[1]["id"] != c1[1]["id"]   # merged chunk must get a new id

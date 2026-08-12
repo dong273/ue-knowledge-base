@@ -24,7 +24,7 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 86 original Chinese docs, indexed into **1,538 searchable chunks** — content
+- 86 original Chinese docs, indexed into **1,455 searchable chunks** — content
   distilled from actual project work
 - Real Chinese query → top-1 at **60.5% similarity** (see actual output below)
 - No API key, no tokens, no server — `pip install` and go
@@ -150,8 +150,9 @@ locally and **not redistributed**, out of respect for Epic's copyright).
   directory was moved/deleted, or a `chromadb` upgrade changed the format.
   Rebuild with `ue-kb build --force` (`chromadb>=0.5,<1.0` is pinned to avoid
   the 1.x Rust backend that cannot reload its own HNSW index).
-- **Two harmless telemetry lines on stderr?** — a `posthog`/chromadb 0.6.x
-  version quirk; pinned `posthog<4` suppresses it. No functional impact.
+- **Telemetry noise on stderr?** — chromadb 0.6.x product telemetry is
+  disabled at the settings level (`anonymized_telemetry=False`), so no
+  posthog lines are printed regardless of the installed posthog version.
 
 ## License
 

@@ -34,7 +34,9 @@ def query(
     # Verify the index exists BEFORE loading the model: gives a precise,
     # model-independent error for a missing index (and works without any
     # model cached, which is what CI exercises).
-    client = chromadb.PersistentClient(path=str(chroma))
+    client = chromadb.PersistentClient(
+        path=str(chroma), settings=config.chroma_settings()
+    )
     try:
         collection = client.get_collection(config.COLLECTION_NAME)
     except chromadb.errors.InvalidCollectionException as e:

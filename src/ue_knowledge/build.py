@@ -64,11 +64,20 @@ def build_index(
     print(f"[*] Reading corpus: {source}")
     documents = collect_markdown(source)
     if not documents:
-        raise RuntimeError("no markdown documents found in corpus")
+        md_files = list(source.rglob("*.md"))
+        if not md_files:
+            raise RuntimeError(f"corpus contains no markdown files: {source}")
+        raise RuntimeError(
+            f"corpus has {len(md_files)} markdown file(s) but zero chunks: "
+            "every section is shorter than min_chars=100 and was filtered. "
+            "Write longer sections, or run with a corpus of real documents."
+        )
     print(f"    {len(documents)} chunks")
 
     chroma.mkdir(parents=True, exist_ok=True)
-    client = chromadb.PersistentClient(path=str(chroma))
+    client = chromadb.PersistentClient(
+        path=str(chroma), settings=config.chroma_settings()
+    )
 
     if force:
         try:

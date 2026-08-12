@@ -37,6 +37,22 @@ class AsciiPathError(ValueError):
     """Raised when an index/corpus path contains non-ASCII characters."""
 
 
+def chroma_settings():
+    """ChromaDB client settings with product telemetry explicitly OFF.
+
+    chromadb 0.6.x sends product telemetry through posthog, and the
+    capture() call signature differs across posthog majors — resolvers
+    routinely install posthog 7.x (pins are not enforced on already-
+    installed packages), which prints a noisy stderr traceback on every
+    build/query ("capture() takes 1 positional argument but 3 were
+    given"). Disabling telemetry at the settings level silences this
+    regardless of which posthog version is installed.
+    """
+    import chromadb
+
+    return chromadb.config.Settings(anonymized_telemetry=False)
+
+
 def check_ascii_path(p: Path, what: str) -> None:
     """Reject non-ASCII paths early.
 
