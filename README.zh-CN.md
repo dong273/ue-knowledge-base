@@ -4,7 +4,7 @@
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> 面向 UE 开发者的本地语义知识库：86 篇原创文档（81 篇英文、5 篇中英混合），
+> 面向 UE 开发者的本地语义知识库：86 篇原创文档（79 篇英文、7 篇中英混合），
 > 配合本地混合检索（BGE + BM25 + ChromaDB）。模型一次下载（约 100MB）后
 > 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
@@ -23,7 +23,7 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 ## 特点
 
-- 86 篇原创文档（81 英文、5 中英混合），使用 Markdown-aware 分块，
+- 86 篇原创文档（79 英文、7 中英混合），使用 Markdown-aware 分块，
   每块最多 384 个 embedding tokens；精确块数由发布验证脚本动态生成和校验
 - 中英 UE 术语扩展 + 向量/BM25 RRF 融合；最终 124 条黄金查询门禁在发布机器上
   中文 held-out Recall@3 达到 **96.8%**，英文达到 **100%**

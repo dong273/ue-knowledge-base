@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > A local semantic knowledge base for UE development: 86 original documents
-> (81 English, 5 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
+> (79 English, 7 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
 > the ~100MB model once, then search fully offline on a laptop CPU — no API costs.
 
 ## Why this exists
@@ -24,7 +24,7 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 86 original docs (81 English, 5 bilingual), split into Markdown-aware chunks
+- 86 original docs (79 English, 7 bilingual), split into Markdown-aware chunks
   of at most 384 embedding tokens; the release verifier generates and checks
   the exact chunk count instead of keeping a stale number in this README
 - Chinese terminology expansion + vector/BM25 RRF fusion; the final 124-query
