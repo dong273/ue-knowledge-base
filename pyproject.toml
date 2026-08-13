@@ -4,11 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ue-knowledge-base"
-version = "0.4.1"
-description = "Offline semantic search over Unreal Engine development knowledge (BGE + ChromaDB)"
+version = "0.5.0"
+description = "Offline hybrid search over Unreal Engine development knowledge (BGE + BM25 + ChromaDB)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Dong" }]
 keywords = ["unreal-engine", "rag", "semantic-search", "chromadb", "knowledge-base"]
 dependencies = [
@@ -31,16 +32,20 @@ ue-kb = "ue_knowledge.cli:main"
 
 [tool.setuptools]
 include-package-data = true
-license-files = ["LICENSE"]
 
 # The bundled corpus ships inside the package: the same knowledge/ tree is
 # used by source checkouts, wheels and sdists (no build-time copying or
 # duplicate maintenance). Never exclude these from package data.
 [tool.setuptools.package-data]
-ue_knowledge = ["knowledge/**/*.md"]
+ue_knowledge = ["knowledge/**/*.md", "glossary.json"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    "error::FutureWarning:ue_knowledge.*",
+    "error::DeprecationWarning:ue_knowledge.*",
+    "ignore:Accessing the 'model_fields' attribute on the instance is deprecated:pydantic.warnings.PydanticDeprecatedSince211:chromadb.types",
+]

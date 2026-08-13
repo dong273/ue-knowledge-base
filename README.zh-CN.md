@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > 面向 UE 开发者的本地语义知识库：86 篇原创文档（81 篇英文、5 篇中英混合），
-> 配合本地向量检索（BGE + ChromaDB）。模型一次下载（约 100MB）后
+> 配合本地混合检索（BGE + BM25 + ChromaDB）。模型一次下载（约 100MB）后
 > 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
 ## 为什么你需要它
@@ -23,8 +23,10 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 ## 特点
 
-- 86 篇原创文档（81 英文、5 中英混合），共 **1455 个检索块**，内容来自实际项目实践
-- 查询实测 top-1 命中 **75.1% 相似度**（见下方真实输出）
+- 86 篇原创文档（81 英文、5 中英混合），使用 Markdown-aware 分块，
+  每块最多 384 个 embedding tokens；精确块数由发布验证脚本动态生成和校验
+- 中英 UE 术语扩展 + 向量/BM25 RRF 融合；最终 124 条黄金查询门禁在发布机器上
+  中文 held-out Recall@3 达到 **96.8%**，英文达到 **100%**
 - 无 API key、无 token 计费，`pip install` 后即可使用
 - embedding 与检索全部在本地完成，代码不会离开你的机器
 - 所有命令支持 `--json` 输出，可接入 Hermes / Claude Code / OpenCode 等 Agent
@@ -40,23 +42,21 @@ ue-kb download-model            # 下载模型（约 100MB，仅一次；官方�
 ue-kb build                     # 构建索引（约 1 分钟，之后完全离线）
 ue-kb query "GAS ability cooldown"   # 语义检索
 ue-kb query "Niagara particle collision" --json   # JSON 输出，给 Agent 用
+ue-kb query "GAS cooldown" --profile vector       # 回退到 0.4 纯向量行为
 ```
 
-## 真实查询示例（实测输出）
+## 查询示例
 
 ```text
 $ ue-kb query "GAS ability cooldown"
 🔍 UE 知识库检索：GAS ability cooldown
 
-[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 75.1%)
-    ## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，
-    容易陷入两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的
-    事件模型，且 `CommitAbility` 的 GC 延迟影响跳跃手感 - **全直调** → 绕过 GAS，
-    失去标签阻断、冷却、属性驱动的 BUFF/DEBUFF...
-[2] ue-animation-system/SKILL.md › GAS Integration — PlayMontageAndWait (匹配度: 74.5%)
-    ### GAS Integration — PlayMontageAndWait
-    ```cpp // GAS ability task — PlayMontageAndWait (requires GameplayAbilities module)
-    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWai...
+[1] ue-gameplay-abilities/references/ue5.7-api-migration.md › Cooldown GE Tag Workaround (匹配度: 100.0%)
+    Since GrantedTags is removed from the GE constructor, cooldown tags must be
+    set via DynamicGrantedTags at spec-application time...
+[2] ue-gameplay-abilities/SKILL.md › GAS Architecture Overview (匹配度: 99.0%)
+    GAS has three pillars that live on UAbilitySystemComponent (ASC): abilities,
+    effects, and attributes...
 ```
 
 检索结果直接包含可用的 C++ 写法，不只是相关文字。
@@ -86,9 +86,10 @@ ue-kb query "GAS ability cooldown"
 | 命令 | 说明 | 示例 |
 | --- | --- | --- |
 | `ue-kb build` | 切块 + embedding 建立索引 | `ue-kb build --force` |
-| `ue-kb build --append` | 增量索引：只处理新增文档，已有内容保持不变；日常扩充语料无需全量重建 | `ue-kb build --append` |
-| `ue-kb query "..."` | 语义检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
-| `ue-kb info` | 查看索引统计（文档数、目录） | `ue-kb info` |
+| `ue-kb build --append` | 快照同步：新增、替换编辑内容并删除 stale chunks | `ue-kb build --append` |
+| `ue-kb query "..."` | 默认混合检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
+| `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
+| `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
 | `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
@@ -120,8 +121,8 @@ for hit in query("GAS 冷却", top_k=5):
 
 内置语料随包分发，但你可以在不修改包的情况下扩充：
 
-1. 在任意本地目录下新增 Markdown 文档（用 `##`/`###` 标题，索引器按标题边界切块）；
-2. `ue-kb build --append --source my-docs/` 把新增文档加入索引，无需全量重建；
+1. 在任意本地目录下新增或编辑 Markdown 文档（token-aware 分块器不会把代码围栏内的标题当成章节）；
+2. `ue-kb build --append --source my-docs/` 通过新的原子 generation 同步新增、编辑和删除；
 3. 也可以直接索引任意本地 `.md` 目录：`ue-kb build --source my-docs/`。
 
 > 源码贡献者注意：随包发布的语料位于
@@ -145,8 +146,9 @@ for hit in query("GAS 冷却", top_k=5):
   纯英文索引目录，如 `ue-kb build --db C:/uekb/.chroma_db`。语料目录本身无限制。
 - **国内下载模型慢？** — `ue-kb download-model` 官方源失败时自动经
   `hf-mirror.com` 镜像重试，无需代理或手动 `HF_ENDPOINT`。
-- **构建成功但查询说索引不存在？** — 索引目录被移动/删除，或 `chromadb` 升级
-  改了存储格式。`ue-kb build --force` 重建即可（`chromadb>=0.5,<1.0` 已自动
+- **构建成功但查询说索引不存在？** — 索引目录被移动/删除，或它是 0.5 之前的
+  旧 schema。运行 `ue-kb build --force` 重建；构建失败不会切走旧 generation
+  （`chromadb>=0.5,<1.0` 已自动
   规避 1.x Rust 后端无法重载自身 HNSW 索引的问题）。
 - **stderr 有 telemetry 报错？** — chromadb 0.6.x 的 telemetry 已在代码层
   显式关闭（`anonymized_telemetry=False`），与安装的 posthog 版本无关，

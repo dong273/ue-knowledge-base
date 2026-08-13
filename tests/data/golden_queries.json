@@ -1,0 +1,157 @@
+[
+  {"topic":"ue-actor-component-architecture","queries":[
+    {"language":"en","split":"heldout","text":"Actor component lifecycle BeginPlay order"},
+    {"language":"en","split":"tune","text":"CreateDefaultSubobject scene component attachment"},
+    {"language":"zh","split":"heldout","text":"Actor组件生命周期 BeginPlay 顺序"},
+    {"language":"zh","split":"tune","text":"场景组件创建和挂接"}]},
+  {"topic":"ue-ai-navigation","queries":[
+    {"language":"en","split":"heldout","text":"Behavior Tree blackboard task pattern"},
+    {"language":"en","split":"tune","text":"EQS NavMesh pathfinding"},
+    {"language":"zh","split":"heldout","text":"行为树黑板任务怎么写"},
+    {"language":"zh","split":"tune","text":"EQS 导航网格寻路"}]},
+  {"topic":"ue-animation-system","queries":[
+    {"language":"en","split":"heldout","text":"AnimInstance locomotion state machine"},
+    {"language":"en","split":"tune","text":"animation montage notify"},
+    {"language":"zh","split":"heldout","text":"动画蓝图移动状态机"},
+    {"language":"zh","split":"tune","text":"蒙太奇通知怎么用"}]},
+  {"topic":"ue-async-threading","queries":[
+    {"language":"en","split":"heldout","text":"UE Tasks game thread dispatch"},
+    {"language":"en","split":"tune","text":"FRunnable thread safety lock"},
+    {"language":"zh","split":"heldout","text":"异步任务切回游戏线程"},
+    {"language":"zh","split":"tune","text":"后台线程安全和锁"}]},
+  {"topic":"ue-audio-system","queries":[
+    {"language":"en","split":"heldout","text":"MetaSound spatial audio attenuation"},
+    {"language":"en","split":"tune","text":"AudioComponent music manager"},
+    {"language":"zh","split":"heldout","text":"MetaSound 空间音频衰减"},
+    {"language":"zh","split":"tune","text":"音频组件音乐管理"}]},
+  {"topic":"ue-character-movement","queries":[
+    {"language":"en","split":"heldout","text":"CharacterMovementComponent braking deceleration"},
+    {"language":"en","split":"tune","text":"custom movement mode FSavedMove"},
+    {"language":"zh","split":"heldout","text":"角色移动速度衰减"},
+    {"language":"zh","split":"tune","text":"自定义移动模式网络预测"}]},
+  {"topic":"ue-code-review","queries":[
+    {"language":"en","split":"heldout","text":"UE C++ code review garbage collection"},
+    {"language":"en","split":"tune","text":"replication collision code review checklist"},
+    {"language":"zh","split":"heldout","text":"UE C++ 代码审查垃圾回收"},
+    {"language":"zh","split":"tune","text":"复制碰撞代码评审清单"}]},
+  {"topic":"ue-cpp-foundations","queries":[
+    {"language":"en","split":"heldout","text":"UPROPERTY UObject garbage collection"},
+    {"language":"en","split":"tune","text":"delegates TArray TMap"},
+    {"language":"zh","split":"heldout","text":"UPROPERTY 对象垃圾回收"},
+    {"language":"zh","split":"tune","text":"委托和容器用法"}]},
+  {"topic":"ue-data-assets-tables","queries":[
+    {"language":"en","split":"heldout","text":"DataAsset DataTable data driven design"},
+    {"language":"en","split":"tune","text":"TSoftObjectPtr async asset loading"},
+    {"language":"zh","split":"heldout","text":"数据资产和数据表"},
+    {"language":"zh","split":"tune","text":"软引用异步加载资源"}]},
+  {"topic":"ue-editor-tools","queries":[
+    {"language":"en","split":"heldout","text":"Editor Utility Widget batch assets"},
+    {"language":"en","split":"tune","text":"detail customization property editor"},
+    {"language":"zh","split":"heldout","text":"编辑器工具批量处理资产"},
+    {"language":"zh","split":"tune","text":"细节面板属性定制"}]},
+  {"topic":"ue-game-features","queries":[
+    {"language":"en","split":"heldout","text":"Game Feature plugin activation"},
+    {"language":"en","split":"tune","text":"Lyra experience modular gameplay"},
+    {"language":"zh","split":"heldout","text":"游戏功能插件激活"},
+    {"language":"zh","split":"tune","text":"Lyra 体验模块化玩法"}]},
+  {"topic":"ue-gameplay-abilities","queries":[
+    {"language":"en","split":"heldout","text":"GameplayEffect cooldown ability"},
+    {"language":"en","split":"tune","text":"AttributeSet Enhanced Input ability binding"},
+    {"language":"zh","split":"heldout","text":"技能冷却 GameplayEffect"},
+    {"language":"zh","split":"tune","text":"属性集和增强输入绑定技能"}]},
+  {"topic":"ue-gameplay-framework","queries":[
+    {"language":"en","split":"heldout","text":"GameMode GameState authority"},
+    {"language":"en","split":"tune","text":"PlayerController Pawn spawning"},
+    {"language":"zh","split":"heldout","text":"游戏模式和游戏状态职责"},
+    {"language":"zh","split":"tune","text":"玩家控制器生成 Pawn"}]},
+  {"topic":"ue-input-system","queries":[
+    {"language":"en","split":"heldout","text":"Enhanced Input mapping context"},
+    {"language":"en","split":"tune","text":"InputAction Hold Tap trigger"},
+    {"language":"zh","split":"heldout","text":"增强输入映射上下文"},
+    {"language":"zh","split":"tune","text":"输入动作长按触发"}]},
+  {"topic":"ue-knowledge-rag","queries":[
+    {"language":"en","split":"heldout","text":"knowledge base semantic search"},
+    {"language":"en","split":"tune","text":"RAG query optimization retrieval"},
+    {"language":"zh","split":"heldout","text":"知识库语义检索"},
+    {"language":"zh","split":"tune","text":"RAG 查询优化"}]},
+  {"topic":"ue-mass-entity","queries":[
+    {"language":"en","split":"heldout","text":"Mass Entity processor fragment"},
+    {"language":"en","split":"tune","text":"FMassEntityQuery archetype chunk"},
+    {"language":"zh","split":"heldout","text":"Mass实体处理器和片段"},
+    {"language":"zh","split":"tune","text":"海量实体查询原型"}]},
+  {"topic":"ue-materials-rendering","queries":[
+    {"language":"en","split":"heldout","text":"dynamic material instance parameter"},
+    {"language":"en","split":"tune","text":"post process Lumen rendering"},
+    {"language":"zh","split":"heldout","text":"动态材质实例参数"},
+    {"language":"zh","split":"tune","text":"后处理和 Lumen 渲染"}]},
+  {"topic":"ue-module-build-system","queries":[
+    {"language":"en","split":"heldout","text":"Build.cs module dependency"},
+    {"language":"en","split":"tune","text":"unresolved external symbol API macro"},
+    {"language":"zh","split":"heldout","text":"Build.cs 模块依赖"},
+    {"language":"zh","split":"tune","text":"链接错误和 API 宏"}]},
+  {"topic":"ue-networking-replication","queries":[
+    {"language":"en","split":"heldout","text":"replication RPC server authority"},
+    {"language":"en","split":"tune","text":"DOREPLIFETIME RepNotify"},
+    {"language":"zh","split":"heldout","text":"网络复制 RPC 服务器权限"},
+    {"language":"zh","split":"tune","text":"属性复制和通知"}]},
+  {"topic":"ue-niagara-effects","queries":[
+    {"language":"en","split":"heldout","text":"Niagara particle system parameter"},
+    {"language":"en","split":"tune","text":"Niagara data interface skeletal mesh"},
+    {"language":"zh","split":"heldout","text":"Niagara 粒子系统参数"},
+    {"language":"zh","split":"tune","text":"Niagara 数据接口骨骼网格"}]},
+  {"topic":"ue-physics-collision","queries":[
+    {"language":"en","split":"heldout","text":"line trace collision channel"},
+    {"language":"en","split":"tune","text":"OnHit overlap Chaos physics"},
+    {"language":"zh","split":"heldout","text":"射线检测碰撞通道"},
+    {"language":"zh","split":"tune","text":"碰撞命中和重叠事件"}]},
+  {"topic":"ue-plugin-installation","queries":[
+    {"language":"en","split":"heldout","text":"install GitHub Unreal plugin"},
+    {"language":"en","split":"tune","text":"project plugin versus engine plugin"},
+    {"language":"zh","split":"heldout","text":"安装 GitHub 虚幻插件"},
+    {"language":"zh","split":"tune","text":"项目插件和引擎插件区别"}]},
+  {"topic":"ue-procedural-generation","queries":[
+    {"language":"en","split":"heldout","text":"PCG procedural generation graph"},
+    {"language":"en","split":"tune","text":"ProceduralMesh HISM terrain"},
+    {"language":"zh","split":"heldout","text":"PCG 程序化生成图"},
+    {"language":"zh","split":"tune","text":"程序化网格和实例地形"}]},
+  {"topic":"ue-project-context","queries":[
+    {"language":"en","split":"heldout","text":"create UE project context document"},
+    {"language":"en","split":"tune","text":"share project setup with agents"},
+    {"language":"zh","split":"heldout","text":"创建虚幻项目上下文文档"},
+    {"language":"zh","split":"tune","text":"让智能体记住项目设置"}]},
+  {"topic":"ue-project-creation","queries":[
+    {"language":"en","split":"heldout","text":"create Unreal Engine project CLI"},
+    {"language":"en","split":"tune","text":"generate project files template"},
+    {"language":"zh","split":"heldout","text":"命令行创建虚幻项目"},
+    {"language":"zh","split":"tune","text":"模板生成项目文件"}]},
+  {"topic":"ue-sequencer-cinematics","queries":[
+    {"language":"en","split":"heldout","text":"Sequencer LevelSequence cutscene"},
+    {"language":"en","split":"tune","text":"Movie Render Queue cinematic camera"},
+    {"language":"zh","split":"heldout","text":"序列器关卡序列过场"},
+    {"language":"zh","split":"tune","text":"电影渲染队列和镜头"}]},
+  {"topic":"ue-serialization-savegames","queries":[
+    {"language":"en","split":"heldout","text":"USaveGame SaveGameToSlot"},
+    {"language":"en","split":"tune","text":"FArchive serialize player progress"},
+    {"language":"zh","split":"heldout","text":"存档系统保存到槽位"},
+    {"language":"zh","split":"tune","text":"序列化玩家进度"}]},
+  {"topic":"ue-state-trees","queries":[
+    {"language":"en","split":"heldout","text":"StateTree task condition evaluator"},
+    {"language":"en","split":"tune","text":"Mass StateTree integration"},
+    {"language":"zh","split":"heldout","text":"状态树任务条件评估器"},
+    {"language":"zh","split":"tune","text":"Mass 状态树集成"}]},
+  {"topic":"ue-testing-debugging","queries":[
+    {"language":"en","split":"heldout","text":"Unreal automation test"},
+    {"language":"en","split":"tune","text":"Unreal Insights profiling UE_LOG"},
+    {"language":"zh","split":"heldout","text":"虚幻自动化测试"},
+    {"language":"zh","split":"tune","text":"日志和性能分析"}]},
+  {"topic":"ue-ui-umg-slate","queries":[
+    {"language":"en","split":"heldout","text":"UMG UserWidget BindWidget"},
+    {"language":"en","split":"tune","text":"Common UI Slate input mode"},
+    {"language":"zh","split":"heldout","text":"UMG 用户控件绑定"},
+    {"language":"zh","split":"tune","text":"Common UI 和输入模式"}]},
+  {"topic":"ue-world-level-streaming","queries":[
+    {"language":"en","split":"heldout","text":"World Partition data layer"},
+    {"language":"en","split":"tune","text":"level streaming seamless travel"},
+    {"language":"zh","split":"heldout","text":"世界分区数据层"},
+    {"language":"zh","split":"tune","text":"关卡流送无缝切换"}]}
+]

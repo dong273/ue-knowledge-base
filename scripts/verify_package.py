@@ -2,7 +2,7 @@
 """Release gate: the corpus inside a built wheel/sdist == the source corpus.
 
 Usage:
-    python scripts/verify_package.py dist/ue_knowledge_base-0.4.1-py3-none-any.whl
+    python scripts/verify_package.py dist/ue_knowledge_base-0.5.0-py3-none-any.whl
     python scripts/verify_package.py dist/*.whl dist/*.tar.gz
 
 For every artifact this checks:
@@ -27,6 +27,24 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SOURCE_CORPUS = REPO_ROOT / "src/ue_knowledge/knowledge"
+SOURCE_GLOSSARY = REPO_ROOT / "src/ue_knowledge/glossary.json"
+
+
+def source_chunk_stats() -> dict[str, int]:
+    """Generate dependency-free release stats from the shipped chunker."""
+    sys.path.insert(0, str(REPO_ROOT / "src"))
+    from ue_knowledge.chunking import collect_markdown, token_count
+
+    chunks = collect_markdown(SOURCE_CORPUS)
+    return {
+        "chunks": len(chunks),
+        "unique_ids": len({chunk["id"] for chunk in chunks}),
+        "max_tokens": max(token_count(chunk["text"]) for chunk in chunks),
+        "unbalanced_fences": sum(
+            chunk["text"].count("```") % 2 or chunk["text"].count("~~~") % 2
+            for chunk in chunks
+        ),
+    }
 
 
 def _sha256(data: bytes) -> str:
@@ -105,6 +123,26 @@ def license_present(artifact: Path) -> bool:
         )
 
 
+def glossary_bytes(artifact: Path) -> bytes | None:
+    """Read the packaged bilingual glossary from a wheel or sdist."""
+    if artifact.suffix == ".whl":
+        with zipfile.ZipFile(artifact) as zf:
+            name = next(
+                (item for item in zf.namelist() if item.endswith("ue_knowledge/glossary.json")),
+                None,
+            )
+            return zf.read(name) if name else None
+    with tarfile.open(artifact, "r:gz") as tf:
+        member = next(
+            (
+                item for item in tf.getmembers()
+                if item.isfile() and item.name.endswith("/src/ue_knowledge/glossary.json")
+            ),
+            None,
+        )
+        return tf.extractfile(member).read() if member else None
+
+
 def check_artifact(artifact: Path, expected_version: str) -> bool:
     ok = True
     print(f"== {artifact.name} ==")
@@ -115,6 +153,7 @@ def check_artifact(artifact: Path, expected_version: str) -> bool:
         else sdist_manifest(artifact)
     )
     source = source_manifest()
+    chunk_stats = source_chunk_stats()
 
     missing = sorted(set(source) - set(manifest))
     stale = sorted(
@@ -125,6 +164,20 @@ def check_artifact(artifact: Path, expected_version: str) -> bool:
 
     print(f"    corpus .md in artifact : {len(manifest)}")
     print(f"    corpus .md in source  : {len(source)}")
+    print(f"    generated chunks      : {chunk_stats['chunks']}")
+    print(f"    fallback max tokens   : {chunk_stats['max_tokens']}")
+    if chunk_stats["chunks"] <= len(source):
+        ok = False
+        print("    [FAIL] generated chunk count is implausibly small")
+    if chunk_stats["unique_ids"] != chunk_stats["chunks"]:
+        ok = False
+        print("    [FAIL] generated chunk ids are not unique")
+    if chunk_stats["max_tokens"] > 384:
+        ok = False
+        print("    [FAIL] generated chunk exceeds 384 fallback tokens")
+    if chunk_stats["unbalanced_fences"]:
+        ok = False
+        print("    [FAIL] generated chunk contains an unbalanced code fence")
     if missing:
         ok = False
         print(f"    [FAIL] {len(missing)} file(s) missing from artifact:")
@@ -157,6 +210,13 @@ def check_artifact(artifact: Path, expected_version: str) -> bool:
     else:
         ok = False
         print("    [FAIL] LICENSE missing from artifact")
+
+    packaged_glossary = glossary_bytes(artifact)
+    if packaged_glossary == SOURCE_GLOSSARY.read_bytes():
+        print("    [ok]  bilingual glossary packaged with identical hash")
+    else:
+        ok = False
+        print("    [FAIL] bilingual glossary missing or stale")
 
     return ok
 

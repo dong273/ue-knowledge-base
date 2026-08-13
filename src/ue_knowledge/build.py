@@ -1,32 +1,87 @@
-"""Index building — embed the corpus and store it in ChromaDB."""
+"""Build validated schema-v2 index generations and activate atomically."""
 
-import os
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Callable
 
-from . import config
-from .chunking import collect_markdown
+from . import __version__, config
+from .chunking import (
+    CHUNKER_VERSION,
+    DEFAULT_MAX_TOKENS,
+    DEFAULT_OVERLAP_TOKENS,
+    collect_markdown,
+)
+from .index_store import (
+    INDEX_SCHEMA_VERSION,
+    IndexSchemaMismatch,
+    activate,
+    cleanup_generations,
+    corpus_fingerprint,
+    discard_incomplete,
+    load_current,
+    new_generation,
+    read_manifest,
+    utc_now,
+)
+from .retrieval import build_bm25
+
+Progress = Callable[[str], None]
 
 
 def _embedding_dimension(model) -> int:
-    """Resolve the embedding dimension across SentenceTransformers versions.
-
-    Newer versions expose the dimension on the transformer module
-    (``model[0].get_sentence_embedding_dimension()``); legacy versions and
-    test embedders expose ``SentenceTransformer.get_sentence_embedding_dimension()``.
-    """
+    modern = getattr(model, "get_embedding_dimension", None)
+    if callable(modern):
+        return int(modern())
     try:
         for module in model:
-            fn = getattr(module, "get_sentence_embedding_dimension", None)
-            if callable(fn):
-                return int(fn())
+            function = getattr(module, "get_embedding_dimension", None)
+            if callable(function):
+                return int(function())
+            function = getattr(module, "get_sentence_embedding_dimension", None)
+            if callable(function):
+                return int(function())
     except (TypeError, AttributeError):
         pass
-    fn = getattr(model, "get_sentence_embedding_dimension", None)
-    if callable(fn):
-        return int(fn())
-    raise RuntimeError(
-        f"cannot determine embedding dimension for {type(model).__name__}"
+    function = getattr(model, "get_sentence_embedding_dimension", None)
+    if callable(function):
+        return int(function())
+    raise RuntimeError(f"cannot determine embedding dimension for {type(model).__name__}")
+
+
+def _existing_ids(root: Path) -> set[str]:
+    try:
+        generation = load_current(root)
+    except (FileNotFoundError, IndexSchemaMismatch):
+        return set()
+    import chromadb
+
+    client = chromadb.PersistentClient(
+        path=str(generation / "chroma"), settings=config.chroma_settings()
     )
+    collection = client.get_collection(config.COLLECTION_NAME)
+    return set(collection.get()["ids"])
+
+
+def _load_embedder(model_name: str, offline: bool):
+    from sentence_transformers import SentenceTransformer
+
+    with config.offline_huggingface(offline):
+        model = SentenceTransformer(model_name, local_files_only=offline)
+    model.max_seq_length = 512
+    return model
+
+
+def _model_revision(model):
+    revision = getattr(model, "revision", None)
+    if revision:
+        return str(revision)
+    try:
+        configuration = getattr(getattr(model[0], "auto_model", None), "config", None)
+        revision = getattr(configuration, "_commit_hash", None)
+    except (TypeError, AttributeError, IndexError):
+        revision = None
+    return str(revision) if revision else None
 
 
 def build_index(
@@ -37,131 +92,153 @@ def build_index(
     offline: bool = True,
     embedder=None,
     append: bool = False,
+    progress: Progress | None = None,
 ) -> dict:
-    """Build (or rebuild) the vector index from the markdown corpus.
+    """Build a complete generation, validate it, then atomically activate it.
 
-    ``embedder`` injects a custom embedder for testing (must expose
-    ``encode(texts, **kwargs)`` and ``get_sentence_embedding_dimension()``);
-    defaults to a local SentenceTransformer when omitted.
-
-    ``append`` indexes only chunks whose ids are not yet in the collection
-    (ids are content-hash based, so appending is idempotent); without it an
-    existing index is refused unless ``force`` is set.
-
-    Returns a summary dict: {files, chunks, collection, chroma_dir}.
+    ``append`` is the compatibility spelling for schema-v2 sync: the corpus is
+    reconciled as a full snapshot, so additions, edits and deletions are all
+    reflected and stale chunks cannot survive.
     """
-    if offline:
-        # Force huggingface_hub into offline mode so a missing file in the
-        # local cache can never trigger network retries (slow in CN networks).
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    import chromadb
+    source = Path(source_dir) if source_dir is not None else config.source_dir()
+    root = Path(chroma_dir) if chroma_dir is not None else config.chroma_dir()
+    selected_model = model_name or config.MODEL_NAME
+    report = progress or (lambda _message: None)
 
-    source = source_dir or config.source_dir()
-    chroma = chroma_dir or config.chroma_dir()
-    model_name = model_name or config.MODEL_NAME
-
-    # Fail fast on non-ASCII index paths (hnswlib Windows limitation) before
-    # loading the model or touching ChromaDB. The corpus itself may live
-    # anywhere — only the vector index is subject to the restriction.
-    config.check_ascii_path(chroma, "索引")
-
+    config.check_ascii_path(root, "索引")
     if not source.is_dir():
         raise FileNotFoundError(f"corpus directory not found: {source}")
 
-    # Load the model lazily: after all cheap, model-independent failure
-    # checks so missing corpus/paths report precisely even with no model
-    # cached (CI) or no network (offline mode).
-    if embedder is None:
-        from sentence_transformers import SentenceTransformer
-        embedder = SentenceTransformer(
-            model_name,
-            local_files_only=offline,
+    try:
+        current = load_current(root)
+    except FileNotFoundError:
+        current = None
+    except IndexSchemaMismatch:
+        if not force:
+            raise
+        current = None
+    if current is not None and not force and not append:
+        manifest = read_manifest(current)
+        raise RuntimeError(
+            f"index already has {manifest['corpus']['chunks']} chunks; "
+            "use --force to rebuild or --append to sync"
         )
-        embedder.max_seq_length = 512
 
-    print(f"[*] Loading model: {model_name}")
-    model = embedder
-    print(f"    Embedding dim: {_embedding_dimension(model)}")
+    report(f"Loading model: {selected_model}")
+    model = embedder if embedder is not None else _load_embedder(selected_model, offline)
+    dimension = _embedding_dimension(model)
+    tokenizer = getattr(model, "tokenizer", None)
+    report(f"Embedding dimension: {dimension}")
 
-    print(f"[*] Reading corpus: {source}")
-    documents = collect_markdown(source)
+    report(f"Reading corpus: {source}")
+    documents = collect_markdown(
+        source,
+        max_tokens=DEFAULT_MAX_TOKENS,
+        overlap_tokens=DEFAULT_OVERLAP_TOKENS,
+        tokenizer=tokenizer,
+    )
+    markdown_files = list(source.rglob("*.md"))
     if not documents:
-        md_files = list(source.rglob("*.md"))
-        if not md_files:
+        if not markdown_files:
             raise RuntimeError(f"corpus contains no markdown files: {source}")
         raise RuntimeError(
-            f"corpus has {len(md_files)} markdown file(s) but zero chunks: "
-            "every section is shorter than min_chars=100 and was filtered. "
-            "Write longer sections, or run with a corpus of real documents."
-        )
-    print(f"    {len(documents)} chunks")
-
-    chroma.mkdir(parents=True, exist_ok=True)
-    client = chromadb.PersistentClient(
-        path=str(chroma), settings=config.chroma_settings()
-    )
-
-    if force:
-        try:
-            client.delete_collection(config.COLLECTION_NAME)
-        except Exception:
-            pass
-
-    collection = client.get_or_create_collection(
-        name=config.COLLECTION_NAME,
-        metadata={
-            "description": "UE Game Development Knowledge Base",
-            "hnsw:space": "cosine",
-        },
-    )
-    if collection.count() > 0 and not force and not append:
-        raise RuntimeError(
-            f"collection already has {collection.count()} docs; "
-            "use --force to rebuild or --append to add new chunks"
+            f"corpus has {len(markdown_files)} markdown file(s) but zero chunks"
         )
 
-    texts = [d["text"] for d in documents]
-    ids = [d["id"] for d in documents]
-    metadatas = [{"source": d["source"], "heading": d["heading"]} for d in documents]
+    old_ids = _existing_ids(root)
+    new_ids = {document["id"] for document in documents}
+    generation = new_generation(root)
+    try:
+        import chromadb
 
-    if append and collection.count() > 0:
-        # Content-hash ids make this idempotent: unchanged chunks keep their
-        # ids and are skipped; only new chunks are embedded and added.
-        existing = set(collection.get(ids=ids)["ids"])
-        keep = [i for i, cid in enumerate(ids) if cid not in existing]
-        texts = [texts[i] for i in keep]
-        ids = [ids[i] for i in keep]
-        metadatas = [metadatas[i] for i in keep]
-        if not texts:
-            print("[·] No new chunks to add (index is up to date).")
-            return {
-                "files": len(list(source.rglob("*.md"))),
-                "chunks": 0,
-                "added": 0,
-                "collection": config.COLLECTION_NAME,
-                "chroma_dir": str(chroma),
-            }
-
-    print(f"[*] Embedding {len(texts)} chunks...")
-    batch_size = 64
-    for i in range(0, len(texts), batch_size):
-        batch_texts = texts[i:i + batch_size]
-        embeddings = model.encode(
-            batch_texts, show_progress_bar=False, normalize_embeddings=True
+        client = chromadb.PersistentClient(
+            path=str(generation / "chroma"), settings=config.chroma_settings()
         )
-        collection.add(
-            ids=ids[i:i + batch_size],
-            embeddings=embeddings.tolist(),
-            documents=batch_texts,
-            metadatas=metadatas[i:i + batch_size],
+        collection = client.create_collection(
+            name=config.COLLECTION_NAME,
+            metadata={
+                "description": "UE Game Development Knowledge Base",
+                "hnsw:space": "cosine",
+                "schema_version": INDEX_SCHEMA_VERSION,
+                "embedding_model": selected_model,
+                "embedding_dimension": dimension,
+            },
         )
-        print(f"    [{min(i + batch_size, len(texts)):4d}/{len(texts)}]")
 
-    print(f"[✓] Index ready: {chroma} ({collection.count()} docs)")
+        texts = [document["text"] for document in documents]
+        identifiers = [document["id"] for document in documents]
+        metadata = [
+            {"source": document["source"], "heading": document["heading"]}
+            for document in documents
+        ]
+        batch_size = 64
+        report(f"Embedding {len(texts)} chunks")
+        for start in range(0, len(texts), batch_size):
+            batch = texts[start : start + batch_size]
+            with config.offline_huggingface(offline):
+                embeddings = model.encode(
+                    batch, show_progress_bar=False, normalize_embeddings=True
+                )
+            collection.add(
+                ids=identifiers[start : start + batch_size],
+                embeddings=embeddings.tolist(),
+                documents=batch,
+                metadatas=metadata[start : start + batch_size],
+            )
+            report(f"Embedded {min(start + batch_size, len(texts))}/{len(texts)}")
+
+        build_bm25(documents, generation / "bm25.json")
+        fingerprint, document_count = corpus_fingerprint(source)
+        manifest = {
+            "schema_version": INDEX_SCHEMA_VERSION,
+            "package_version": __version__,
+            "built_at": utc_now(),
+            "embedding": {
+                "model": selected_model,
+                "revision": _model_revision(model),
+                "dimension": dimension,
+                "normalization": "l2",
+            },
+            "chunker": {
+                "version": CHUNKER_VERSION,
+                "max_tokens": DEFAULT_MAX_TOKENS,
+                "overlap_tokens": DEFAULT_OVERLAP_TOKENS,
+            },
+            "corpus": {
+                "sha256": fingerprint,
+                "source": str(source.resolve()),
+                "documents": document_count,
+                "chunks": len(documents),
+            },
+        }
+        import json
+
+        (generation / "manifest.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        if collection.count() != len(documents):
+            raise RuntimeError(
+                f"index validation failed: {collection.count()} != {len(documents)}"
+            )
+        if not (generation / "bm25.json").is_file():
+            raise RuntimeError("index validation failed: bm25.json missing")
+
+        activate(root, generation)
+        cleanup_generations(root, keep=2)
+    except Exception:
+        discard_incomplete(generation)
+        raise
+
+    report(f"Index ready: {root} ({len(documents)} chunks)")
     return {
-        "files": len(list(source.rglob("*.md"))),
+        "files": len(markdown_files),
         "chunks": len(documents),
-        "added": len(texts),
+        "added": len(new_ids - old_ids),
+        "removed": len(old_ids - new_ids),
+        "unchanged": len(old_ids & new_ids),
         "collection": config.COLLECTION_NAME,
-        "chroma_dir": str(chroma),
+        "chroma_dir": str(root),
+        "generation": generation.name,
+        "schema_version": INDEX_SCHEMA_VERSION,
     }

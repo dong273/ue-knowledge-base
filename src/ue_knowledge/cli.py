@@ -1,4 +1,6 @@
-"""ue-kb command-line interface: build / query / info / download-model."""
+"""ue-kb command-line interface with stable JSON contracts."""
+
+from __future__ import annotations
 
 import argparse
 import json
@@ -8,37 +10,50 @@ import sys
 
 from . import __version__, config
 from .build import build_index
+from .index_store import (
+    IndexErrorBase,
+    IndexSchemaMismatch,
+    corpus_fingerprint,
+    load_current,
+    read_manifest,
+)
 from .query import format_results, query
 
-# HuggingFace 国内镜像。官方源下载失败时自动切换重试（无需手动 export）。
 HF_MIRROR = "https://hf-mirror.com"
 
 
-def _model_unavailable_hint(exc: Exception) -> str:
-    return (
-        "Model 未找到或无法加载。首次使用请先运行:\n"
-        "    ue-kb download-model\n"
-        "（网络受限时会自动切换到 hf-mirror 镜像，无需代理）\n"
-        f"原始错误: {exc}"
-    )
+def _emit(payload, json_mode: bool) -> None:
+    if json_mode:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print(payload)
 
 
-def _classify_error(exc: Exception) -> str:
-    """Classify a caught exception so the user gets the right next action."""
-    msg = str(exc).lower()
-    if any(k in msg for k in ("hnsw", "segment", "backfill", "corrupt", "sqlite")):
-        return "index_corrupt"
-    return "model"
+def _error_payload(exc: Exception, default_code: str = "RUNTIME_ERROR") -> dict[str, str]:
+    if isinstance(exc, IndexErrorBase):
+        return exc.as_dict()
+    if isinstance(exc, config.AsciiPathError):
+        return {"code": "INVALID_INDEX_PATH", "message": str(exc), "action": "choose an ASCII-only --db path"}
+    if isinstance(exc, FileNotFoundError):
+        message = str(exc)
+        if "corpus" in message.lower():
+            return {"code": "CORPUS_NOT_FOUND", "message": message, "action": "check --source or UE_KB_SOURCE"}
+        return {"code": "INDEX_NOT_FOUND", "message": message, "action": "ue-kb build"}
+    message = str(exc)
+    lowered = message.lower()
+    if any(word in lowered for word in ("hnsw", "segment", "backfill", "corrupt", "sqlite")):
+        return {"code": "INDEX_CORRUPT", "message": message, "action": "ue-kb build --force"}
+    return {"code": default_code, "message": message, "action": "ue-kb download-model"}
 
 
-def _print_index_corrupt_hint(exc: Exception) -> None:
-    print(
-        "[!] 索引文件损坏或不可读（chromadb 持久化问题）。\n"
-        "    请删除索引目录后重新构建:\n"
-        "        ue-kb build --force\n"
-        f"    原始错误: {exc}",
-        file=sys.stderr,
-    )
+def _fail(exc: Exception, json_mode: bool, default_code: str = "RUNTIME_ERROR") -> int:
+    payload = _error_payload(exc, default_code)
+    if json_mode:
+        _emit(payload, True)
+        print(f"[!] {payload['message']}", file=sys.stderr)
+    else:
+        print(f"[!] {payload['message']}\n    下一步: {payload['action']}", file=sys.stderr)
+    return 1
 
 
 def cmd_build(args: argparse.Namespace) -> int:
@@ -50,20 +65,11 @@ def cmd_build(args: argparse.Namespace) -> int:
             force=args.force,
             append=args.append,
             offline=not args.online,
+            progress=lambda message: print(f"[*] {message}", file=sys.stderr),
         )
-    except FileNotFoundError as e:
-        print(f"[!] {e}", file=sys.stderr)
-        return 1
-    except config.AsciiPathError as e:
-        print(f"[!] {e}", file=sys.stderr)
-        return 1
-    except Exception as e:
-        if _classify_error(e) == "index_corrupt":
-            _print_index_corrupt_hint(e)
-        else:
-            print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
-        return 1
-    print(json.dumps(summary, ensure_ascii=False))
+    except Exception as exc:
+        return _fail(exc, args.json)
+    _emit(summary, args.json)
     return 0
 
 
@@ -75,49 +81,57 @@ def cmd_query(args: argparse.Namespace) -> int:
             chroma_dir=config.chroma_dir(args.db),
             model_name=args.model,
             offline=not args.online,
+            profile=args.profile,
         )
-    except FileNotFoundError as e:
-        # Raised by query() when the index is missing (checked before any
-        # model loading) — distinct from a model problem.
-        print(f"[!] {e}", file=sys.stderr)
-        return 1
-    except config.AsciiPathError as e:
-        print(f"[!] {e}", file=sys.stderr)
-        return 1
-    except Exception as e:
-        if _classify_error(e) == "index_corrupt":
-            _print_index_corrupt_hint(e)
-        else:
-            print(f"[!] {_model_unavailable_hint(e)}", file=sys.stderr)
-        return 1
-
-    if args.json:
-        print(json.dumps(results, ensure_ascii=False, indent=2))
-    else:
-        print(format_results(results, args.query))
+    except Exception as exc:
+        return _fail(exc, args.json)
+    _emit(results if args.json else format_results(results, args.query), args.json)
     return 0
 
 
-def cmd_info(args: argparse.Namespace) -> int:
-    import chromadb
+def _info(args: argparse.Namespace) -> dict:
+    root = config.chroma_dir(args.db)
+    config.check_ascii_path(root, "索引")
+    generation = load_current(root)
+    manifest = read_manifest(generation)
+    source = config.source_dir(args.source) if args.source else config.source_dir(
+        manifest["corpus"].get("source")
+    )
+    stale = None
+    if source.is_dir():
+        fingerprint, _ = corpus_fingerprint(source)
+        stale = fingerprint != manifest["corpus"]["sha256"]
+    return {
+        "collection": config.COLLECTION_NAME,
+        "documents": manifest["corpus"]["chunks"],
+        "chroma_dir": str(root),
+        "generation": generation.name,
+        "manifest": manifest,
+        "stale": stale,
+        "model_matches": manifest["embedding"]["model"] == args.model,
+    }
 
-    chroma = config.chroma_dir(args.db)
+
+def cmd_info(args: argparse.Namespace) -> int:
     try:
-        client = chromadb.PersistentClient(path=str(chroma))
-        collection = client.get_collection(config.COLLECTION_NAME)
-    except Exception as e:
-        print(f"[!] 索引不存在: {chroma}（先运行 ue-kb build）\n{e}", file=sys.stderr)
-        return 1
-    meta = collection.metadata or {}
-    print(f"collection : {collection.name}")
-    print(f"documents  : {collection.count()}")
-    print(f"description: {meta.get('description', '')}")
-    print(f"chroma_dir : {chroma}")
+        payload = _info(args)
+    except Exception as exc:
+        return _fail(exc, args.json)
+    if args.json:
+        _emit(payload, True)
+    else:
+        print(f"collection : {payload['collection']}")
+        print(f"documents  : {payload['documents']}")
+        print(f"generation : {payload['generation']}")
+        print(f"schema     : {payload['manifest']['schema_version']}")
+        print(f"model      : {payload['manifest']['embedding']['model']}")
+        print(f"model match: {payload['model_matches']}")
+        print(f"stale      : {payload['stale']}")
+        print(f"chroma_dir : {payload['chroma_dir']}")
     return 0
 
 
 def _download_model_once(model_name: str) -> None:
-    """Load the embedding model, downloading it if needed (raises on failure)."""
     from sentence_transformers import SentenceTransformer
 
     SentenceTransformer(model_name)
@@ -125,65 +139,76 @@ def _download_model_once(model_name: str) -> None:
 
 def cmd_download_model(args: argparse.Namespace) -> int:
     model_name = args.model or config.MODEL_NAME
-    print(f"[*] 下载模型: {model_name}（首次约 100MB，之后完全离线）")
+    print(f"[*] 下载模型: {model_name}（首次约 100MB）", file=sys.stderr)
     try:
         _download_model_once(model_name)
-    except Exception as e:
-        print(f"[!] 官方源下载失败: {e}", file=sys.stderr)
-        if os.environ.get("HF_ENDPOINT") != HF_MIRROR:
-            print(f"[*] 自动切换到国内镜像重试（无需代理）: {HF_MIRROR}")
-            os.environ["HF_ENDPOINT"] = HF_MIRROR
-            # huggingface_hub 在进程启动时读取 HF_ENDPOINT；改环境变量后
-            # 需重启进程才生效，这里用子进程以新环境变量重新下载。
+    except Exception as first_error:
+        print(f"[!] 官方源下载失败: {first_error}", file=sys.stderr)
+        if os.environ.get("HF_ENDPOINT") == HF_MIRROR:
+            return _fail(first_error, args.json, "MODEL_UNAVAILABLE")
+        mirror_environment = os.environ.copy()
+        mirror_environment["HF_ENDPOINT"] = HF_MIRROR
+        print(f"[*] 使用镜像重试: {HF_MIRROR}", file=sys.stderr)
+        result = subprocess.run(
+            [
+                sys.executable, "-m", "ue_knowledge.cli", "download-model",
+                "--model", model_name, "--json",
+            ],
+            env=mirror_environment,
+            capture_output=True,
+            text=True,
+        )
+        if result.stderr:
+            print(result.stderr, file=sys.stderr, end="")
+        if result.returncode != 0:
             try:
-                r = subprocess.run(
-                    [sys.executable, "-m", "ue_knowledge.cli", "download-model",
-                     "--model", model_name],
-                    env=os.environ,
-                )
-                if r.returncode == 0:
-                    return 0
-            except Exception as e2:
-                print(f"[!] 镜像重试异常: {e2}", file=sys.stderr)
-        print("[!] 镜像源下载也失败，请检查网络后重试。", file=sys.stderr)
-        return 1
-    print("[✓] 模型已缓存。现在可以运行: ue-kb build && ue-kb query")
+                child_error = json.loads(result.stdout)
+                return _fail(RuntimeError(child_error["message"]), args.json, "MODEL_UNAVAILABLE")
+            except (json.JSONDecodeError, KeyError):
+                return _fail(first_error, args.json, "MODEL_UNAVAILABLE")
+    _emit({"model": model_name, "cached": True} if args.json else "[✓] 模型已缓存。", args.json)
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="ue-kb",
-        description="UE Knowledge Base — offline semantic search over Unreal Engine dev docs",
+        description="UE Knowledge Base — offline Unreal Engine knowledge search",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
-    sub = parser.add_subparsers(dest="command", required=True)
+    subcommands = parser.add_subparsers(dest="command", required=True)
 
-    p_build = sub.add_parser("build", help="build the vector index from the corpus")
-    p_build.add_argument("--source", help="corpus dir (default: bundled package corpus)")
-    p_build.add_argument("--db", help="chroma dir (default: user data dir)")
-    p_build.add_argument("--model", default=config.MODEL_NAME, help="embedding model")
-    p_build.add_argument("--force", action="store_true", help="rebuild even if index exists")
-    p_build.add_argument("--append", action="store_true", help="add only new chunks (idempotent)")
-    p_build.add_argument("--online", action="store_true", help="allow model download if missing")
-    p_build.set_defaults(func=cmd_build)
+    build = subcommands.add_parser("build", help="build or sync the index")
+    build.add_argument("--source", help="corpus directory")
+    build.add_argument("--db", help="index root")
+    build.add_argument("--model", default=config.MODEL_NAME)
+    build.add_argument("--force", action="store_true")
+    build.add_argument("--append", action="store_true", help="sync additions, edits and deletions")
+    build.add_argument("--online", action="store_true")
+    build.add_argument("--json", action="store_true")
+    build.set_defaults(func=cmd_build)
 
-    p_query = sub.add_parser("query", help="semantic search")
-    p_query.add_argument("query", help="search text (e.g. \"GAS cooldown\")")
-    p_query.add_argument("--top-k", type=int, default=5)
-    p_query.add_argument("--db", help="chroma dir")
-    p_query.add_argument("--model", default=config.MODEL_NAME, help="embedding model")
-    p_query.add_argument("--online", action="store_true", help="allow model download if missing")
-    p_query.add_argument("--json", action="store_true", help="raw JSON output")
-    p_query.set_defaults(func=cmd_query)
+    search = subcommands.add_parser("query", help="search the index")
+    search.add_argument("query")
+    search.add_argument("--top-k", type=int, default=5)
+    search.add_argument("--db")
+    search.add_argument("--model", default=config.MODEL_NAME)
+    search.add_argument("--profile", choices=("hybrid", "vector"), default="hybrid")
+    search.add_argument("--online", action="store_true")
+    search.add_argument("--json", action="store_true")
+    search.set_defaults(func=cmd_query)
 
-    p_info = sub.add_parser("info", help="show index stats")
-    p_info.add_argument("--db", help="chroma dir")
-    p_info.set_defaults(func=cmd_info)
+    info = subcommands.add_parser("info", help="show manifest and index health")
+    info.add_argument("--db")
+    info.add_argument("--source")
+    info.add_argument("--model", default=config.MODEL_NAME)
+    info.add_argument("--json", action="store_true")
+    info.set_defaults(func=cmd_info)
 
-    p_dl = sub.add_parser("download-model", help="download the embedding model once")
-    p_dl.add_argument("--model", default=config.MODEL_NAME)
-    p_dl.set_defaults(func=cmd_download_model)
+    download = subcommands.add_parser("download-model", help="cache the embedding model")
+    download.add_argument("--model", default=config.MODEL_NAME)
+    download.add_argument("--json", action="store_true")
+    download.set_defaults(func=cmd_download_model)
 
     args = parser.parse_args(argv)
     return args.func(args)

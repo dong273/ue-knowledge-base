@@ -1,9 +1,64 @@
-"""Semantic querying against the built index."""
+"""Vector and bilingual hybrid retrieval against a schema-v2 index."""
 
-import os
+from __future__ import annotations
+
 from pathlib import Path
 
 from . import config
+from .build import _embedding_dimension, _model_revision
+from .index_store import IndexSchemaMismatch, load_current, read_manifest
+from .retrieval import bm25_search, expand_query, rrf
+
+
+def _model(model_name: str, offline: bool, embedder):
+    if embedder is not None:
+        return embedder
+    from sentence_transformers import SentenceTransformer
+
+    with config.offline_huggingface(offline):
+        return SentenceTransformer(model_name, local_files_only=offline)
+
+
+def _check_identity(manifest: dict, model_name: str, model) -> None:
+    expected = manifest["embedding"]
+    actual_dimension = _embedding_dimension(model)
+    actual_revision = _model_revision(model)
+    revision_mismatch = bool(expected.get("revision")) and expected.get("revision") != actual_revision
+    if (
+        expected.get("model") != model_name
+        or expected.get("dimension") != actual_dimension
+        or revision_mismatch
+    ):
+        raise IndexSchemaMismatch(
+            "索引与当前 embedding 配置不匹配: "
+            f"index={expected.get('model')}:{expected.get('dimension')}, "
+            f"runtime={model_name}:{actual_dimension}:{actual_revision}"
+        )
+
+
+def _vector_results(collection, model, text: str, count: int) -> list[dict]:
+    with_embeddings = model.encode([text], normalize_embeddings=True)[0]
+    raw = collection.query(
+        query_embeddings=[with_embeddings.tolist()],
+        n_results=count,
+        include=["documents", "metadatas", "distances"],
+    )
+    ids = raw.get("ids") or [[]]
+    documents = raw.get("documents") or [[]]
+    metadata = raw.get("metadatas") or [[]]
+    distances = raw.get("distances") or [[]]
+    return [
+        {
+            "id": identifier,
+            "source": meta.get("source", "?"),
+            "heading": meta.get("heading", "?"),
+            "score": max(0.0, min(1.0, 1.0 - float(distance))),
+            "text": document,
+        }
+        for identifier, document, meta, distance in zip(
+            ids[0], documents[0], metadata[0], distances[0]
+        )
+    ]
 
 
 def query(
@@ -13,74 +68,88 @@ def query(
     model_name: str | None = None,
     offline: bool = True,
     embedder=None,
+    profile: str = "hybrid",
 ) -> list[dict]:
-    """Search the knowledge base. Returns [{source, heading, score, text}].
+    """Search the knowledge base and preserve the 0.4 result structure."""
+    if profile not in {"hybrid", "vector"}:
+        raise ValueError("profile must be 'hybrid' or 'vector'")
+    if top_k <= 0:
+        return []
+    root = Path(chroma_dir) if chroma_dir is not None else config.chroma_dir()
+    selected_model = model_name or config.MODEL_NAME
+    config.check_ascii_path(root, "索引")
+    generation = load_current(root)
+    manifest = read_manifest(generation)
 
-    ``embedder`` injects a custom embedder for testing (must expose
-    ``encode(texts, **kwargs)``); defaults to a local SentenceTransformer.
-    """
-    if offline:
-        # Force huggingface_hub into offline mode so a missing file in the
-        # local cache can never trigger network retries (slow in CN networks).
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+    model = _model(selected_model, offline, embedder)
+    _check_identity(manifest, selected_model, model)
+
     import chromadb
 
-    chroma = chroma_dir or config.chroma_dir()
-    model_name = model_name or config.MODEL_NAME
-
-    # Fail fast on non-ASCII paths (hnswlib Windows limitation).
-    config.check_ascii_path(chroma, "索引")
-
-    # Verify the index exists BEFORE loading the model: gives a precise,
-    # model-independent error for a missing index (and works without any
-    # model cached, which is what CI exercises).
     client = chromadb.PersistentClient(
-        path=str(chroma), settings=config.chroma_settings()
+        path=str(generation / "chroma"), settings=config.chroma_settings()
     )
-    try:
-        collection = client.get_collection(config.COLLECTION_NAME)
-    except chromadb.errors.InvalidCollectionException as e:
-        raise FileNotFoundError(
-            f"索引不存在: {chroma}（请先运行: ue-kb build）"
-        ) from e
+    collection = client.get_collection(config.COLLECTION_NAME)
+    candidate_count = min(30 if profile == "hybrid" else top_k, collection.count())
+    if not candidate_count:
+        return []
 
-    if embedder is None:
-        from sentence_transformers import SentenceTransformer
-        embedder = SentenceTransformer(model_name, local_files_only=offline)
-    model = embedder
+    vector_text = expand_query(query_text) if profile == "hybrid" else query_text
+    vector = _vector_results(collection, model, vector_text, candidate_count)
+    if profile == "vector":
+        return [
+            {key: value for key, value in hit.items() if key != "id"}
+            for hit in vector[:top_k]
+        ]
 
-    query_embedding = model.encode(
-        [query_text], normalize_embeddings=True
-    )[0]
-
-    results = collection.query(
-        query_embeddings=[query_embedding.tolist()],
-        n_results=top_k,
-        include=["documents", "metadatas", "distances"],
-    )
-
-    out = []
-    docs = results["documents"] or [[]]
-    metas = results["metadatas"] or [[]]
-    dists = results["distances"] or [[]]
-    for doc, meta, dist in zip(docs[0], metas[0], dists[0]):
-        out.append({
-            "source": meta.get("source", "?"),
-            "heading": meta.get("heading", "?"),
-            "score": round(1.0 - dist, 4),
-            "text": doc,
-        })
-    return out
+    lexical = bm25_search(generation / "bm25.json", vector_text, limit=30)
+    fused = rrf([hit["id"] for hit in vector], [identifier for identifier, _ in lexical])
+    by_id = {hit["id"]: hit for hit in vector}
+    missing = [identifier for identifier, _ in fused if identifier not in by_id]
+    if missing:
+        stored = collection.get(ids=missing, include=["documents", "metadatas"])
+        for identifier, document, meta in zip(
+            stored["ids"], stored["documents"], stored["metadatas"]
+        ):
+            by_id[identifier] = {
+                "id": identifier,
+                "source": meta.get("source", "?"),
+                "heading": meta.get("heading", "?"),
+                "score": 0.0,
+                "text": document,
+            }
+    maximum = fused[0][1] if fused else 1.0
+    output: list[dict] = []
+    seen_sources: set[str] = set()
+    for identifier, score in fused:
+        hit = by_id.get(identifier)
+        if hit is None:
+            continue
+        if hit["source"] in seen_sources:
+            continue
+        seen_sources.add(hit["source"])
+        output.append(
+            {
+                "source": hit["source"],
+                "heading": hit["heading"],
+                "score": round(score / maximum, 4),
+                "text": hit["text"],
+            }
+        )
+        if len(output) == top_k:
+            break
+    return output
 
 
 def format_results(results: list[dict], query_text: str) -> str:
-    """Human-readable rendering of query results."""
     if not results:
         return "没有找到相关结果。"
     lines = [f"🔍 UE 知识库检索：{query_text}", ""]
-    for i, r in enumerate(results, 1):
-        score = f"{r['score']:.1%}"
-        lines.append(f"[{i}] {r['source']} › {r['heading']} (匹配度: {score})")
-        lines.append(f"    {r['text'][:200].replace(chr(10), ' ')}...")
+    for index, result in enumerate(results, 1):
+        lines.append(
+            f"[{index}] {result['source']} › {result['heading']} "
+            f"(匹配度: {result['score']:.1%})"
+        )
+        lines.append(f"    {result['text'][:200].replace(chr(10), ' ')}...")
         lines.append("")
     return "\n".join(lines)

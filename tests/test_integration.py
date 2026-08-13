@@ -77,14 +77,17 @@ def test_rebuild_without_force_raises(corpus, tmp_path):
 
 
 def test_append_only_adds_new_chunks(corpus, tmp_path):
-    """--append semantics: only new chunk ids are indexed; idempotent."""
+    """--append is a snapshot sync; repeated syncs are idempotent."""
     import chromadb
 
     from ue_knowledge.config import chroma_settings
+    from ue_knowledge.index_store import load_current
 
     db = tmp_path / "chroma"
     build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
-    client = chromadb.PersistentClient(path=str(db), settings=chroma_settings())
+    client = chromadb.PersistentClient(
+        path=str(load_current(db) / "chroma"), settings=chroma_settings()
+    )
     col = client.get_collection("ue_knowledge")
     n1 = col.count()
 
@@ -93,19 +96,28 @@ def test_append_only_adds_new_chunks(corpus, tmp_path):
         "# New Topic\n\n" + ("brand new content words " * 20),
         encoding="utf-8",
     )
-    build_index(
+    summary = build_index(
         source_dir=corpus, chroma_dir=db, model_name="fake",
         embedder=FakeEmbedder(), append=True,
+    )
+    client = chromadb.PersistentClient(
+        path=str(load_current(db) / "chroma"), settings=chroma_settings()
     )
     n2 = client.get_collection("ue_knowledge").count()
     assert n2 > n1
+    assert summary["added"] > 0
 
     # idempotent: appending again adds nothing
-    build_index(
+    summary = build_index(
         source_dir=corpus, chroma_dir=db, model_name="fake",
         embedder=FakeEmbedder(), append=True,
     )
-    assert client.get_collection("ue_knowledge").count() == n2
+    current = chromadb.PersistentClient(
+        path=str(load_current(db) / "chroma"), settings=chroma_settings()
+    )
+    assert current.get_collection("ue_knowledge").count() == n2
+    assert summary["added"] == 0
+    assert summary["removed"] == 0
 
     # the new doc is queryable
     results = query(
@@ -115,33 +127,39 @@ def test_append_only_adds_new_chunks(corpus, tmp_path):
     assert "new.md" in results[0]["source"]
 
 
-def test_append_indexes_content_merged_into_existing_chunk(corpus, tmp_path):
-    """Regression: a short new section (< 200 chars) gets merged into an
-    existing chunk; the merged chunk must be re-id'd, otherwise --append
-    silently drops the new content from the index."""
+def test_append_syncs_edited_content(corpus, tmp_path):
+    """A content edit replaces old chunk ids and is queryable after sync."""
     import chromadb
 
     from ue_knowledge.config import chroma_settings
+    from ue_knowledge.index_store import load_current
 
     db = tmp_path / "chroma"
     build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
-    client = chromadb.PersistentClient(path=str(db), settings=chroma_settings())
+    client = chromadb.PersistentClient(
+        path=str(load_current(db) / "chroma"), settings=chroma_settings()
+    )
     n1 = client.get_collection("ue_knowledge").count()
 
-    # ~140 chars: passes min_chars but stays under the 200-char merge threshold
+    # Replace existing body content so the old chunk ids become stale.
     doc = corpus / "topic" / "doc.md"
     doc.write_text(
-        doc.read_text(encoding="utf-8")
-        + "\n## NewShort\n\nshort but meaningful addition about stamina drain "
-        + "and movement speed decay that gets absorbed into the previous chunk\n",
+        "# GAS\n\n" + ("cooldown ability gameplay attribute " * 20)
+        + "\n\n## Jump\n\n"
+        + ("stamina drain movement speed decay " * 20),
         encoding="utf-8",
     )
-    build_index(
+    summary = build_index(
         source_dir=corpus, chroma_dir=db, model_name="fake",
         embedder=FakeEmbedder(), append=True,
     )
-    n2 = client.get_collection("ue_knowledge").count()
-    assert n2 > n1
+    current = chromadb.PersistentClient(
+        path=str(load_current(db) / "chroma"), settings=chroma_settings()
+    )
+    n2 = current.get_collection("ue_knowledge").count()
+    assert n2 >= n1
+    assert summary["added"] > 0
+    assert summary["removed"] > 0
 
     # the merged-in content is actually queryable
     results = query(

@@ -46,7 +46,8 @@ def built_index(tmp_path_factory):
         model_name="fake",
         embedder=FakeEmbedder(),
     )
-    assert summary["chunks"] == 1455  # the whole shipped corpus is indexed
+    assert summary["files"] == 86
+    assert summary["chunks"] > summary["files"]
     return db
 
 

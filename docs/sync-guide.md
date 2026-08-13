@@ -55,7 +55,7 @@ After any corpus change, the release gate must stay green (CI runs it):
 ```bash
 python -m build                                   # build wheel + sdist
 python scripts/verify_package.py dist/*.whl       # corpus in wheel == source corpus (hashes)
-python -m pytest tests/                           # incl. default-corpus tests (86 files / 1,455 chunks)
+python -m pytest tests/                           # incl. 86-file corpus + generated chunk checks
 ```
 
 ### 4. Update README numbers

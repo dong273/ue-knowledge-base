@@ -2,6 +2,7 @@
 
 import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 # Default model — English-first corpus (81/86 docs are English), small and
@@ -51,7 +52,24 @@ def chroma_dir(override: str | None = None) -> Path:
     if override:
         return Path(override)
     env = os.environ.get("UE_KB_CHROMA_DIR")
-    return Path(env) if env else DEFAULT_CHROMA_DIR
+    return Path(env) if env else _default_chroma_dir()
+
+
+@contextmanager
+def offline_huggingface(enabled: bool = True):
+    """Temporarily force Hugging Face offline without polluting the process."""
+    key = "HF_HUB_OFFLINE"
+    previous = os.environ.get(key)
+    if enabled:
+        os.environ[key] = "1"
+    try:
+        yield
+    finally:
+        if enabled:
+            if previous is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = previous
 
 
 class AsciiPathError(ValueError):

@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > A local semantic knowledge base for UE development: 86 original documents
-> (81 English, 5 bilingual), indexed with BGE embeddings + ChromaDB. Download
+> (81 English, 5 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
 > the ~100MB model once, then search fully offline on a laptop CPU — no API costs.
 
 ## Why this exists
@@ -24,9 +24,11 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 86 original docs (81 English, 5 bilingual), indexed into **1,455 searchable chunks** — content
-  distilled from actual project work
-- Real query → top-1 at **75.1% similarity** (see actual output below)
+- 86 original docs (81 English, 5 bilingual), split into Markdown-aware chunks
+  of at most 384 embedding tokens; the release verifier generates and checks
+  the exact chunk count instead of keeping a stale number in this README
+- Chinese terminology expansion + vector/BM25 RRF fusion; the final 124-query
+  gate reached **96.8% Chinese / 100% English held-out Recall@3** on the release machine
 - No API key, no tokens, no server — `pip install` and go
 - Embedding + retrieval happen locally; code never leaves your machine
 - Every command supports `--json`; patterns for Hermes / Claude Code /
@@ -44,23 +46,21 @@ ue-kb download-model            # one-time ~100MB model (auto-falls back to hf-m
 ue-kb build                     # build the index (~1 min, fully offline from here)
 ue-kb query "GAS ability cooldown"
 ue-kb query "Niagara particle collision" --json   # JSON output for agents
+ue-kb query "GAS cooldown" --profile vector       # 0.4-compatible vector fallback
 ```
 
-## Real query output
+## Query output
 
 ```text
 $ ue-kb query "GAS ability cooldown"
 🔍 UE 知识库检索：GAS ability cooldown
 
-[1] ue-gameplay-abilities/references/gas-input-integration.md › 问题 (匹配度: 75.1%)
-    ## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时，
-    容易陷入两个极端：- **全 GAS** → 所有输入走 GAS，但 WASD 轴输入不适合 GAS 的
-    事件模型，且 `CommitAbility` 的 GC 延迟影响跳跃手感 - **全直调** → 绕过 GAS，
-    失去标签阻断、冷却、属性驱动的 BUFF/DEBUFF...
-[2] ue-animation-system/SKILL.md › GAS Integration — PlayMontageAndWait (匹配度: 74.5%)
-    ### GAS Integration — PlayMontageAndWait
-    ```cpp // GAS ability task — PlayMontageAndWait (requires GameplayAbilities module)
-    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWai...
+[1] ue-gameplay-abilities/references/ue5.7-api-migration.md › Cooldown GE Tag Workaround (匹配度: 100.0%)
+    Since GrantedTags is removed from the GE constructor, cooldown tags must be
+    set via DynamicGrantedTags at spec-application time...
+[2] ue-gameplay-abilities/SKILL.md › GAS Architecture Overview (匹配度: 99.0%)
+    GAS has three pillars that live on UAbilitySystemComponent (ASC): abilities,
+    effects, and attributes...
 ```
 
 Hits include usable C++ patterns, not just related text.
@@ -90,9 +90,10 @@ ue-kb query "GAS ability cooldown"
 | Command | Description | Example |
 | --- | --- | --- |
 | `ue-kb build` | Chunk + embed the corpus into ChromaDB | `ue-kb build --force` |
-| `ue-kb build --append` | Incremental indexing — only new documents are processed; existing content stays untouched; no full rebuild for daily corpus updates | `ue-kb build --append` |
-| `ue-kb query "..."` | Semantic search; top-k hits with source + heading | `ue-kb query "角色移动 速度衰减" --top-k 5` |
-| `ue-kb info` | Index stats (document count, chroma dir) | `ue-kb info` |
+| `ue-kb build --append` | Snapshot sync: add new chunks, replace edits and remove stale chunks | `ue-kb build --append` |
+| `ue-kb query "..."` | Hybrid search by default; top-k hits with source + heading | `ue-kb query "角色移动 速度衰减" --top-k 5` |
+| `ue-kb query --profile vector` | Fall back to 0.4-style vector-only ranking | `ue-kb query "GAS" --profile vector` |
+| `ue-kb info` | Manifest, generation, staleness and model-match status | `ue-kb info --json` |
 | `ue-kb download-model` | One-time embedding model download | `ue-kb download-model` |
 | `--json` | Machine-readable output (agents) | `ue-kb query "..." --json` |
 | `--db <dir>` | Custom chroma dir (default: user data dir, see FAQ) | `ue-kb build --db C:/uekb/.chroma_db` |
@@ -126,9 +127,10 @@ on every command. Integration examples in
 The bundled corpus is part of the installed package, but you can extend it
 without touching the package:
 
-1. Add a markdown file under any local directory (`##`/`###` headings — the
-   indexer chunks on heading boundaries);
-2. `ue-kb build --append --source my-docs/` — **no full rebuild needed**;
+1. Add or edit markdown files under any local directory (headings inside code
+   fences are ignored by the token-aware chunker);
+2. `ue-kb build --append --source my-docs/` — synchronizes additions, edits,
+   and deletions through a new atomic index generation;
 3. Or index any local `.md` directory: `ue-kb build --source my-docs/`.
 
 > Source contributors: the shipped corpus lives at
@@ -157,8 +159,9 @@ locally and **not redistributed**, out of respect for Epic's copyright).
   automatically retries via `hf-mirror.com` when the official source fails;
   no proxy or manual `HF_ENDPOINT` needed.
 - **`Index ready` but queries say the index is missing?** — the index
-  directory was moved/deleted, or a `chromadb` upgrade changed the format.
-  Rebuild with `ue-kb build --force` (`chromadb>=0.5,<1.0` is pinned to avoid
+  directory was moved/deleted, or it is a pre-0.5 schema. Rebuild with
+  `ue-kb build --force`; failed rebuilds leave the old active generation intact
+  (`chromadb>=0.5,<1.0` is pinned to avoid
   the 1.x Rust backend that cannot reload its own HNSW index).
 - **Telemetry noise on stderr?** — chromadb 0.6.x product telemetry is
   disabled at the settings level (`anonymized_telemetry=False`), so no

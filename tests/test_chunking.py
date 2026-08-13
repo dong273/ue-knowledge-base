@@ -11,17 +11,17 @@ def test_chunks_by_heading():
     assert len(chunks) == 3
     headings = [c["heading"] for c in chunks]
     assert headings[0] == "Title"
-    assert headings[1] == "Section A"
-    assert headings[2] == "Sub"
+    assert headings[1] == "Title / Section A"
+    assert headings[2] == "Title / Section A / Sub"
     assert chunks[0]["source"] == "test.md"
 
 
 def test_tiny_chunks_merged():
     doc = f"# Big\n\n{LONG}\n\n## Tiny\n\nshort\n\n## Big2\n\n{LONG}"
-    chunks = chunk_markdown(doc, source="t.md", min_chars=100)
-    # "short" is below min_chars → dropped; only Big and Big2 become chunks
-    assert len(chunks) == 2
-    assert "Tiny" not in [c["heading"] for c in chunks]
+    chunks = chunk_markdown(doc, source="t.md")
+    # v2 keeps even short meaningful sections: coverage must be complete.
+    assert len(chunks) == 3
+    assert "Big / Tiny" in [c["heading"] for c in chunks]
 
 
 def test_ids_unique():
@@ -31,14 +31,14 @@ def test_ids_unique():
     assert len(ids) == len(set(ids))
 
 
-def test_append_merge_changes_id():
-    """Regression: content absorbed into an existing chunk must re-id that
-    chunk, or --append would silently skip the new content (ids are
-    content-hash based and must be assigned AFTER merging)."""
+def test_added_section_gets_its_own_content_id():
+    """A new short-but-meaningful section is independently addressable."""
     base = f"# A\n\n{LONG}\n\n## B\n\n{LONG}"
     extended = base + "\n## C\n\nshort but new content absorbed into B"
     c1 = chunk_markdown(base, source="t.md", min_chars=10)
     c2 = chunk_markdown(extended, source="t.md", min_chars=10)
-    assert len(c2) == 2  # C is merged into the B chunk
-    assert c2[0]["id"] == c1[0]["id"]   # unchanged chunk keeps its id
-    assert c2[1]["id"] != c1[1]["id"]   # merged chunk must get a new id
+    assert len(c2) == 3
+    assert c2[0]["id"] == c1[0]["id"]
+    assert c2[1]["id"] == c1[1]["id"]
+    assert c2[2]["heading"] == "A / C"
+    assert c2[2]["id"] not in {chunk["id"] for chunk in c1}

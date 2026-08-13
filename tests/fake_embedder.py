@@ -31,6 +31,7 @@ def _tokens(text: str) -> list[str]:
 class FakeEmbedder:
     def __init__(self):
         self.max_seq_length = 512
+        self.revision = None
 
     def get_sentence_embedding_dimension(self) -> int:
         return DIM
