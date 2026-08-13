@@ -80,6 +80,7 @@ def test_console_script_json_failure_has_no_stdout_noise(tmp_path):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",  # the CLI always emits UTF-8 (reconfigured in main)
         env=os.environ.copy(),
         timeout=30,
     )
@@ -106,6 +107,7 @@ def test_console_script_info_json_success(tmp_path):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",  # the CLI always emits UTF-8 (reconfigured in main)
         env=os.environ.copy(),
         timeout=30,
     )
@@ -121,6 +123,28 @@ def test_download_model_json_success(monkeypatch, capsys):
     payload, _ = _json_stdout(capsys)
     assert rc == 0
     assert payload == {"model": "fake", "cached": True}
+
+
+def test_console_script_json_works_under_legacy_encoding(tmp_path):
+    """The CLI must emit parseable UTF-8 JSON even when the environment
+    forces a legacy code page (en-US Windows runners are cp1252, many
+    Chinese systems are gbk). Printing Chinese payloads to such a pipe used
+    to raise UnicodeEncodeError and kill the CLI with a traceback."""
+    env = {**os.environ, "PYTHONIOENCODING": "cp1252", "PYTHONUTF8": "0"}
+    result = subprocess.run(
+        [
+            sys.executable, "-m", "ue_knowledge.cli", "query", "anything",
+            "--db", str(tmp_path / "missing"), "--json",
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",  # the CLI always emits UTF-8 (reconfigured in main)
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 1, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["code"] == "INDEX_NOT_FOUND"
 
 
 def test_offline_env_is_restored_after_build_failure(tmp_path):

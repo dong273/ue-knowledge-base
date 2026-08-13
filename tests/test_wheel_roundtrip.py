@@ -56,11 +56,15 @@ def _query_in_new_process(db: Path, text: str) -> list[dict]:
         **os.environ,
         # expose tests/fake_embedder.py to the child process
         "PYTHONPATH": str(Path(__file__).parent),
+        # the child prints Chinese hit text; force UTF-8 so the round trip
+        # works identically on every locale (cp1252/gbk/utf-8)
+        "PYTHONIOENCODING": "utf-8",
     }
     r = subprocess.run(
         [sys.executable, "-c", QUERY_SCRIPT, str(db), text],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         env=env,
         timeout=180,
     )
