@@ -1,6 +1,6 @@
 # Free UE5.7 Plugins Survey (July 2026)
 
-Surveyed during a Baihechubu project session. GitHub API + README + uplugin + build verification.
+Surveyed during a UE 5.7 production project session. GitHub API + README + uplugin + build verification.
 
 ## Confirmed Free/Open-Source, UE5.7 Compatible
 

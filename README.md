@@ -27,15 +27,20 @@ materials/rendering, module build system, editor tools, and more
 - 86 original docs (79 English, 7 bilingual), split into Markdown-aware chunks
   of at most 384 embedding tokens; the release verifier generates and checks
   the exact chunk count instead of keeping a stale number in this README
-- Chinese terminology expansion + vector/BM25 RRF fusion; the final 124-query
-  gate reached **96.8% Chinese / 100% English held-out Recall@3** on the release machine
+- Chinese terminology expansion + vector/BM25 RRF fusion; the held-out gate
+  (62 queries, 2 per topic) reached **100% Chinese / 100% English Recall@3**
+  on the release machine. The same harness also reports the tuning split and
+  an independent natural-Chinese query set (see `scripts/evaluate_retrieval.py`)
+  so alias-shaped queries cannot inflate the numbers
 - No API key, no tokens, no server — `pip install` and go
 - Embedding + retrieval happen locally; code never leaves your machine
 - Every command supports `--json`; patterns for Hermes / Claude Code /
-  OpenCode / any custom pipeline
+  OpenCode / any custom pipeline; `ue-kb serve` is an MCP server that keeps
+  the model loaded for fast agent query loops
 - China-friendly: GitHub mirror clone + Tsinghua PyPI + automatic
   hf-mirror fallback — no proxy needed
-- ~100MB model, laptop CPU, no GPU; index build ~1 min
+- ~100MB model, laptop CPU, no GPU; index build ~1 min; cold CLI query
+  ~12s (model load), warm in-process query <0.1s
 
 ## Quick start
 
@@ -95,6 +100,7 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query --profile vector` | Fall back to 0.4-style vector-only ranking | `ue-kb query "GAS" --profile vector` |
 | `ue-kb info` | Manifest, generation, staleness and model-match status | `ue-kb info --json` |
 | `ue-kb download-model` | One-time embedding model download | `ue-kb download-model` |
+| `ue-kb serve` | MCP stdio server: load the model once, answer queries in process (fast agent loops) | `ue-kb serve` |
 | `--json` | Machine-readable output (agents) | `ue-kb query "..." --json` |
 | `--db <dir>` | Custom chroma dir (default: user data dir, see FAQ) | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | Custom corpus dir (default: bundled corpus) | `ue-kb build --source my-docs/` |
@@ -120,6 +126,8 @@ on every command. Integration examples in
 - **Hermes Agent** skill wrapper (expose the search as an agent tool)
 - **Claude Code** slash command
 - **OpenCode** command
+- **MCP server** (`ue-kb serve`) — the model loads once per session, so
+  query loops skip the ~12s cold start entirely
 - Plain **Python snippet** for any custom pipeline
 
 ## Extending the corpus

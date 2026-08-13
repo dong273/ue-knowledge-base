@@ -11,7 +11,6 @@ description: Use when extending the Unreal Editor with editor tool, editor utili
 
 ## Before You Start
 
-Ask which area the user needs if not clear:
 - **Editor Utility Widget** — UMG panel run from editor right-click
 - **Blutility** — UAssetActionUtility or UActorActionUtility scripted actions
 - **Detail Customization** — Custom property panel (IDetailCustomization / IPropertyTypeCustomization)

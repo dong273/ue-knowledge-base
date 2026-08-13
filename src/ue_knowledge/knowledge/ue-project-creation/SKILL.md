@@ -33,9 +33,9 @@ File → New Project → Blank (C++) → 命名 → 创建
 ## 方式 B：克隆模板 + CLI（推荐用于自动化）
 
 ### 前置条件
-- UE 引擎已安装（路径如 `E:/UE_5.7/`）
+- UE 引擎已安装（路径如 `<ENGINE_ROOT>/`）
 - 已安装 Visual Studio（含 C++ 工具链）
-- 本指南示例路径：`E:/UE_5.7/`
+- 本指南示例路径：`<ENGINE_ROOT>/`
 
 ### Step 1：选择模板
 
@@ -50,16 +50,16 @@ UE 预置模板在 `Engine/Templates/` 下：
 | `TP_ThirdPerson` | Third Person | ✅ | 第三人称模板 |
 | `TP_TopDown` | Top Down | ✅ | 俯视角模板 |
 
-> 查看所有：`ls "E:/UE_5.7/Templates/" | grep "^TP_"`
+> 查看所有：`ls "<ENGINE_ROOT>/Templates/" | grep "^TP_"`
 
 ### Step 2：复制模板到目标目录
 
 ```bash
 # 设定变量
-ENGINE="E:/UE_5.7"
+ENGINE="<ENGINE_ROOT>"
 TEMPLATE="$ENGINE/Templates/TP_Blank"
 PROJECT_NAME="MyNewProject"
-PROJECT_DIR="E:/Unreal Projects/$PROJECT_NAME"
+PROJECT_DIR="<PROJECTS_ROOT>/$PROJECT_NAME"
 
 # 复制模板
 cp -r "$TEMPLATE" "$PROJECT_DIR"
@@ -308,6 +308,6 @@ cd "$PROJECT_DIR"
 
 ## 参考
 
-- 已创建的示例项目：`E:/Unreal Projects/MyBlankProject/`
-- 模板目录：`E:/UE_5.7/Templates/`
+- 已创建的示例项目：`<PROJECTS_ROOT>/MyBlankProject/`
+- 模板目录：`<ENGINE_ROOT>/Templates/`
 - 相关技能：`ue-project-context`（项目配置）、`ue-module-build-system`（模块管理）

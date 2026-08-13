@@ -130,7 +130,7 @@ The server must be running before Hermes can use its tools.
 - **Submodule nested directory:** GitHub zip archives extract as `RepoName-main/` — if you extract into a directory that already has a nested folder with the same name, check and move contents up.
 - **Engine version lock in .uplugin:** Some plugins pin an EngineVersion. If empty string (`""`), they usually work across versions. If pinned, may need manual UE5.x compatibility edits.
 - **Content-only plugins (no Source/):** No C++ compilation needed — just drop in Plugins/ and register in .uproject.
-- **MSYS2 git-bash path quirks:** When running Build.bat from git-bash, some MSYS2 path conversions may affect `/c/` paths. Use absolute Windows paths with drive letters (e.g. `E:/UE_5.7/...`).
+- **MSYS2 git-bash path quirks:** When running Build.bat from git-bash, some MSYS2 path conversions may affect `/c/` paths. Use absolute Windows paths with drive letters (e.g. `<ENGINE_ROOT>/...`).
 - **Plugin conflicts:** Two plugins registering the same module name cause a build error. Check existing plugins before adding new ones.
 - **Third-party DLL dependencies:** Some plugins ship with .dll files that must be in the executable path. Check plugin docs for redist requirements.
 

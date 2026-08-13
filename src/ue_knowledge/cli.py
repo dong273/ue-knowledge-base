@@ -170,6 +170,19 @@ def cmd_download_model(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_serve(args: argparse.Namespace) -> int:
+    from .server import serve_loop
+
+    serve_loop(
+        sys.stdin,
+        sys.stdout,
+        chroma_dir=args.db,
+        model_name=args.model,
+        top_k=args.top_k,
+    )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="ue-kb",
@@ -204,6 +217,15 @@ def main(argv: list[str] | None = None) -> int:
     info.add_argument("--model", default=config.MODEL_NAME)
     info.add_argument("--json", action="store_true")
     info.set_defaults(func=cmd_info)
+
+    serve = subcommands.add_parser(
+        "serve",
+        help="MCP stdio server (loads the model once; agents keep it running)",
+    )
+    serve.add_argument("--db", help="index root (default: user data dir)")
+    serve.add_argument("--model", default=config.MODEL_NAME)
+    serve.add_argument("--top-k", type=int, default=5)
+    serve.set_defaults(func=_cmd_serve)
 
     download = subcommands.add_parser("download-model", help="cache the embedding model")
     download.add_argument("--model", default=config.MODEL_NAME)

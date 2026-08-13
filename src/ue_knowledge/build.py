@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -22,11 +25,57 @@ from .index_store import (
     load_current,
     new_generation,
     read_manifest,
+    sweep_incomplete,
     utc_now,
 )
 from .retrieval import build_bm25
 
 Progress = Callable[[str], None]
+
+BUILD_LOCK_FILE = ".build.lock"
+BUILD_LOCK_STALE_SECONDS = 3600
+
+
+def _acquire_build_lock(root: Path, stale_seconds: int = BUILD_LOCK_STALE_SECONDS) -> Path:
+    """Serialize builds with an O_EXCL lock file; tolerate stale locks.
+
+    A crashed build can leave the lock behind, so a lock older than
+    ``stale_seconds`` is considered abandoned and replaced. The lock only
+    guards the write/activation section of a build (model loading and corpus
+    reading are read-only and safe to run concurrently).
+    """
+    root.mkdir(parents=True, exist_ok=True)
+    lock = root / BUILD_LOCK_FILE
+    try:
+        descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        try:
+            age = time.time() - lock.stat().st_mtime
+        except OSError:
+            age = 0.0
+        if age > stale_seconds:
+            try:
+                lock.unlink()
+            except OSError:
+                pass
+            return _acquire_build_lock(root, stale_seconds)
+        raise RuntimeError(
+            "另一个 ue-kb build 正在进行（构建锁已存在）。如果该构建已崩溃，"
+            f"等待 {stale_seconds // 60} 分钟超时后重试，或手动删除: {lock}"
+        )
+    os.write(
+        descriptor,
+        f"pid={os.getpid()}\nstarted={datetime.now(timezone.utc).isoformat()}\n".encode("ascii"),
+    )
+    os.close(descriptor)
+    return lock
+
+
+def _release_build_lock(lock: Path) -> None:
+    try:
+        lock.unlink()
+    except OSError:
+        pass
 
 
 def _embedding_dimension(model) -> int:
@@ -147,7 +196,12 @@ def build_index(
 
     old_ids = _existing_ids(root)
     new_ids = {document["id"] for document in documents}
+    lock = _acquire_build_lock(root)
+    swept = sweep_incomplete(root)
+    if swept:
+        report(f"Reclaimed {len(swept)} abandoned build(s)")
     generation = new_generation(root)
+    client = None
     try:
         import chromadb
 
@@ -227,8 +281,15 @@ def build_index(
         activate(root, generation)
         cleanup_generations(root, keep=2)
     except Exception:
-        discard_incomplete(generation)
+        # Release chromadb's Windows file handles before removal so the
+        # leftover generation can actually be cleaned up.
+        discard_incomplete(
+            generation,
+            close=getattr(client, "clear_system_cache", None) if client is not None else None,
+        )
         raise
+    finally:
+        _release_build_lock(lock)
 
     report(f"Index ready: {root} ({len(documents)} chunks)")
     return {

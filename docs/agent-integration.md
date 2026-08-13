@@ -17,18 +17,53 @@ Returns structured JSON:
   {
     "source": "ue-gameplay-abilities/references/gas-input-integration.md",
     "heading": "问题",
-    "score": 0.605,
+    "score": 1.0,
+    "raw_score": 0.0328,
+    "rank": 1,
     "text": "## 问题  UE 项目同时使用 GAS (GameplayAbilitySystem) 和 Enhanced Input 时..."
   }
 ]
 ```
+
+### Reading the scores
+
+- `score` is **display-relative**: it is normalized so the top hit of the
+  current query is always 1.0. Never use it to compare across queries or to
+  decide "is there any coverage".
+- `raw_score` is the **RRF fusion value**, comparable across queries. Use it
+  for confidence and coverage decisions. Calibrated ranges for the current
+  pipeline (RRF k=60, 30 vector + 30 BM25 candidates):
+  - `raw_score ≥ 0.025` — ranked high in **both** lists; strong grounding.
+  - `0.015 ≤ raw_score < 0.025` — strong in one list; usable grounding.
+  - `raw_score < 0.012` — single-list tail; weak.
+  - **All hits `raw_score < 0.012` → the knowledge base likely has no
+    coverage**; answer from general UE knowledge and say so.
+- `rank` is the 1-based position in the returned list.
+
+## MCP server (recommended for agent loops)
+
+Each `ue-kb query` spawns a process and loads the ~100MB embedding model
+(cold CLI query ≈ 12s on the release machine vs 0.07s warm). For anything
+that queries repeatedly, run `ue-kb serve` and let the agent call it as an
+MCP tool — the model loads once per session:
+
+```bash
+ue-kb serve                 # MCP stdio server; expose as an MCP client tool
+```
+
+- Exposes a single tool `ue_kb_query(query, top_k?, profile?)` returning the
+  same hit structure as `ue-kb query --json` (including `raw_score`).
+- Configure it in Claude Code (`claude mcp add`) / Hermes (`hermes mcp add`)
+  / any MCP-capable client; no API key, fully local.
+- The server is a plain JSON-RPC-over-stdio process: anything that can spawn
+  a subprocess and read stdout can speak the protocol directly.
 
 Agent-side workflow:
 
 1. User asks a UE development question.
 2. Agent runs `ue-kb query "<question>" --top-k 5 --json`.
 3. Agent uses the top hits (`source` / `heading` / `text`) as grounding
-   context, with `score` as a confidence signal (≈0.5+ is a solid hit).
+   context, using `raw_score` as the confidence signal (see ranges above).
 4. Agent cites `source › heading` in its answer.
 
 Recommendations:
@@ -65,8 +100,8 @@ Query the local UE knowledge base for grounded answers.
 1. Run: `ue-kb query "<question>" --top-k 5 --json`
 2. If it errors with "索引不存在", run `ue-kb build` first, then retry.
 3. Ground the answer in the top hits; cite `source › heading`.
-4. If no hit scores above ~0.4, say the knowledge base has no coverage and
-   answer from general UE knowledge.
+4. If every hit has `raw_score < 0.012`, say the knowledge base has no
+   coverage and answer from general UE knowledge.
 
 ## Pitfalls
 - Index dir must be ASCII (hnswlib): pass `--db C:/uekb/.chroma_db` if the

@@ -11,7 +11,6 @@ description: Use when writing Unreal Engine C++ code involving UPROPERTY, UFUNCT
 
 ## Before You Start
 
-Ask which area the user needs help with if unclear:
 - **Macros & Reflection** — UCLASS, UPROPERTY, UFUNCTION, USTRUCT, UENUM
 - **Containers** — TArray, TMap, TSet, TOptional
 - **Delegates** — static, dynamic, multicast, binding patterns

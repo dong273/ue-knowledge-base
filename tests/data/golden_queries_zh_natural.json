@@ -1,0 +1,64 @@
+[
+  {"topic": "ue-actor-component-architecture", "queries": [
+    {"text": "挂在 Pawn 上的组件，DestroyComponent 之后指针还能用吗？"}]},
+  {"topic": "ue-ai-navigation", "queries": [
+    {"text": "AI 被墙挡住走不过去的时候，怎么让它重新找一条路？"}]},
+  {"topic": "ue-animation-system", "queries": [
+    {"text": "跑步和走路两段动画之间怎么过渡得自然一点？"}]},
+  {"topic": "ue-async-threading", "queries": [
+    {"text": "在别的线程上直接调 UObject 的接口会崩吗？"}]},
+  {"topic": "ue-audio-system", "queries": [
+    {"text": "远处的枪声应该越来越小，这个效果怎么实现？"}]},
+  {"topic": "ue-character-movement", "queries": [
+    {"text": "角色从斜坡上滑下去的时候速度要怎么控制？"}]},
+  {"topic": "ue-code-review", "queries": [
+    {"text": "同事写的 UE 代码里到处是裸指针，评审的时候该重点看什么？"}]},
+  {"topic": "ue-cpp-foundations", "queries": [
+    {"text": "TMap 里存的 UObject 会不会被 GC 回收掉？"}]},
+  {"topic": "ue-data-assets-tables", "queries": [
+    {"text": "改一个数值不想重新编译项目，有什么好用的方案？"}]},
+  {"topic": "ue-editor-tools", "queries": [
+    {"text": "想在编辑器里一次性改几百个资产的某个属性，有什么现成路子？"}]},
+  {"topic": "ue-game-features", "queries": [
+    {"text": "游戏内容做成插件之后，怎么做到需要时才加载？"}]},
+  {"topic": "ue-gameplay-abilities", "queries": [
+    {"text": "技能放一半被打断了，这个技能的冷却时间怎么算？"}]},
+  {"topic": "ue-gameplay-framework", "queries": [
+    {"text": "玩家被打死后，是谁负责重新把他生成出来？"}]},
+  {"topic": "ue-input-system", "queries": [
+    {"text": "手柄和键盘的输入想走同一套逻辑，一般怎么设计？"}]},
+  {"topic": "ue-knowledge-rag", "queries": [
+    {"text": "本地知识库搜出来的结果顺序有点奇怪，该从哪调起？"}]},
+  {"topic": "ue-mass-entity", "queries": [
+    {"text": "场上同时有几千个敌人活动，性能上怎么撑得住？"}]},
+  {"topic": "ue-materials-rendering", "queries": [
+    {"text": "同一个材质要给不同角色换颜色，哪种做法最省？"}]},
+  {"topic": "ue-module-build-system", "queries": [
+    {"text": "编译报了一堆链接错误，一般从什么地方开始查？"}]},
+  {"topic": "ue-networking-replication", "queries": [
+    {"text": "服务器改了血量数值，客户端最快什么时候能看到？"}]},
+  {"topic": "ue-niagara-effects", "queries": [
+    {"text": "想让粒子跟着角色的手移动，粒子系统要怎么配置？"}]},
+  {"topic": "ue-physics-collision", "queries": [
+    {"text": "子弹打中敌人之后想拿到具体的命中位置，用哪种检测？"}]},
+  {"topic": "ue-plugin-installation", "queries": [
+    {"text": "从网上下载的插件压缩包，应该解压到哪个目录？"}]},
+  {"topic": "ue-procedural-generation", "queries": [
+    {"text": "大地图上要散落几千棵树，运行的时候生成会不会卡？"}]},
+  {"topic": "ue-project-context", "queries": [
+    {"text": "每次开新项目都要跟 AI 重新讲一遍项目结构，太麻烦了"}]},
+  {"topic": "ue-project-creation", "queries": [
+    {"text": "想用命令行建一个空项目，需要传哪些参数？"}]},
+  {"topic": "ue-sequencer-cinematics", "queries": [
+    {"text": "过场动画播完之后想黑屏切到下一关，该怎么接？"}]},
+  {"topic": "ue-serialization-savegames", "queries": [
+    {"text": "游戏存档到底存在电脑的哪个位置？"}]},
+  {"topic": "ue-state-trees", "queries": [
+    {"text": "AI 的行为切换逻辑越来越乱，有没有更好的组织方式？"}]},
+  {"topic": "ue-testing-debugging", "queries": [
+    {"text": "游戏玩着玩着开始卡顿，怎么定位问题出在哪？"}]},
+  {"topic": "ue-ui-umg-slate", "queries": [
+    {"text": "点按钮之后想弹一个确认框，这个流程怎么写？"}]},
+  {"topic": "ue-world-level-streaming", "queries": [
+    {"text": "大地图切成了好几块，角色快到边界时怎么提前把下一块加载好？"}]}
+]

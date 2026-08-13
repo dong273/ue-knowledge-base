@@ -22,7 +22,6 @@ If the context file is missing, ask for engine version and target platforms befo
 
 ## Step 2: Clarify the Rendering Need
 
-Ask which area the user needs:
 
 1. **Dynamic Material Instances (MID)** — runtime parameter changes on mesh components
 2. **Material Parameter Collections** — global parameters shared across all materials

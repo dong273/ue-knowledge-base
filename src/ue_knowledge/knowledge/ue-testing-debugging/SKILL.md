@@ -11,7 +11,6 @@ description: Use when writing automation tests, functional tests, or any test in
 
 ## Before You Start
 
-Ask which area the user needs help with if unclear:
 - **Automation tests** — unit/integration tests using IMPLEMENT_SIMPLE_AUTOMATION_TEST
 - **Functional tests** — actor-based AFunctionalTest in maps
 - **Logging** — UE_LOG, custom categories, verbosity filtering

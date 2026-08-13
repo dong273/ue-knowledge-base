@@ -36,6 +36,8 @@ Exclusions handled by the script:
 ### 2. Gate checks (must all pass)
 
 ```bash
+# Privacy: private names, personal paths, agent-prompt leftovers
+python scripts/check_privacy.py                                                        # 0 findings
 # Broken fences: single-backtick + language tag at line start
 grep -rnE '^`(csharp|cpp|python|bash|json|text|py|c|h|sh)$' src/ue_knowledge/knowledge/ | wc -l   # 0
 # Orphan single-backtick lines
@@ -63,8 +65,8 @@ python -m pytest tests/                           # incl. 86-file corpus + gener
 `README.md` + `README.zh-CN.md`:
 
 - topic count (31) and document count (86) in the header/table/list
-- searchable chunk count only after a local `build_ue_knowledge.py` run —
-  never guess it
+- searchable chunk count only from a real `ue-kb build` run (the count
+  depends on the embedding tokenizer, so it must never be guessed)
 
 ### 5. Commit & push (behind the Clash 7897 proxy)
 
@@ -77,11 +79,17 @@ git push origin main
 `git config http.proxy` is already set to `http://127.0.0.1:7897`. GitHub
 API calls need a `Mozilla/5.0` User-Agent header or they 403.
 
+### 6. Releasing a new package version
+
+Follow `docs/releasing.md`: version bump → tag → build → verify → twine
+upload → CI `smoke` job green. The PyPI release must NEVER lag the corpus
+fixes (the 0.4.0 incident: fixes committed, never published).
+
 ## Local RAG index (not part of the repo)
 
 The ChromaDB index at `~/AppData/Local/hermes/ue-knowledge/chroma_db/` is
-built locally, never committed:
+built locally, never committed. The current commands are:
 
 ```bash
-cd ~/ue-rag-env && PYTHONPATH="" TRANSFORMERS_OFFLINE=1 ./Scripts/python build_ue_knowledge.py
+ue-kb build --db <ascii-path>   # or point the local Hermes skill at the CLI
 ```

@@ -19,7 +19,6 @@ description: Use when implementing collision detection, trace queries, physics s
 
 ## Step 2: Identify the Need
 
-Ask which area applies if not stated:
 1. **Collision setup** — channels, profiles, responses on components
 2. **Trace queries** — line traces, sweeps, overlap queries for gameplay logic
 3. **Collision events** — OnComponentHit, OnBeginOverlap, OnEndOverlap delegates

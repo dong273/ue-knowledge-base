@@ -11,7 +11,6 @@ description: Covers Unreal Engine async operations, threading, parallel executio
 
 ## Information Gathering
 
-Ask the user if unclear:
 - **Offload type** — CPU-bound computation, I/O wait, or periodic background work?
 - **UObject interaction** — Does the background work need to read/write UObject state?
 - **Lifetime** — One-shot task, recurring work, or long-lived thread?

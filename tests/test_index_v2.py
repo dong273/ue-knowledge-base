@@ -174,7 +174,7 @@ def test_hybrid_expands_chinese_ue_terms(movement_corpus, tmp_path):
     assert vector[0]["source"].startswith("ue-character-movement/")
 
 
-def test_hybrid_deduplicates_chunks_from_the_same_source(tmp_path):
+def test_hybrid_deduplicates_by_source_and_heading(tmp_path):
     corpus = tmp_path / "corpus"
     topic = corpus / "ue-character-movement"
     topic.mkdir(parents=True)
@@ -199,5 +199,13 @@ def test_hybrid_deduplicates_chunks_from_the_same_source(tmp_path):
         "角色移动", top_k=5, chroma_dir=db,
         model_name="fake", embedder=FakeEmbedder(), profile="hybrid",
     )
-    sources = [result["source"] for result in results]
-    assert len(sources) == len(set(sources))
+    # Dedup is at (source, heading) granularity: distinct sections of the
+    # same file may all surface, but an exact (source, heading) pair never
+    # repeats.
+    keys = [(result["source"], result["heading"]) for result in results]
+    assert len(keys) == len(set(keys))
+    # Each hit carries cross-query-comparable raw_score and a 1-based rank.
+    assert all(result["raw_score"] > 0 for result in results)
+    assert [result["rank"] for result in results] == list(range(1, len(results) + 1))
+    # The strongest section of many.md is present, not collapsed away.
+    assert any(source.endswith("many.md") for source, _ in keys)

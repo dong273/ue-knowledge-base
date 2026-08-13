@@ -9,7 +9,6 @@ description: Use when working with Build.cs, Target.cs, module creation, plugin 
 ## Before Starting
 
 
-Ask which situation applies:
 1. Configuring dependencies in an existing Build.cs
 2. Creating a new module from scratch
 3. Creating a new plugin

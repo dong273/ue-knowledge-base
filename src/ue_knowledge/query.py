@@ -98,8 +98,15 @@ def query(
     vector = _vector_results(collection, model, vector_text, candidate_count)
     if profile == "vector":
         return [
-            {key: value for key, value in hit.items() if key != "id"}
-            for hit in vector[:top_k]
+            {
+                "source": hit["source"],
+                "heading": hit["heading"],
+                "score": hit["score"],
+                "raw_score": hit["score"],
+                "rank": index + 1,
+                "text": hit["text"],
+            }
+            for index, hit in enumerate(vector[:top_k])
         ]
 
     lexical = bm25_search(generation / "bm25.json", vector_text, limit=30)
@@ -120,19 +127,26 @@ def query(
             }
     maximum = fused[0][1] if fused else 1.0
     output: list[dict] = []
-    seen_sources: set[str] = set()
-    for identifier, score in fused:
+    seen: set[tuple[str, str]] = set()
+    for identifier, fused_score in fused:
         hit = by_id.get(identifier)
         if hit is None:
             continue
-        if hit["source"] in seen_sources:
+        key = (hit["source"], hit["heading"])
+        if key in seen:
             continue
-        seen_sources.add(hit["source"])
+        seen.add(key)
         output.append(
             {
                 "source": hit["source"],
                 "heading": hit["heading"],
-                "score": round(score / maximum, 4),
+                # score is display-relative: the top hit of this query is
+                # always 1.0. raw_score is the RRF fusion value, comparable
+                # ACROSS queries — use it for coverage/confidence decisions
+                # (see docs/agent-integration.md for calibrated ranges).
+                "score": round(fused_score / maximum, 4),
+                "raw_score": round(fused_score, 4),
+                "rank": len(output) + 1,
                 "text": hit["text"],
             }
         )

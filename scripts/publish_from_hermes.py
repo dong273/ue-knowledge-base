@@ -58,6 +58,10 @@ EXCLUDED_TOPICS = {"ue-baihechubu-pipeline"}
 DROP_LINE_RE = [
     re.compile(r"^You are an? .*expert.*$", re.I),
     re.compile(r"^Ask the developer.*$", re.I),
+    # Agent-prompt leftovers that add nothing to a search corpus (found in
+    # several topic SKILL.md files: "Ask which area the user needs...").
+    re.compile(r"^Ask which area.*$", re.I),
+    re.compile(r"^Ask the user.*$", re.I),
 ]
 
 DESC_TWEAKS = [

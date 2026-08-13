@@ -8,11 +8,14 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Windows coverage guards the platform-specific failure class (hnswlib
+    # cannot open index files under non-ASCII paths, console-script behavior).
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,6 +49,57 @@ jobs:
           fresh/bin/pip install pytest
       - name: Installed-wheel suite (default corpus + new-process round trip)
         run: fresh/bin/python -m pytest tests/ -v
+
+  smoke:
+    # Install-from-wheel smoke test: what a user gets from PyPI must build a
+    # real index and return hits. This catches the "corpus missing from the
+    # published wheel" regression class (see 0.4.0, whose PyPI wheel shipped
+    # no knowledge/ corpus and could not build an index at all).
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Build wheel + sdist
+        run: |
+          pip install build
+          python -m build
+      - name: Release gate — corpus in artifact == source corpus
+        run: python scripts/verify_package.py dist/*.whl dist/*.tar.gz
+      - name: Fresh venv, install from wheel only
+        run: |
+          python -m venv fresh
+          fresh/bin/pip install dist/*.whl
+      - name: Cache embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: bge-small-en-v1.5-${{ runner.os }}
+      - name: Download default model
+        run: fresh/bin/ue-kb download-model --json
+      - name: Build index from the wheel's bundled corpus
+        run: fresh/bin/ue-kb build --json
+      - name: Query returns hits
+        run: fresh/bin/ue-kb query "GAS ability cooldown" --top-k 5 --json | grep -q '"source":'
+      - name: Corpus shipped intact (chunk count sanity)
+        run: |
+          fresh/bin/ue-kb info --json | python -c "import json,sys; d=json.load(sys.stdin); assert d['documents'] >= 1500, d['documents']; print('chunks ok:', d['documents'])"
+
+  privacy:
+    # The corpus ships inside the published wheel: personal paths, private
+    # project names or agent-prompt leftovers would reach every user.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Corpus privacy scan
+        run: python scripts/check_privacy.py
 
   quality:
     # Quality evaluation uses the cached ~100MB default model. It is kept as a
