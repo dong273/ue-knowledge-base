@@ -3,8 +3,7 @@
 
 Splits:
   heldout    — the release gate: 2 queries per topic (en + zh), topic-level
-               and (when labeled) passage-level recall.
-  tune       — the tuning split: evaluated and reported for regression
+               and (when labeled) passage-level recall.  tune       — the tuning split: evaluated and reported for regression
                visibility; not gated (it is the pool used to tune, so gating
                on it would overfit).
   natural_zh — independent Chinese queries written WITHOUT glossary-alias
@@ -248,6 +247,13 @@ def main(argv=None) -> int:
         "heldout_en_recall_at_3": rate(hybrid, "en", "heldout") >= 0.90,
         "en_regression_within_2pp": rate(hybrid, "en", "heldout") >= rate(vector, "en", "heldout") - 0.02,
         "overall_mrr_at_5_not_lower": mrr(hybrid, "heldout") >= mrr(vector, "heldout"),
+        # Passage-level recall: labels in tests/data/passage_expected.json
+        # are the most specific section the engine actually returns for each
+        # held-out query (refined from a top-10 pass; no "前言" fallbacks).
+        # Same-source labels make this a REGRESSION gate (measured 98.4%),
+        # not an absolute-quality claim — it fails when a change stops
+        # surfacing the right section in the top 3.
+        "heldout_passage_recall_at_3": passage_rate(hybrid, "heldout") >= 0.80,
         # natural_zh is the honest bar for spoken-Chinese queries: no
         # glossary-alias wording, plain phrasing (baseline 25.8% before the
         # zh_dict spoken-phrase expansion; threshold keeps headroom).

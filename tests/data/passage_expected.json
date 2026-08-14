@@ -1,0 +1,622 @@
+[
+  {
+    "query": "Actor component lifecycle BeginPlay order",
+    "topic": "ue-actor-component-architecture",
+    "expected": [
+      {
+        "source": "ue-actor-component-architecture/SKILL.md",
+        "heading": "UE Actor-Component Architecture / Actor Lifecycle"
+      }
+    ]
+  },
+  {
+    "query": "Actor组件生命周期 BeginPlay 顺序",
+    "topic": "ue-actor-component-architecture",
+    "expected": [
+      {
+        "source": "ue-actor-component-architecture/references/actor-lifecycle.md",
+        "heading": "Actor Lifecycle Reference / Complete Lifecycle Diagram"
+      }
+    ]
+  },
+  {
+    "query": "Behavior Tree blackboard task pattern",
+    "topic": "ue-ai-navigation",
+    "expected": [
+      {
+        "source": "ue-ai-navigation/references/behavior-tree-patterns.md",
+        "heading": "Behavior Tree Patterns"
+      }
+    ]
+  },
+  {
+    "query": "行为树黑板任务怎么写",
+    "topic": "ue-ai-navigation",
+    "expected": [
+      {
+        "source": "ue-ai-navigation/SKILL.md",
+        "heading": "UE AI and Navigation / AI Architecture"
+      }
+    ]
+  },
+  {
+    "query": "AnimInstance locomotion state machine",
+    "topic": "ue-animation-system",
+    "expected": [
+      {
+        "source": "ue-animation-system/references/locomotion-setup.md",
+        "heading": "Locomotion Setup Reference / State Machine Setup — Locomotion State Machine"
+      }
+    ]
+  },
+  {
+    "query": "动画蓝图移动状态机",
+    "topic": "ue-animation-system",
+    "expected": [
+      {
+        "source": "ue-animation-system/SKILL.md",
+        "heading": "UE Animation System / Architecture"
+      }
+    ]
+  },
+  {
+    "query": "UE Tasks game thread dispatch",
+    "topic": "ue-async-threading",
+    "expected": [
+      {
+        "source": "ue-async-threading/SKILL.md",
+        "heading": "UE Async and Threading / Pattern Selection Guide"
+      }
+    ]
+  },
+  {
+    "query": "异步任务切回游戏线程",
+    "topic": "ue-async-threading",
+    "expected": [
+      {
+        "source": "ue-async-threading/SKILL.md",
+        "heading": "UE Async and Threading / Synchronization Primitives / FCriticalSection (Recursive Mutex)"
+      }
+    ]
+  },
+  {
+    "query": "MetaSound spatial audio attenuation",
+    "topic": "ue-audio-system",
+    "expected": [
+      {
+        "source": "ue-audio-system/SKILL.md",
+        "heading": "UE Audio System"
+      }
+    ]
+  },
+  {
+    "query": "MetaSound 空间音频衰减",
+    "topic": "ue-audio-system",
+    "expected": [
+      {
+        "source": "ue-audio-system/SKILL.md",
+        "heading": "UE Audio System"
+      }
+    ]
+  },
+  {
+    "query": "CharacterMovementComponent braking deceleration",
+    "topic": "ue-character-movement",
+    "expected": [
+      {
+        "source": "ue-character-movement/references/third-person-setup.md",
+        "heading": "Third-Person Character Setup / Component Layout / Constructor pattern"
+      }
+    ]
+  },
+  {
+    "query": "角色移动速度衰减",
+    "topic": "ue-character-movement",
+    "expected": [
+      {
+        "source": "ue-character-movement/references/third-person-setup.md",
+        "heading": "Third-Person Character Setup / Component Layout / Constructor pattern"
+      }
+    ]
+  },
+  {
+    "query": "UE C++ code review garbage collection",
+    "topic": "ue-code-review",
+    "expected": [
+      {
+        "source": "ue-code-review/SKILL.md",
+        "heading": "UE C++ 代码审查规则 / 使用方法 / 与 requesting-code-review 配合"
+      }
+    ]
+  },
+  {
+    "query": "UE C++ 代码审查垃圾回收",
+    "topic": "ue-code-review",
+    "expected": [
+      {
+        "source": "ue-code-review/SKILL.md",
+        "heading": "UE C++ 代码审查规则 / 1. 宏 & 反射安全 / UFUNCTION 检查"
+      }
+    ]
+  },
+  {
+    "query": "UPROPERTY UObject garbage collection",
+    "topic": "ue-cpp-foundations",
+    "expected": [
+      {
+        "source": "ue-cpp-foundations/SKILL.md",
+        "heading": "UE C++ Foundations / Memory & Garbage Collection"
+      }
+    ]
+  },
+  {
+    "query": "UPROPERTY 对象垃圾回收",
+    "topic": "ue-cpp-foundations",
+    "expected": [
+      {
+        "source": "ue-cpp-foundations/SKILL.md",
+        "heading": "UE C++ Foundations / Before You Start"
+      }
+    ]
+  },
+  {
+    "query": "DataAsset DataTable data driven design",
+    "topic": "ue-data-assets-tables",
+    "expected": [
+      {
+        "source": "ue-data-assets-tables/references/data-driven-design.md",
+        "heading": "Data-Driven Design in Unreal Engine"
+      }
+    ]
+  },
+  {
+    "query": "数据资产和数据表",
+    "topic": "ue-data-assets-tables",
+    "expected": [
+      {
+        "source": "ue-data-assets-tables/SKILL.md",
+        "heading": "UE Data Assets and Tables"
+      }
+    ]
+  },
+  {
+    "query": "Editor Utility Widget batch assets",
+    "topic": "ue-editor-tools",
+    "expected": [
+      {
+        "source": "ue-editor-tools/SKILL.md",
+        "heading": "UE Editor Tools / Editor Utility Widgets"
+      }
+    ]
+  },
+  {
+    "query": "编辑器工具批量处理资产",
+    "topic": "ue-editor-tools",
+    "expected": [
+      {
+        "source": "ue-editor-tools/SKILL.md",
+        "heading": "UE Editor Tools / Before You Start"
+      }
+    ]
+  },
+  {
+    "query": "Game Feature plugin activation",
+    "topic": "ue-game-features",
+    "expected": [
+      {
+        "source": "ue-game-features/SKILL.md",
+        "heading": "UE Game Features and Modular Gameplay / Plugin State Machine"
+      }
+    ]
+  },
+  {
+    "query": "游戏功能插件激活",
+    "topic": "ue-game-features",
+    "expected": [
+      {
+        "source": "ue-game-features/SKILL.md",
+        "heading": "UE Game Features and Modular Gameplay / UGameFeaturesSubsystem"
+      }
+    ]
+  },
+  {
+    "query": "GameplayEffect cooldown ability",
+    "topic": "ue-gameplay-abilities",
+    "expected": [
+      {
+        "source": "ue-gameplay-abilities/SKILL.md",
+        "heading": "Gameplay Ability System (GAS) / GameplayAbilities / ActivateAbility Pattern"
+      }
+    ]
+  },
+  {
+    "query": "技能冷却 GameplayEffect",
+    "topic": "ue-gameplay-abilities",
+    "expected": [
+      {
+        "source": "ue-gameplay-abilities/SKILL.md",
+        "heading": "Gameplay Ability System (GAS) / GAS Architecture Overview"
+      }
+    ]
+  },
+  {
+    "query": "GameMode GameState authority",
+    "topic": "ue-gameplay-framework",
+    "expected": [
+      {
+        "source": "ue-gameplay-framework/SKILL.md",
+        "heading": "UE Gameplay Framework / GameMode: Registration and Spawn Pipeline"
+      }
+    ]
+  },
+  {
+    "query": "游戏模式和游戏状态职责",
+    "topic": "ue-gameplay-framework",
+    "expected": [
+      {
+        "source": "ue-gameplay-framework/SKILL.md",
+        "heading": "UE Gameplay Framework / GameMode: Registration and Spawn Pipeline"
+      }
+    ]
+  },
+  {
+    "query": "Enhanced Input mapping context",
+    "topic": "ue-input-system",
+    "expected": [
+      {
+        "source": "ue-input-system/SKILL.md",
+        "heading": "UE Enhanced Input System / Mapping Context Priority"
+      }
+    ]
+  },
+  {
+    "query": "增强输入映射上下文",
+    "topic": "ue-input-system",
+    "expected": [
+      {
+        "source": "ue-input-system/SKILL.md",
+        "heading": "UE Enhanced Input System / Context Check"
+      }
+    ]
+  },
+  {
+    "query": "knowledge base semantic search",
+    "topic": "ue-knowledge-rag",
+    "expected": [
+      {
+        "source": "ue-knowledge-rag/SKILL.md",
+        "heading": "UE Knowledge Base (RAG) / 数据源 / Layer 1: 随包分发的技能文档"
+      }
+    ]
+  },
+  {
+    "query": "知识库语义检索",
+    "topic": "ue-knowledge-rag",
+    "expected": [
+      {
+        "source": "ue-knowledge-rag/references/query-optimization.md",
+        "heading": "UE Knowledge Base — Query Optimization Guide / 查询重写与术语扩展"
+      }
+    ]
+  },
+  {
+    "query": "Mass Entity processor fragment",
+    "topic": "ue-mass-entity",
+    "expected": [
+      {
+        "source": "ue-mass-entity/SKILL.md",
+        "heading": "UE Mass Entity Framework / Reference Files"
+      }
+    ]
+  },
+  {
+    "query": "Mass实体处理器和片段",
+    "topic": "ue-mass-entity",
+    "expected": [
+      {
+        "source": "ue-mass-entity/SKILL.md",
+        "heading": "UE Mass Entity Framework / FMassEntityQuery / Fragment-Based Chunk Filtering"
+      }
+    ]
+  },
+  {
+    "query": "dynamic material instance parameter",
+    "topic": "ue-materials-rendering",
+    "expected": [
+      {
+        "source": "ue-materials-rendering/references/material-parameter-reference.md",
+        "heading": "Material Parameter Reference / API Quick Reference / UMaterialInstanceDynamic (MaterialInstanceDynamic.h)"
+      }
+    ]
+  },
+  {
+    "query": "动态材质实例参数",
+    "topic": "ue-materials-rendering",
+    "expected": [
+      {
+        "source": "ue-materials-rendering/SKILL.md",
+        "heading": "UE Materials and Rendering / Core Patterns / 1. Dynamic Material Instances (MID) / Additional MID Operations"
+      }
+    ]
+  },
+  {
+    "query": "Build.cs module dependency",
+    "topic": "ue-module-build-system",
+    "expected": [
+      {
+        "source": "ue-module-build-system/references/common-build-errors.md",
+        "heading": "Common UE Build Errors: Causes and Solutions / Circular Dependency / Symptom"
+      }
+    ]
+  },
+  {
+    "query": "Build.cs 模块依赖",
+    "topic": "ue-module-build-system",
+    "expected": [
+      {
+        "source": "ue-module-build-system/references/build-cs-reference.md",
+        "heading": "Build.cs Complete Field Reference / Class Structure"
+      }
+    ]
+  },
+  {
+    "query": "replication RPC server authority",
+    "topic": "ue-networking-replication",
+    "expected": [
+      {
+        "source": "ue-networking-replication/references/rpc-decision-guide.md",
+        "heading": "RPC Decision Guide / RPC Type Quick Reference"
+      }
+    ]
+  },
+  {
+    "query": "网络复制 RPC 服务器权限",
+    "topic": "ue-networking-replication",
+    "expected": [
+      {
+        "source": "ue-networking-replication/references/rpc-decision-guide.md",
+        "heading": "RPC Decision Guide / RPC Type Quick Reference"
+      }
+    ]
+  },
+  {
+    "query": "Niagara particle system parameter",
+    "topic": "ue-niagara-effects",
+    "expected": [
+      {
+        "source": "ue-niagara-effects/references/niagara-data-interfaces.md",
+        "heading": "Niagara Data Interfaces — Built-In Reference / Export DI / UNiagaraDataInterfaceExport"
+      }
+    ]
+  },
+  {
+    "query": "Niagara 粒子系统参数",
+    "topic": "ue-niagara-effects",
+    "expected": [
+      {
+        "source": "ue-niagara-effects/references/niagara-parameter-types.md",
+        "heading": "Niagara Parameter Types — C++ to Niagara Type Mapping / Parameter Namespace Rules"
+      }
+    ]
+  },
+  {
+    "query": "line trace collision channel",
+    "topic": "ue-physics-collision",
+    "expected": [
+      {
+        "source": "ue-physics-collision/references/collision-channel-setup.md",
+        "heading": "Collision Channel Setup Reference / DefaultEngine.ini Configuration / Declaring a Custom Trace Channel"
+      }
+    ]
+  },
+  {
+    "query": "射线检测碰撞通道",
+    "topic": "ue-physics-collision",
+    "expected": [
+      {
+        "source": "ue-physics-collision/SKILL.md",
+        "heading": "UE Physics & Collision"
+      }
+    ]
+  },
+  {
+    "query": "install GitHub Unreal plugin",
+    "topic": "ue-plugin-installation",
+    "expected": [
+      {
+        "source": "ue-plugin-installation/SKILL.md",
+        "heading": "UE Plugin Installation / Workflow / 1. Feasibility Research"
+      }
+    ]
+  },
+  {
+    "query": "安装 GitHub 虚幻插件",
+    "topic": "ue-plugin-installation",
+    "expected": [
+      {
+        "source": "ue-plugin-installation/SKILL.md",
+        "heading": "UE Plugin Installation / Workflow / 1. Feasibility Research"
+      }
+    ]
+  },
+  {
+    "query": "PCG procedural generation graph",
+    "topic": "ue-procedural-generation",
+    "expected": [
+      {
+        "source": "ue-procedural-generation/SKILL.md",
+        "heading": "ue-procedural-generation / 1. PCG Framework (UE 5.2+)"
+      }
+    ]
+  },
+  {
+    "query": "PCG 程序化生成图",
+    "topic": "ue-procedural-generation",
+    "expected": [
+      {
+        "source": "ue-procedural-generation/SKILL.md",
+        "heading": "ue-procedural-generation / 2. ProceduralMeshComponent"
+      }
+    ]
+  },
+  {
+    "query": "create UE project context document",
+    "topic": "ue-project-context",
+    "expected": [
+      {
+        "source": "ue-project-context/SKILL.md",
+        "heading": "UE Project Context"
+      }
+    ]
+  },
+  {
+    "query": "创建虚幻项目上下文文档",
+    "topic": "ue-project-context",
+    "expected": [
+      {
+        "source": "ue-project-context/SKILL.md",
+        "heading": "UE Project Context"
+      }
+    ]
+  },
+  {
+    "query": "create Unreal Engine project CLI",
+    "topic": "ue-project-creation",
+    "expected": [
+      {
+        "source": "ue-project-creation/SKILL.md",
+        "heading": "UE Project Creation — Standard Workflow / 方式 B：克隆模板 + CLI（推荐用于自动化） / Step 5：生成项目文件"
+      }
+    ]
+  },
+  {
+    "query": "命令行创建虚幻项目",
+    "topic": "ue-project-creation",
+    "expected": [
+      {
+        "source": "ue-project-creation/SKILL.md",
+        "heading": "UE Project Creation — Standard Workflow / 方式 B：克隆模板 + CLI（推荐用于自动化） / Step 6：验证项目"
+      }
+    ]
+  },
+  {
+    "query": "Sequencer LevelSequence cutscene",
+    "topic": "ue-sequencer-cinematics",
+    "expected": [
+      {
+        "source": "ue-sequencer-cinematics/references/sequencer-patterns.md",
+        "heading": "Sequencer Patterns Reference / Pattern 1: Full-Screen Dialogue Cutscene"
+      }
+    ]
+  },
+  {
+    "query": "序列器关卡序列过场",
+    "topic": "ue-sequencer-cinematics",
+    "expected": [
+      {
+        "source": "ue-sequencer-cinematics/SKILL.md",
+        "heading": "Skill: ue-sequencer-cinematics / Build.cs Modules"
+      }
+    ]
+  },
+  {
+    "query": "USaveGame SaveGameToSlot",
+    "topic": "ue-serialization-savegames",
+    "expected": [
+      {
+        "source": "ue-serialization-savegames/references/save-system-architecture.md",
+        "heading": "Save System Architecture / 2. Save Manager Subsystem"
+      }
+    ]
+  },
+  {
+    "query": "存档系统保存到槽位",
+    "topic": "ue-serialization-savegames",
+    "expected": [
+      {
+        "source": "ue-serialization-savegames/SKILL.md",
+        "heading": "UE Serialization & Save Games"
+      }
+    ]
+  },
+  {
+    "query": "StateTree task condition evaluator",
+    "topic": "ue-state-trees",
+    "expected": [
+      {
+        "source": "ue-state-trees/SKILL.md",
+        "heading": "UE State Trees / Evaluators"
+      }
+    ]
+  },
+  {
+    "query": "状态树任务条件评估器",
+    "topic": "ue-state-trees",
+    "expected": [
+      {
+        "source": "ue-state-trees/SKILL.md",
+        "heading": "UE State Trees / Tasks / FStateTreeTaskBase API"
+      }
+    ]
+  },
+  {
+    "query": "Unreal automation test",
+    "topic": "ue-testing-debugging",
+    "expected": [
+      {
+        "source": "ue-testing-debugging/references/automation-test-patterns.md",
+        "heading": "Automation Test Patterns"
+      }
+    ]
+  },
+  {
+    "query": "虚幻自动化测试",
+    "topic": "ue-testing-debugging",
+    "expected": [
+      {
+        "source": "ue-testing-debugging/SKILL.md",
+        "heading": "UE Testing & Debugging / Before You Start"
+      }
+    ]
+  },
+  {
+    "query": "UMG UserWidget BindWidget",
+    "topic": "ue-ui-umg-slate",
+    "expected": [
+      {
+        "source": "ue-ui-umg-slate/SKILL.md",
+        "heading": "UE UI: UMG, Slate, and Common UI / 2. BindWidget Pattern"
+      }
+    ]
+  },
+  {
+    "query": "UMG 用户控件绑定",
+    "topic": "ue-ui-umg-slate",
+    "expected": [
+      {
+        "source": "ue-ui-umg-slate/references/widget-types.md",
+        "heading": "UMG Widget Type Reference / UButton"
+      }
+    ]
+  },
+  {
+    "query": "World Partition data layer",
+    "topic": "ue-world-level-streaming",
+    "expected": [
+      {
+        "source": "ue-world-level-streaming/SKILL.md",
+        "heading": "UE World & Level Streaming / World Partition (UE5) / HLOD"
+      }
+    ]
+  },
+  {
+    "query": "世界分区数据层",
+    "topic": "ue-world-level-streaming",
+    "expected": [
+      {
+        "source": "ue-world-level-streaming/SKILL.md",
+        "heading": "UE World & Level Streaming"
+      }
+    ]
+  }
+]
