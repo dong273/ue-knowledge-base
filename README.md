@@ -1,6 +1,6 @@
 # UE Knowledge Base — a local semantic knowledge base for UE developers
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.0)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
