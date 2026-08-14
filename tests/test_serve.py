@@ -242,3 +242,36 @@ def test_repeated_query_hits_cache(tmp_path):
         FakeEmbedder(),
     )
     assert responses[0]["result"]["structuredContent"] == responses[1]["result"]["structuredContent"]
+
+
+def test_lazy_embedder_handshake_needs_no_model(tmp_path):
+    # With embedder=None, initialize / tools/list / non-query tools must
+    # answer WITHOUT loading the embedding model (lazy load, so the MCP
+    # handshake stays inside client startup timeouts).
+    stdin = io.StringIO("\n".join([
+        json.dumps({
+            "jsonrpc": "2.0", "id": 20, "method": "initialize",
+            "params": {
+                "protocolVersion": "2024-11-05", "capabilities": {},
+                "clientInfo": {"name": "test", "version": "1"},
+            },
+        }),
+        json.dumps({"jsonrpc": "2.0", "id": 21, "method": "tools/list"}),
+        json.dumps({
+            "jsonrpc": "2.0", "id": 22, "method": "tools/call",
+            "params": {"name": "ue_kb_topics", "arguments": {}},
+        }),
+    ]) + "\n")
+    stdout = io.StringIO()
+    serve_loop(
+        stdin, stdout,
+        chroma_dir=str(tmp_path / "db"),
+        model_name="fake",
+        embedder=None,  # no model provided; must never be loaded here
+        top_k=3,
+    )
+    responses = [json.loads(line) for line in stdout.getvalue().strip().splitlines()]
+    assert len(responses) == 3
+    assert responses[0]["result"]["serverInfo"]["name"] == "ue-knowledge-base"
+    assert responses[1]["result"]["tools"][0]["name"] == "ue_kb_query"
+    assert responses[2]["result"]["isError"] is False

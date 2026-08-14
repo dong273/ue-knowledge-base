@@ -244,11 +244,22 @@ def serve_loop(
 ) -> None:
     """Run the MCP stdio loop until EOF. Testable with fake streams."""
     selected = model_name or config.MODEL_NAME
-    if embedder is None:
-        from sentence_transformers import SentenceTransformer
 
-        with config.offline_huggingface(True):
-            embedder = SentenceTransformer(selected, local_files_only=True)
+    # Lazy model load: the ~100MB embedding model takes ~12-14s to load,
+    # which risks exceeding MCP client startup timeouts if paid during the
+    # initialize handshake. Defer it to the first tools/call that actually
+    # queries — initialize / tools/list / info / topics / glossary all
+    # answer without the model.
+    loaded_embedder = embedder
+
+    def ensure_embedder():
+        nonlocal loaded_embedder
+        if loaded_embedder is None:
+            from sentence_transformers import SentenceTransformer
+
+            with config.offline_huggingface(True):
+                loaded_embedder = SentenceTransformer(selected, local_files_only=True)
+        return loaded_embedder
 
     @lru_cache(maxsize=64)
     def search(query_text: str, count: int, profile: str) -> list[dict]:
@@ -261,7 +272,7 @@ def serve_loop(
             chroma_dir=Path(chroma_dir) if chroma_dir else None,
             model_name=selected,
             offline=True,
-            embedder=embedder,
+            embedder=ensure_embedder(),
             profile=profile,
         )
 

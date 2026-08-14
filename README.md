@@ -166,8 +166,10 @@ locally and **not redistributed**, out of respect for Epic's copyright).
   (`ue_kb_info` / `ue_kb_topics` / `ue_kb_glossary` + `resources/list` +
   query cache), resume-friendly Epic docs crawler (markdown corpus output,
   no direct ChromaDB writes)
-- **next candidates** — passage-level recall gate (labeled held-out set),
-  scheduled eval runs in CI, more bilingual topics, UE 5.7 feature coverage
+- **next candidates** — agent write-back protocol (verified material routes
+  back into the corpus through the publish pipeline; see
+  `docs/agent-integration.md` Codex section), more bilingual topics,
+  UE 5.7 feature coverage
 
 ## FAQ
 

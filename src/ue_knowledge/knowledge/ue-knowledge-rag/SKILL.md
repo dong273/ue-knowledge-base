@@ -91,3 +91,28 @@ all-MiniLM-L6-v2 ONNX 模型下载（~79MB）。始终用 `query_embeddings=`
 - `ue-kb info --json` 查看索引清单、语料指纹、staleness、模型匹配状态
 - 索引是版本化代数 + 原子激活：构建失败不会破坏当前可用索引
 - 发布流程与语料同步见 `docs/sync-guide.md` 与 `docs/releasing.md`
+
+## 写回（Write-back）
+
+任务中验证过的合适材料要主动沉淀回知识库。先按路由表判定去向：
+
+| 材料类型 | 去向 | 发布性 |
+|---|---|---|
+| UE 通用可复用（已验证的引擎技术、C++ 模式、坑与解法） | `%LOCALAPPDATA%\hermes\skills\ue\<topic>\`（SKILL.md 或 references/*.md） | 走 publish 管线进公共语料，随 PyPI 发版 |
+| 项目特定（设计决策、关卡、项目状态） | 项目自己的知识库（项目级 MCP） | 仅项目内 |
+| 私有/内部管线 | publish 排除的私有主题（项目内部管线类技能） | 永不上线（publish 已排除） |
+
+**判定标准（全部满足才写）**：
+1. 实际验证过（编译或运行通过；禁止编造 API）；
+2. 通用性：不含项目名、私有路径、内部管线信息（`check_privacy.py` 兜底）；
+3. 新颖性：先查 KB，`raw_score` 低或无对应小节才写；
+4. 风格合规：English-first 正文（可双语）、copy-paste C++ 模式带引擎版本标注、
+   SKILL.md frontmatter（name/description/version/metadata.hermes.tags）。
+
+**操作链（按序，任一门禁失败即停）**：
+1. 写/更新 skills 树文件（新主题建目录）；
+2. `python scripts/publish_from_hermes.py --topics <topic>`（在 repo 检出内运行，消毒再生成语料）；
+3. 门禁：`python scripts/check_privacy.py`、`python scripts/check_zh_dict.py`、
+   `pytest tests/` 全绿；
+4. `ue-kb build --append`（editable 安装 → 本地立即可搜）；
+5. PyPI 发版仅按用户指示执行（docs/releasing.md）；写回 ≠ 立即发版。

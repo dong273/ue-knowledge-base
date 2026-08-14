@@ -81,6 +81,54 @@ Recommendations:
 - Prefer `--json` over the human format; the human format is for terminals.
 - If the index does not exist yet: `ue-kb build` (one-time, ~1 min on CPU).
 
+## Codex CLI
+
+Codex (OpenAI Codex CLI, 0.147+) reads project-level MCP servers from
+`.codex/config.toml`. Point it at `ue-kb serve` and it gains the same
+in-process tools as any MCP client — the model loads once per session:
+
+```toml
+# .codex/config.toml (project root)
+[mcp_servers.ue_kb]
+command = "C:/Users/15141/AppData/Local/ue-knowledge-base/venv/Scripts/ue-kb.exe"
+args = ["serve"]
+```
+
+Then verify with `codex mcp list` (shows `ue_kb ... enabled`) and check the
+tools are visible in a session (`ue_kb_query` / `ue_kb_info` / `ue_kb_topics`
+/ `ue_kb_glossary`).
+
+Autonomous use comes from instructions, not just tools — put the read/write
+protocol into the project `AGENTS.md` so the agent knows *when* to query
+(before implementing UE systems), *how to read* `raw_score`, and *when/how*
+to write back verified material. Recommended section:
+
+- **Read**: query before implementing GAS / CMC / animation / AI / networking /
+  UMG / Niagara / PCG / materials / build / editor-tool work; treat
+  `raw_score ≥ 0.025` as strong, `0.015–0.025` usable, all `< 0.012` as
+  no-coverage (answer from general knowledge, mark as write-back candidate).
+- **Write (3-way routing)**:
+  - UE-general reusable (verified engine technique, C++ patterns) →
+    Hermes skills tree → `publish_from_hermes.py` → public corpus;
+  - project-specific (design decisions, levels, status) → the project's own
+    knowledge base;
+  - private/internal pipeline → a publish-excluded topic (never ships).
+- **Write-back chain**: update the skill tree → `publish_from_hermes.py
+  --topics <topic>` → `check_privacy.py` + `check_zh_dict.py` + `pytest tests/`
+  → `ue-kb build --append` → (PyPI release only on explicit instruction).
+- Criteria before writing: verified by compile/run, generic (no project
+  names/private paths), novel (query first), style-compliant (English-first,
+  copy-paste C++ with engine-version notes, SKILL.md frontmatter).
+
+A persistent editable install is recommended so write-backs are searchable
+immediately without a PyPI release:
+
+```bash
+uv venv "$LOCALAPPDATA/ue-knowledge-base/venv" --python 3.11
+uv pip install -e <repo-checkout> --python "$LOCALAPPDATA/ue-knowledge-base/venv/Scripts/python.exe"
+"$LOCALAPPDATA/ue-knowledge-base/venv/Scripts/ue-kb.exe" build
+```
+
 ## Hermes
 
 Drop this into a skill (e.g. `ue-knowledge-rag/SKILL.md`) to give any Hermes

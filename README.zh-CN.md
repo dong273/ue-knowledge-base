@@ -152,8 +152,8 @@ for hit in query("GAS 冷却", top_k=5):
   自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
   `ue_kb_topics` / `ue_kb_glossary` ＋ `resources/list` ＋ 查询缓存）、
   可续爬的 Epic 官方文档爬虫（输出 markdown 语料，不再直接写 ChromaDB）
-- **后续候选** — 段落级召回门禁（带标注的 held-out 集）、CI 定时评测、
-  更多双语主题、UE 5.7 新特性覆盖
+- **后续候选** — Agent 写回协议（已验证材料经 publish 管线路由回语料；
+  见 `docs/agent-integration.md` Codex 章节）、更多双语主题、UE 5.7 新特性覆盖
 
 ## FAQ
 
