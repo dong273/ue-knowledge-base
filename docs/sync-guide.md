@@ -93,3 +93,32 @@ built locally, never committed. The current commands are:
 ```bash
 ue-kb build --db <ascii-path>   # or point the local Hermes skill at the CLI
 ```
+
+## Indexing Epic official docs (local only, never redistributed)
+
+`scripts/crawl_epic_docs.py` crawls selected UE 5.7 Epic documentation pages
+into a **local markdown corpus**, then you index it with the standard
+pipeline — the extracted text is generated locally and is **not** part of
+the published package (Epic copyright):
+
+```bash
+# 1. Crawl (resume-friendly: HTML cached under .cache/epic-docs/)
+python scripts/crawl_epic_docs.py --out epic-docs/
+
+# 2. Index into a fresh or existing knowledge base (snapshot sync)
+ue-kb build --source epic-docs/ --append
+
+# 3. Search (epic-docs hits are marked source: epic-docs/...)
+ue-kb query "module dependency graph"
+```
+
+Notes:
+
+- Add more pages by appending slugs to `PAGES` in the script.
+- Some Epic pages are Angular SPAs with no server-rendered content; the
+  crawler skips those and reports them in the summary.
+- The crawler never writes into the schema-v2 index directly — everything
+  goes through `ue-kb build`, so atomic generation, rollback markers and the
+  build lock all keep working.
+- A rerun after a partial crawl reuses the cached HTML and only re-emits
+  markdown; `--append` then adds/updates/removes chunks by chunk id.

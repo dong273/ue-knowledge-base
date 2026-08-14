@@ -51,8 +51,13 @@ MCP tool — the model loads once per session:
 ue-kb serve                 # MCP stdio server; expose as an MCP client tool
 ```
 
-- Exposes a single tool `ue_kb_query(query, top_k?, profile?)` returning the
-  same hit structure as `ue-kb query --json` (including `raw_score`).
+- Exposes tools: `ue_kb_query(query, top_k?, profile?)` returning the
+  same hit structure as `ue-kb query --json` (including `raw_score`);
+  `ue_kb_info` (index status / chunk count / model match, call before
+  querying to learn whether an index exists); `ue_kb_topics` (topic list);
+  `ue_kb_glossary(topic?)` (terminology table). Also implements MCP
+  `resources/list` (one resource per topic) and a query cache (repeated
+  identical queries skip re-embedding).
 - Configure it in Claude Code (`claude mcp add`) / Hermes (`hermes mcp add`)
   / any MCP-capable client; no API key, fully local.
 - The server is a plain JSON-RPC-over-stdio process: anything that can spawn

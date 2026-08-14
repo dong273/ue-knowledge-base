@@ -99,7 +99,7 @@ def test_tools_call_unknown_tool_is_error(tmp_path):
 
 def test_unknown_method_returns_jsonrpc_error(tmp_path):
     responses = _run_server(
-        [json.dumps({"jsonrpc": "2.0", "id": 6, "method": "resources/list"})],
+        [json.dumps({"jsonrpc": "2.0", "id": 6, "method": "prompts/list"})],
         tmp_path / "db",
         FakeEmbedder(),
     )
@@ -118,3 +118,127 @@ def test_notification_gets_no_response(tmp_path):
         embedder=FakeEmbedder(),
     )
     assert stdout.getvalue() == ""
+
+
+def test_tools_list_has_info_topics_glossary(tmp_path):
+    responses = _run_server(
+        [json.dumps({"jsonrpc": "2.0", "id": 7, "method": "tools/list"})],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    names = [tool["name"] for tool in responses[0]["result"]["tools"]]
+    assert names == ["ue_kb_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary"]
+
+
+def test_info_tool_reports_missing_index(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 8, "method": "tools/call",
+            "params": {"name": "ue_kb_info", "arguments": {}},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    call = responses[0]
+    assert call["result"]["isError"] is False
+    info = call["result"]["structuredContent"]
+    assert info["index_ready"] is False
+    assert info["topic_count"] >= 30
+    assert "package_version" in info
+
+
+def test_info_tool_reports_ready_index(tmp_path):
+    corpus = _corpus(tmp_path)
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder()
+    )
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 9, "method": "tools/call",
+            "params": {"name": "ue_kb_info", "arguments": {}},
+        })],
+        db,
+        FakeEmbedder(),
+    )
+    info = responses[0]["result"]["structuredContent"]
+    assert info["index_ready"] is True
+    assert info["chunk_count"] >= 1
+    assert info["generation"].startswith("gen-")
+
+
+def test_topics_tool_lists_topics(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 10, "method": "tools/call",
+            "params": {"name": "ue_kb_topics", "arguments": {}},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    topics = responses[0]["result"]["structuredContent"]
+    assert any(t["topic"] == "ue-gameplay-abilities" for t in topics)
+    assert all("canonical" in t for t in topics)
+
+
+def test_glossary_tool_filters_by_topic(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 11, "method": "tools/call",
+            "params": {"name": "ue_kb_glossary",
+                       "arguments": {"topic": "ue-gameplay-abilities"}},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    entries = responses[0]["result"]["structuredContent"]
+    assert len(entries) == 1
+    assert entries[0]["topic"] == "ue-gameplay-abilities"
+    assert entries[0]["identifiers"]
+
+
+def test_glossary_tool_unknown_topic_is_error(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 12, "method": "tools/call",
+            "params": {"name": "ue_kb_glossary", "arguments": {"topic": "nope"}},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    assert responses[0]["result"]["isError"] is True
+
+
+def test_resources_list_lists_topics(tmp_path):
+    responses = _run_server(
+        [json.dumps({"jsonrpc": "2.0", "id": 13, "method": "resources/list"})],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    resources = responses[0]["result"]["resources"]
+    assert any(r["uri"] == "ue-kb://topic/ue-gameplay-abilities" for r in resources)
+
+
+def test_repeated_query_hits_cache(tmp_path):
+    corpus = _corpus(tmp_path)
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder()
+    )
+    responses = _run_server(
+        [
+            json.dumps({
+                "jsonrpc": "2.0", "id": 14, "method": "tools/call",
+                "params": {"name": "ue_kb_query",
+                           "arguments": {"query": "movement speed"}},
+            }),
+            json.dumps({
+                "jsonrpc": "2.0", "id": 15, "method": "tools/call",
+                "params": {"name": "ue_kb_query",
+                           "arguments": {"query": "movement speed"}},
+            }),
+        ],
+        db,
+        FakeEmbedder(),
+    )
+    assert responses[0]["result"]["structuredContent"] == responses[1]["result"]["structuredContent"]

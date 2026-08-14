@@ -25,8 +25,12 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 - 86 篇原创文档（79 英文、7 中英混合），使用 Markdown-aware 分块，
   每块最多 384 个 embedding tokens；精确块数由发布验证脚本动态生成和校验
-- 中英 UE 术语扩展 + 向量/BM25 RRF 融合；最终 124 条黄金查询门禁在发布机器上
-  中文 held-out Recall@3 达到 **96.8%**，英文达到 **100%**
+- 中英 UE 术语扩展 + 口语中文短语词典（`zh_dict.json`，每个概念词均由语料
+  词表校验）+ 向量/BM25 RRF 融合。124 条黄金查询门禁在发布机器上中文
+  held-out Recall@3 达到 **100%**，英文 **100%**；另有一组 **31 条独立
+  自然口语中文查询**（非术语表措辞）达到 **90.3% Recall@3**（引入短语
+  词典前仅 25.8%）。同一评测还报告 tune 组，防止别名式查询虚高数字
+  （见 `scripts/evaluate_retrieval.py`）
 - 无 API key、无 token 计费，`pip install` 后即可使用
 - embedding 与检索全部在本地完成，代码不会离开你的机器
 - 所有命令支持 `--json` 输出，可接入 Hermes / Claude Code / OpenCode 等 Agent
@@ -91,6 +95,8 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
 | `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
+| `ue-kb serve` | MCP stdio 服务：模型只加载一次，进程内快速应答（Agent 循环） | `ue-kb serve` |
+| `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`（检索）、`ue_kb_info`（索引状态）、`ue_kb_topics`（主题清单）、`ue_kb_glossary`（术语表）＋ `resources/list` | 通过任意 MCP 客户端调用 |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
 | `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | 自定义语料目录（默认：包内内置语料） | `ue-kb build --source my-docs/` |
@@ -115,6 +121,8 @@ for hit in query("GAS 冷却", top_k=5):
 - **Hermes Agent** skill 封装（把检索变成 agent 工具）
 - **Claude Code** 斜杠命令
 - **OpenCode** 命令
+- **MCP server**（`ue-kb serve`）——模型每次会话只加载一次，查询循环
+  完全跳过约 12s 冷启动
 - 任意管线的**纯 Python 片段**
 
 ## 扩展语料
@@ -132,6 +140,20 @@ for hit in query("GAS 冷却", top_k=5):
 如需索引 **UE 引擎 C++ 头文件注释** 或 **Epic 官方文档**，参见
 `scripts/index_engine_source.py` 与 `scripts/crawl_epic_docs.py`（需要本地引擎
 路径；提取的索引数据仅本地生成、不随仓库分发，尊重 Epic 版权）。
+爬虫支持断点续爬（HTML 缓存）与失败重试，输出本地 markdown 语料后走
+`ue-kb build --source` 标准管线。
+
+## 路线图
+
+- **v0.5.0（已发布）** — 发布可用性：语料随 wheel 分发、原子索引 generation
+  + 构建锁、Windows CI、`raw_score`/`rank` 语义、MCP `ue-kb serve`、
+  隐私门禁、发布清单
+- **v0.6.0（当前）** — 检索质量：口语中文短语词典（`zh_dict.json`，
+  自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
+  `ue_kb_topics` / `ue_kb_glossary` ＋ `resources/list` ＋ 查询缓存）、
+  可续爬的 Epic 官方文档爬虫（输出 markdown 语料，不再直接写 ChromaDB）
+- **后续候选** — 段落级召回门禁（带标注的 held-out 集）、CI 定时评测、
+  更多双语主题、UE 5.7 新特性覆盖
 
 ## FAQ
 

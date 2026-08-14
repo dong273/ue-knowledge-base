@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ue-knowledge-base"
-version = "0.5.0"
+version = "0.6.0"
 description = "Offline hybrid search over Unreal Engine development knowledge (BGE + BM25 + ChromaDB)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -37,7 +37,7 @@ include-package-data = true
 # used by source checkouts, wheels and sdists (no build-time copying or
 # duplicate maintenance). Never exclude these from package data.
 [tool.setuptools.package-data]
-ue_knowledge = ["knowledge/**/*.md", "glossary.json"]
+ue_knowledge = ["knowledge/**/*.md", "glossary.json", "zh_dict.json"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

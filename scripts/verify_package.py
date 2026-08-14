@@ -2,7 +2,7 @@
 """Release gate: the corpus inside a built wheel/sdist == the source corpus.
 
 Usage:
-    python scripts/verify_package.py dist/ue_knowledge_base-0.5.0-py3-none-any.whl
+    python scripts/verify_package.py dist/ue_knowledge_base-0.6.0-py3-none-any.whl
     python scripts/verify_package.py dist/*.whl dist/*.tar.gz
 
 For every artifact this checks:
@@ -27,7 +27,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SOURCE_CORPUS = REPO_ROOT / "src/ue_knowledge/knowledge"
-SOURCE_GLOSSARY = REPO_ROOT / "src/ue_knowledge/glossary.json"
 
 
 def source_chunk_stats() -> dict[str, int]:
@@ -123,12 +122,12 @@ def license_present(artifact: Path) -> bool:
         )
 
 
-def glossary_bytes(artifact: Path) -> bytes | None:
-    """Read the packaged bilingual glossary from a wheel or sdist."""
+def packaged_json(artifact: Path, filename: str) -> bytes | None:
+    """Read a packaged JSON data file (glossary.json / zh_dict.json)."""
     if artifact.suffix == ".whl":
         with zipfile.ZipFile(artifact) as zf:
             name = next(
-                (item for item in zf.namelist() if item.endswith("ue_knowledge/glossary.json")),
+                (item for item in zf.namelist() if item.endswith(f"ue_knowledge/{filename}")),
                 None,
             )
             return zf.read(name) if name else None
@@ -136,7 +135,7 @@ def glossary_bytes(artifact: Path) -> bytes | None:
         member = next(
             (
                 item for item in tf.getmembers()
-                if item.isfile() and item.name.endswith("/src/ue_knowledge/glossary.json")
+                if item.isfile() and item.name.endswith(f"/src/ue_knowledge/{filename}")
             ),
             None,
         )
@@ -211,12 +210,14 @@ def check_artifact(artifact: Path, expected_version: str) -> bool:
         ok = False
         print("    [FAIL] LICENSE missing from artifact")
 
-    packaged_glossary = glossary_bytes(artifact)
-    if packaged_glossary == SOURCE_GLOSSARY.read_bytes():
-        print("    [ok]  bilingual glossary packaged with identical hash")
-    else:
-        ok = False
-        print("    [FAIL] bilingual glossary missing or stale")
+    for filename in ("glossary.json", "zh_dict.json"):
+        source_file = REPO_ROOT / f"src/ue_knowledge/{filename}"
+        packaged = packaged_json(artifact, filename)
+        if packaged == source_file.read_bytes():
+            print(f"    [ok]  {filename} packaged with identical hash")
+        else:
+            ok = False
+            print(f"    [FAIL] {filename} missing or stale")
 
     return ok
 

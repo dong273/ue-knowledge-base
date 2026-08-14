@@ -1,0 +1,38 @@
+name: eval-daily
+
+# Scheduled retrieval-quality evaluation. Runs the same gates as the
+# release `quality` job (plus the natural-Zh gate) every night and uploads
+# the full report as an artifact, so silent retrieval regressions — e.g. a
+# corpus edit that breaks zh_dict grounding, or a glossary alias removed by
+# accident — surface within a day instead of at the next release.
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 03:17 UTC daily
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -e .
+      - name: Cache embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: bge-small-en-v1.5-${{ runner.os }}
+      - name: Download default model
+        run: ue-kb download-model --json
+      - name: Retrieval-quality gates (heldout + tune + natural-Zh)
+        run: python scripts/evaluate_retrieval.py --db /tmp/uekb-daily --build --output daily-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: retrieval-daily-report
+          path: daily-report.json

@@ -27,11 +27,15 @@ materials/rendering, module build system, editor tools, and more
 - 86 original docs (79 English, 7 bilingual), split into Markdown-aware chunks
   of at most 384 embedding tokens; the release verifier generates and checks
   the exact chunk count instead of keeping a stale number in this README
-- Chinese terminology expansion + vector/BM25 RRF fusion; the held-out gate
-  (62 queries, 2 per topic) reached **100% Chinese / 100% English Recall@3**
-  on the release machine. The same harness also reports the tuning split and
-  an independent natural-Chinese query set (see `scripts/evaluate_retrieval.py`)
-  so alias-shaped queries cannot inflate the numbers
+- Chinese terminology expansion + spoken-Chinese phrase dictionary
+  (`zh_dict.json`, every concept grounded in the corpus vocabulary) +
+  vector/BM25 RRF fusion. The held-out gate (62 queries, 2 per topic)
+  reached **100% Chinese / 100% English Recall@3** on the release machine;
+  an independent set of **31 natural spoken-Chinese queries** (no
+  glossary-alias wording) scores **90.3% Recall@3** — up from 25.8% before
+  the phrase dictionary. The same harness reports the tuning split so
+  alias-shaped queries cannot inflate the numbers (see
+  `scripts/evaluate_retrieval.py`)
 - No API key, no tokens, no server — `pip install` and go
 - Embedding + retrieval happen locally; code never leaves your machine
 - Every command supports `--json`; patterns for Hermes / Claude Code /
@@ -101,6 +105,7 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb info` | Manifest, generation, staleness and model-match status | `ue-kb info --json` |
 | `ue-kb download-model` | One-time embedding model download | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio server: load the model once, answer queries in process (fast agent loops) | `ue-kb serve` |
+| `ue-kb serve` tools | MCP tools: `ue_kb_query` (search), `ue_kb_info` (index status), `ue_kb_topics` (topic list), `ue_kb_glossary` (terminology table) + `resources/list` | via any MCP client |
 | `--json` | Machine-readable output (agents) | `ue-kb query "..." --json` |
 | `--db <dir>` | Custom chroma dir (default: user data dir, see FAQ) | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | Custom corpus dir (default: bundled corpus) | `ue-kb build --source my-docs/` |
@@ -150,6 +155,19 @@ For indexing **Unreal Engine C++ header comments** or **Epic official docs**,
 see `scripts/index_engine_source.py` and `scripts/crawl_epic_docs.py`
 (they expect local engine/UE paths — extracted index data is generated
 locally and **not redistributed**, out of respect for Epic's copyright).
+
+## Roadmap
+
+- **v0.5.0 (released)** — publish-ready: corpus shipped in the wheel, atomic
+  index generations + build lock, Windows CI, `raw_score`/`rank` semantics,
+  MCP `ue-kb serve`, privacy gates, release checklist
+- **v0.6.0 (current)** — retrieval quality: spoken-Chinese phrase dictionary
+  (`zh_dict.json`, natural-Chinese Recall@3 25.8% → 90.3%), MCP tool set
+  (`ue_kb_info` / `ue_kb_topics` / `ue_kb_glossary` + `resources/list` +
+  query cache), resume-friendly Epic docs crawler (markdown corpus output,
+  no direct ChromaDB writes)
+- **next candidates** — passage-level recall gate (labeled held-out set),
+  scheduled eval runs in CI, more bilingual topics, UE 5.7 feature coverage
 
 ## FAQ
 

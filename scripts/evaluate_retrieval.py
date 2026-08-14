@@ -33,6 +33,7 @@ from ue_knowledge.build import build_index
 from ue_knowledge.chunking import collect_markdown, token_count
 from ue_knowledge.index_store import load_current
 from ue_knowledge.query import query
+from ue_knowledge.retrieval import expand_query
 
 GOLDEN = REPO_ROOT / "tests/data/golden_queries.json"
 PASSAGE_EXPECTED = REPO_ROOT / "tests/data/passage_expected.json"
@@ -93,6 +94,9 @@ def evaluate_profile(entries, profile, db, model_name, model) -> list[dict]:
             "recall_at_3": reciprocal_rank(hits, entry["topic"], 3) > 0,
             "passage_recall_at_3": passage_recall(hits, entry.get("expected"), 3),
             "reciprocal_rank_at_5": reciprocal_rank(hits, entry["topic"], 5),
+            # Only the hybrid profile expands the query; report the expanded
+            # text so zh_dict misses are debuggable from the failure output.
+            "expanded": expand_query(entry["text"]) if profile == "hybrid" else entry["text"],
             "top_hits": [
                 {
                     "source": hit["source"],
@@ -244,6 +248,10 @@ def main(argv=None) -> int:
         "heldout_en_recall_at_3": rate(hybrid, "en", "heldout") >= 0.90,
         "en_regression_within_2pp": rate(hybrid, "en", "heldout") >= rate(vector, "en", "heldout") - 0.02,
         "overall_mrr_at_5_not_lower": mrr(hybrid, "heldout") >= mrr(vector, "heldout"),
+        # natural_zh is the honest bar for spoken-Chinese queries: no
+        # glossary-alias wording, plain phrasing (baseline 25.8% before the
+        # zh_dict spoken-phrase expansion; threshold keeps headroom).
+        "natural_zh_recall_at_3": rate(natural_hybrid, "zh") >= 0.40,
         "hot_query_p95_under_1s": p95 < 1.0,
         # Cold CLI is dominated by loading the ~100MB embedding model into a
         # fresh process (measured 12s on the release machine vs 0.07s warm).

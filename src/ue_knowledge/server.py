@@ -7,8 +7,17 @@ that keeps the server running pays the model load once per session instead
 of once per query.
 
 Protocol: JSON-RPC 2.0 over stdin/stdout, newline-delimited JSON messages
-(MCP stdio transport). Only the tools subset is implemented — exactly what
-agents need, with zero new dependencies.
+(MCP stdio transport). Implements the tools + resources subsets with zero
+new dependencies.
+
+Tools:
+  ue_kb_query     — hybrid semantic search (top hits with raw_score/rank)
+  ue_kb_info      — index status: generation, chunk count, model, schema
+  ue_kb_topics    — the 31 topic identifiers (canonical + aliases)
+  ue_kb_glossary  — terminology expansion table (topic -> canonical/aliases/identifiers)
+
+Resources:
+  ue-kb://topic/<id> — one resource per topic (metadata only)
 
 Usage:
     ue-kb serve [--db <dir>] [--model <name>] [--top-k N]
@@ -19,10 +28,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 from . import __version__, config
 from .query import query
+from .retrieval import glossary
 
 PROTOCOL_VERSION = "2024-11-05"
 TOOL_NAME = "ue_kb_query"
@@ -34,33 +45,89 @@ TOOL_DESCRIPTION = (
     "hits below 0.012 means the KB has no coverage."
 )
 
+INFO_TOOL_NAME = "ue_kb_info"
+INFO_TOOL_DESCRIPTION = (
+    "Index status: generation id, schema version, chunk count, embedding "
+    "model, package version and topic count. Use before querying to learn "
+    "whether an index exists and matches the configured model."
+)
 
-def _tool_definition(top_k_default: int) -> dict:
-    return {
-        "name": TOOL_NAME,
-        "description": TOOL_DESCRIPTION,
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "The UE development question (English API terms work best).",
+TOPICS_TOOL_NAME = "ue_kb_topics"
+TOPICS_TOOL_DESCRIPTION = (
+    "List the topic identifiers of the knowledge base with their canonical "
+    "names and aliases. Useful to scope a query or to learn the vocabulary "
+    "the KB covers."
+)
+
+GLOSSARY_TOOL_NAME = "ue_kb_glossary"
+GLOSSARY_TOOL_DESCRIPTION = (
+    "The terminology expansion table: for each topic the canonical name, "
+    "Chinese aliases and code identifiers. Optionally filter by topic."
+)
+
+
+def _topics() -> list[dict]:
+    return [
+        {
+            "topic": entry["topic"],
+            "canonical": entry.get("canonical", ""),
+            "aliases": entry.get("aliases", []),
+        }
+        for entry in glossary()
+    ]
+
+
+def _tool_definitions(top_k_default: int) -> list[dict]:
+    return [
+        {
+            "name": TOOL_NAME,
+            "description": TOOL_DESCRIPTION,
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The UE development question (English API terms work best).",
+                    },
+                    "top_k": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20,
+                        "default": top_k_default,
+                    },
+                    "profile": {
+                        "type": "string",
+                        "enum": ["hybrid", "vector"],
+                        "default": "hybrid",
+                    },
                 },
-                "top_k": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 20,
-                    "default": top_k_default,
-                },
-                "profile": {
-                    "type": "string",
-                    "enum": ["hybrid", "vector"],
-                    "default": "hybrid",
+                "required": ["query"],
+            },
+        },
+        {
+            "name": INFO_TOOL_NAME,
+            "description": INFO_TOOL_DESCRIPTION,
+            "inputSchema": {"type": "object", "properties": {}},
+        },
+        {
+            "name": TOPICS_TOOL_NAME,
+            "description": TOPICS_TOOL_DESCRIPTION,
+            "inputSchema": {"type": "object", "properties": {}},
+        },
+        {
+            "name": GLOSSARY_TOOL_NAME,
+            "description": GLOSSARY_TOOL_DESCRIPTION,
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "topic": {
+                        "type": "string",
+                        "description": "Optional topic id filter, e.g. ue-gameplay-abilities.",
+                    },
                 },
             },
-            "required": ["query"],
         },
-    }
+    ]
 
 
 def _rpc_response(request_id, result=None, error=None) -> str:
@@ -72,9 +139,74 @@ def _rpc_response(request_id, result=None, error=None) -> str:
     return json.dumps(payload, ensure_ascii=False)
 
 
-def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default) -> dict:
+def _index_info(chroma_dir, model_name) -> dict:
+    """Lightweight index status without loading chroma (reads bm25.json)."""
+    from .index_store import load_current, read_manifest
+
+    root = Path(chroma_dir) if chroma_dir else config.chroma_dir()
+    try:
+        generation = load_current(root)
+        manifest = read_manifest(generation)
+        bm25 = generation / "bm25.json"
+        chunk_count = 0
+        if bm25.is_file():
+            chunk_count = len(json.loads(bm25.read_text(encoding="utf-8"))["documents"])
+        return {
+            "index_ready": True,
+            "generation": manifest.get("generation") or generation.name,
+            "schema_version": manifest.get("schema_version"),
+            "chunk_count": chunk_count,
+            "embedding": manifest.get("embedding"),
+            "model_name": model_name,
+            "package_version": __version__,
+            "topic_count": len(_topics()),
+            "chroma_dir": str(generation),
+        }
+    except Exception as exc:
+        return {
+            "index_ready": False,
+            "error": f"{type(exc).__name__}: {exc}",
+            "model_name": model_name,
+            "package_version": __version__,
+            "topic_count": len(_topics()),
+            "chroma_dir": str(root),
+        }
+
+
+def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default, search) -> dict:
     name = (params or {}).get("name")
     arguments = (params or {}).get("arguments") or {}
+    if name == INFO_TOOL_NAME:
+        return {
+            "content": [{"type": "text", "text": json.dumps(_index_info(chroma_dir, model_name), ensure_ascii=False)}],
+            "structuredContent": _index_info(chroma_dir, model_name),
+            "isError": False,
+        }
+    if name == TOPICS_TOOL_NAME:
+        topics = _topics()
+        return {
+            "content": [{"type": "text", "text": json.dumps(topics, ensure_ascii=False)}],
+            "structuredContent": topics,
+            "isError": False,
+        }
+    if name == GLOSSARY_TOOL_NAME:
+        topic_filter = arguments.get("topic")
+        entries = [
+            {"topic": e["topic"], "canonical": e.get("canonical", ""),
+             "aliases": e.get("aliases", []), "identifiers": e.get("identifiers", [])}
+            for e in glossary()
+            if not topic_filter or e["topic"] == topic_filter
+        ]
+        if topic_filter and not entries:
+            return {
+                "content": [{"type": "text", "text": f"unknown topic: {topic_filter}"}],
+                "isError": True,
+            }
+        return {
+            "content": [{"type": "text", "text": json.dumps(entries, ensure_ascii=False)}],
+            "structuredContent": entries,
+            "isError": False,
+        }
     if name != TOOL_NAME:
         return {
             "content": [{"type": "text", "text": f"unknown tool: {name}"}],
@@ -89,15 +221,7 @@ def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default) ->
     top_k = arguments.get("top_k", top_k_default)
     profile = arguments.get("profile", "hybrid")
     try:
-        results = query(
-            query_text,
-            top_k=int(top_k),
-            chroma_dir=Path(chroma_dir) if chroma_dir else None,
-            model_name=model_name,
-            offline=True,
-            embedder=embedder,
-            profile=profile,
-        )
+        results = search(query_text, int(top_k), profile)
     except Exception as exc:  # surfaced to the agent as a tool error
         return {
             "content": [{"type": "text", "text": f"{type(exc).__name__}: {exc}"}],
@@ -125,7 +249,28 @@ def serve_loop(
 
         with config.offline_huggingface(True):
             embedder = SentenceTransformer(selected, local_files_only=True)
-    tool = _tool_definition(top_k)
+
+    @lru_cache(maxsize=64)
+    def search(query_text: str, count: int, profile: str) -> list[dict]:
+        # Embedder/chroma_dir/model are fixed for the process lifetime, so
+        # caching on the (query, top_k, profile) tuple is safe. Repeated
+        # agent queries skip re-embedding entirely.
+        return query(
+            query_text,
+            top_k=count,
+            chroma_dir=Path(chroma_dir) if chroma_dir else None,
+            model_name=selected,
+            offline=True,
+            embedder=embedder,
+            profile=profile,
+        )
+
+    tools = _tool_definitions(top_k)
+    resources = [
+        {"uri": f"ue-kb://topic/{entry['topic']}", "name": entry["topic"],
+         "mimeType": "text/markdown", "description": entry.get("canonical", "")}
+        for entry in _topics()
+    ]
     for raw in stdin:
         line = raw.strip()
         if not line:
@@ -144,15 +289,17 @@ def serve_loop(
         if method == "initialize":
             result = {
                 "protocolVersion": PROTOCOL_VERSION,
-                "capabilities": {"tools": {}},
+                "capabilities": {"tools": {}, "resources": {}},
                 "serverInfo": {"name": "ue-knowledge-base", "version": __version__},
             }
         elif method == "ping":
             result = {}
         elif method == "tools/list":
-            result = {"tools": [tool]}
+            result = {"tools": tools}
         elif method == "tools/call":
-            result = _call_tool(params, chroma_dir, selected, embedder, top_k)
+            result = _call_tool(params, chroma_dir, selected, embedder, top_k, search)
+        elif method == "resources/list":
+            result = {"resources": resources}
         else:
             stdout.write(
                 _rpc_response(request_id, error={"code": -32601, "message": f"method not found: {method}"}) + "\n"

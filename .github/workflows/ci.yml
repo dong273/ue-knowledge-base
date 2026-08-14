@@ -100,6 +100,8 @@ jobs:
           python-version: "3.11"
       - name: Corpus privacy scan
         run: python scripts/check_privacy.py
+      - name: zh_dict concepts grounded in corpus vocabulary
+        run: python scripts/check_zh_dict.py
 
   quality:
     # Quality evaluation uses the cached ~100MB default model. It is kept as a

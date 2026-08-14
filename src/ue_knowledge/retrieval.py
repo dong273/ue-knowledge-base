@@ -32,8 +32,29 @@ def glossary() -> tuple[dict, ...]:
     return tuple(json.loads(path.read_text(encoding="utf-8")))
 
 
+@lru_cache(maxsize=1)
+def zh_dict() -> tuple[tuple[str, tuple[str, ...]], ...]:
+    """Spoken-Chinese phrase -> English concepts, grounded in corpus vocabulary."""
+    path = files("ue_knowledge").joinpath("zh_dict.json")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return tuple((phrase, tuple(concepts)) for phrase, concepts in data.items())
+
+
+_CJK_RE = re.compile(r"[\u3400-\u9fff]")
+MAX_EXPANSION_TERMS = 12
+
+
+def _has_cjk(text: str) -> bool:
+    return _CJK_RE.search(text) is not None
+
+
 def expand_query(text: str) -> str:
-    """Longest-match Chinese aliases and add canonical UE terminology."""
+    """Longest-match Chinese aliases and add canonical UE terminology.
+
+    For CJK queries, spoken-Chinese phrases from zh_dict.json are also
+    expanded into the English concepts the corpus actually uses; the total
+    number of added terms is capped to avoid diluting the embedding.
+    """
     normalized = normalize(text)
     additions: list[str] = []
     occupied: list[tuple[int, int]] = []
@@ -53,7 +74,27 @@ def expand_query(text: str) -> str:
             occupied.append(interval)
             additions.extend([entry["canonical"], *entry.get("identifiers", [])])
             break
-    return " ".join([normalized, *additions]).strip()
+
+    if _has_cjk(normalized):
+        phrases = sorted(zh_dict(), key=lambda item: len(item[0]), reverse=True)
+        for phrase, concepts in phrases:
+            start = 0
+            while phrase and (found := normalized.find(phrase, start)) >= 0:
+                interval = (found, found + len(phrase))
+                start = interval[1]
+                if any(not (interval[1] <= left or interval[0] >= right) for left, right in occupied):
+                    continue
+                occupied.append(interval)
+                additions.extend(concepts)
+                break
+
+    seen: set[str] = set()
+    unique: list[str] = []
+    for term in additions:
+        if term not in seen:
+            seen.add(term)
+            unique.append(term)
+    return " ".join([normalized, *unique[:MAX_EXPANSION_TERMS]]).strip()
 
 
 def _topic(source: str) -> str:
