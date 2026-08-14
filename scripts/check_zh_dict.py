@@ -12,7 +12,11 @@ import sys
 from importlib.resources import files
 from pathlib import Path
 
-from ue_knowledge.retrieval import normalize
+try:
+    from ue_knowledge.retrieval import normalize
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+    from ue_knowledge.retrieval import normalize
 
 
 def load_corpus(root: Path) -> str:
