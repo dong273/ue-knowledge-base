@@ -1,18 +1,18 @@
 # UE Knowledge Base — a local semantic knowledge base for UE developers
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.0)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.1)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> A local semantic knowledge base for UE development: 86 original documents
-> (79 English, 7 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
+> A local semantic knowledge base for UE development: 90 original documents
+> (83 English, 7 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
 > the ~100MB model once, then search fully offline on a laptop CPU — no API costs.
 
 ## Why this exists
 
 | Problem | Status quo | This project |
 |---|---|---|
-| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **86 structured original documents**, one search away |
+| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **90 structured original documents**, one search away |
 | **LLMs hallucinate UE APIs** | Generic models blur the UE 5.4 vs 5.7 differences and hand you "looks right" code | Documents are distilled from **real project work**, with **copy-pasteable C++ patterns** checked against specific engine versions |
 | **Cloud RAG costs money & leaks code** | Every query ships your game code to an API and bills you per token | **100% local, zero API cost** — code never leaves your machine |
 | **Docs lose fidelity in translation** | Translated or re-summarized docs blur UE terminology and drift from actual engine behavior | **Original English corpus** — written in the engine's own language, nothing lost in translation; bilingual topics keep Chinese queries working |
@@ -24,7 +24,7 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 86 original docs (79 English, 7 bilingual), split into Markdown-aware chunks
+- 90 original docs (83 English, 7 bilingual), split into Markdown-aware chunks
   of at most 384 embedding tokens; the release verifier generates and checks
   the exact chunk count instead of keeping a stale number in this README
 - Chinese terminology expansion + spoken-Chinese phrase dictionary

@@ -392,3 +392,7 @@ PublicDependencyModuleNames.AddRange(new string[] {
 - `ue-ai-navigation` — trace-based sensing and navmesh overlap queries
 - `ue-gameplay-abilities` — targeting systems built on trace and overlap queries
 - `ue-cpp-foundations` — delegate binding syntax and UFUNCTION requirements
+
+## References
+
+- `references/actor-collision-enable-state.md` — Actor-level collision enable state versus component collision readback

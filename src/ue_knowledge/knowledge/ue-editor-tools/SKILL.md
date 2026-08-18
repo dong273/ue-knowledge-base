@@ -492,3 +492,7 @@ class UMyValidator : public UEditorValidatorBase
 - **ue-module-build-system** — Editor module `.Build.cs`, LoadingPhase, `WITH_EDITOR` guards
 - **ue-data-assets-tables** — Custom UDataAsset types that need asset editors and type actions
 - **ue-cpp-foundations** — UPROPERTY, UFUNCTION, UObject reflection system
+
+## References
+
+- `references/unattended-editor-automation.md` — fresh unattended Editor and separate-PIE-window validation patterns
