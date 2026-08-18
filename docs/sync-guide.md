@@ -57,14 +57,14 @@ After any corpus change, the release gate must stay green (CI runs it):
 ```bash
 python -m build                                   # build wheel + sdist
 python scripts/verify_package.py dist/*.whl       # corpus in wheel == source corpus (hashes)
-python -m pytest tests/                           # incl. 86-file corpus + generated chunk checks
+python -m pytest tests/                           # incl. 90-file corpus + generated chunk checks
 ```
 
 ### 4. Update README numbers
 
 `README.md` + `README.zh-CN.md`:
 
-- topic count (31) and document count (86) in the header/table/list
+- topic count (31) and document count (90) in the header/table/list
 - searchable chunk count only from a real `ue-kb build` run (the count
   depends on the embedding tokenizer, so it must never be guessed)
 

@@ -74,7 +74,7 @@ Agent-side workflow:
 Recommendations:
 
 - `--top-k 3–5` is the sweet spot; more adds noise.
-- Query in English for best results — the corpus is 81/86 English and the
+- Query in English for best results — the corpus is English-first and the
   default `bge-small-en-v1.5` embedder is English-first. Chinese queries
   still work on bilingual topics; rebuild with `--model BAAI/bge-small-zh-v1.5`
   for Chinese-first retrieval.

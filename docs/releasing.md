@@ -60,7 +60,7 @@ python -m venv /tmp/fresh && /tmp/fresh/bin/pip install ue-knowledge-base
 ```
 
 3. Confirm PyPI shows the new version and a wheel size consistent with the
-   bundled corpus (86 markdown files ≈ 1.2 MB source; expect a wheel well
+   bundled corpus (90 markdown files; expect a wheel well
    above 100 KB — a ~15 KB wheel means the corpus is missing again).
 4. Add a GitHub release from the tag with the quality report
    (`quality-report.json` artifact from CI) attached.

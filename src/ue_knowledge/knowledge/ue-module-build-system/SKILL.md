@@ -464,3 +464,4 @@ Most build errors fall into a few categories: **LNK2019** (missing dependency or
 
 For detailed Build.cs field reference, see [references/build-cs-reference.md](references/build-cs-reference.md).
 For error message lookup, see [references/common-build-errors.md](references/common-build-errors.md).
+For Windows path/response-file diagnostics, see [references/windows-non-ascii-project-paths.md](references/windows-non-ascii-project-paths.md).

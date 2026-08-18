@@ -1,10 +1,10 @@
 # UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.0)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.1)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> 面向 UE 开发者的本地语义知识库：86 篇原创文档（79 篇英文、7 篇中英混合），
+> 面向 UE 开发者的本地语义知识库：90 篇原创文档（83 篇英文、7 篇中英混合），
 > 配合本地混合检索（BGE + BM25 + ChromaDB）。模型一次下载（约 100MB）后
 > 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
@@ -12,7 +12,7 @@
 
 | 痛点 | 常见现状 | 这个项目 |
 |---|---|---|
-| **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 31 个主题、86 篇**结构化原创文档**，一次检索直达答案 |
+| **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 31 个主题、90 篇**结构化原创文档**，一次检索直达答案 |
 | **LLM 会幻觉 UE API** | 通用模型分不清 UE 5.4 和 5.7 的 API 差异，给你"看起来对"的代码 | 文档来自真实项目实践，包含**可直接使用的 C++ 模式**，并针对特定引擎版本校验 |
 | **云 RAG 花钱 + 泄代码** | 每次查询都把你的代码片段发给云端 API，还要按 token 计费 | **完全本地运行，零 API 成本**——游戏代码一行都不会离开你的机器 |
 | **翻译丢保真度** | 翻译/转述文档会模糊 UE 术语、偏离真实引擎行为 | **原创英文语料**（引擎本身的语言，无翻译损耗）+ 混合主题支持中文查询 |
@@ -23,7 +23,7 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 
 ## 特点
 
-- 86 篇原创文档（79 英文、7 中英混合），使用 Markdown-aware 分块，
+- 90 篇原创文档（83 英文、7 中英混合），使用 Markdown-aware 分块，
   每块最多 384 个 embedding tokens；精确块数由发布验证脚本动态生成和校验
 - 中英 UE 术语扩展 + 口语中文短语词典（`zh_dict.json`，每个概念词均由语料
   词表校验）+ 向量/BM25 RRF 融合。124 条黄金查询门禁在发布机器上中文

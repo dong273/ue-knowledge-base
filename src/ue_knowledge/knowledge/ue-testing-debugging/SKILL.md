@@ -488,3 +488,4 @@ For `check()` and `ensure()` failures, set breakpoints on the handler functions 
 
 - `references/automation-test-patterns.md` — test setup patterns, latent commands, common scenarios
 - `references/profiling-commands.md` — stat commands, Insights capture, analysis workflow
+- `references/fresh-pie-negative-evidence.md` — fresh PIE negative scenarios and separate machine/human evidence layers
