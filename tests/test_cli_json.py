@@ -37,6 +37,110 @@ def test_query_json_failure_is_parseable(capsys, tmp_path):
     assert payload["action"] == "ue-kb build"
 
 
+def test_doctor_json_reports_runtime_and_missing_index(capsys, tmp_path):
+    rc = main(["doctor", "--db", str(tmp_path / "missing"), "--model", "fake", "--json"])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 1
+    assert payload["schema_version"] == 1
+    assert payload["ok"] is False
+    assert payload["package"]["module_path"].endswith("__init__.py")
+    assert payload["package"]["corpus_path"]
+    assert payload["index"]["ready"] is False
+    assert payload["mcp"]["checked"] is False
+
+
+def test_doctor_mcp_smoke_reports_tools_and_ready_index(capsys, tmp_path):
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    (corpus / "doc.md").write_text(
+        "# Movement\n\n" + ("movement speed braking " * 30), encoding="utf-8"
+    )
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db,
+        model_name="fake", embedder=FakeEmbedder(),
+    )
+
+    rc = main([
+        "doctor", "--db", str(db), "--model", "fake",
+        "--mcp-smoke", "--json",
+    ])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 0
+    assert payload["ok"] is True
+    assert payload["mcp"]["checked"] is True
+    assert payload["mcp"]["info_ready"] is True
+    assert payload["mcp"]["tools"] == [
+        "ue_kb_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary",
+    ]
+    assert payload["mcp"]["tools_complete"] is True
+
+
+def test_doctor_json_reports_model_mismatch(capsys, tmp_path):
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    (corpus / "doc.md").write_text(
+        "# Movement\n\n" + ("movement speed braking " * 30), encoding="utf-8"
+    )
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db,
+        model_name="fake", embedder=FakeEmbedder(),
+    )
+
+    rc = main(["doctor", "--db", str(db), "--model", "other", "--json"])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 1
+    assert payload["index"]["ready"] is True
+    assert payload["index"]["model_matches"] is False
+    assert payload["ok"] is False
+
+
+def test_doctor_json_reports_stale_corpus(capsys, tmp_path):
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    document = corpus / "doc.md"
+    document.write_text("# Movement\n\n" + ("movement speed braking " * 30), encoding="utf-8")
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db,
+        model_name="fake", embedder=FakeEmbedder(),
+    )
+    document.write_text("# Movement\n\nchanged", encoding="utf-8")
+
+    rc = main(["doctor", "--db", str(db), "--model", "fake", "--json"])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 1
+    assert payload["index"]["corpus"]["stale"] is True
+    assert payload["ok"] is False
+
+
+def test_doctor_json_reports_non_ascii_index_path(capsys, tmp_path):
+    rc = main(["doctor", "--db", str(tmp_path / "索引"), "--model", "fake", "--json"])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 1
+    assert payload["ok"] is False
+    assert payload["index"]["error"]["code"] == "INVALID_INDEX_PATH"
+    assert payload["index"]["corpus"]["stale"] is None
+
+
+def test_doctor_package_identity_matches_ci_install_mode(capsys, tmp_path):
+    mode = os.environ.get("UE_KB_EXPECT_PACKAGE_MODE")
+    if not mode:
+        pytest.skip("CI install mode not requested")
+
+    rc = main(["doctor", "--db", str(tmp_path / "missing"), "--model", "fake", "--json"])
+    payload, _ = _json_stdout(capsys)
+    assert rc == 1
+    module_path = Path(payload["package"]["module_path"])
+    if mode == "source":
+        assert module_path.is_relative_to(Path(__file__).resolve().parents[1] / "src")
+    elif mode == "wheel":
+        assert "site-packages" in str(module_path).lower()
+    else:
+        raise AssertionError(f"unknown install mode: {mode}")
+
+
 def test_info_json_success_exposes_manifest(capsys, tmp_path):
     corpus = tmp_path / "corpus"
     corpus.mkdir()

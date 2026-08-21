@@ -25,7 +25,13 @@ jobs:
       - name: Install
         run: pip install -e .
       - name: Unit tests (chunking + CLI + default paths)
+        env:
+          UE_KB_EXPECT_PACKAGE_MODE: source
         run: pip install pytest && pytest tests/ -v
+      - name: Doctor source identity
+        env:
+          UE_KB_EXPECT_PACKAGE_MODE: source
+        run: python scripts/check_doctor_identity.py
 
   package:
     runs-on: ubuntu-latest
@@ -48,7 +54,13 @@ jobs:
           fresh/bin/pip install dist/*.whl
           fresh/bin/pip install pytest
       - name: Installed-wheel suite (default corpus + new-process round trip)
+        env:
+          UE_KB_EXPECT_PACKAGE_MODE: wheel
         run: fresh/bin/python -m pytest tests/ -v
+      - name: Doctor wheel identity
+        env:
+          UE_KB_EXPECT_PACKAGE_MODE: wheel
+        run: fresh/bin/python scripts/check_doctor_identity.py
 
   smoke:
     # Install-from-wheel smoke test: what a user gets from PyPI must build a
@@ -82,6 +94,10 @@ jobs:
         run: fresh/bin/ue-kb download-model --json
       - name: Build index from the wheel's bundled corpus
         run: fresh/bin/ue-kb build --json
+      - name: MCP stdio doctor and query smoke
+        run: |
+          fresh/bin/ue-kb doctor --json --mcp-smoke --mcp-smoke-query "GAS ability cooldown" \
+            | python -c "import json,sys; d=json.load(sys.stdin); assert d['ok'], d; assert d['mcp']['query_ok'], d['mcp']; print('MCP smoke ok:', d['mcp']['tools'])"
       - name: Query returns hits
         run: fresh/bin/ue-kb query "GAS ability cooldown" --top-k 5 --json | grep -q '"source":'
       - name: Corpus shipped intact (chunk count sanity)

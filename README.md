@@ -1,6 +1,6 @@
 # UE Knowledge Base — a local semantic knowledge base for UE developers
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.1)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.2)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -103,6 +103,7 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query "..."` | Hybrid search by default; top-k hits with source + heading | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | Fall back to 0.4-style vector-only ranking | `ue-kb query "GAS" --profile vector` |
 | `ue-kb info` | Manifest, generation, staleness and model-match status | `ue-kb info --json` |
+| `ue-kb doctor` | Read-only package, index and MCP runtime diagnostics | `ue-kb doctor --json --mcp-smoke` |
 | `ue-kb download-model` | One-time embedding model download | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio server: load the model once, answer queries in process (fast agent loops) | `ue-kb serve` |
 | `ue-kb serve` tools | MCP tools: `ue_kb_query` (search), `ue_kb_info` (index status), `ue_kb_topics` (topic list), `ue_kb_glossary` (terminology table) + `resources/list` | via any MCP client |
@@ -161,7 +162,7 @@ locally and **not redistributed**, out of respect for Epic's copyright).
 - **v0.5.0 (released)** — publish-ready: corpus shipped in the wheel, atomic
   index generations + build lock, Windows CI, `raw_score`/`rank` semantics,
   MCP `ue-kb serve`, privacy gates, release checklist
-- **v0.6.0 (current)** — retrieval quality: spoken-Chinese phrase dictionary
+- **v0.6.2 (current)** — runtime doctor diagnostics, MCP identity checks and retrieval quality
   (`zh_dict.json`, natural-Chinese Recall@3 25.8% → 90.3%), MCP tool set
   (`ue_kb_info` / `ue_kb_topics` / `ue_kb_glossary` + `resources/list` +
   query cache), resume-friendly Epic docs crawler (markdown corpus output,

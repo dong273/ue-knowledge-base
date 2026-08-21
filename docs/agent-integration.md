@@ -96,7 +96,30 @@ args = ["serve"]
 
 Then verify with `codex mcp list` (shows `ue_kb ... enabled`) and check the
 tools are visible in a session (`ue_kb_query` / `ue_kb_info` / `ue_kb_topics`
-/ `ue_kb_glossary`).
+/ `ue_kb_glossary`). For a local, machine-readable transport check, run:
+
+```bash
+ue-kb doctor --json --mcp-smoke
+```
+
+This validates the package identity, active index, MCP initialize handshake,
+tool list and `ue_kb_info`. It does **not** prove that a model has injected or
+chosen the tools in its current conversation.
+
+To include one real retrieval call in a release smoke test, add
+`--mcp-smoke-query "GAS ability cooldown"`; the result checks
+`source` / `heading` / `raw_score` / `rank` as well as the handshake.
+
+Codex integration has three separate states:
+
+1. **Server configured** — `.codex/config.toml` contains the `ue_kb` stdio
+   entry above.
+2. **Tools injected** — a fresh Codex session lists the four `ue_kb_*` tools.
+3. **Automatic use instructed** — the project `AGENTS.md` requires a KB query
+   before the relevant UE implementation work.
+
+Only the third state makes use automatic for matching tasks; MCP registration
+alone is not an autonomous-use guarantee.
 
 Autonomous use comes from instructions, not just tools — put the read/write
 protocol into the project `AGENTS.md` so the agent knows *when* to query
@@ -121,13 +144,26 @@ to write back verified material. Recommended section:
   copy-paste C++ with engine-version notes, SKILL.md frontmatter).
 
 A persistent editable install is recommended so write-backs are searchable
-immediately without a PyPI release:
+immediately without a PyPI release. Use one canonical checkout for the
+editable install, then verify which source is actually running:
 
 ```bash
 uv venv "$LOCALAPPDATA/ue-knowledge-base/venv" --python 3.11
 uv pip install -e <repo-checkout> --python "$LOCALAPPDATA/ue-knowledge-base/venv/Scripts/python.exe"
 "$LOCALAPPDATA/ue-knowledge-base/venv/Scripts/ue-kb.exe" build
+"$LOCALAPPDATA/ue-knowledge-base/venv/Scripts/ue-kb.exe" doctor --json
 ```
+
+The doctor output includes the imported module path, corpus identity, index
+generation, model match and (with `--mcp-smoke`) the local MCP transport. If
+the path points at a different checkout than the one just installed, stop and
+reinstall from the intended canonical checkout; the doctor never repairs that
+drift automatically.
+
+For final Codex acceptance, perform the machine checks above and then create a
+fresh session, ask one UE implementation question, and confirm that the model
+actually called `ue_kb_query`. The session observation is a human/client gate,
+not a claim made by this package's diagnostics.
 
 ## Hermes
 
@@ -213,13 +249,16 @@ Any tool that can run a subprocess and read stdout can use `ue-kb`:
 
 ```python
 import json
+import os
 import subprocess
 
 
 def ue_kb_search(question: str, top_k: int = 5) -> list[dict]:
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
     out = subprocess.run(
         ["ue-kb", "query", question, "--top-k", str(top_k), "--json"],
-        capture_output=True, text=True, check=True,
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+        env=env, check=True,
     )
     return json.loads(out.stdout)
 ```
@@ -231,6 +270,7 @@ def ue_kb_search(question: str, top_k: int = 5) -> list[dict]:
 | `ue-kb build [--append]` | build / incrementally update the index | summary |
 | `ue-kb query <q> --top-k N` | semantic search | hits |
 | `ue-kb info` | index stats (count, description) | plain text |
+| `ue-kb doctor` | read-only package, index and MCP diagnostics | stable JSON with `--json` |
 | `ue-kb download-model` | one-time model fetch (mirror fallback) | plain text |
 
 ## Troubleshooting (quick)

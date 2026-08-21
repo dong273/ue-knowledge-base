@@ -49,6 +49,7 @@ def test_initialize_and_tools_list(tmp_path):
     assert tools[0]["name"] == "ue_kb_query"
     assert "query" in tools[0]["inputSchema"]["properties"]
     assert "raw_score" in tools[0]["description"]
+    assert "86 docs" not in tools[0]["description"]
 
 
 def test_tools_call_returns_hits(tmp_path):
@@ -69,6 +70,7 @@ def test_tools_call_returns_hits(tmp_path):
     assert call["result"]["isError"] is False
     hits = json.loads(call["result"]["content"][0]["text"])
     assert hits and hits[0]["source"].startswith("ue-character-movement/")
+    assert set(hits[0]) == {"source", "heading", "score", "raw_score", "rank", "text"}
     assert hits[0]["raw_score"] > 0
     assert hits[0]["rank"] == 1
 
@@ -145,6 +147,9 @@ def test_info_tool_reports_missing_index(tmp_path):
     assert info["index_ready"] is False
     assert info["topic_count"] >= 30
     assert "package_version" in info
+    assert info["module_path"].endswith("__init__.py")
+    assert info["model_matches"] is False
+    assert set(info["corpus"]) == {"source", "sha256", "documents", "chunks", "stale"}
 
 
 def test_info_tool_reports_ready_index(tmp_path):
@@ -165,6 +170,30 @@ def test_info_tool_reports_ready_index(tmp_path):
     assert info["index_ready"] is True
     assert info["chunk_count"] >= 1
     assert info["generation"].startswith("gen-")
+
+
+def test_info_tool_reports_package_and_corpus_identity(tmp_path):
+    corpus = _corpus(tmp_path)
+    db = tmp_path / "db"
+    build_index(
+        source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder()
+    )
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 91, "method": "tools/call",
+            "params": {"name": "ue_kb_info", "arguments": {}},
+        })],
+        db,
+        FakeEmbedder(),
+    )
+    info = responses[0]["result"]["structuredContent"]
+    assert info["module_path"].endswith("__init__.py")
+    assert info["model_matches"] is True
+    assert info["corpus"]["source"] == str(corpus.resolve())
+    assert info["corpus"]["sha256"]
+    assert info["corpus"]["documents"] == 1
+    assert info["corpus"]["chunks"] == info["chunk_count"]
+    assert info["corpus"]["stale"] is False
 
 
 def test_topics_tool_lists_topics(tmp_path):

@@ -31,6 +31,7 @@ import sys
 from functools import lru_cache
 from pathlib import Path
 
+import ue_knowledge
 from . import __version__, config
 from .query import query
 from .retrieval import glossary
@@ -39,7 +40,8 @@ PROTOCOL_VERSION = "2024-11-05"
 TOOL_NAME = "ue_kb_query"
 TOOL_DESCRIPTION = (
     "Hybrid semantic search over the local Unreal Engine knowledge base "
-    "(31 topics, 86 docs, BGE + BM25 RRF fusion). Returns top hits with "
+    "(BGE + BM25 RRF fusion). Call ue_kb_info for current corpus inventory. "
+    "Returns top hits with "
     "source / heading / text / raw_score / rank. Use raw_score for "
     "confidence: >=0.025 strong, 0.015-0.025 moderate, <0.012 weak; all "
     "hits below 0.012 means the KB has no coverage."
@@ -47,8 +49,9 @@ TOOL_DESCRIPTION = (
 
 INFO_TOOL_NAME = "ue_kb_info"
 INFO_TOOL_DESCRIPTION = (
-    "Index status: generation id, schema version, chunk count, embedding "
-    "model, package version and topic count. Use before querying to learn "
+    "Index status and runtime identity: generation id, schema version, corpus "
+    "source/hash/document/chunk counts, stale state, embedding model, module "
+    "path, package version and topic count. Use before querying to learn "
     "whether an index exists and matches the configured model."
 )
 
@@ -141,9 +144,17 @@ def _rpc_response(request_id, result=None, error=None) -> str:
 
 def _index_info(chroma_dir, model_name) -> dict:
     """Lightweight index status without loading chroma (reads bm25.json)."""
-    from .index_store import load_current, read_manifest
+    from .index_store import corpus_fingerprint, load_current, read_manifest
 
     root = Path(chroma_dir) if chroma_dir else config.chroma_dir()
+    module_path = str(Path(ue_knowledge.__file__).resolve())
+    package = {
+        "module_path": module_path,
+        "model_name": model_name,
+        "package_version": __version__,
+        "topic_count": len(_topics()),
+        "chroma_dir": str(root),
+    }
     try:
         generation = load_current(root)
         manifest = read_manifest(generation)
@@ -151,25 +162,43 @@ def _index_info(chroma_dir, model_name) -> dict:
         chunk_count = 0
         if bm25.is_file():
             chunk_count = len(json.loads(bm25.read_text(encoding="utf-8"))["documents"])
+        corpus = manifest.get("corpus", {})
+        source = Path(corpus["source"]) if corpus.get("source") else None
+        stale = None
+        if source is not None and source.is_dir() and corpus.get("sha256"):
+            fingerprint, _ = corpus_fingerprint(source)
+            stale = fingerprint != corpus["sha256"]
+        embedding = manifest.get("embedding", {})
         return {
             "index_ready": True,
             "generation": manifest.get("generation") or generation.name,
             "schema_version": manifest.get("schema_version"),
             "chunk_count": chunk_count,
-            "embedding": manifest.get("embedding"),
-            "model_name": model_name,
-            "package_version": __version__,
-            "topic_count": len(_topics()),
+            "embedding": embedding,
+            "model_matches": embedding.get("model") == model_name,
+            "corpus": {
+                "source": corpus.get("source"),
+                "sha256": corpus.get("sha256"),
+                "documents": corpus.get("documents"),
+                "chunks": corpus.get("chunks", chunk_count),
+                "stale": stale,
+            },
+            **package,
             "chroma_dir": str(generation),
         }
     except Exception as exc:
         return {
             "index_ready": False,
             "error": f"{type(exc).__name__}: {exc}",
-            "model_name": model_name,
-            "package_version": __version__,
-            "topic_count": len(_topics()),
-            "chroma_dir": str(root),
+            "model_matches": False,
+            "corpus": {
+                "source": None,
+                "sha256": None,
+                "documents": None,
+                "chunks": None,
+                "stale": None,
+            },
+            **package,
         }
 
 
@@ -177,9 +206,10 @@ def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default, se
     name = (params or {}).get("name")
     arguments = (params or {}).get("arguments") or {}
     if name == INFO_TOOL_NAME:
+        info = _index_info(chroma_dir, model_name)
         return {
-            "content": [{"type": "text", "text": json.dumps(_index_info(chroma_dir, model_name), ensure_ascii=False)}],
-            "structuredContent": _index_info(chroma_dir, model_name),
+            "content": [{"type": "text", "text": json.dumps(info, ensure_ascii=False)}],
+            "structuredContent": info,
             "isError": False,
         }
     if name == TOPICS_TOOL_NAME:
