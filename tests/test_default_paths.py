@@ -29,7 +29,7 @@ CORPUS_FILES = 90
 
 
 def test_package_version():
-    assert ue_knowledge.__version__ == "0.6.1"
+    assert ue_knowledge.__version__ == "0.6.2"
 
 
 def test_default_source_dir_is_package_data():

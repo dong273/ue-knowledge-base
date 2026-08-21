@@ -154,10 +154,16 @@ def measure_cold_cli(model_name: str, db: Path) -> float:
         "角色移动 速度衰减", "--top-k", "5",
         "--db", str(db), "--model", model_name, "--json",
     ]
-    env = os.environ.copy()
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
     start = time.perf_counter()
     result = subprocess.run(
-        command, capture_output=True, text=True, env=env, timeout=180
+        command,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=env,
+        timeout=180,
     )
     elapsed = time.perf_counter() - start
     if result.returncode != 0:

@@ -1,6 +1,6 @@
 # UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.1)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.2)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -94,6 +94,7 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query "..."` | 默认混合检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
 | `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
+| `ue-kb doctor` | 只读诊断包、索引和 MCP 运行时身份 | `ue-kb doctor --json --mcp-smoke` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio 服务：模型只加载一次，进程内快速应答（Agent 循环） | `ue-kb serve` |
 | `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`（检索）、`ue_kb_info`（索引状态）、`ue_kb_topics`（主题清单）、`ue_kb_glossary`（术语表）＋ `resources/list` | 通过任意 MCP 客户端调用 |
@@ -148,7 +149,7 @@ for hit in query("GAS 冷却", top_k=5):
 - **v0.5.0（已发布）** — 发布可用性：语料随 wheel 分发、原子索引 generation
   + 构建锁、Windows CI、`raw_score`/`rank` 语义、MCP `ue-kb serve`、
   隐私门禁、发布清单
-- **v0.6.0（当前）** — 检索质量：口语中文短语词典（`zh_dict.json`，
+- **v0.6.2（当前）** — 运行时 doctor 诊断、MCP 身份校验，以及检索质量：口语中文短语词典（`zh_dict.json`，
   自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
   `ue_kb_topics` / `ue_kb_glossary` ＋ `resources/list` ＋ 查询缓存）、
   可续爬的 Epic 官方文档爬虫（输出 markdown 语料，不再直接写 ChromaDB）
