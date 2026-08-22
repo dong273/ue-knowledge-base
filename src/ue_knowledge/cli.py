@@ -45,7 +45,17 @@ def _error_payload(exc: Exception, default_code: str = "RUNTIME_ERROR") -> dict[
     lowered = message.lower()
     if any(word in lowered for word in ("hnsw", "segment", "backfill", "corrupt", "sqlite")):
         return {"code": "INDEX_CORRUPT", "message": message, "action": "ue-kb build --force"}
-    return {"code": default_code, "message": message, "action": "ue-kb download-model"}
+    if default_code == "MODEL_UNAVAILABLE":
+        return {
+            "code": default_code,
+            "message": message,
+            "action": "check the network, then retry ue-kb download-model (mirror fallback is automatic)",
+        }
+    return {
+        "code": default_code,
+        "message": message,
+        "action": "run ue-kb doctor; if the problem persists, file an issue",
+    }
 
 
 def _fail(exc: Exception, json_mode: bool, default_code: str = "RUNTIME_ERROR") -> int:
@@ -84,6 +94,7 @@ def cmd_query(args: argparse.Namespace) -> int:
             model_name=args.model,
             offline=not args.online,
             profile=args.profile,
+            demote_frontmatter=args.demote_frontmatter,
         )
     except Exception as exc:
         return _fail(exc, args.json)
@@ -365,18 +376,7 @@ def _cmd_serve(args: argparse.Namespace) -> int:
 
 
 def _force_utf8_streams() -> None:
-    """Make output robust on non-UTF-8 consoles/pipes.
-
-    On en-US Windows (cp1252) or other legacy code pages, printing Chinese
-    messages/JSON to a pipe raises UnicodeEncodeError and the CLI dies with
-    a traceback instead of returning a machine-readable payload. Reconfigure
-    to UTF-8 with backslashreplace so output is always parseable.
-    """
-    for stream in (sys.stdout, sys.stderr):
-        try:
-            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
-        except (AttributeError, ValueError, OSError):
-            pass
+    config.force_utf8_streams()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -404,6 +404,10 @@ def main(argv: list[str] | None = None) -> int:
     search.add_argument("--db")
     search.add_argument("--model", default=config.MODEL_NAME)
     search.add_argument("--profile", choices=("hybrid", "vector"), default="hybrid")
+    search.add_argument(
+        "--demote-frontmatter", action="store_true",
+        help="rank topic-summary chunks (type=frontmatter) below content chunks",
+    )
     search.add_argument("--online", action="store_true")
     search.add_argument("--json", action="store_true")
     search.set_defaults(func=cmd_query)

@@ -1,6 +1,6 @@
 # UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.2)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.3)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -93,11 +93,12 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb build --append` | 快照同步：新增、替换编辑内容并删除 stale chunks | `ue-kb build --append` |
 | `ue-kb query "..."` | 默认混合检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
+| `ue-kb query --demote-frontmatter` | 内容块排在主题摘要块（frontmatter）之前；融合分数不变 | `ue-kb query "GAS" --demote-frontmatter` |
 | `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
 | `ue-kb doctor` | 只读诊断包、索引和 MCP 运行时身份 | `ue-kb doctor --json --mcp-smoke` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio 服务：模型只加载一次，进程内快速应答（Agent 循环） | `ue-kb serve` |
-| `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`（检索）、`ue_kb_info`（索引状态）、`ue_kb_topics`（主题清单）、`ue_kb_glossary`（术语表）＋ `resources/list` | 通过任意 MCP 客户端调用 |
+| `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`（检索）、`ue_kb_info`（索引状态）、`ue_kb_topics`（主题清单）、`ue_kb_glossary`（术语表）＋ `resources/list` / `resources/read` | 通过任意 MCP 客户端调用 |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
 | `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | 自定义语料目录（默认：包内内置语料） | `ue-kb build --source my-docs/` |
@@ -149,15 +150,22 @@ for hit in query("GAS 冷却", top_k=5):
 - **v0.5.0（已发布）** — 发布可用性：语料随 wheel 分发、原子索引 generation
   + 构建锁、Windows CI、`raw_score`/`rank` 语义、MCP `ue-kb serve`、
   隐私门禁、发布清单
-- **v0.6.2（当前）** — 运行时 doctor 诊断、MCP 身份校验，以及检索质量：口语中文短语词典（`zh_dict.json`，
+- **v0.6.2** — 运行时 doctor 诊断、MCP 身份校验，以及检索质量：口语中文短语词典（`zh_dict.json`，
   自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
   `ue_kb_topics` / `ue_kb_glossary` ＋ `resources/list` ＋ 查询缓存）、
   可续爬的 Epic 官方文档爬虫（输出 markdown 语料，不再直接写 ChromaDB）
+- **v0.6.3（当前）** — MCP `resources/read`（ advertised 主题资源真正可读）、
+  chunk 打上 `type=frontmatter/content` 标记并提供可选 `--demote-frontmatter`、
+  `requires-python` 上限收紧到 `<3.13`（chroma-hnswlib 无 3.13+ Windows wheel）、
+  MCP server 入口强制 UTF-8、Python API 模型加载缓存
 - **后续候选** — Agent 写回协议（已验证材料经 publish 管线路由回语料；
   见 `docs/agent-integration.md` Codex 章节）、更多双语主题、UE 5.7 新特性覆盖
 
 ## FAQ
 
+- **支持哪些 Python 版本？** — 3.10 至 3.12。pin 住的 `chromadb` 0.x 依赖
+  `chroma-hnswlib`，它没有 3.13+ 的 Windows wheel（3.13+ 安装会尝试源码编译
+  并失败）；在迁移 chromadb 1.x 之前 `requires-python` 相应收紧。
 - **索引默认存在哪里？** — 向量库默认放在用户数据目录（Windows:
   `%LOCALAPPDATA%\ue-knowledge-base\chroma_db`；macOS:
   `~/Library/Application Support/ue-knowledge-base/chroma_db`；Linux:
@@ -176,6 +184,9 @@ for hit in query("GAS 冷却", top_k=5):
 - **stderr 有 telemetry 报错？** — chromadb 0.6.x 的 telemetry 已在代码层
   显式关闭（`anonymized_telemetry=False`），与安装的 posthog 版本无关，
   不会再输出噪音。
+- **0.6.3 之前建的索引所有命中都显示 `content`？** — `type=frontmatter/content`
+  标记随 0.6.3 索引引入。旧索引可继续使用（命中默认按 `content` 处理）；
+  需要标记时运行 `ue-kb build --force` 重建。
 
 ## License
 

@@ -17,6 +17,7 @@ Returns structured JSON:
   {
     "source": "ue-gameplay-abilities/references/gas-input-integration.md",
     "heading": "问题",
+    "type": "content",
     "score": 1.0,
     "raw_score": 0.0328,
     "rank": 1,
@@ -39,6 +40,12 @@ Returns structured JSON:
   - **All hits `raw_score < 0.012` → the knowledge base likely has no
     coverage**; answer from general UE knowledge and say so.
 - `rank` is the 1-based position in the returned list.
+- `type` is `"content"` for real knowledge chunks and `"frontmatter"` for a
+  document's leading YAML summary (topic/trigger list — dense in keywords but
+  not an answer itself). Prefer `content` hits when composing answers; a
+  `frontmatter` hit is mainly useful as a topic-routing signal. To have the
+  CLI list content hits first automatically, add `--demote-frontmatter`
+  (fusion scores are untouched, only the ordering changes).
 
 ## MCP server (recommended for agent loops)
 

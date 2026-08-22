@@ -17,7 +17,7 @@ Tools:
   ue_kb_glossary  — terminology expansion table (topic -> canonical/aliases/identifiers)
 
 Resources:
-  ue-kb://topic/<id> — one resource per topic (metadata only)
+  ue-kb://topic/<id> — one resource per topic (SKILL.md content via resources/read)
 
 Usage:
     ue-kb serve [--db <dir>] [--model <name>] [--top-k N]
@@ -78,6 +78,26 @@ def _topics() -> list[dict]:
         }
         for entry in glossary()
     ]
+
+
+RESOURCE_URI_PREFIX = "ue-kb://topic/"
+
+
+def _read_resource(uri) -> dict | None:
+    """MCP resources/read result for a ``ue-kb://topic/<id>`` URI, or None."""
+    if not isinstance(uri, str) or not uri.startswith(RESOURCE_URI_PREFIX):
+        return None
+    topic = uri[len(RESOURCE_URI_PREFIX):]
+    if not topic or "/" in topic or "\\" in topic:
+        return None
+    if topic not in {entry["topic"] for entry in glossary()}:
+        return None
+    path = config.DEFAULT_SOURCE_DIR / topic / "SKILL.md"
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    return {"contents": [{"uri": uri, "mimeType": "text/markdown", "text": text}]}
 
 
 def _tool_definitions(top_k_default: int) -> list[dict]:
@@ -341,6 +361,19 @@ def serve_loop(
             result = _call_tool(params, chroma_dir, selected, embedder, top_k, search)
         elif method == "resources/list":
             result = {"resources": resources}
+        elif method == "resources/read":
+            read = _read_resource(params.get("uri"))
+            if read is None:
+                stdout.write(
+                    _rpc_response(
+                        request_id,
+                        error={"code": -32602, "message": f"unknown resource: {params.get('uri')}"},
+                    )
+                    + "\n"
+                )
+                stdout.flush()
+                continue
+            result = read
         else:
             stdout.write(
                 _rpc_response(request_id, error={"code": -32601, "message": f"method not found: {method}"}) + "\n"
@@ -360,6 +393,7 @@ def main(argv=None) -> int:
     parser.add_argument("--model", default=config.MODEL_NAME)
     parser.add_argument("--top-k", type=int, default=5)
     args = parser.parse_args(argv)
+    config.force_utf8_streams()
     try:
         serve_loop(
             sys.stdin,

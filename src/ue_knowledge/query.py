@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 
 from . import config
@@ -10,13 +11,24 @@ from .index_store import IndexSchemaMismatch, load_current, read_manifest
 from .retrieval import bm25_search, expand_query, rrf
 
 
-def _model(model_name: str, offline: bool, embedder):
-    if embedder is not None:
-        return embedder
+@lru_cache(maxsize=2)
+def _cached_model(model_name: str, offline: bool):
+    """Load the SentenceTransformer once per (model, offline) per process.
+
+    The Python API path calls query() repeatedly; without the cache every
+    call pays the full model load. CLI one-shot processes are unaffected,
+    and callers that pass their own ``embedder`` bypass this entirely.
+    """
     from sentence_transformers import SentenceTransformer
 
     with config.offline_huggingface(offline):
         return SentenceTransformer(model_name, local_files_only=offline)
+
+
+def _model(model_name: str, offline: bool, embedder):
+    if embedder is not None:
+        return embedder
+    return _cached_model(model_name, offline)
 
 
 def _check_identity(manifest: dict, model_name: str, model) -> None:
@@ -52,6 +64,7 @@ def _vector_results(collection, model, text: str, count: int) -> list[dict]:
             "id": identifier,
             "source": meta.get("source", "?"),
             "heading": meta.get("heading", "?"),
+            "type": meta.get("type") or "content",
             "score": max(0.0, min(1.0, 1.0 - float(distance))),
             "text": document,
         }
@@ -69,6 +82,7 @@ def query(
     offline: bool = True,
     embedder=None,
     profile: str = "hybrid",
+    demote_frontmatter: bool = False,
 ) -> list[dict]:
     """Search the knowledge base and preserve the 0.4 result structure."""
     if profile not in {"hybrid", "vector"}:
@@ -101,6 +115,7 @@ def query(
             {
                 "source": hit["source"],
                 "heading": hit["heading"],
+                "type": hit.get("type", "content"),
                 "score": hit["score"],
                 "raw_score": hit["score"],
                 "rank": index + 1,
@@ -122,9 +137,18 @@ def query(
                 "id": identifier,
                 "source": meta.get("source", "?"),
                 "heading": meta.get("heading", "?"),
+                "type": meta.get("type") or "content",
                 "score": 0.0,
                 "text": document,
             }
+    if demote_frontmatter:
+        # Presentation-level only: fusion scores stay untouched, but content
+        # chunks are listed before topic-summary (frontmatter) chunks. The
+        # sort is stable, so fused order survives within each group.
+        fused = sorted(
+            fused,
+            key=lambda item: by_id.get(item[0], {}).get("type") == "frontmatter",
+        )
     maximum = fused[0][1] if fused else 1.0
     output: list[dict] = []
     seen: set[tuple[str, str]] = set()
@@ -140,6 +164,7 @@ def query(
             {
                 "source": hit["source"],
                 "heading": hit["heading"],
+                "type": hit.get("type", "content"),
                 # score is display-relative: the top hit of this query is
                 # always 1.0. raw_score is the RRF fusion value, comparable
                 # ACROSS queries — use it for coverage/confidence decisions

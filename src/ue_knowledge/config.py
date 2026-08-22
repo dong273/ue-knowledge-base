@@ -92,6 +92,22 @@ def chroma_settings():
     return chromadb.config.Settings(anonymized_telemetry=False)
 
 
+def force_utf8_streams() -> None:
+    """Make output robust on non-UTF-8 consoles/pipes.
+
+    On en-US Windows (cp1252) or other legacy code pages, printing Chinese
+    messages/JSON to a pipe raises UnicodeEncodeError and the CLI dies with
+    a traceback instead of returning a machine-readable payload. Reconfigure
+    to UTF-8 with backslashreplace so output is always parseable. Shared by
+    the CLI entry point and the MCP server entry point.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def check_ascii_path(p: Path, what: str) -> None:
     """Reject non-ASCII paths early.
 

@@ -4,10 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ue-knowledge-base"
-version = "0.6.2"
+version = "0.6.3"
 description = "Offline hybrid search over Unreal Engine development knowledge (BGE + BM25 + ChromaDB)"
 readme = "README.md"
-requires-python = ">=3.10"
+# Upper bound: the pinned chromadb 0.x line pulls chroma-hnswlib, which has
+# no cp313+ wheels on Windows — a 3.13+ install attempts a source build and
+# fails far from the real cause. Lift the cap when migrating to chromadb 1.x.
+requires-python = ">=3.10,<3.13"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Dong" }]
@@ -29,6 +32,9 @@ dependencies = [
 
 [project.scripts]
 ue-kb = "ue_knowledge.cli:main"
+
+[dependency-groups]
+dev = ["pytest", "build"]
 
 [tool.setuptools]
 include-package-data = true
