@@ -167,3 +167,38 @@ def test_append_syncs_edited_content(corpus, tmp_path):
         model_name="fake", embedder=FakeEmbedder(),
     )
     assert "doc.md" in results[0]["source"]
+
+
+def test_demote_frontmatter_reorders_but_keeps_membership(corpus, tmp_path):
+    """demote_frontmatter is presentation-only: same hits, same raw scores.
+
+    Content chunks are listed before topic-summary (frontmatter) chunks;
+    RRF fusion itself is untouched, so default queries stay byte-identical.
+    """
+    (corpus / "topic" / "meta.md").write_text(
+        "---\n"
+        "title: meta\n"
+        "description: cooldown ability gameplay attribute summary\n"
+        "---\n\n"
+        "# Meta Doc\n\nSee also cooldown ability gameplay attribute.\n",
+        encoding="utf-8",
+    )
+    db = tmp_path / "chroma"
+    build_index(source_dir=corpus, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
+    kwargs = dict(top_k=8, chroma_dir=db, model_name="fake", embedder=FakeEmbedder())
+
+    plain = query("cooldown ability gameplay attribute", **kwargs)
+    demoted = query("cooldown ability gameplay attribute", demote_frontmatter=True, **kwargs)
+
+    keys = {(hit["source"], hit["heading"]) for hit in plain}
+    assert keys == {(hit["source"], hit["heading"]) for hit in demoted}
+    frontmatter = [hit for hit in demoted if hit["type"] == "frontmatter"]
+    content = [hit for hit in demoted if hit["type"] == "content"]
+    assert frontmatter and content
+    assert max(demoted.index(hit) for hit in content) < min(demoted.index(hit) for hit in frontmatter)
+    # ranks are recomputed after demotion and stay 1..n
+    assert [hit["rank"] for hit in demoted] == list(range(1, len(demoted) + 1))
+    # per-hit fusion scores are untouched by the reordering
+    raw_plain = {(hit["source"], hit["heading"]): hit["raw_score"] for hit in plain}
+    for hit in demoted:
+        assert raw_plain[(hit["source"], hit["heading"])] == hit["raw_score"]

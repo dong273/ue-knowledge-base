@@ -105,6 +105,16 @@ def _has_body(section: str) -> bool:
     return bool("\n".join(lines).strip())
 
 
+def _is_frontmatter(heading: str, section: str) -> bool:
+    """True for a SKILL.md's leading YAML frontmatter.
+
+    It surfaces as a ``前言`` section whose text opens with a ``---`` fence.
+    Flagged as ``frontmatter`` so clients can tell topic summaries apart
+    from content chunks (the chunk id deliberately ignores the type).
+    """
+    return heading == "前言" and section.lstrip().startswith("---")
+
+
 def _fenced_token_ranges(text: str, spans: list[tuple[int, int]]) -> list[tuple[int, int]]:
     """Return half-open token ranges occupied by complete fenced blocks."""
     char_ranges: list[tuple[int, int]] = []
@@ -260,6 +270,7 @@ def chunk_markdown(
         if len(body.strip()) < min_chars:
             continue
 
+        frontmatter = _is_frontmatter(heading, section)
         spans = _token_spans(section, tokenizer)
         if not spans:
             continue
@@ -278,6 +289,7 @@ def chunk_markdown(
                     "text": chunk_text,
                     "source": normalized_source,
                     "heading": heading,
+                    "type": "frontmatter" if frontmatter else "content",
                 }
             )
     return chunks

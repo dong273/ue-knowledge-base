@@ -70,7 +70,7 @@ def test_tools_call_returns_hits(tmp_path):
     assert call["result"]["isError"] is False
     hits = json.loads(call["result"]["content"][0]["text"])
     assert hits and hits[0]["source"].startswith("ue-character-movement/")
-    assert set(hits[0]) == {"source", "heading", "score", "raw_score", "rank", "text"}
+    assert set(hits[0]) == {"source", "heading", "type", "score", "raw_score", "rank", "text"}
     assert hits[0]["raw_score"] > 0
     assert hits[0]["rank"] == 1
 
@@ -246,6 +246,34 @@ def test_resources_list_lists_topics(tmp_path):
     )
     resources = responses[0]["result"]["resources"]
     assert any(r["uri"] == "ue-kb://topic/ue-gameplay-abilities" for r in resources)
+
+
+def test_resources_read_returns_skill_markdown(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 16, "method": "resources/read",
+            "params": {"uri": "ue-kb://topic/ue-gameplay-abilities"},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    contents = responses[0]["result"]["contents"]
+    assert len(contents) == 1
+    assert contents[0]["uri"] == "ue-kb://topic/ue-gameplay-abilities"
+    assert contents[0]["mimeType"] == "text/markdown"
+    assert "Gameplay Ability System" in contents[0]["text"]
+
+
+def test_resources_read_unknown_uri_is_error(tmp_path):
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 17, "method": "resources/read",
+            "params": {"uri": "ue-kb://topic/does-not-exist"},
+        })],
+        tmp_path / "db",
+        FakeEmbedder(),
+    )
+    assert responses[0]["error"]["code"] == -32602
 
 
 def test_repeated_query_hits_cache(tmp_path):

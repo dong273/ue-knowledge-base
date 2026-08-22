@@ -113,3 +113,35 @@ def test_oversized_code_fence_is_balanced_in_every_chunk():
     assert all(chunk["text"].count("```") % 2 == 0 for chunk in chunks)
     assert "value_0" in chunks[0]["text"]
     assert "value_299" in chunks[-1]["text"]
+
+
+def test_frontmatter_chunks_are_typed_with_stable_ids():
+    """YAML frontmatter is flagged as type=frontmatter without changing ids.
+
+    Chunk ids are sha256(source + heading + text) and must not absorb the
+    new type field, so 0.6.2 indexes stay valid and rebuilds reuse ids.
+    """
+    import hashlib
+
+    doc = (
+        "---\n"
+        "title: ue-test\n"
+        "description: alpha beta gamma\n"
+        "---\n\n"
+        "# Head\n\n"
+        "body text here\n"
+    )
+    chunks = chunk_markdown(doc, source="topic/doc.md")
+    assert [chunk["type"] for chunk in chunks] == ["frontmatter", "content"]
+    frontmatter = chunks[0]
+    digest = hashlib.sha256(
+        f"topic/doc.md\0前言\0{frontmatter['text']}".encode("utf-8")
+    ).hexdigest()
+    assert frontmatter["id"] == digest
+    assert frontmatter["heading"] == "前言"
+
+
+def test_preface_without_frontmatter_is_content():
+    doc = "intro paragraph\n\n# Head\n\nbody\n"
+    chunks = chunk_markdown(doc, source="doc.md")
+    assert chunks and all(chunk["type"] == "content" for chunk in chunks)

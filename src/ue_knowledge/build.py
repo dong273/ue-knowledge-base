@@ -222,7 +222,11 @@ def build_index(
         texts = [document["text"] for document in documents]
         identifiers = [document["id"] for document in documents]
         metadata = [
-            {"source": document["source"], "heading": document["heading"]}
+            {
+                "source": document["source"],
+                "heading": document["heading"],
+                "type": document.get("type", "content"),
+            }
             for document in documents
         ]
         batch_size = 64
