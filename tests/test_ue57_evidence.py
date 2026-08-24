@@ -1,7 +1,7 @@
 import json
 import hashlib
 
-from scripts.check_ue57_evidence import check
+from scripts.check_ue57_evidence import check, normalized_text_sha256
 
 
 def _payload():
@@ -108,7 +108,7 @@ def test_ue57_evidence_checks_terminal_claim_coverage(tmp_path):
         "tests": [],
     }
     registry.write_text(json.dumps(registry_payload), encoding="utf-8")
-    registry_digest = hashlib.sha256(registry.read_bytes()).hexdigest()
+    registry_digest = normalized_text_sha256(registry)
     fixture_digest = hashlib.sha256(fixture_source.read_bytes()).hexdigest()
     payload = _payload()
     payload["fixture_registry_sha256"] = registry_digest
@@ -151,7 +151,7 @@ def test_ue57_evidence_checks_terminal_claim_coverage(tmp_path):
         "source": "UEKnowledgeValidation/Source/Fixture.cpp",
     }]
     registry.write_text(json.dumps(registry_payload), encoding="utf-8")
-    payload["fixture_registry_sha256"] = hashlib.sha256(registry.read_bytes()).hexdigest()
+    payload["fixture_registry_sha256"] = normalized_text_sha256(registry)
     payload["expected_failures"] = [{
         "id": "UEKB.ExpectedFailure.Test",
         "state": "ExpectedFailure",
@@ -166,3 +166,23 @@ def test_ue57_evidence_checks_terminal_claim_coverage(tmp_path):
     evidence.write_text(json.dumps(payload), encoding="utf-8")
     errors = check(evidence, fixture_registry=registry, claim_ledger=ledger)
     assert any("expected failure must not be exported" in error for error in errors)
+
+
+def test_ue57_evidence_registry_hash_is_line_ending_independent(tmp_path):
+    registry = tmp_path / "fixture-registry.json"
+    registry_text = json.dumps({
+        "schema_version": 2,
+        "engine": {"version": "5.7.4", "changelist": 51494982},
+        "fixtures": [],
+        "tests": [],
+    }, indent=2) + "\n"
+    registry.write_bytes(registry_text.encode("utf-8"))
+
+    payload = _payload()
+    payload["fixture_registry_sha256"] = hashlib.sha256(registry.read_bytes()).hexdigest()
+    payload["fixture_hashes"] = {}
+    evidence = tmp_path / "evidence.json"
+    evidence.write_text(json.dumps(payload), encoding="utf-8")
+
+    registry.write_bytes(registry_text.replace("\n", "\r\n").encode("utf-8"))
+    assert check(evidence, fixture_registry=registry) == []

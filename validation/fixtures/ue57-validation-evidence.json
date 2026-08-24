@@ -11,7 +11,7 @@
   "reports": [
     "index.json"
   ],
-  "fixture_registry_sha256": "5a12d7cc0bebb738ac50930a9f856dfe2748a415ec1f21e1ed97021ff1fd7286",
+  "fixture_registry_sha256": "c6b777b0f462ec46e47f2eec4eb42cccaea5a8068ee98abf64c78c1c5f469e50",
   "fixture_hashes": {
     "UEKB.Compile.Core": "9df0ad3eb48468d6416e51bf22b36e966989c6b063169e0f0f7b0a3f8dd77e50",
     "UEKB.Compile.NetworkingRpc": "7670241245d16ff4d15ca5eff0439f3e0fbfc1199defdc0f350ba061ee850032",

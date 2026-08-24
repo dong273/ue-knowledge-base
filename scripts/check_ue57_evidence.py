@@ -14,6 +14,13 @@ _ID_RE = re.compile(r"^[A-Za-z0-9_.:-]+$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
+def normalized_text_sha256(path: Path) -> str:
+    """Hash UTF-8 text after normalizing platform line endings to LF."""
+    text = path.read_bytes().decode("utf-8")
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
 def _report_path(root: Path, name: str) -> Path | None:
     candidate = Path(name)
     if candidate.is_absolute() or ".." in candidate.parts:
@@ -228,7 +235,7 @@ def check(
     if registry_path is not None and payload.get("fixture_hashes") is not None:
         try:
             registry_payload = json.loads(registry_path.read_text(encoding="utf-8"))
-            registry_digest = hashlib.sha256(registry_path.read_bytes()).hexdigest()
+            registry_digest = normalized_text_sha256(registry_path)
             if payload.get("fixture_registry_sha256") != registry_digest:
                 errors.append("fixture registry hash mismatch")
             registry_engine = registry_payload.get("engine", {})

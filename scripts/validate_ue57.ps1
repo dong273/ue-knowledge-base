@@ -37,7 +37,17 @@ if ("$($registry.engine.version)" -ne "5.7.4" -or [int]$registry.engine.changeli
     throw "UE fixture registry does not target UE 5.7.4 / 51494982"
 }
 $fixtureRoot = (Resolve-Path $projectRoot).Path
-$registryHash = (Get-FileHash -LiteralPath $registryPath -Algorithm SHA256).Hash.ToLowerInvariant()
+$registryText = [IO.File]::ReadAllText($registryPath, [Text.UTF8Encoding]::new($false))
+$normalizedRegistryText = $registryText.Replace("`r`n", "`n").Replace("`r", "`n")
+$registryHashAlgorithm = [Security.Cryptography.SHA256]::Create()
+try {
+    $registryHashBytes = $registryHashAlgorithm.ComputeHash(
+        [Text.UTF8Encoding]::new($false).GetBytes($normalizedRegistryText)
+    )
+} finally {
+    $registryHashAlgorithm.Dispose()
+}
+$registryHash = [Convert]::ToHexString($registryHashBytes).ToLowerInvariant()
 $fixtureRecords = @()
 $seenFixtureIds = @{}
 foreach ($fixture in @($registry.fixtures)) {
