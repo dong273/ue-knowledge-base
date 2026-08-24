@@ -43,7 +43,12 @@ include-package-data = true
 # used by source checkouts, wheels and sdists (no build-time copying or
 # duplicate maintenance). Never exclude these from package data.
 [tool.setuptools.package-data]
-ue_knowledge = ["knowledge/**/*.md", "glossary.json", "zh_dict.json"]
+ue_knowledge = [
+    "knowledge/**/*.md",
+    "knowledge/.ue-kb-provenance.json",
+    "glossary.json",
+    "zh_dict.json",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

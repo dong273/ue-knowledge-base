@@ -43,6 +43,10 @@ Thanks for considering a contribution to **ue-knowledge-base**!
 - **No personal paths, private project names, or machine-specific examples**
   (CI runs `scripts/check_privacy.py` on every PR). Use placeholders like
   `<ENGINE_ROOT>/` instead of real drive paths.
+- Test-only privacy fixtures and the artifact scope scanner may contain
+  synthetic forbidden markers so the scanner can prove that publication
+  rejects them. They must not be copied into `knowledge/`, packaged artifacts,
+  or evidence payloads; keep those markers in tests/scanners only.
 
 ## Development setup
 
@@ -67,3 +71,5 @@ python scripts/check_privacy.py   # corpus must stay clean
 - [ ] `pytest tests/` passes
 - [ ] `python scripts/check_privacy.py` passes
 - [ ] If content: heading structure is clean (good chunking)
+- [ ] If content: regenerate from Hermes, run `publish_from_hermes.py --check`,
+      and update the schema-v2 claim ledger through the review workflow

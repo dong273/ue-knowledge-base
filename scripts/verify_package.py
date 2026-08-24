@@ -142,9 +142,38 @@ def packaged_json(artifact: Path, filename: str) -> bytes | None:
         return tf.extractfile(member).read() if member else None
 
 
+def packaged_provenance(artifact: Path) -> bytes | None:
+    """Read the public provenance sidecar from a wheel or source archive."""
+    suffix = "ue_knowledge/knowledge/.ue-kb-provenance.json"
+    if artifact.suffix == ".whl":
+        with zipfile.ZipFile(artifact) as zf:
+            name = next((item for item in zf.namelist() if item.endswith(suffix)), None)
+            return zf.read(name) if name else None
+    with tarfile.open(artifact, "r:gz") as tf:
+        member = next(
+            (item for item in tf.getmembers() if item.isfile() and item.name.endswith(f"src/{suffix}")),
+            None,
+        )
+        return tf.extractfile(member).read() if member else None
+
+
 def check_artifact(artifact: Path, expected_version: str) -> bool:
     ok = True
     print(f"== {artifact.name} ==")
+
+    from check_scope import scan_artifact
+
+    scope_findings = scan_artifact(artifact)
+    if scope_findings:
+        ok = False
+        print(f"    [FAIL] {len(scope_findings)} project-scope leak(s)")
+        for finding in scope_findings:
+            print(
+                f"           - {finding['file']} [{finding['location']}] "
+                f"{finding['pattern']}"
+            )
+    else:
+        print("    [ok]  public scope clean")
 
     manifest = (
         wheel_manifest(artifact)
@@ -218,6 +247,14 @@ def check_artifact(artifact: Path, expected_version: str) -> bool:
         else:
             ok = False
             print(f"    [FAIL] {filename} missing or stale")
+
+    provenance_source = SOURCE_CORPUS / ".ue-kb-provenance.json"
+    packaged = packaged_provenance(artifact)
+    if provenance_source.is_file() and packaged == provenance_source.read_bytes():
+        print("    [ok]  public provenance sidecar packaged with identical hash")
+    else:
+        ok = False
+        print("    [FAIL] public provenance sidecar missing or stale")
 
     return ok
 

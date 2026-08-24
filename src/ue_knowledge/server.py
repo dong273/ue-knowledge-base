@@ -33,11 +33,13 @@ from pathlib import Path
 
 import ue_knowledge
 from . import __version__, config
-from .query import query
+from .federation import federated_query
+from .query import query, query_envelope
 from .retrieval import glossary
 
 PROTOCOL_VERSION = "2024-11-05"
 TOOL_NAME = "ue_kb_query"
+FEDERATED_TOOL_NAME = "ue_kb_federated_query"
 TOOL_DESCRIPTION = (
     "Hybrid semantic search over the local Unreal Engine knowledge base "
     "(BGE + BM25 RRF fusion). Call ue_kb_info for current corpus inventory. "
@@ -66,6 +68,10 @@ GLOSSARY_TOOL_NAME = "ue_kb_glossary"
 GLOSSARY_TOOL_DESCRIPTION = (
     "The terminology expansion table: for each topic the canonical name, "
     "Chinese aliases and code identifiers. Optionally filter by topic."
+)
+FEDERATED_TOOL_DESCRIPTION = (
+    "Query physically isolated named indexes and return public/project groups. "
+    "Scores are only comparable within each group."
 )
 
 
@@ -122,6 +128,29 @@ def _tool_definitions(top_k_default: int) -> list[dict]:
                         "type": "string",
                         "enum": ["hybrid", "vector"],
                         "default": "hybrid",
+                    },
+                    "envelope": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "Return coverage and provenance metadata with the hits.",
+                    },
+                },
+                "required": ["query"],
+            },
+        },
+        {
+            "name": FEDERATED_TOOL_NAME,
+            "description": FEDERATED_TOOL_DESCRIPTION,
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "top_k": {"type": "integer", "minimum": 1, "maximum": 20, "default": top_k_default},
+                    "profile": {"type": "string", "enum": ["hybrid", "vector"], "default": "hybrid"},
+                    "indexes": {
+                        "type": "object",
+                        "description": "Optional name-to-path overrides; normally configured on the server.",
+                        "additionalProperties": {"type": "string"},
                     },
                 },
                 "required": ["query"],
@@ -186,11 +215,22 @@ def _index_info(chroma_dir, model_name) -> dict:
         source = Path(corpus["source"]) if corpus.get("source") else None
         stale = None
         if source is not None and source.is_dir() and corpus.get("sha256"):
-            fingerprint, _ = corpus_fingerprint(source)
+            extra_files = [
+                path for path in (
+                    manifest.get("provenance", {}).get("path"),
+                    manifest.get("source_registry"),
+                ) if path
+            ]
+            fingerprint, _ = corpus_fingerprint(
+                source,
+                extra_files=[Path(path) for path in extra_files],
+            )
             stale = fingerprint != corpus["sha256"]
         embedding = manifest.get("embedding", {})
         return {
             "index_ready": True,
+            "scope": manifest.get("scope", "public"),
+            "provenance": manifest.get("provenance", {}),
             "generation": manifest.get("generation") or generation.name,
             "schema_version": manifest.get("schema_version"),
             "chunk_count": chunk_count,
@@ -209,6 +249,8 @@ def _index_info(chroma_dir, model_name) -> dict:
     except Exception as exc:
         return {
             "index_ready": False,
+            "scope": "unknown",
+            "provenance": {},
             "error": f"{type(exc).__name__}: {exc}",
             "model_matches": False,
             "corpus": {
@@ -222,7 +264,16 @@ def _index_info(chroma_dir, model_name) -> dict:
         }
 
 
-def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default, search) -> dict:
+def _call_tool(
+    params: dict,
+    chroma_dir,
+    indexes,
+    model_name,
+    embedder,
+    top_k_default,
+    search,
+    embedder_loader=None,
+) -> dict:
     name = (params or {}).get("name")
     arguments = (params or {}).get("arguments") or {}
     if name == INFO_TOOL_NAME:
@@ -257,6 +308,47 @@ def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default, se
             "structuredContent": entries,
             "isError": False,
         }
+    if name == FEDERATED_TOOL_NAME:
+        query_text = arguments.get("query")
+        if not query_text or not isinstance(query_text, str):
+            return {
+                "content": [{"type": "text", "text": "missing string argument: query"}],
+                "isError": True,
+            }
+        configured = indexes or ({"public": Path(chroma_dir)} if chroma_dir else {})
+        requested = arguments.get("indexes")
+        if requested is not None:
+            if not isinstance(requested, dict) or not all(
+                isinstance(key, str) and isinstance(value, str)
+                for key, value in requested.items()
+            ):
+                return {
+                    "content": [{"type": "text", "text": "indexes must be a name-to-path object"}],
+                    "isError": True,
+                }
+            configured = {key: Path(value) for key, value in requested.items()}
+        try:
+            query_embedder = embedder if embedder is not None else (
+                embedder_loader() if embedder_loader is not None else None
+            )
+            result = federated_query(
+                query_text,
+                configured,
+                top_k=int(arguments.get("top_k", top_k_default)),
+                model_name=model_name,
+                embedder=query_embedder,
+                profile=arguments.get("profile", "hybrid"),
+            )
+        except Exception as exc:
+            return {
+                "content": [{"type": "text", "text": f"{type(exc).__name__}: {exc}"}],
+                "isError": True,
+            }
+        return {
+            "content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}],
+            "structuredContent": result,
+            "isError": False,
+        }
     if name != TOOL_NAME:
         return {
             "content": [{"type": "text", "text": f"unknown tool: {name}"}],
@@ -270,8 +362,23 @@ def _call_tool(params: dict, chroma_dir, model_name, embedder, top_k_default, se
         }
     top_k = arguments.get("top_k", top_k_default)
     profile = arguments.get("profile", "hybrid")
+    envelope = bool(arguments.get("envelope", False))
     try:
-        results = search(query_text, int(top_k), profile)
+        query_embedder = embedder if embedder is not None else (
+            embedder_loader() if envelope and embedder_loader is not None else None
+        )
+        results = (
+            query_envelope(
+                query_text,
+                top_k=int(top_k),
+                chroma_dir=Path(chroma_dir) if chroma_dir else None,
+                model_name=model_name,
+                embedder=query_embedder,
+                profile=profile,
+            )
+            if envelope
+            else search(query_text, int(top_k), profile)
+        )
     except Exception as exc:  # surfaced to the agent as a tool error
         return {
             "content": [{"type": "text", "text": f"{type(exc).__name__}: {exc}"}],
@@ -291,9 +398,11 @@ def serve_loop(
     model_name: str | None = None,
     embedder=None,
     top_k: int = 5,
+    indexes=None,
 ) -> None:
     """Run the MCP stdio loop until EOF. Testable with fake streams."""
     selected = model_name or config.MODEL_NAME
+    configured_indexes = {name: Path(path) for name, path in (indexes or {}).items()}
 
     # Lazy model load: the ~100MB embedding model takes ~12-14s to load,
     # which risks exceeding MCP client startup timeouts if paid during the
@@ -358,7 +467,16 @@ def serve_loop(
         elif method == "tools/list":
             result = {"tools": tools}
         elif method == "tools/call":
-            result = _call_tool(params, chroma_dir, selected, embedder, top_k, search)
+            result = _call_tool(
+                params,
+                chroma_dir,
+                configured_indexes,
+                selected,
+                embedder,
+                top_k,
+                search,
+                ensure_embedder,
+            )
         elif method == "resources/list":
             result = {"resources": resources}
         elif method == "resources/read":
@@ -390,17 +508,21 @@ def main(argv=None) -> int:
         description="MCP stdio server: load the model once, answer queries in process.",
     )
     parser.add_argument("--db", help="index root (default: user data dir)")
+    parser.add_argument("--index", action="append", help="named index for federation: name=path")
     parser.add_argument("--model", default=config.MODEL_NAME)
     parser.add_argument("--top-k", type=int, default=5)
     args = parser.parse_args(argv)
     config.force_utf8_streams()
     try:
+        from .federation import parse_index_specs
+
         serve_loop(
             sys.stdin,
             sys.stdout,
             chroma_dir=args.db,
             model_name=args.model,
             top_k=args.top_k,
+            indexes=parse_index_specs(args.index),
         )
     except KeyboardInterrupt:
         pass

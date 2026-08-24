@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-06-final-tools-ui",
+  "description": "Editor tools, knowledge RAG, PCG, testing/debugging, and UI contracts.",
+  "documents": [
+    {"cohort": "A", "path": "ue-editor-tools/SKILL.md", "initial_content_sha256": "dc1d1123b89e2292d37bafd7bd15ccc574789934e8dd37ca10b68031913036ef"},
+    {"cohort": "A", "path": "ue-editor-tools/references/detail-customization-patterns.md", "initial_content_sha256": "bbd10eb5128830f2c7116408d4205b3724ae8a7f9aa902c41182d5784875d6ec"},
+    {"cohort": "A", "path": "ue-editor-tools/references/editor-module-setup.md", "initial_content_sha256": "84c52c62fce77abcb11f0a35765d76d92d9a36e021bd5e93d3d9c01bdae11a7a"},
+    {"cohort": "A", "path": "ue-editor-tools/references/unattended-editor-automation.md", "initial_content_sha256": "69eac023e9eef42279420bb253d40943541d495ff9316e3172596330327261e4"},
+    {"cohort": "B", "path": "ue-knowledge-rag/SKILL.md", "initial_content_sha256": "90f189e555359c277e9701180c86cd506351ddc5cfca421ff2c2bf3d4e87e723"},
+    {"cohort": "B", "path": "ue-knowledge-rag/references/query-optimization.md", "initial_content_sha256": "8acf2e2b8cac7e40f042e470da8e8fbd83ad983a5bbe21b7551d6209a599e644"},
+    {"cohort": "C", "path": "ue-procedural-generation/SKILL.md", "initial_content_sha256": "69211f4eae64e2e2b57012e70efb355494f7df3061f7a25955927ece210e8ea8"},
+    {"cohort": "C", "path": "ue-procedural-generation/references/pcg-node-reference.md", "initial_content_sha256": "46dd2fa57b9dc66d99d0943db70dd97d95f99ed14e5a922913d0bae8e9b660e6"},
+    {"cohort": "C", "path": "ue-procedural-generation/references/procedural-mesh-patterns.md", "initial_content_sha256": "e42d027c788ba51b11392a44e8e4fcaf36bac55ea2f562524170e9ad913ecb05"},
+    {"cohort": "D", "path": "ue-testing-debugging/SKILL.md", "initial_content_sha256": "752c2c8f10a72335aed3676bfef228b87c9718176b1a6022516f88dbacd81bb8"},
+    {"cohort": "D", "path": "ue-testing-debugging/references/automation-test-patterns.md", "initial_content_sha256": "b27307ffaf6f5a9d190e0c08565ca49809abd3e72e32dd0ebe91ad02113038c6"},
+    {"cohort": "D", "path": "ue-testing-debugging/references/profiling-commands.md", "initial_content_sha256": "5da0b004b82697583c71a619790a8bef069265cf180f5c16097c97c5ef495df6"},
+    {"cohort": "E", "path": "ue-ui-umg-slate/SKILL.md", "initial_content_sha256": "c11624ab6f744a14617192221d1619ec54be61e6e01fe1b71a1676e85acbb847"},
+    {"cohort": "E", "path": "ue-ui-umg-slate/references/common-ui-setup.md", "initial_content_sha256": "8dfa5c04eadeb3807e9e5459dde12e74ee6164dab3a5284447220fc0482358bc"},
+    {"cohort": "E", "path": "ue-ui-umg-slate/references/widget-types.md", "initial_content_sha256": "98dcfa8161f80ee8830e300a2c65c76cf6af83e5a61c6addd980ba0a17c07ae6"}
+  ]
+}

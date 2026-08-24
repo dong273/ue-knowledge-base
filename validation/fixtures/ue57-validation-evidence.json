@@ -1,0 +1,1241 @@
+{
+  "schema_version": 1,
+  "validation": "UEKnowledgeValidation",
+  "engine": {
+    "version": "5.7.4",
+    "changelist": 51494982,
+    "root": "<UE_ENGINE_ROOT>"
+  },
+  "build_exit_code": 0,
+  "automation_exit_code": 0,
+  "reports": [
+    "index.json"
+  ],
+  "fixture_registry_sha256": "5a12d7cc0bebb738ac50930a9f856dfe2748a415ec1f21e1ed97021ff1fd7286",
+  "fixture_hashes": {
+    "UEKB.Compile.Core": "9df0ad3eb48468d6416e51bf22b36e966989c6b063169e0f0f7b0a3f8dd77e50",
+    "UEKB.Compile.NetworkingRpc": "7670241245d16ff4d15ca5eff0439f3e0fbfc1199defdc0f350ba061ee850032",
+    "UEKB.Compile.GasApi": "81e0b3f3e197e841fec5b1629a6fada628cbd4abb380bcf25c97d88a795644a9",
+    "UEKB.Compile.ActorComponents": "b58e667640a8dc149c0d0302fc98ff52cf0bb408a3fc0056f1e2a35bacaa8c82",
+    "UEKB.Compile.CppReflection": "19041da3f8b9ffac2d8868db04c92d708dccd623f057412acd0032dc1acaba72",
+    "UEKB.Compile.CppFoundations": "36023642e05d0b4c67cad9c21c990714cee497556169f7085800aa73d89a6806",
+    "UEKB.Compile.DataAssetTypes": "616db2fe6c98d70f091f0c0ef2d839708f3700324c67005f1d067ab93d9b44eb",
+    "UEKB.Compile.DataAssets": "e599d88566fa759dbbda79fb4cb4c2ca0013bf5cbe0578962db18bccfd6d61e2",
+    "UEKB.Compile.GameplayFramework": "03efe808e6e72a4c6e979758864413513c7376f11ca6fae76e5a0335816e67d8",
+    "UEKB.Compile.InputTypes": "9f0a020e6c3622ba751c2a098802125783400199f243960dd64f09c5a91356b9",
+    "UEKB.Compile.InputUi": "4d5cf39915b391a5ce61d7c258e10fa043d49def4388c3aa7b1de065141be5e1",
+    "UEKB.Compile.BuildRules": "8ac73ff0b64de605e01c004da78c94018b69da014429e688ab5d76f6b2296d6e",
+    "UEKB.Compile.BuildRulesEditor": "97fdf1b6706085d76ca65d54521c3fde7b93617685a89cdf6ed9130d00465fdc",
+    "UEKB.Compile.ActorCollision": "050268997705056cb28a8ded69986655f171cd5b121c6274bb6e9cb32195e0a2",
+    "UEKB.Compile.CharacterMovement": "11232c60156ff4c15de9f021b74bb5b2b3225a1bf79bdbdcdab311ff1e795dc6",
+    "UEKB.Compile.PhysicsCollision": "f43f0533c156fc27f19ca9a982f7089b74d92b0853ead04e54356a3684f34416",
+    "UEKB.Compile.SaveGameTypes": "0b32910a8ad57b4dd95df4a15d295c491f61c4710a9038e0b66f9bd1a57bc362",
+    "UEKB.Compile.SaveGameApi": "e66f499a30bc67388c2963c72354e0fb1b6a86585ccb523cae48f844e5fae541",
+    "UEKB.Compile.AsyncThreading": "29f2c5ca9f9c25e1a9228e6a816b9cecbc93a5af6215e0f0683fe4c2385ab925",
+    "UEKB.Compile.AINavigation": "f3b9d13b73e4b6c2688977c057441e539b4cb6f097784edb0016a9cf6a131f10",
+    "UEKB.Compile.StateTree": "7389eb68b398b18edd98886cc38a12af4f6c89f0eb775ff0adb2f646a9d15cfa",
+    "UEKB.Compile.MassEntity": "627eb2248e406d5fce38bc22f42a5d3d5d4a46b5c31073f389c9d44f06aabc0c",
+    "UEKB.Compile.GameFeatures": "cef84829635d1770d206902e90f390cd8a9cd9066bc2a4abcb1aa3d49cc42488",
+    "UEKB.Compile.WorldStreaming": "bb043279af90f55d24c34fef4adb68659260c127c277847f45d973725cc4cd9e",
+    "UEKB.Compile.Animation": "3ee4f20072d95851d4bb0f48059307f6b326c57f0f78e9f308be09132e6c3a6d",
+    "UEKB.Compile.Audio": "1581581cd0dad5653b71ce5bd80423a960eb202336195bf7ce432e53fdc4c0a3",
+    "UEKB.Compile.MaterialsRendering": "5015cfb13e59b28228e6f4655747773501b605f124ee3780b8993f57d7644727",
+    "UEKB.Compile.Niagara": "a9cdef18155a70dbd9f4ddc3d328fdd9e3b9cda108a4b6316a6430af01c3727c",
+    "UEKB.Compile.Sequencer": "0696cc16f3e77bb1e3325cdbb83fd36ebd8dcdcf51473b928cc8e1fff3ccf309",
+    "UEKB.Compile.PluginManager": "d600cacedcead4cd48068be3cdf47968337d57976d0e9d0e54f2edd848e067a0",
+    "UEKB.Compile.EditorTools": "17897e91f8af9da084a6f8baa5f00da9f7f6f190a96bee0a3cd90f4a2feee545",
+    "UEKB.Compile.PCG": "aaac440603134e817d62f4021bdf3b0240cbba91d052104b7a11fa3a97169fd5",
+    "UEKB.Compile.Automation": "fa4fb049b5552f52743df3477d63c3019fdaf0d36cbd252d5b49b5540f304fea",
+    "UEKB.Compile.UI": "f915baf54b1fc1a258ad3265fa3861c0c1a1f31e558547b17e6b9141d82d31a3",
+    "UEKB.Compile.UIBindWidget": "5860e09a23f86a78b603b2b71b319f3030ebfa49f911e705b825ea6bd7c0c1ec"
+  },
+  "compile_validations": [
+    {
+      "id": "UEKB.Compile.Core",
+      "state": "Success",
+      "fixture_sha256": "9df0ad3eb48468d6416e51bf22b36e966989c6b063169e0f0f7b0a3f8dd77e50",
+      "symbols": [
+        "FString",
+        "CoreMinimal.h"
+      ],
+      "covers_claims": []
+    },
+    {
+      "id": "UEKB.Compile.NetworkingRpc",
+      "state": "Success",
+      "fixture_sha256": "7670241245d16ff4d15ca5eff0439f3e0fbfc1199defdc0f350ba061ee850032",
+      "symbols": [
+        "AActor",
+        "GetLifetimeReplicatedProps",
+        "DOREPLIFETIME",
+        "DOREPLIFETIME_CONDITION",
+        "FFastArraySerializer",
+        "AddReplicatedSubObject",
+        "ServerValidated",
+        "ServerPlain"
+      ],
+      "covers_claims": [
+        "uekb.00cbca16f5f03012307136d9.c213014a38115ea1a",
+        "uekb.00cbca16f5f03012307136d9.c32c3e5f874d9f462",
+        "uekb.00cbca16f5f03012307136d9.ce7ca4497bc89c532",
+        "uekb.00cbca16f5f03012307136d9.cf2982086ac9f8b72",
+        "uekb.afc9f9852859f1b4a7325ba9.c04c13c7f2f269982",
+        "uekb.afc9f9852859f1b4a7325ba9.c0fadd92a4106b0b7",
+        "uekb.afc9f9852859f1b4a7325ba9.c1a98b3682d4535b2",
+        "uekb.afc9f9852859f1b4a7325ba9.c94b80a515474f3fa",
+        "uekb.afc9f9852859f1b4a7325ba9.c94bbd3108c44a52b",
+        "uekb.afc9f9852859f1b4a7325ba9.c9f80198c13b3f5c9",
+        "uekb.afc9f9852859f1b4a7325ba9.cbfa212dacd33da81",
+        "uekb.afc9f9852859f1b4a7325ba9.cc6b047456ef0e5d5",
+        "uekb.afc9f9852859f1b4a7325ba9.cfb3ab58eab73c5d1",
+        "uekb.c9680a1d9dc4aa1d75275920.c362b16bfc848b3ea",
+        "uekb.c9680a1d9dc4aa1d75275920.c52f44378a6401982",
+        "uekb.c9680a1d9dc4aa1d75275920.c591d7c14d135ab10",
+        "uekb.c9680a1d9dc4aa1d75275920.c8a58ac7e8dab1a77",
+        "uekb.c9680a1d9dc4aa1d75275920.cb593a25719d3c0bd",
+        "uekb.c9680a1d9dc4aa1d75275920.cde68685203ff6ec1",
+        "uekb.c9680a1d9dc4aa1d75275920.ce3571f4ad18ef37a"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.GasApi",
+      "state": "Success",
+      "fixture_sha256": "81e0b3f3e197e841fec5b1629a6fada628cbd4abb380bcf25c97d88a795644a9",
+      "symbols": [
+        "UAbilitySystemComponent",
+        "UGameplayAbility",
+        "ActivateAbility",
+        "EndAbility",
+        "InitAbilityActorInfo",
+        "GiveAbility",
+        "GetNumericAttribute",
+        "MakeOutgoingSpec",
+        "ApplyGameplayEffectSpecToSelf",
+        "SetSetByCallerMagnitude",
+        "CancelAbilities",
+        "TryActivateAbilitiesByTag",
+        "UAbilityTask_WaitDelay",
+        "UAbilityTask_PlayMontageAndWait"
+      ],
+      "covers_claims": [
+        "uekb.44747041c9a8fc2d33cfc3bd.c4b92133ee20dce1b",
+        "uekb.44747041c9a8fc2d33cfc3bd.c505f7a4e14401918",
+        "uekb.44747041c9a8fc2d33cfc3bd.c830d6a59c028c1b6",
+        "uekb.44747041c9a8fc2d33cfc3bd.cb5aac0aa7ebdd812",
+        "uekb.44747041c9a8fc2d33cfc3bd.cb697bd6436262d30",
+        "uekb.558fdd0b751029a790ed90e4.c07f98d7f018be1b3",
+        "uekb.558fdd0b751029a790ed90e4.cb32e37db8adf4e95",
+        "uekb.558fdd0b751029a790ed90e4.cbd85716df5779571",
+        "uekb.558fdd0b751029a790ed90e4.ccf77b5f30a56dfc0",
+        "uekb.558fdd0b751029a790ed90e4.cda85b51550f7273a",
+        "uekb.558fdd0b751029a790ed90e4.cfe7f17c52fa2746b",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c05ead871827ad505",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c2d4cd98eca179080",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c368b73ae2d03316a",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c46219d307ae1e0c3",
+        "uekb.5dd79f6eb11abe7bf2b19b21.ca06e83ac147392f7",
+        "uekb.5dd79f6eb11abe7bf2b19b21.cd06227bf9c152176",
+        "uekb.5dd79f6eb11abe7bf2b19b21.cf738a96278c2acc3",
+        "uekb.806616a23321819bf28bc8d2.c1e962bfcfbf9110a",
+        "uekb.806616a23321819bf28bc8d2.c662b8fa7de23757b",
+        "uekb.806616a23321819bf28bc8d2.c68dcd31296c2a00d",
+        "uekb.806616a23321819bf28bc8d2.cb3f82f318776f47d",
+        "uekb.cd786022fb2f3b94c7b14ca0.c13c738fe91f4dbfc",
+        "uekb.cd786022fb2f3b94c7b14ca0.c1d3231254acadffd",
+        "uekb.cd786022fb2f3b94c7b14ca0.c4389d46985b22ed4",
+        "uekb.cd786022fb2f3b94c7b14ca0.c5deb1ca1c342e07f",
+        "uekb.cd786022fb2f3b94c7b14ca0.c8170057d409844ed",
+        "uekb.cd786022fb2f3b94c7b14ca0.c96d6e44157650f19",
+        "uekb.cd786022fb2f3b94c7b14ca0.cd347da968ba74222",
+        "uekb.cd786022fb2f3b94c7b14ca0.cf3cb3dcf36e473a3",
+        "uekb.dccb7fe1d0cb4fafb55befed.c429bae794ea6c841",
+        "uekb.dccb7fe1d0cb4fafb55befed.c527987fbceca753d",
+        "uekb.dccb7fe1d0cb4fafb55befed.ca592199724fdbd41",
+        "uekb.dccb7fe1d0cb4fafb55befed.cd69998c3caf53b43",
+        "uekb.dccb7fe1d0cb4fafb55befed.cfde06984ce635e74"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.ActorComponents",
+      "state": "Success",
+      "fixture_sha256": "b58e667640a8dc149c0d0302fc98ff52cf0bb408a3fc0056f1e2a35bacaa8c82",
+      "symbols": [
+        "UActorComponent",
+        "USceneComponent",
+        "UPrimitiveComponent",
+        "CreateDefaultSubobject",
+        "AddInstanceComponent",
+        "RegisterComponent",
+        "SetupAttachment",
+        "AttachToComponent",
+        "Activate",
+        "GetOwner",
+        "GetAttachParent",
+        "PostInitializeComponents",
+        "BeginPlay",
+        "EndPlay"
+      ],
+      "covers_claims": [
+        "uekb.5df89051d0def2a7a3033d2c.c4b0f7033954cebdc",
+        "uekb.5df89051d0def2a7a3033d2c.c7b86ef15fe6e774e",
+        "uekb.5df89051d0def2a7a3033d2c.cb5d933da0be3ffa0",
+        "uekb.5df89051d0def2a7a3033d2c.cd5575f5acca71cb7",
+        "uekb.5df89051d0def2a7a3033d2c.cf50aa65e1464a8b5",
+        "uekb.5df89051d0def2a7a3033d2c.cfb897eb27985ee52",
+        "uekb.888079fa045ea523b79a9e4e.c9c9876fc3ff1ed2e",
+        "uekb.888079fa045ea523b79a9e4e.cba6effc453933db9",
+        "uekb.ac08ec5586c3a011e5d39e31.c485977b393a1a953",
+        "uekb.ac08ec5586c3a011e5d39e31.ca1e0afaf00f98543",
+        "uekb.ac08ec5586c3a011e5d39e31.ce827aebf918c1732"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.CppReflection",
+      "state": "Success",
+      "fixture_sha256": "19041da3f8b9ffac2d8868db04c92d708dccd623f057412acd0032dc1acaba72",
+      "symbols": [
+        "UCLASS",
+        "USTRUCT",
+        "UFUNCTION",
+        "UPROPERTY",
+        "TObjectPtr",
+        "DECLARE_DYNAMIC_MULTICAST_DELEGATE"
+      ],
+      "covers_claims": [
+        "uekb.43b994d4cf24ee47b6824a14.c05d74bdc28120bb1",
+        "uekb.43b994d4cf24ee47b6824a14.c0d1910200ef581d7",
+        "uekb.43b994d4cf24ee47b6824a14.c1da7b9ef8909d5ec",
+        "uekb.43b994d4cf24ee47b6824a14.ca21f9aa2a3623b2b",
+        "uekb.43b994d4cf24ee47b6824a14.ce6bd01c4285af445",
+        "uekb.43b994d4cf24ee47b6824a14.ce90f924acb3b499f",
+        "uekb.60479440c7329c769a53e93b.c01b3f33889c095e0",
+        "uekb.60479440c7329c769a53e93b.c4d81147fcd3b616c",
+        "uekb.60479440c7329c769a53e93b.c584883d1e006f3d9",
+        "uekb.60479440c7329c769a53e93b.c8ad234dfb9e43b39",
+        "uekb.60479440c7329c769a53e93b.cc6bee4b6864c9e44",
+        "uekb.6f918359a268debd248043be.c17dc6f55245cc1e2",
+        "uekb.6f918359a268debd248043be.c1b1f276de7ea5b69",
+        "uekb.6f918359a268debd248043be.c1e06b0a4f5ea6bb5",
+        "uekb.6f918359a268debd248043be.ca458f9c5ee5db5f1",
+        "uekb.6f918359a268debd248043be.cf9dd24d2bcacb74f"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.CppFoundations",
+      "state": "Success",
+      "fixture_sha256": "36023642e05d0b4c67cad9c21c990714cee497556169f7085800aa73d89a6806",
+      "symbols": [
+        "TArray",
+        "TMap",
+        "TSet",
+        "FString",
+        "FName",
+        "FText",
+        "DECLARE_DELEGATE",
+        "DECLARE_MULTICAST_DELEGATE",
+        "DECLARE_DYNAMIC_MULTICAST_DELEGATE"
+      ],
+      "covers_claims": [
+        "uekb.05f562fbd6f13535e566d332.c205ac808f9373521",
+        "uekb.05f562fbd6f13535e566d332.c5854f6ccce472b6d",
+        "uekb.05f562fbd6f13535e566d332.c72697e0761c5da95",
+        "uekb.05f562fbd6f13535e566d332.c8a17b2c6d1e615f5",
+        "uekb.05f562fbd6f13535e566d332.c8f0a3a29b9015fd4",
+        "uekb.05f562fbd6f13535e566d332.cdce44908b8c0cca5",
+        "uekb.43b994d4cf24ee47b6824a14.c05d74bdc28120bb1",
+        "uekb.43b994d4cf24ee47b6824a14.c0d1910200ef581d7",
+        "uekb.43b994d4cf24ee47b6824a14.c1da7b9ef8909d5ec",
+        "uekb.43b994d4cf24ee47b6824a14.ca21f9aa2a3623b2b",
+        "uekb.43b994d4cf24ee47b6824a14.ce6bd01c4285af445",
+        "uekb.43b994d4cf24ee47b6824a14.ce90f924acb3b499f",
+        "uekb.60479440c7329c769a53e93b.c01b3f33889c095e0",
+        "uekb.60479440c7329c769a53e93b.c4d81147fcd3b616c",
+        "uekb.60479440c7329c769a53e93b.c584883d1e006f3d9",
+        "uekb.60479440c7329c769a53e93b.c8ad234dfb9e43b39",
+        "uekb.60479440c7329c769a53e93b.cc6bee4b6864c9e44"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.DataAssetTypes",
+      "state": "Success",
+      "fixture_sha256": "616db2fe6c98d70f091f0c0ef2d839708f3700324c67005f1d067ab93d9b44eb",
+      "symbols": [
+        "UDataAsset",
+        "UPrimaryDataAsset",
+        "UDataTable",
+        "FTableRowBase",
+        "FDataTableRowHandle",
+        "TSoftObjectPtr"
+      ],
+      "covers_claims": [
+        "uekb.47367af0320bb47b5c6490dc.c33c67afbea1f84ed",
+        "uekb.47367af0320bb47b5c6490dc.c795fa67d771e961c",
+        "uekb.47367af0320bb47b5c6490dc.cb63a30a658233e0f",
+        "uekb.47367af0320bb47b5c6490dc.cbbd9590a9a6c84e1",
+        "uekb.864b779e6c1827766d88fe11.c25c0288d8a737331",
+        "uekb.864b779e6c1827766d88fe11.c2bba4bfcf7cc0b80",
+        "uekb.864b779e6c1827766d88fe11.ca5789e53643db8c9",
+        "uekb.864b779e6c1827766d88fe11.cb7dced8af998f59b",
+        "uekb.b862f31ca20bb773ad0f5a04.c499c7eff4fe525c2",
+        "uekb.b862f31ca20bb773ad0f5a04.c7fb896ec8de1c401",
+        "uekb.b862f31ca20bb773ad0f5a04.c9d307c6e25271919",
+        "uekb.b862f31ca20bb773ad0f5a04.cb019382dbcad7575",
+        "uekb.b862f31ca20bb773ad0f5a04.cde075d8e3e29e761",
+        "uekb.b862f31ca20bb773ad0f5a04.cfa5b19daaf541778"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.DataAssets",
+      "state": "Success",
+      "fixture_sha256": "e599d88566fa759dbbda79fb4cb4c2ca0013bf5cbe0578962db18bccfd6d61e2",
+      "symbols": [
+        "FPrimaryAssetId",
+        "UAssetManager",
+        "FStreamableManager",
+        "RequestAsyncLoad",
+        "LoadSynchronous"
+      ],
+      "covers_claims": [
+        "uekb.47367af0320bb47b5c6490dc.c33c67afbea1f84ed",
+        "uekb.47367af0320bb47b5c6490dc.c795fa67d771e961c",
+        "uekb.47367af0320bb47b5c6490dc.cb63a30a658233e0f",
+        "uekb.47367af0320bb47b5c6490dc.cbbd9590a9a6c84e1",
+        "uekb.864b779e6c1827766d88fe11.c25c0288d8a737331",
+        "uekb.864b779e6c1827766d88fe11.c2bba4bfcf7cc0b80",
+        "uekb.864b779e6c1827766d88fe11.ca5789e53643db8c9",
+        "uekb.864b779e6c1827766d88fe11.cb7dced8af998f59b",
+        "uekb.b862f31ca20bb773ad0f5a04.c499c7eff4fe525c2",
+        "uekb.b862f31ca20bb773ad0f5a04.c7fb896ec8de1c401",
+        "uekb.b862f31ca20bb773ad0f5a04.c9d307c6e25271919",
+        "uekb.b862f31ca20bb773ad0f5a04.cb019382dbcad7575",
+        "uekb.b862f31ca20bb773ad0f5a04.cde075d8e3e29e761",
+        "uekb.b862f31ca20bb773ad0f5a04.cfa5b19daaf541778"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.GameplayFramework",
+      "state": "Success",
+      "fixture_sha256": "03efe808e6e72a4c6e979758864413513c7376f11ca6fae76e5a0335816e67d8",
+      "symbols": [
+        "ACharacter",
+        "APawn",
+        "APlayerController",
+        "APlayerState",
+        "AGameMode",
+        "AGameModeBase",
+        "AGameStateBase",
+        "UGameInstance",
+        "RestartPlayer"
+      ],
+      "covers_claims": [
+        "uekb.c892fe4ece105de6f951dd7e.c679af86d03cbb823",
+        "uekb.c892fe4ece105de6f951dd7e.ca2a2a3b3d29be284",
+        "uekb.c892fe4ece105de6f951dd7e.ccff0584f50094eb3",
+        "uekb.e9e9c11320f4c84b477dddd7.cc33762a39c917103",
+        "uekb.e9e9c11320f4c84b477dddd7.cf54e71967857b5ee"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.InputTypes",
+      "state": "Success",
+      "fixture_sha256": "9f0a020e6c3622ba751c2a098802125783400199f243960dd64f09c5a91356b9",
+      "symbols": [
+        "UObject",
+        "FInputActionValue",
+        "FVector2D"
+      ],
+      "covers_claims": [
+        "uekb.32af6265d13f8b998b8a6d0b.c6e7ed0bf4725d58d",
+        "uekb.32af6265d13f8b998b8a6d0b.cc6cf1baaa35b0e22",
+        "uekb.32af6265d13f8b998b8a6d0b.ce3ffcc3e7496e154",
+        "uekb.32af6265d13f8b998b8a6d0b.cfb3a319164e66d87",
+        "uekb.3a973a344ef2fc95c9b445e6.c114807ebb1a65ba8",
+        "uekb.3a973a344ef2fc95c9b445e6.c50e019e0405c2d2b",
+        "uekb.3a973a344ef2fc95c9b445e6.cfc65d5cb0842900e"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.InputUi",
+      "state": "Success",
+      "fixture_sha256": "4d5cf39915b391a5ce61d7c258e10fa043d49def4388c3aa7b1de065141be5e1",
+      "symbols": [
+        "UUserWidget",
+        "UInputComponent",
+        "UInputAction",
+        "UInputMappingContext",
+        "UEnhancedInputComponent",
+        "UEnhancedInputLocalPlayerSubsystem",
+        "FInputActionValue",
+        "ETriggerEvent",
+        "UInputTrigger",
+        "UInputModifier",
+        "AddMappingContext",
+        "RemoveMappingContext",
+        "BindAction"
+      ],
+      "covers_claims": [
+        "uekb.32af6265d13f8b998b8a6d0b.c6e7ed0bf4725d58d",
+        "uekb.32af6265d13f8b998b8a6d0b.cc6cf1baaa35b0e22",
+        "uekb.32af6265d13f8b998b8a6d0b.ce3ffcc3e7496e154",
+        "uekb.32af6265d13f8b998b8a6d0b.cfb3a319164e66d87",
+        "uekb.3a973a344ef2fc95c9b445e6.c114807ebb1a65ba8",
+        "uekb.3a973a344ef2fc95c9b445e6.c50e019e0405c2d2b",
+        "uekb.3a973a344ef2fc95c9b445e6.cfc65d5cb0842900e"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.BuildRules",
+      "state": "Success",
+      "fixture_sha256": "8ac73ff0b64de605e01c004da78c94018b69da014429e688ab5d76f6b2296d6e",
+      "symbols": [
+        "ModuleRules",
+        "PublicDependencyModuleNames",
+        "PrivateDependencyModuleNames",
+        "PCHUsage",
+        "Target.Platform",
+        "PrivateDefinitions"
+      ],
+      "covers_claims": [
+        "uekb.871d2cc2288767a58e52e563.c024eb0e1acb06a54",
+        "uekb.871d2cc2288767a58e52e563.c1dd674ec24331643",
+        "uekb.871d2cc2288767a58e52e563.c710ce0089c6d3a00",
+        "uekb.871d2cc2288767a58e52e563.c920392bf46ee0a01",
+        "uekb.93ad96acc2b36c14cc041d00.c9692b4316ceb15fd",
+        "uekb.93ad96acc2b36c14cc041d00.ca45213a2a5ee053f",
+        "uekb.93ad96acc2b36c14cc041d00.cca1e1a87d5d06981",
+        "uekb.93ad96acc2b36c14cc041d00.ccdc92938d4da2325",
+        "uekb.93ad96acc2b36c14cc041d00.cff0423b0cb9f2ee9",
+        "uekb.cd786022fb2f3b94c7b14ca0.c6e2a0be22f5b0054"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.BuildRulesEditor",
+      "state": "Success",
+      "fixture_sha256": "97fdf1b6706085d76ca65d54521c3fde7b93617685a89cdf6ed9130d00465fdc",
+      "symbols": [
+        "ModuleRules",
+        "PrivateDependencyModuleNames",
+        "UEKnowledgeValidation",
+        "UnrealEd"
+      ],
+      "covers_claims": [
+        "uekb.871d2cc2288767a58e52e563.c1dd674ec24331643",
+        "uekb.93ad96acc2b36c14cc041d00.c39641afc5126d9bc",
+        "uekb.93ad96acc2b36c14cc041d00.cf8a0c1d9d9c8aee8",
+        "uekb.9da7f2edf9472a048cce8f09.cbf74e487336ce14d"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.ActorCollision",
+      "state": "Success",
+      "fixture_sha256": "050268997705056cb28a8ded69986655f171cd5b121c6274bb6e9cb32195e0a2",
+      "symbols": [
+        "SetActorEnableCollision",
+        "GetActorEnableCollision"
+      ],
+      "covers_claims": [
+        "uekb.6b27a6e428a6f0d6b3d9afd5.c2985331f7bb5f71a"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.CharacterMovement",
+      "state": "Success",
+      "fixture_sha256": "11232c60156ff4c15de9f021b74bb5b2b3225a1bf79bdbdcdab311ff1e795dc6",
+      "symbols": [
+        "ACharacter",
+        "APawn",
+        "UCharacterMovementComponent",
+        "AddMovementInput",
+        "GetPendingMovementInputVector",
+        "ConsumeMovementInputVector",
+        "SetMovementMode",
+        "PhysCustom",
+        "FindFloor",
+        "SafeMoveUpdatedComponent",
+        "SlideAlongSurface",
+        "LaunchCharacter",
+        "Jump",
+        "SetDefaultSubobjectClass"
+      ],
+      "covers_claims": [
+        "uekb.49d25a6225d301aff090335d.c19a4dc9f1f2432d0",
+        "uekb.49d25a6225d301aff090335d.cbbef7302955e39b7",
+        "uekb.49d25a6225d301aff090335d.cd6e0058599803c3c",
+        "uekb.52743fd6f0c8454f2862c1b1.c018f5dccc848e56d",
+        "uekb.52743fd6f0c8454f2862c1b1.c38304138760950ce",
+        "uekb.52743fd6f0c8454f2862c1b1.c6af355e31b48ede7",
+        "uekb.52743fd6f0c8454f2862c1b1.ca56e5fa9bab4e26f",
+        "uekb.52743fd6f0c8454f2862c1b1.cb2f9f1366624aa75",
+        "uekb.52743fd6f0c8454f2862c1b1.cbbe97e8c5fae3d0b",
+        "uekb.52743fd6f0c8454f2862c1b1.cbec67e3cce01faf6",
+        "uekb.52743fd6f0c8454f2862c1b1.cdc7a0cacab6bb573",
+        "uekb.994240234395f1990393c029.c04fabf684ded8b35",
+        "uekb.994240234395f1990393c029.c1de76cf053b88f24",
+        "uekb.994240234395f1990393c029.c56d7f168094155f5",
+        "uekb.994240234395f1990393c029.c666659aab32f7751",
+        "uekb.994240234395f1990393c029.c6f0ccdcb33f012c9",
+        "uekb.994240234395f1990393c029.c77fb08ad690ca896",
+        "uekb.994240234395f1990393c029.ccf022df31ce69478",
+        "uekb.994240234395f1990393c029.cfd059ed9d6e23cdf",
+        "uekb.ca3f900a258f491a0ab870cd.c0682b3f24f786b2a",
+        "uekb.ca3f900a258f491a0ab870cd.c2774207b765056f9",
+        "uekb.ca3f900a258f491a0ab870cd.c7eca0d57be3600ec",
+        "uekb.ca3f900a258f491a0ab870cd.cf9b3a0868e876824",
+        "uekb.f5e755b3860e010caaa6a7b1.c2984d39904e62399",
+        "uekb.f5e755b3860e010caaa6a7b1.cfb8b32dbe2399b47"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.PhysicsCollision",
+      "state": "Success",
+      "fixture_sha256": "f43f0533c156fc27f19ca9a982f7089b74d92b0853ead04e54356a3684f34416",
+      "symbols": [
+        "SetActorEnableCollision",
+        "GetActorEnableCollision",
+        "UPrimitiveComponent",
+        "SetCollisionEnabled",
+        "SetCollisionResponseToChannel",
+        "SetGenerateOverlapEvents",
+        "SetNotifyRigidBodyCollision",
+        "FCollisionQueryParams",
+        "LineTraceSingleByChannel",
+        "FCollisionShape",
+        "SweepSingleByChannel",
+        "FHitResult"
+      ],
+      "covers_claims": [
+        "uekb.29dc3af7031aa5ba6de51c1d.c71243836c2361b38",
+        "uekb.32148321ed44df6039b176e4.c0a40ed8c3e767891",
+        "uekb.32148321ed44df6039b176e4.c32b4e52db635956f",
+        "uekb.32148321ed44df6039b176e4.c7a3f93ac228b6099",
+        "uekb.32148321ed44df6039b176e4.c8062e8962cbe7f7e",
+        "uekb.32148321ed44df6039b176e4.c8f5e322f4af498f5",
+        "uekb.32148321ed44df6039b176e4.cb6798aa80d1cef28",
+        "uekb.32148321ed44df6039b176e4.cb96972c555af0141",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c208298890294c751",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c6471fb3f40d9438f",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c7477dc2084d34c7b",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.cee6e4db52db44131",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.cd8b14058ce70d9e5",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.cdeb5bf110ee9dc3d",
+        "uekb.700b69951f76581fdf788ae4.c10bb8b8abdade519",
+        "uekb.700b69951f76581fdf788ae4.c454d5e1b50f35041",
+        "uekb.700b69951f76581fdf788ae4.c7ccbeb34633c13b1",
+        "uekb.700b69951f76581fdf788ae4.c8070ce17c6fe9d62",
+        "uekb.700b69951f76581fdf788ae4.c93ba38ab69f0fd8b",
+        "uekb.700b69951f76581fdf788ae4.c94ee62e3b5078349",
+        "uekb.700b69951f76581fdf788ae4.ca680a9f9a9ad9fec",
+        "uekb.700b69951f76581fdf788ae4.cf01206d1f4637b3c"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.SaveGameTypes",
+      "state": "Success",
+      "fixture_sha256": "0b32910a8ad57b4dd95df4a15d295c491f61c4710a9038e0b66f9bd1a57bc362",
+      "symbols": [
+        "USaveGame",
+        "UPROPERTY(SaveGame)",
+        "SchemaVersion",
+        "TMap"
+      ],
+      "covers_claims": [
+        "uekb.100c04138184ad1677de3870.c1f128162fc74a139",
+        "uekb.100c04138184ad1677de3870.c59f42c80ec1c9d91",
+        "uekb.100c04138184ad1677de3870.c7ae61c47688f4713"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.SaveGameApi",
+      "state": "Success",
+      "fixture_sha256": "e66f499a30bc67388c2963c72354e0fb1b6a86585ccb523cae48f844e5fae541",
+      "symbols": [
+        "CreateSaveGameObject",
+        "SaveGameToSlot",
+        "DoesSaveGameExist",
+        "LoadGameFromSlot",
+        "AsyncSaveGameToSlot",
+        "AsyncLoadGameFromSlot"
+      ],
+      "covers_claims": [
+        "uekb.100c04138184ad1677de3870.c0536baecc9fb9eaf",
+        "uekb.100c04138184ad1677de3870.c48d9c58e4bf4240f",
+        "uekb.100c04138184ad1677de3870.c8f3a44a487c86c9f",
+        "uekb.100c04138184ad1677de3870.cb400d5cce04937ba",
+        "uekb.100c04138184ad1677de3870.ceb2ccdf43680e13c",
+        "uekb.ec78d30283c4dd09de64064b.c4912ecc0a7026802",
+        "uekb.ec78d30283c4dd09de64064b.c93d638b0d3ad7d24",
+        "uekb.ec78d30283c4dd09de64064b.c9ec7260d793e2313",
+        "uekb.ec78d30283c4dd09de64064b.cc5962a6e97103c88"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.AsyncThreading",
+      "state": "Success",
+      "fixture_sha256": "29f2c5ca9f9c25e1a9228e6a816b9cecbc93a5af6215e0f0683fe4c2385ab925",
+      "symbols": [
+        "Async",
+        "EAsyncExecution",
+        "TFuture",
+        "AsyncTask",
+        "ENamedThreads::GameThread",
+        "UE::Tasks::Launch",
+        "UE::Tasks::TTask",
+        "TWeakObjectPtr",
+        "FCriticalSection",
+        "FScopeLock",
+        "TAtomic"
+      ],
+      "covers_claims": [
+        "uekb.224c50032f9284fd6df7a87e.c6a530be080355c56",
+        "uekb.224c50032f9284fd6df7a87e.c8b918f767a16b64b",
+        "uekb.224c50032f9284fd6df7a87e.ca94abd51d1cf9237",
+        "uekb.224c50032f9284fd6df7a87e.cc098ffdc453ce018",
+        "uekb.224c50032f9284fd6df7a87e.ccaacfd425a787f39",
+        "uekb.54a47114f6be3e64e7b20c6d.c307eb238e925ad67",
+        "uekb.54a47114f6be3e64e7b20c6d.c794be30b952715a5",
+        "uekb.54a47114f6be3e64e7b20c6d.c862722b560745437",
+        "uekb.54a47114f6be3e64e7b20c6d.c927db990d801a8b4",
+        "uekb.54a47114f6be3e64e7b20c6d.cc651b5724479b300",
+        "uekb.54a47114f6be3e64e7b20c6d.cdfdcb69c56fd2546",
+        "uekb.ae7942b50d418e3ab65981c6.c0a938adceeb45cc1",
+        "uekb.ae7942b50d418e3ab65981c6.c11fc60b23b23cd50",
+        "uekb.ae7942b50d418e3ab65981c6.c16de79a24baf39fd",
+        "uekb.ae7942b50d418e3ab65981c6.cbc97ca8db0f9d02f",
+        "uekb.ae7942b50d418e3ab65981c6.cc222f6f44b38dcce",
+        "uekb.ae7942b50d418e3ab65981c6.ccc91955bb4e87257",
+        "uekb.ae7942b50d418e3ab65981c6.cdd23df17d4eb9259"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.AINavigation",
+      "state": "Success",
+      "fixture_sha256": "f3b9d13b73e4b6c2688977c057441e539b4cb6f097784edb0016a9cf6a131f10",
+      "symbols": [
+        "AAIController",
+        "FAIMoveRequest",
+        "RunBehaviorTree",
+        "UBehaviorTreeComponent::StartTree",
+        "UBlackboardComponent::SetValueAsVector",
+        "UNavigationSystemV1::ProjectPointToNavigation",
+        "UEnvQueryManager::RunEQSQuery"
+      ],
+      "covers_claims": [
+        "uekb.7cf2520a11235d472ac51e43.c11645152d23bfb3c",
+        "uekb.7cf2520a11235d472ac51e43.c4ca0b5deda24ecdc",
+        "uekb.7cf2520a11235d472ac51e43.c704e987f78550047",
+        "uekb.7cf2520a11235d472ac51e43.cbc984285fcda886d",
+        "uekb.7cf2520a11235d472ac51e43.ccddb271f42b502b4",
+        "uekb.7cf2520a11235d472ac51e43.cd5c219f3833838ed",
+        "uekb.7cf2520a11235d472ac51e43.cdaf3afcfb6168c88",
+        "uekb.7ee70913b7a7f9ec2497235b.c1274a563031f4d3d",
+        "uekb.7ee70913b7a7f9ec2497235b.c1b1bacad4e626be4",
+        "uekb.7ee70913b7a7f9ec2497235b.c1f25a9daaca9face",
+        "uekb.7ee70913b7a7f9ec2497235b.c3526856ca3395ada",
+        "uekb.7ee70913b7a7f9ec2497235b.c8bceb8c98e942357",
+        "uekb.7ee70913b7a7f9ec2497235b.c91ae3ee697aa5018",
+        "uekb.85c2d18fe1b60ab2f4eded32.c29f2037bf938894e",
+        "uekb.85c2d18fe1b60ab2f4eded32.cf2cfe58866468836",
+        "uekb.85c2d18fe1b60ab2f4eded32.cfef559a2a5935532"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.StateTree",
+      "state": "Success",
+      "fixture_sha256": "7389eb68b398b18edd98886cc38a12af4f6c89f0eb775ff0adb2f646a9d15cfa",
+      "symbols": [
+        "UStateTree",
+        "UStateTreeComponent",
+        "FStateTreeTaskBase",
+        "FStateTreeEvaluatorBase",
+        "FStateTreeConditionBase",
+        "SendStateTreeEvent",
+        "UMassStateTreeSchema",
+        "UMassStateTreeTrait",
+        "UMassStateTreeSubsystem",
+        "FMassStateTreeInstanceFragment",
+        "FMassStateTreeSharedFragment",
+        "UMassStateTreeActivationProcessor"
+      ],
+      "covers_claims": [
+        "uekb.3c89d7853e82670f582453fd.c8c457525f8fef0e6",
+        "uekb.3c89d7853e82670f582453fd.ccefae755c40de603",
+        "uekb.3c89d7853e82670f582453fd.cd1836caa6dcdffe9",
+        "uekb.3c89d7853e82670f582453fd.ceb3cc4c476c7a134",
+        "uekb.3c89d7853e82670f582453fd.cf3c7679684eb8b27",
+        "uekb.79ce04032651bbf7d4705cdb.c0696aa497cdbf497",
+        "uekb.79ce04032651bbf7d4705cdb.c150eb205c0ab7fb7",
+        "uekb.79ce04032651bbf7d4705cdb.c2610ef832073bce5",
+        "uekb.79ce04032651bbf7d4705cdb.c7dadd5e9a9a8e383",
+        "uekb.79ce04032651bbf7d4705cdb.cb173f1a3b0f57a89",
+        "uekb.79ce04032651bbf7d4705cdb.cf5ebb08bf3cdb4fc",
+        "uekb.f054939d6b85d70a3e85a37d.c1396b60e600cd111",
+        "uekb.f054939d6b85d70a3e85a37d.c3e364a3e00f5ede8",
+        "uekb.f054939d6b85d70a3e85a37d.c7798b17ef1ff57e7",
+        "uekb.f054939d6b85d70a3e85a37d.c7a724a154524f248",
+        "uekb.f054939d6b85d70a3e85a37d.c8615bbfbe17ba070",
+        "uekb.f054939d6b85d70a3e85a37d.cedba2e28921d4d69",
+        "uekb.f054939d6b85d70a3e85a37d.cf88117a4bf38e275"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.MassEntity",
+      "state": "Success",
+      "fixture_sha256": "627eb2248e406d5fce38bc22f42a5d3d5d4a46b5c31073f389c9d44f06aabc0c",
+      "symbols": [
+        "FMassEntityHandle",
+        "FMassFragment",
+        "FMassTag",
+        "FMassChunkFragment",
+        "FMassSharedFragment",
+        "FMassConstSharedFragment",
+        "FMassEntityManager",
+        "FMassEntityQuery",
+        "FMassExecutionContext",
+        "UMassProcessor"
+      ],
+      "covers_claims": [
+        "uekb.1819dcda296c34a9c55fe293.c3e2fd98f073eda8a",
+        "uekb.1819dcda296c34a9c55fe293.c5729b95c403fc779",
+        "uekb.1819dcda296c34a9c55fe293.c9633d3ade20c6ba3",
+        "uekb.1819dcda296c34a9c55fe293.cb21cb1a4df9c8b75",
+        "uekb.2b4d561926aae32fdedfe720.c1afee1229c8e2ddc",
+        "uekb.2b4d561926aae32fdedfe720.c4be895321ca6264e",
+        "uekb.2b4d561926aae32fdedfe720.c4f3a4d53cc11fa1b",
+        "uekb.2b4d561926aae32fdedfe720.c5aa1f29808d94aae",
+        "uekb.2b4d561926aae32fdedfe720.c6aec9a9e4ce091bb",
+        "uekb.306a55671638f66d96a7ddc4.c032d6daf4a36bacb",
+        "uekb.306a55671638f66d96a7ddc4.c756214ae6a48fd87",
+        "uekb.306a55671638f66d96a7ddc4.cad577315533aea34",
+        "uekb.306a55671638f66d96a7ddc4.cbcedef846ae6e36a",
+        "uekb.306a55671638f66d96a7ddc4.cd88ce52026e7acdd"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.GameFeatures",
+      "state": "Success",
+      "fixture_sha256": "cef84829635d1770d206902e90f390cd8a9cd9066bc2a4abcb1aa3d49cc42488",
+      "symbols": [
+        "UGameFeaturesSubsystem",
+        "UGameFeatureData",
+        "UGameFeatureAction",
+        "UGameFeatureAction_AddComponents",
+        "LoadAndActivateGameFeaturePlugin",
+        "DeactivateGameFeaturePlugin"
+      ],
+      "covers_claims": [
+        "uekb.6c293b2d66cd534f0a4ce7c6.c0fb70838e8dc84d1",
+        "uekb.6c293b2d66cd534f0a4ce7c6.c3e22bf5663d24008",
+        "uekb.6c293b2d66cd534f0a4ce7c6.c93de1f633a3c2af7",
+        "uekb.6c293b2d66cd534f0a4ce7c6.ce77b8f53325be615",
+        "uekb.6c293b2d66cd534f0a4ce7c6.ce958ed9de2a34f33",
+        "uekb.bd3987a546a74b1b619a3dce.c361cc7a08903eed2",
+        "uekb.bd3987a546a74b1b619a3dce.c45c217e4ed3b7184",
+        "uekb.bd3987a546a74b1b619a3dce.c906347c16a1f8f8b",
+        "uekb.bd3987a546a74b1b619a3dce.c9a6bdaf233f52581",
+        "uekb.bd3987a546a74b1b619a3dce.cca21830416c125c1",
+        "uekb.bd3987a546a74b1b619a3dce.cefd30ddfec0c219e",
+        "uekb.c0c442d21df0f1ef60317535.c40c1a34065aa3767"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.WorldStreaming",
+      "state": "Success",
+      "fixture_sha256": "bb043279af90f55d24c34fef4adb68659260c127c277847f45d973725cc4cd9e",
+      "symbols": [
+        "ULevelStreaming",
+        "ELevelStreamingState",
+        "UGameplayStatics::LoadStreamLevel",
+        "UGameplayStatics::UnloadStreamLevel",
+        "ULevelStreamingDynamic::LoadLevelInstance",
+        "UWorldPartitionSubsystem",
+        "UWorldSubsystem"
+      ],
+      "covers_claims": [
+        "uekb.4618cf38491f38f238195fb0.c01e7207e6d5b29ed",
+        "uekb.4618cf38491f38f238195fb0.c647691e89aae0835",
+        "uekb.4618cf38491f38f238195fb0.c9a3722f1e66859f2",
+        "uekb.a90ebec19cf862dcbb630c2d.c031bc0156373dffa",
+        "uekb.a90ebec19cf862dcbb630c2d.c314bcd3afc3375fb",
+        "uekb.a90ebec19cf862dcbb630c2d.c4713102687c4140e",
+        "uekb.a90ebec19cf862dcbb630c2d.c790b10b3e4f2c54d",
+        "uekb.a90ebec19cf862dcbb630c2d.c8be49638aefaf6ff",
+        "uekb.a90ebec19cf862dcbb630c2d.cac55555800c50624",
+        "uekb.a90ebec19cf862dcbb630c2d.cecb492aae34ddd97"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.Animation",
+      "state": "Success",
+      "fixture_sha256": "3ee4f20072d95851d4bb0f48059307f6b326c57f0f78e9f308be09132e6c3a6d",
+      "symbols": [
+        "UAnimInstance",
+        "Montage_Play",
+        "Montage_IsPlaying",
+        "Montage_Stop",
+        "TryGetPawnOwner",
+        "SetRootMotionMode",
+        "UAnimNotify",
+        "UAnimNotifyState",
+        "FAnimNotifyEventReference",
+        "UCharacterMovementComponent::IsFalling"
+      ],
+      "covers_claims": [
+        "uekb.068005acf558dfcc264e33a3.c3f21401b6a1c2868",
+        "uekb.068005acf558dfcc264e33a3.c680f2e6b3cb03a7d",
+        "uekb.068005acf558dfcc264e33a3.c6c495c154a941d63",
+        "uekb.068005acf558dfcc264e33a3.c784f139c902d9f52",
+        "uekb.068005acf558dfcc264e33a3.c8a0b28585fb553ca",
+        "uekb.068005acf558dfcc264e33a3.ce4b5842975b168de",
+        "uekb.551c08370c97d414c075b04a.c1c8aa804e048a83c",
+        "uekb.551c08370c97d414c075b04a.c5a05e6aac9ad5c19",
+        "uekb.551c08370c97d414c075b04a.c6c78af2dce2aff39",
+        "uekb.551c08370c97d414c075b04a.cb5094442fbaea9d8",
+        "uekb.551c08370c97d414c075b04a.cf35e072b8e5ed48c",
+        "uekb.cce821f186c44b13fdc5de9c.c2c382f4c8136cc60",
+        "uekb.cce821f186c44b13fdc5de9c.c890aa71c0dbd6da1",
+        "uekb.cce821f186c44b13fdc5de9c.cafa592b0e1d75e65",
+        "uekb.cce821f186c44b13fdc5de9c.cf63bd8954186b53a"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.Audio",
+      "state": "Success",
+      "fixture_sha256": "1581581cd0dad5653b71ce5bd80423a960eb202336195bf7ce432e53fdc4c0a3",
+      "symbols": [
+        "UAudioComponent",
+        "SetSound",
+        "Play",
+        "Stop",
+        "FadeIn",
+        "FadeOut",
+        "UGameplayStatics::PlaySoundAtLocation",
+        "UGameplayStatics::SpawnSoundAttached"
+      ],
+      "covers_claims": [
+        "uekb.ab2bbcc94e204b7693919148.c13ffcdbd524ea228",
+        "uekb.ab2bbcc94e204b7693919148.c4ec5f9add47119eb",
+        "uekb.ab2bbcc94e204b7693919148.c542b4ec674326ef7",
+        "uekb.ab2bbcc94e204b7693919148.c74ff9e907fe14a63",
+        "uekb.ab2bbcc94e204b7693919148.c911a117c93efb273",
+        "uekb.ab2bbcc94e204b7693919148.ccba368fd230b3365",
+        "uekb.bfc38d2d801db19d852aba4a.c223d90979c598916",
+        "uekb.bfc38d2d801db19d852aba4a.c22d007a6ed3a8b7c",
+        "uekb.bfc38d2d801db19d852aba4a.c86557536d9f0e876",
+        "uekb.bfc38d2d801db19d852aba4a.cee3af86f76bd33b1"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.MaterialsRendering",
+      "state": "Success",
+      "fixture_sha256": "5015cfb13e59b28228e6f4655747773501b605f124ee3780b8993f57d7644727",
+      "symbols": [
+        "UPrimitiveComponent::CreateDynamicMaterialInstance",
+        "UMaterialInstanceDynamic",
+        "SetScalarParameterValue",
+        "SetVectorParameterValue",
+        "SetTextureParameterValue",
+        "UKismetMaterialLibrary",
+        "UCameraComponent::SetPostProcessBlendWeight",
+        "UCameraComponent::AddOrUpdateBlendable",
+        "APostProcessVolume"
+      ],
+      "covers_claims": [
+        "uekb.2b057435373e9c5d6d10c6c3.c4550576a927e5191",
+        "uekb.2b057435373e9c5d6d10c6c3.c56b75c9bc92a746d",
+        "uekb.2b057435373e9c5d6d10c6c3.c5b58fbd02be55ec6",
+        "uekb.2b057435373e9c5d6d10c6c3.c5cf3c156fa52fcbf",
+        "uekb.2b057435373e9c5d6d10c6c3.ce332d1f47dd3cb35",
+        "uekb.2b057435373e9c5d6d10c6c3.ce964a6009237bc1f",
+        "uekb.c42031870195ff106a2da1ae.c00ca99013c9f5605",
+        "uekb.c42031870195ff106a2da1ae.c2131d77c8eeff8a9",
+        "uekb.c42031870195ff106a2da1ae.c2f7dcb79ba91a665",
+        "uekb.c42031870195ff106a2da1ae.c3d3f09bb301ccd49",
+        "uekb.c42031870195ff106a2da1ae.c809efecf6f570016",
+        "uekb.c42031870195ff106a2da1ae.c85e36bd4d66fa776",
+        "uekb.c42031870195ff106a2da1ae.cb56ee87b11ceb5ba",
+        "uekb.f93e6d2a0761a067cc22950e.c0ee25c4f80fa59a8",
+        "uekb.f93e6d2a0761a067cc22950e.c3666ccb53d10936a",
+        "uekb.f93e6d2a0761a067cc22950e.c502e59ea17012118",
+        "uekb.f93e6d2a0761a067cc22950e.c549862ca082f55c0",
+        "uekb.f93e6d2a0761a067cc22950e.c86d19a0239eb3c2b",
+        "uekb.f93e6d2a0761a067cc22950e.ccda909aae1fac55f",
+        "uekb.f93e6d2a0761a067cc22950e.cd7fa64b72670dffa"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.Niagara",
+      "state": "Success",
+      "fixture_sha256": "a9cdef18155a70dbd9f4ddc3d328fdd9e3b9cda108a4b6316a6430af01c3727c",
+      "symbols": [
+        "UNiagaraSystem",
+        "UNiagaraComponent",
+        "UNiagaraFunctionLibrary::SpawnSystemAtLocation",
+        "UNiagaraFunctionLibrary::GetSkeletalMeshDataInterface",
+        "SetVariableFloat",
+        "SetVariableVec3",
+        "SetVariableBool",
+        "UNiagaraDataInterface",
+        "UNiagaraDataInterfaceArrayInt32",
+        "FNiagaraVariable"
+      ],
+      "covers_claims": [
+        "uekb.6776ac74fad4e6ac4c501b8c.c2c071536ed0ad382",
+        "uekb.6776ac74fad4e6ac4c501b8c.c59598004b6afa290",
+        "uekb.6776ac74fad4e6ac4c501b8c.c8f2ee2652019ddb9",
+        "uekb.6776ac74fad4e6ac4c501b8c.cc7c863d86c029195",
+        "uekb.6776ac74fad4e6ac4c501b8c.cd6709e3c0aedf101",
+        "uekb.6776ac74fad4e6ac4c501b8c.cdac15443f7c2537c",
+        "uekb.6776ac74fad4e6ac4c501b8c.cf009ee0aeb67620c",
+        "uekb.c74f110a2584df5073f47c84.c25e6f51a9eaa5a10",
+        "uekb.c74f110a2584df5073f47c84.c36de529372203461",
+        "uekb.c74f110a2584df5073f47c84.c58cc40e909bd0c9c",
+        "uekb.c74f110a2584df5073f47c84.cd1a4a080d99c8309",
+        "uekb.e0d901bcfa01548bade92705.c05dd5149fcee878b",
+        "uekb.e0d901bcfa01548bade92705.c4870520656eff8d0",
+        "uekb.e0d901bcfa01548bade92705.c59abb201bd7224eb",
+        "uekb.e0d901bcfa01548bade92705.c7531c23279f07f9d",
+        "uekb.e0d901bcfa01548bade92705.cdd249d64963d15cd",
+        "uekb.e0d901bcfa01548bade92705.cf447f6dad6546c6b"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.Sequencer",
+      "state": "Success",
+      "fixture_sha256": "0696cc16f3e77bb1e3325cdbb83fd36ebd8dcdcf51473b928cc8e1fff3ccf309",
+      "symbols": [
+        "ULevelSequence",
+        "ULevelSequencePlayer",
+        "ALevelSequenceActor",
+        "CreateLevelSequencePlayer",
+        "FMovieSceneSequencePlaybackParams",
+        "SetPlaybackPosition",
+        "FMovieSceneObjectBindingID",
+        "SetBinding",
+        "AddBinding",
+        "ResetBinding"
+      ],
+      "covers_claims": [
+        "uekb.1050fc1878447f1d627ca2e6.c35cdcb228a9b5ee2",
+        "uekb.1050fc1878447f1d627ca2e6.c79f95d4a563405db",
+        "uekb.1050fc1878447f1d627ca2e6.c85002120c8b407ec",
+        "uekb.1050fc1878447f1d627ca2e6.cb7c678f2db3c61b6",
+        "uekb.1050fc1878447f1d627ca2e6.cbf4f7b984c010b8e",
+        "uekb.1050fc1878447f1d627ca2e6.cdd6c13a8269db4a8",
+        "uekb.d5dfd402682e3a61241a5ac1.c109594deaa31c2e0",
+        "uekb.d5dfd402682e3a61241a5ac1.c5f4f9c2a56dab93a",
+        "uekb.d5dfd402682e3a61241a5ac1.ca3c546c3cf0acfee",
+        "uekb.d5dfd402682e3a61241a5ac1.cadb962e5e3b86ba1",
+        "uekb.d5dfd402682e3a61241a5ac1.ccae29a2fcd23a08c"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.PluginManager",
+      "state": "Success",
+      "fixture_sha256": "d600cacedcead4cd48068be3cdf47968337d57976d0e9d0e54f2edd848e067a0",
+      "symbols": [
+        "IPluginManager",
+        "IPlugin",
+        "FindPlugin",
+        "GetEnabledPlugins",
+        "FPluginDescriptor",
+        "GetDescriptor",
+        "GetBaseDir",
+        "GetMountedAssetPath"
+      ],
+      "covers_claims": [
+        "uekb.8029d73dd5ae4069d1e93ec6.c75e2237b6ded8e9b",
+        "uekb.8029d73dd5ae4069d1e93ec6.c96225f9c8a283d1c",
+        "uekb.8029d73dd5ae4069d1e93ec6.ce59517ba8667c819"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.EditorTools",
+      "state": "Success",
+      "fixture_sha256": "17897e91f8af9da084a6f8baa5f00da9f7f6f190a96bee0a3cd90f4a2feee545",
+      "symbols": [
+        "FPropertyEditorModule",
+        "IDetailCustomization",
+        "IDetailLayoutBuilder::GetProperty",
+        "IDetailLayoutBuilder::EditCategory",
+        "IDetailLayoutBuilder::ForceRefreshDetails",
+        "FScopedTransaction",
+        "UToolMenus",
+        "FApp::IsUnattended",
+        "IsRunningCommandlet"
+      ],
+      "covers_claims": [
+        "uekb.50a38237872106d770207101.c2b7cdb9233c0d7b6",
+        "uekb.50a38237872106d770207101.c74e8aff8fddd1834",
+        "uekb.50a38237872106d770207101.cc162d05dfdb3e560",
+        "uekb.50a38237872106d770207101.cc715ee2b51d0040e",
+        "uekb.50a38237872106d770207101.ce0b48d814ab7aa14",
+        "uekb.50ad612d616618acfc2028d5.c771382ea7ec86986",
+        "uekb.a9f54ebd22558cca95749077.c721ce8febb1eb14c",
+        "uekb.a9f54ebd22558cca95749077.c86d0879ab2bd5fbc",
+        "uekb.a9f54ebd22558cca95749077.ca336b23667c291d9",
+        "uekb.a9f54ebd22558cca95749077.cc420e880b159ecd5",
+        "uekb.a9f54ebd22558cca95749077.cd0a92e5a79da1c89",
+        "uekb.f6a892608966467008ec94ba.c07c77a375be83311",
+        "uekb.f6a892608966467008ec94ba.c1e6fa74641bd7a52",
+        "uekb.f6a892608966467008ec94ba.c28d1fc5b2cb35cb1",
+        "uekb.f6a892608966467008ec94ba.c81c9d1cbfa74a351",
+        "uekb.f6a892608966467008ec94ba.c901cfc5ab91ecf41",
+        "uekb.f6a892608966467008ec94ba.c9aa7fcd5a57b6c13",
+        "uekb.f6a892608966467008ec94ba.cc0b50b658d00ebe7",
+        "uekb.f6a892608966467008ec94ba.cf9f1c3b0f7dc232c"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.PCG",
+      "state": "Success",
+      "fixture_sha256": "aaac440603134e817d62f4021bdf3b0240cbba91d052104b7a11fa3a97169fd5",
+      "symbols": [
+        "UPCGComponent::SetGraph",
+        "UPCGComponent::Generate",
+        "UPCGComponent::Cleanup",
+        "UPCGGraph::AddNodeOfType",
+        "UPCGGraph::AddEdge",
+        "UPCGGraph::RemoveNode",
+        "UProceduralMeshComponent::CreateMeshSection"
+      ],
+      "covers_claims": [
+        "uekb.04fe60cff04f78af0943c720.c41820721deb711f2",
+        "uekb.04fe60cff04f78af0943c720.c457bf4cb7a993a86",
+        "uekb.04fe60cff04f78af0943c720.c7af2fd2b700ef085",
+        "uekb.04fe60cff04f78af0943c720.cded1a1af61e34246",
+        "uekb.04fe60cff04f78af0943c720.cdf41b16537fbb1a1",
+        "uekb.04fe60cff04f78af0943c720.cf4e68bacc202f50a",
+        "uekb.5664f1303986889021932e6c.c186303e7c909f936",
+        "uekb.5664f1303986889021932e6c.cbaad8bb19a737271",
+        "uekb.5664f1303986889021932e6c.cccbb4d2d37551604",
+        "uekb.5664f1303986889021932e6c.ce6786b1a810864d2",
+        "uekb.7e90fe20f94877ee972fbdb8.c0a6b036235196a89",
+        "uekb.7e90fe20f94877ee972fbdb8.c8997d2939b66a146",
+        "uekb.7e90fe20f94877ee972fbdb8.c8d3fe6c232c39efb"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.Automation",
+      "state": "Success",
+      "fixture_sha256": "fa4fb049b5552f52743df3477d63c3019fdaf0d36cbd252d5b49b5540f304fea",
+      "symbols": [
+        "IMPLEMENT_SIMPLE_AUTOMATION_TEST",
+        "DEFINE_LATENT_AUTOMATION_COMMAND",
+        "ADD_LATENT_AUTOMATION_COMMAND",
+        "FAutomationTestBase::TestTrue",
+        "FAutomationTestBase::TestFalse",
+        "FAutomationTestBase::TestEqual",
+        "FAutomationTestBase::AddExpectedError"
+      ],
+      "covers_claims": [
+        "uekb.3fe47cfafe955b372789e0b0.c18a14cbfb3f38e4c",
+        "uekb.3fe47cfafe955b372789e0b0.c318f98eeb5b58ae4",
+        "uekb.3fe47cfafe955b372789e0b0.c3417600bd942ac96",
+        "uekb.3fe47cfafe955b372789e0b0.c4c4ea3fba1697737",
+        "uekb.3fe47cfafe955b372789e0b0.c7941193b505ef2ba",
+        "uekb.3fe47cfafe955b372789e0b0.c813e83a2cf87d28f",
+        "uekb.3fe47cfafe955b372789e0b0.cd4bfa3ea69684990",
+        "uekb.3fe47cfafe955b372789e0b0.cd99a2580bf475f9e",
+        "uekb.f26a6738bacbedc1b610b38e.c21f327022988e46e",
+        "uekb.f26a6738bacbedc1b610b38e.c42439f3593d76d58",
+        "uekb.f26a6738bacbedc1b610b38e.c6fc22d7c710f3f80",
+        "uekb.f26a6738bacbedc1b610b38e.cae70929d50bf2425",
+        "uekb.f26a6738bacbedc1b610b38e.cd2ac9491d7843e91"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.UI",
+      "state": "Success",
+      "fixture_sha256": "f915baf54b1fc1a258ad3265fa3861c0c1a1f31e558547b17e6b9141d82d31a3",
+      "symbols": [
+        "UWidgetBlueprintLibrary::Create",
+        "UUserWidget::AddToViewport",
+        "UWidget::RemoveFromParent",
+        "UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx",
+        "UCommonActivatableWidget::ActivateWidget",
+        "UCommonActivatableWidget::DeactivateWidget",
+        "UCommonActivatableWidget::IsActivated",
+        "UPanelWidget",
+        "UTextBlock",
+        "UButton",
+        "SWidget"
+      ],
+      "covers_claims": [
+        "uekb.925164b2a9ac0a0d36cc299e.c036f08ed487c8c8e",
+        "uekb.925164b2a9ac0a0d36cc299e.c38d79953e0c3d318",
+        "uekb.925164b2a9ac0a0d36cc299e.cb99bc7e1765993b4",
+        "uekb.925164b2a9ac0a0d36cc299e.cdaf9df7ee5d91c8b",
+        "uekb.9ba5308b62ccfa3eb8191d44.c4e3b64d0ef536e20",
+        "uekb.9ba5308b62ccfa3eb8191d44.c65e0b69c74291c1e",
+        "uekb.9ba5308b62ccfa3eb8191d44.cb52e18c2d0403fa3",
+        "uekb.9ba5308b62ccfa3eb8191d44.cb8b82add697a281b",
+        "uekb.9ba5308b62ccfa3eb8191d44.ce022bdebf5de0717",
+        "uekb.9ba5308b62ccfa3eb8191d44.cf0b31cc85609a62b",
+        "uekb.e0f77dd076b8ab122a51065a.c0042b8172fa8b581",
+        "uekb.e0f77dd076b8ab122a51065a.c01070174fd82c7b1",
+        "uekb.e0f77dd076b8ab122a51065a.c0f40b0bdb81d394a",
+        "uekb.e0f77dd076b8ab122a51065a.c7c3d22937a825cdd",
+        "uekb.e0f77dd076b8ab122a51065a.cbc8231dfae2fda45"
+      ]
+    },
+    {
+      "id": "UEKB.Compile.UIBindWidget",
+      "state": "Success",
+      "fixture_sha256": "5860e09a23f86a78b603b2b71b319f3030ebfa49f911e705b825ea6bd7c0c1ec",
+      "symbols": [
+        "UUserWidget",
+        "UButton",
+        "UPROPERTY(meta=(BindWidget))"
+      ],
+      "covers_claims": [
+        "uekb.e0f77dd076b8ab122a51065a.c7ce49bc6273243f9",
+        "uekb.e0f77dd076b8ab122a51065a.cfadd33588df3cb9d"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "UEKnowledgeValidation.ActorCollisionEnableState",
+      "state": "Success",
+      "duration": 0.0012855976819992065,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "SetActorEnableCollision readback"
+      ],
+      "covers_claims": [
+        "uekb.6b27a6e428a6f0d6b3d9afd5.c2985331f7bb5f71a"
+      ]
+    },
+    {
+      "id": "UEKnowledgeValidation.ActorReplicationState",
+      "state": "Success",
+      "duration": 0.016940303146839142,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "replication state readback"
+      ],
+      "covers_claims": [
+        "uekb.c9680a1d9dc4aa1d75275920.c591d7c14d135ab10"
+      ]
+    },
+    {
+      "id": "UEKnowledgeValidation.AutomationApiSurface",
+      "state": "Success",
+      "duration": 0.033700600266456604,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "TestTrue succeeds for true",
+        "TestFalse succeeds for false",
+        "TestEqual succeeds for equal integers",
+        "latent command completes"
+      ],
+      "covers_claims": []
+    },
+    {
+      "id": "UEKnowledgeValidation.GameplayFrameworkTypeSurface",
+      "state": "Success",
+      "duration": 0.016966700553894043,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "ACharacter derives from APawn",
+        "AActor derives from UObject"
+      ],
+      "covers_claims": []
+    },
+    {
+      "id": "UEKnowledgeValidation.GasComponentReplicationState",
+      "state": "Success",
+      "duration": 0.016797900199890137,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "AbilitySystemComponent replication state"
+      ],
+      "covers_claims": []
+    },
+    {
+      "id": "UEKnowledgeValidation.SaveGameObjectCreation",
+      "state": "Success",
+      "duration": 0.01642170175909996,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "CreateSaveGameObject returns an instance of the requested USaveGame subclass"
+      ],
+      "covers_claims": [
+        "uekb.100c04138184ad1677de3870.c0536baecc9fb9eaf"
+      ]
+    },
+    {
+      "id": "UEKnowledgeValidation.WidgetObjectCreation",
+      "state": "Success",
+      "duration": 0.017116401344537735,
+      "warnings": 0,
+      "errors": 0,
+      "assertions": [
+        "UUserWidget derives from UWidget"
+      ],
+      "covers_claims": []
+    }
+  ],
+  "expected_failures": [
+    {
+      "id": "UEKB.ExpectedFailure.MissingGameplayAbilitiesDependency",
+      "state": "ExpectedFailure",
+      "exit_code": 6,
+      "diagnostic": "C1083.*AbilitySystemComponent\\.h",
+      "fixture_sha256": "5e7549e2bf1505dc2f0a43cfc18844d707f063e3808b84530da0dbeebb840e18",
+      "matched": true
+    }
+  ],
+  "validation_ids": [
+    "UEKB.Compile.ActorCollision",
+    "UEKB.Compile.ActorComponents",
+    "UEKB.Compile.AINavigation",
+    "UEKB.Compile.Animation",
+    "UEKB.Compile.AsyncThreading",
+    "UEKB.Compile.Audio",
+    "UEKB.Compile.Automation",
+    "UEKB.Compile.BuildRules",
+    "UEKB.Compile.BuildRulesEditor",
+    "UEKB.Compile.CharacterMovement",
+    "UEKB.Compile.Core",
+    "UEKB.Compile.CppFoundations",
+    "UEKB.Compile.CppReflection",
+    "UEKB.Compile.DataAssets",
+    "UEKB.Compile.DataAssetTypes",
+    "UEKB.Compile.EditorTools",
+    "UEKB.Compile.GameFeatures",
+    "UEKB.Compile.GameplayFramework",
+    "UEKB.Compile.GasApi",
+    "UEKB.Compile.InputTypes",
+    "UEKB.Compile.InputUi",
+    "UEKB.Compile.MassEntity",
+    "UEKB.Compile.MaterialsRendering",
+    "UEKB.Compile.NetworkingRpc",
+    "UEKB.Compile.Niagara",
+    "UEKB.Compile.PCG",
+    "UEKB.Compile.PhysicsCollision",
+    "UEKB.Compile.PluginManager",
+    "UEKB.Compile.SaveGameApi",
+    "UEKB.Compile.SaveGameTypes",
+    "UEKB.Compile.Sequencer",
+    "UEKB.Compile.StateTree",
+    "UEKB.Compile.UI",
+    "UEKB.Compile.UIBindWidget",
+    "UEKB.Compile.WorldStreaming",
+    "UEKnowledgeValidation.ActorCollisionEnableState",
+    "UEKnowledgeValidation.ActorReplicationState",
+    "UEKnowledgeValidation.AutomationApiSurface",
+    "UEKnowledgeValidation.GameplayFrameworkTypeSurface",
+    "UEKnowledgeValidation.GasComponentReplicationState",
+    "UEKnowledgeValidation.SaveGameObjectCreation",
+    "UEKnowledgeValidation.WidgetObjectCreation"
+  ],
+  "passed": true,
+  "fixture_only": true
+}

@@ -27,7 +27,7 @@
   {"topic":"ue-sequencer-cinematics","canonical":"sequencer cinematics","aliases":["过场动画","序列器","电影镜头","电影渲染队列","关卡序列","电影摄像机"],"identifiers":["Sequencer","LevelSequence","MovieRenderQueue"]},
   {"topic":"ue-serialization-savegames","canonical":"serialization save games","aliases":["存档系统","保存游戏","序列化","玩家进度","保存槽位","读取存档"],"identifiers":["SaveGame","Serialize","SaveGameToSlot","FArchive"]},
   {"topic":"ue-state-trees","canonical":"state trees","aliases":["状态树","状态机","Mass状态树","状态树集成","状态树任务","状态树条件"],"identifiers":["StateTree","StateTreeTask","StateTreeEvaluator"]},
-  {"topic":"ue-testing-debugging","canonical":"testing debugging profiling","aliases":["测试调试","自动化测试","性能分析","日志调试","调试绘制","断言"],"identifiers":["AutomationTest","UE_LOG","UnrealInsights","DrawDebug"]},
+  {"topic":"ue-testing-debugging","canonical":"testing debugging profiling","aliases":["测试调试","自动化测试","性能分析","日志调试","调试绘制","断言","Fresh PIE","fresh session","负向证据"],"identifiers":["AutomationTest","UE_LOG","UnrealInsights","DrawDebug","fresh-pie-negative-evidence"]},
   {"topic":"ue-ui-umg-slate","canonical":"UI UMG Slate","aliases":["用户界面","界面系统","控件","输入模式","UI控件","用户控件","Common UI"],"identifiers":["UMG","Slate","UserWidget","CommonUI","BindWidget"]},
   {"topic":"ue-world-level-streaming","canonical":"world level streaming","aliases":["世界分区","关卡流送","关卡切换","无缝切换","数据层","开放世界","子关卡"],"identifiers":["WorldPartition","LevelStreaming","OpenLevel","ServerTravel","DataLayer"]}
 ]

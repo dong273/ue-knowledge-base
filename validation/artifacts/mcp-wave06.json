@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "query": "collision response component",
+  "server_startup_seconds": 0.0966914999880828,
+  "process_spawn_seconds": 0.006205099984072149,
+  "initialize_roundtrip_seconds": 0.0966914999880828,
+  "first_query_seconds": 6.641329200007021,
+  "hot_query_seconds": 0.00016680004773661494,
+  "passed": true,
+  "baseline": {
+    "metrics": {
+      "server_startup_seconds": 6.9192,
+      "first_query_seconds": 6.8206,
+      "hot_query_seconds": 0.0001857
+    },
+    "max_regression": 0.2,
+    "absolute_tolerance_seconds": 0.0002,
+    "relative_regression": {
+      "server_startup_seconds": -0.9860256243513581,
+      "first_query_seconds": -0.026283728703190092,
+      "hot_query_seconds": -0.10177680271074338
+    },
+    "failures": [],
+    "passed": true
+  }
+}

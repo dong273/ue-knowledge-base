@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-03-gameplay-runtime",
+  "description": "Gameplay runtime state: character movement, physics/collision, serialization/save games, and async/threading.",
+  "documents": [
+    {"cohort": "A", "path": "ue-character-movement/SKILL.md", "initial_content_sha256": "cb51b2d8f1bf0a7d4a417eceab085e0a86caeb2afadefe67acd629c50cfc7ea4"},
+    {"cohort": "A", "path": "ue-character-movement/references/cmc-extension-patterns.md", "initial_content_sha256": "41e50abbd712a9ffeda9b22c7e6445d9ca2072363005f5635728675d8e1a92de"},
+    {"cohort": "A", "path": "ue-character-movement/references/movement-pipeline.md", "initial_content_sha256": "5ba9fa031757daa0093d5760e85aaaa6546c057766a8427dfcb0fade675eaa95"},
+    {"cohort": "A", "path": "ue-character-movement/references/third-person-setup.md", "initial_content_sha256": "ab8dda70f3307e90921aad251b37e63c6ddfeac6a37229f805598b83dfc1d3fc"},
+    {"cohort": "A", "path": "ue-character-movement/references/top-down-hades-setup.md", "initial_content_sha256": "e034d11a989bb485a27b206adbc748eff2c5c09999796ede487df10f862cb259"},
+    {"cohort": "B", "path": "ue-physics-collision/SKILL.md", "initial_content_sha256": "15d5e9c5654a4c79e61306fbc21714723ea5a886914e400467d73dd3dca6f3a7"},
+    {"cohort": "B", "path": "ue-physics-collision/references/actor-collision-enable-state.md", "initial_content_sha256": "7b01d3a4c2e316a8bd5d131f5554bbc119d0b1467e059b6cee0f134549076dee"},
+    {"cohort": "B", "path": "ue-physics-collision/references/collision-channel-setup.md", "initial_content_sha256": "e892c2105e80206c5d8a757a6b0d64121ea005503cca66c51040d6e0a494a225"},
+    {"cohort": "B", "path": "ue-physics-collision/references/ground-penetration-debugging.md", "initial_content_sha256": "8d307d3689d67b760353832cafa04c0415de370842352f055d4462b5039cdd52"},
+    {"cohort": "B", "path": "ue-physics-collision/references/trace-patterns.md", "initial_content_sha256": "22c4cb25ac20e89083e767fee38b8031ead167579ddfedc7ef99f2ec84fa4e92"},
+    {"cohort": "C", "path": "ue-serialization-savegames/SKILL.md", "initial_content_sha256": "635535f589805c214f0907f3a26d77e4189894a799b032051d80b59aa47222a9"},
+    {"cohort": "C", "path": "ue-serialization-savegames/references/save-system-architecture.md", "initial_content_sha256": "75bcee41a47a29b25ba218d4a6b2575c6af17808b643f9a9d770484e8e939e35"},
+    {"cohort": "D", "path": "ue-async-threading/SKILL.md", "initial_content_sha256": "134c86cd7e87e200ed5a7e8c5f0a9867dc61748adc5d993e399ec1528001641a"},
+    {"cohort": "D", "path": "ue-async-threading/references/thread-safety-guide.md", "initial_content_sha256": "517140f79f8a201f8eb50340452f3aedae456e8323999c4cc6838fe6438e7c0a"},
+    {"cohort": "D", "path": "ue-async-threading/references/threading-patterns.md", "initial_content_sha256": "849f3c3f7d2a4d92fb3761b8513205f135eff53c6e90a2c8682ca77884db81b1"}
+  ]
+}

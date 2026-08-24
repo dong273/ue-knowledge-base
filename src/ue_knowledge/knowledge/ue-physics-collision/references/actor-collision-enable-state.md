@@ -1,29 +1,17 @@
-# Actor-Level Collision Enable State and Component Readback
+# Actor Collision Enable State
 
-Use this contract when a validator mutates collision at the Actor level in Unreal Engine 5.7.4.
+## What SetActorEnableCollision controls
 
-## Two different states
+`SetActorEnableCollision(bool)` writes the Actor-level collision gate. `GetActorEnableCollision()` returns that gate. UE 5.7 exposes both on `AActor`.
 
-`SetActorEnableCollision(false)` changes the Actor-level enable switch. `UPrimitiveComponent::GetCollisionEnabled()` reports a component's collision mode such as `NoCollision`, `QueryOnly`, or `QueryAndPhysics`. These values are related but are not interchangeable.
+## What it does not replace
 
-| Mutation | Correct readback | What it proves |
-|---|---|---|
-| Actor collision enable switch | Actor-level enable-collision getter/property | The Actor gate is enabled or disabled |
-| Component collision mode | `GetCollisionEnabled()` | The component's query/physics mode |
-| Per-channel response | Component response query | The response for the selected channel |
+The Actor gate does not replace per-component `SetCollisionEnabled`, collision profiles, response containers, geometry, overlap generation, or hit-notification settings. An Actor may report its gate as enabled while a target primitive remains `NoCollision`.
 
-## Validator rule
+## Verified readback
 
-Read back the same abstraction that the test mutates. A component can report `QueryAndPhysics` while its owning Actor-level collision switch is disabled. Conversely, an Actor-level switch can be enabled while one component still has `NoCollision`.
+The validation Automation test toggles a transient Actor false/true and checks `GetActorEnableCollision` after each call. It proves only Actor-level state readback; it does not claim a world collision or overlap occurred.
 
-For a negative scenario, log both the mutation target and the readback abstraction. If the acceptance contract is Actor-level, do not silently substitute a component field because it is easier to query.
+## Diagnostic order
 
-## Practical sequence
-
-1. Capture the precondition at the Actor and component levels.
-2. Apply exactly one collision mutation.
-3. Read back the same level immediately and after the relevant frame or transition.
-4. Run the gameplay trace/overlap that should change behavior.
-5. Restore the state and verify restoration through the same getter.
-
-This keeps state assertions, physical behavior, and evidence labels separate instead of allowing a passing component readback to mask an Actor-level regression.
+Read the Actor gate first, then inspect the exact `UPrimitiveComponent`, its collision mode/profile, object type, channel response, and collision geometry. Finally run the intended trace, sweep, overlap, or movement reproduction.

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-02-core-runtime",
+  "description": "Core runtime foundations: actors/components, C++ reflection and containers, data assets, gameplay framework, input, and project creation.",
+  "documents": [
+    {"cohort": "A", "path": "ue-actor-component-architecture/SKILL.md", "initial_content_sha256": "84d5c3ae504951a9e403d9c98ba8afe64c58a52e23d9845aa7f9948a716b9c97"},
+    {"cohort": "A", "path": "ue-actor-component-architecture/references/actor-lifecycle.md", "initial_content_sha256": "d5dc0aaa84272e2fa97c828647cde6e07f12c5e9c25b0a8b3c8821e9901c6e9e"},
+    {"cohort": "A", "path": "ue-actor-component-architecture/references/component-types.md", "initial_content_sha256": "8d3b9e56f5431b8e1354d5a4eeac59ea4212c23132c2192aa898e305fae3d4ba"},
+    {"cohort": "A", "path": "ue-cpp-foundations/SKILL.md", "initial_content_sha256": "5e561123bffd96b48be929d6a938a3b91e5258c62bc55837826e293559adc5bb"},
+    {"cohort": "A", "path": "ue-cpp-foundations/references/container-patterns.md", "initial_content_sha256": "5e5867da8769139b4b60427e4280233b2fd4a1c88461180d8b8d2ab1667e5633"},
+    {"cohort": "A", "path": "ue-cpp-foundations/references/delegate-patterns.md", "initial_content_sha256": "feb3ebda653750bbdef34327dea5ed0e0e6308d109c34b91ff27a35d6dc224e6"},
+    {"cohort": "A", "path": "ue-cpp-foundations/references/property-specifiers.md", "initial_content_sha256": "9948d2f09a7960a97f4f67dd9c5ba7f662f900a1927d276b0197956c5339a233"},
+    {"cohort": "B", "path": "ue-data-assets-tables/SKILL.md", "initial_content_sha256": "6212eaaa4d4d20721d7c782c0ac80f697276377b8664a998dde68c888b411284"},
+    {"cohort": "B", "path": "ue-data-assets-tables/references/asset-loading-patterns.md", "initial_content_sha256": "ea3db4e5b2415e7f20d885e29f0eb8f0da5fd3c8cd508be1fb8e180acff31112"},
+    {"cohort": "B", "path": "ue-data-assets-tables/references/data-driven-design.md", "initial_content_sha256": "3bdc66706208f3af231bd5c4aaec160e843aaf808ab6277ccd8c97f0bedca214"},
+    {"cohort": "C", "path": "ue-gameplay-framework/SKILL.md", "initial_content_sha256": "317b977b755e89e88937cee6e7a3cc565028a11f21a0a4f315a8025f3ac3c5bb"},
+    {"cohort": "C", "path": "ue-gameplay-framework/references/framework-class-map.md", "initial_content_sha256": "a0807db218d0d990a991d078318dde1ee47bbec1c7f90425a88664d4ca812d60"},
+    {"cohort": "C", "path": "ue-input-system/SKILL.md", "initial_content_sha256": "422f535fdf6241908614b9d35c160fb0aab710ad80b67b7fdde7d04108e4fef2"},
+    {"cohort": "C", "path": "ue-input-system/references/input-action-reference.md", "initial_content_sha256": "20956ecb2e7cc5b286ccb977c8ddc1230f29fc2c062d05d7abdaa3e591cec50e"},
+    {"cohort": "C", "path": "ue-project-creation/SKILL.md", "initial_content_sha256": "929bce37996dd35ccd59813819750593a2b5be906a41b3ddc11ee64c0ac269fe"}
+  ]
+}

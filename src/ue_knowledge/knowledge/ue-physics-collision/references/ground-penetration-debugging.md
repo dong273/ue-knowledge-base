@@ -1,46 +1,21 @@
-# Character Ground Penetration Debugging Checklist
+# Ground Penetration Debugging
 
-When a character (ACharacter / CMC) jumps and occasionally falls through the ground.
+## Identify the colliding shape
 
-## Quick Wins (80%+ of cases)
+For `ACharacter`, locomotion collision normally uses the capsule, while the skeletal mesh is presentation. Confirm which primitive is expected to block the floor before changing mesh or animation settings.
 
-1. **Enable physics substepping** — Project Settings → Physics → `MaxSubsteps=4`, `MaxSubstepDeltaTime=0.008`
-2. **Thicken ground collision** — Use a box with height ≥ 10cm instead of a single-face Plane
+## Inspect collision state
 
-## Systematic Debugging Flow
+Record the Actor gate, primitive `ECollisionEnabled` value, object type, response to the floor's channel, capsule size, and floor geometry. A visible mesh and a blocking shape are not the same evidence.
 
-### Step 1: Enable CMC debug display
-```cpp
-GetCharacterMovement()->bShowDebug = true;
-```
-Watch the HUD for `MovementMode: Falling/Walking` and `Floor Z` values.
+## Check initial penetration
 
-### Step 2: Check floor detection
-```cpp
-void UMyCMC::FindFloor(const FVector& CapsuleLocation,
-    FFindFloorResult& OutFloorResult, bool bCanUseCachedLocation,
-    const FHitResult* DownwardSweepResult)
-{
-    Super::FindFloor(CapsuleLocation, OutFloorResult,
-        bCanUseCachedLocation, DownwardSweepResult);
-    UE_LOG(LogTemp, Warning, TEXT("FloorDist=%.1f bBlockingHit=%d bWalkable=%d"),
-        OutFloorResult.FloorDist, OutFloorResult.bBlockingHit,
-        OutFloorResult.bWalkableFloor);
-}
-```
+Inspect `FHitResult::bStartPenetrating` and `PenetrationDepth` in the failing movement or sweep. Starting overlapped is a different fault from tunnelling or an incorrect response.
 
-### Step 3: Console commands
-```
-ShowDebug MOVEMENT       # Real-time movement mode, velocity, floor
-p.KillZ -1000000          # Prevent death from falling through
-```
+## Preserve the movement path
 
-## Root Cause Reference
+Do not mask penetration by teleporting the character upward every frame. Reproduce with collision-aware movement, then correct the initial transform, collision shape, response, or movement configuration that caused the overlap.
 
-| Symptom | Likely Cause |
-|---------|-------------|
-| No blocking hit on floor | Collision channel mismatch, or ground too thin |
-| Blocking hit + !WalkableFloor | `WalkableFloorAngle` too tight |
-| Blocks fine walking, fails on jump | No physics substepping (high velocity misses collision in one tick) |
-| Only on certain terrain spots | Complex collision gaps (`bTraceComplex=false` with complex ground mesh) |
-| Multiplayer: client sees ground but server correction pulls through | Network prediction desync (saved move not capturing state) |
+## Evidence boundary
+
+Logs and state snapshots can isolate the configuration layer. Visual absence of clipping and stable traversal require an actual movement reproduction; they are not proven by a static readback alone.

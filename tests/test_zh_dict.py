@@ -24,7 +24,7 @@ def test_zh_dict_dataset_is_sane():
 
 def test_expand_query_adds_spoken_concepts():
     expanded = expand_query("角色从斜坡上滑下去的时候速度要怎么控制")
-    for concept in ("slope", "walkable", "velocity", "movement"):
+    for concept in ("slide", "walkable", "velocity", "movement"):
         assert concept in expanded
 
 

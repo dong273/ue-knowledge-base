@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-05-presentation-plugins",
+  "description": "Animation, audio, materials, Niagara, Sequencer, and plugin installation contracts.",
+  "documents": [
+    {"cohort": "A", "path": "ue-animation-system/SKILL.md", "initial_content_sha256": "0da9faac8ca391934952b94070cc24878058a723dce8239b3d65f145076406a4"},
+    {"cohort": "A", "path": "ue-animation-system/references/anim-notify-reference.md", "initial_content_sha256": "23484dc71da1e36e22b0d79e1cbe879382086cbaab8ae18d1273cff7de3159bc"},
+    {"cohort": "A", "path": "ue-animation-system/references/locomotion-setup.md", "initial_content_sha256": "235e69502888cfb3b4f3624b6292828c71e6cdf7ed943a3d00b3d12cdf54d322"},
+    {"cohort": "A", "path": "ue-sequencer-cinematics/SKILL.md", "initial_content_sha256": "2a86b8ab76e558d82e380d870a2fad899af0a9b04f08b59ebc7a3f0bdf790aa5"},
+    {"cohort": "A", "path": "ue-sequencer-cinematics/references/sequencer-patterns.md", "initial_content_sha256": "7f4b1b19a4c687205254951bd900367be8e912d185b803e450b6800b1250712f"},
+    {"cohort": "B", "path": "ue-audio-system/SKILL.md", "initial_content_sha256": "311832edc7f43426e70d46696fb3f5808947d2fbb1369cdc8a0bc5223d1438e2"},
+    {"cohort": "B", "path": "ue-audio-system/references/audio-setup-patterns.md", "initial_content_sha256": "daf827434906bde99aeb49a8daa87e34987ef3a4af9ec10b2d737866bc51c6a4"},
+    {"cohort": "B", "path": "ue-materials-rendering/SKILL.md", "initial_content_sha256": "ee8e043cc3bbb5701d5384ba4f30f513748805ccae7587056be75692ceb2737a"},
+    {"cohort": "B", "path": "ue-materials-rendering/references/material-parameter-reference.md", "initial_content_sha256": "5b438eb6d5d393f0b400eaa7c1af4dd82156cfc4b344b49e6ff5224f5f273922"},
+    {"cohort": "B", "path": "ue-materials-rendering/references/post-process-settings.md", "initial_content_sha256": "615c653808f327753d8a887fc5eb09496b59e321be616045cf34771e475bbbbf"},
+    {"cohort": "C", "path": "ue-niagara-effects/SKILL.md", "initial_content_sha256": "1d2f926f93817849bb4ee4e52e53297e3866b3bd48778a428cff4b204c9594dc"},
+    {"cohort": "C", "path": "ue-niagara-effects/references/niagara-data-interfaces.md", "initial_content_sha256": "a309f1873efe4c8c6f7f1e02da9f679e45fb9817d53ca68fe18584f96df1a4b1"},
+    {"cohort": "C", "path": "ue-niagara-effects/references/niagara-parameter-types.md", "initial_content_sha256": "694e49dc6f3112b90e9727ad9239c75e4b61539b14717bc6dbb0de25947edb3c"},
+    {"cohort": "D", "path": "ue-plugin-installation/SKILL.md", "initial_content_sha256": "41603dbc2b0c560227627ab3116ffa4fc9e8284b1a3e191c74ae2d899a8b3ad9"},
+    {"cohort": "D", "path": "ue-plugin-installation/references/free-ue57-plugins-2026.md", "initial_content_sha256": "ea19d2980a74a9e60ac6505d30af8f238e8360801cf3a0b89d8893315f4cadd3"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "baseline_version": "0.6.3",
+  "captured_on": "2026-08-23",
+  "note": "Same-machine baseline captured with the public index and BAAI/bge-small-en-v1.5.",
+  "server_startup_seconds": 6.9192,
+  "first_query_seconds": 6.8206,
+  "hot_query_seconds": 0.0001857
+}

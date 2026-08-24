@@ -1,27 +1,23 @@
-# Unattended Editor Automation and Window State
+# Unattended Editor Automation
 
-Applies to Unreal Engine 5.7.4 on Windows and similar editor-driven validation setups.
+Unattended execution is a process contract: deterministic inputs, explicit outputs, and an observable exit status.
 
-## The failure pattern
+## Detect the environment
 
-An automation run can be logically correct while an external capture or watchdog times out. A minimized, unfocused, or otherwise backgrounded Editor may throttle its tick rate. The PIE world can remain alive, but helper processes that expect a responsive game window receive stale frames or no usable window.
+Use `IsRunningCommandlet()` and `FApp::IsUnattended()` to branch away from interactive editor behavior when necessary.
 
-## A reliable validation contract
+## Avoid interaction
 
-1. Start a fresh Editor process for unattended automation when the run must be reproducible.
-2. Use the Editor's unattended command-line mode for machine-driven validation. Keep the project path and map selection explicit.
-3. Start PIE in a separate game window when evidence depends on real window pixels.
-4. Wait for a stable window and frame before capturing; do not treat process existence as proof of visual readiness.
-5. Record the process mode, PIE mode, capture target, timeout, and final log offset in the result.
+Replace modal dialogs, file pickers, and focus-dependent operations with parameters and deterministic paths. Log actionable errors.
 
-`-unattended` reduces interactive-editor interference; it does not replace a pixel-level check. A passing object query or JSON state readback proves object state only. User-visible evidence still requires a real game-window capture, and human review remains a separate gate.
+## Save explicitly
 
-## Diagnostic split
+When automation mutates packages, define which packages are dirty, which are saved, and what failure means. In-memory mutation is not durable evidence.
 
-| Symptom | Likely class | Check |
-|---|---|---|
-| PIE state is correct but capture times out | Window/tick throttling | Fresh unattended process, separate PIE window, stable-frame wait |
-| Capture is black or targets the wrong window | Window selection | Enumerate visible windows and select the game window explicitly |
-| Automation completes but logs contain old failures | Log baseline | Take the tail baseline after the final save/restart, then scan only the post-baseline tail |
+## Exit contract
 
-Keep historical errors with their timestamps. “No errors” must always mean no matching errors after the stated baseline, not a claim about the entire Editor session.
+Return a non-zero process result for failure and preserve the relevant log category. A launched command or a quiet log is not proof of success.
+
+## Validation boundary
+
+Run the automation from a fresh process with fixed inputs, inspect the produced artifacts, and verify the exit code. Interactive success does not substitute for unattended evidence.

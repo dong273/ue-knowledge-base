@@ -41,7 +41,7 @@ def test_build_activates_valid_generation_manifest(movement_corpus, tmp_path):
     generation = load_current(db)
     manifest = json.loads((generation / "manifest.json").read_text(encoding="utf-8"))
     assert (db / "CURRENT").read_text(encoding="utf-8").strip() == generation.name
-    assert manifest["schema_version"] == INDEX_SCHEMA_VERSION == 2
+    assert manifest["schema_version"] == INDEX_SCHEMA_VERSION == 3
     assert manifest["embedding"]["model"] == "fake"
     assert manifest["embedding"]["dimension"] == 64
     assert manifest["chunker"]["max_tokens"] == 384

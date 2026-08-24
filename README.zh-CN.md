@@ -94,11 +94,14 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query "..."` | 默认混合检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
 | `ue-kb query --demote-frontmatter` | 内容块排在主题摘要块（frontmatter）之前；融合分数不变 | `ue-kb query "GAS" --demote-frontmatter` |
+| `ue-kb query --envelope` | 增加 `coverage` 与证据元数据；`none` 会拒答而不是返回误导性命中 | `ue-kb query "项目 H1" --envelope --json` |
+| `ue-kb audit-corpus` | 审计每篇文档的版本、来源和验证证据 | `ue-kb audit-corpus --json` |
+| `ue-kb federated-query` | 分组查询公共与项目索引，不混比分数 | `ue-kb federated-query "问题" --index public=<PUBLIC_INDEX> --index project=<PROJECT_INDEX> --json` |
 | `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
 | `ue-kb doctor` | 只读诊断包、索引和 MCP 运行时身份 | `ue-kb doctor --json --mcp-smoke` |
 | `ue-kb download-model` | 一次性下载 embedding 模型 | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio 服务：模型只加载一次，进程内快速应答（Agent 循环） | `ue-kb serve` |
-| `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`（检索）、`ue_kb_info`（索引状态）、`ue_kb_topics`（主题清单）、`ue_kb_glossary`（术语表）＋ `resources/list` / `resources/read` | 通过任意 MCP 客户端调用 |
+| `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`、`ue_kb_federated_query`、`ue_kb_info`、`ue_kb_topics`、`ue_kb_glossary` ＋ `resources/list` / `resources/read` | 通过任意 MCP 客户端调用 |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
 | `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | 自定义语料目录（默认：包内内置语料） | `ue-kb build --source my-docs/` |
@@ -126,6 +129,9 @@ for hit in query("GAS 冷却", top_k=5):
 - **MCP server**（`ue-kb serve`）——模型每次会话只加载一次，查询循环
   完全跳过约 12s 冷启动
 - 任意管线的**纯 Python 片段**
+
+候选包与发布门禁见 [docs/releasing.md](docs/releasing.md)；v0.7 必须先通过
+90 篇文档严格审计和 UE 5.7 证据清单，当前仍保持发布阻断。
 
 ## 扩展语料
 
@@ -158,6 +164,9 @@ for hit in query("GAS 冷却", top_k=5):
   chunk 打上 `type=frontmatter/content` 标记并提供可选 `--demote-frontmatter`、
   `requires-python` 上限收紧到 `<3.13`（chroma-hnswlib 无 3.13+ Windows wheel）、
   MCP server 入口强制 UTF-8、Python API 模型加载缓存
+- **v0.7.0（开发中，发布阻断）** — provenance sidecar 与全量语料审计、
+  schema v3 元数据、查询 coverage envelope、公共/项目双索引联邦查询、
+  MCP `ue_kb_federated_query`；90 篇文档和 UE 5.7 验证证据全部完成前不会发布
 - **后续候选** — Agent 写回协议（已验证材料经 publish 管线路由回语料；
   见 `docs/agent-integration.md` Codex 章节）、更多双语主题、UE 5.7 新特性覆盖
 

@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-02-core-runtime",
+  "generated_on": "2026-08-24",
+  "scope": "public",
+  "version": "0.6.3",
+  "summary": {
+    "documents": 15,
+    "reviewed": 15,
+    "pending": 0,
+    "blocking_issue_count": 0,
+    "warning_count": 0,
+    "unclassified_code": 0,
+    "stale_evidence": 0,
+    "wave_ready": true,
+    "global_reviewed": 30,
+    "global_pending": 60,
+    "global_release_ready": false
+  },
+  "review_units": {
+    "total": 133,
+    "sections": 98,
+    "code_artifacts": 35,
+    "dispositions": {
+      "concept": 67,
+      "api_contract": 59,
+      "non_claim": 7
+    },
+    "code_kinds": {
+      "fragment": 35
+    }
+  },
+  "corrections": [
+    "Separated Actor ownership, attachment, registration, activation, and lifecycle boundaries.",
+    "Narrowed reflection, UObject lifetime, container, delegate, and property-specifier guidance to UE 5.7 contracts.",
+    "Corrected DataAsset, DataTable, Primary Asset, soft-reference, StreamableManager, and Asset Manager claims.",
+    "Separated Gameplay Framework authority, network presence, ownership, and replicated-state placement.",
+    "Corrected Enhanced Input mapping-context, binding, trigger, modifier, and local-player responsibilities.",
+    "Removed the blanket non-ASCII project-path failure claim and retained only source-project and rebuild contracts.",
+    "Marked every retained incomplete code example as a fragment instead of implying copy-ready compilation."
+  ],
+  "source_evidence_ids": [
+    "UE57.Source.ActorComponents",
+    "UE57.Source.ActorLifecycle",
+    "UE57.Source.CoreContainersDelegates",
+    "UE57.Source.CppReflection",
+    "UE57.Source.DataAssets",
+    "UE57.Source.EnhancedInput",
+    "UE57.Source.GameplayFramework",
+    "UE57.Source.ProjectCreation"
+  ],
+  "compile_validation_ids": [
+    "UEKB.Compile.ActorComponents",
+    "UEKB.Compile.CppFoundations",
+    "UEKB.Compile.CppReflection",
+    "UEKB.Compile.DataAssets",
+    "UEKB.Compile.DataAssetTypes",
+    "UEKB.Compile.GameplayFramework",
+    "UEKB.Compile.InputTypes",
+    "UEKB.Compile.InputUi"
+  ],
+  "ue_gate": {
+    "engine_version": "5.7.4",
+    "changelist": 51494982,
+    "compile_fixtures": 14,
+    "automation_tests": 5,
+    "expected_failures": 1,
+    "unregistered_warnings": 0,
+    "errors": 0,
+    "passed": true
+  },
+  "retrieval_gate": {
+    "queries": 10,
+    "failures": 0,
+    "fresh_pie_regression": true,
+    "unsupported_false_positive_rate": 0.0,
+    "passed": true
+  },
+  "mcp_gate": {
+    "server_startup_seconds": 0.0892651,
+    "first_query_seconds": 6.6210454,
+    "hot_query_seconds": 0.0003731,
+    "baseline_version": "0.6.3",
+    "passed": true,
+    "note": "One initial hot-query sample exceeded the absolute tolerance by 0.000000026 seconds; a regression test now stabilizes the floating-point boundary and failed reports exit nonzero."
+  },
+  "remaining": {
+    "documents": 60,
+    "topics": 21,
+    "sections": 1201,
+    "code_artifacts": 701,
+    "distribution": [
+      {"topic": "ue-ai-navigation", "documents": 3, "sections": 65, "code_artifacts": 41},
+      {"topic": "ue-animation-system", "documents": 3, "sections": 73, "code_artifacts": 52},
+      {"topic": "ue-async-threading", "documents": 3, "sections": 40, "code_artifacts": 32},
+      {"topic": "ue-audio-system", "documents": 2, "sections": 40, "code_artifacts": 33},
+      {"topic": "ue-character-movement", "documents": 5, "sections": 69, "code_artifacts": 49},
+      {"topic": "ue-editor-tools", "documents": 4, "sections": 54, "code_artifacts": 39},
+      {"topic": "ue-game-features", "documents": 3, "sections": 47, "code_artifacts": 36},
+      {"topic": "ue-knowledge-rag", "documents": 2, "sections": 22, "code_artifacts": 3},
+      {"topic": "ue-mass-entity", "documents": 3, "sections": 50, "code_artifacts": 21},
+      {"topic": "ue-materials-rendering", "documents": 3, "sections": 75, "code_artifacts": 37},
+      {"topic": "ue-niagara-effects", "documents": 3, "sections": 87, "code_artifacts": 36},
+      {"topic": "ue-physics-collision", "documents": 5, "sections": 67, "code_artifacts": 41},
+      {"topic": "ue-plugin-installation", "documents": 2, "sections": 27, "code_artifacts": 10},
+      {"topic": "ue-procedural-generation", "documents": 3, "sections": 76, "code_artifacts": 42},
+      {"topic": "ue-project-context", "documents": 1, "sections": 26, "code_artifacts": 1},
+      {"topic": "ue-sequencer-cinematics", "documents": 2, "sections": 42, "code_artifacts": 28},
+      {"topic": "ue-serialization-savegames", "documents": 2, "sections": 37, "code_artifacts": 31},
+      {"topic": "ue-state-trees", "documents": 3, "sections": 56, "code_artifacts": 27},
+      {"topic": "ue-testing-debugging", "documents": 3, "sections": 117, "code_artifacts": 53},
+      {"topic": "ue-ui-umg-slate", "documents": 3, "sections": 77, "code_artifacts": 56},
+      {"topic": "ue-world-level-streaming", "documents": 2, "sections": 54, "code_artifacts": 33}
+    ]
+  },
+  "release_actions": {
+    "version_bumped": false,
+    "candidate_package_built": false,
+    "committed": false,
+    "pushed": false,
+    "pull_request_created": false,
+    "pypi_published": false
+  }
+}

@@ -1,0 +1,17 @@
+UEKnowledgeValidation/Binaries/
+UEKnowledgeValidation/Intermediate/
+UEKnowledgeValidation/Saved/
+UEKnowledgeValidation/DerivedDataCache/
+UEKnowledgeValidation/Config/
+neg/**/Binaries/
+neg/**/Intermediate/
+neg/**/Saved/
+neg/**/DerivedDataCache/
+fixtures/**/Binaries/
+fixtures/**/Intermediate/
+fixtures/**/Saved/
+fixtures/**/DerivedDataCache/
+artifacts/ue57/
+artifacts/package-smoke/
+artifacts/fresh-smoke-venv/
+artifacts/fresh-smoke-index/

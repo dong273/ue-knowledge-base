@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-04-ai-world-systems",
+  "reviewer": "codex-wave-04-source-review",
+  "reviewed_at": "2026-08-24",
+  "evidence_catalog": {
+    "UE57.Source.AINavigation": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/AIModule/Classes/AIController.h; Engine/Source/Runtime/AIModule/Classes/AITypes.h; Engine/Source/Runtime/AIModule/Classes/BehaviorTree/BehaviorTreeComponent.h; Engine/Source/Runtime/AIModule/Classes/BehaviorTree/BlackboardComponent.h; Engine/Source/Runtime/AIModule/Classes/EnvironmentQuery/EnvQueryManager.h; Engine/Source/Runtime/NavigationSystem/Public/NavigationSystem.h",
+      "symbols": ["AAIController", "FAIMoveRequest", "UBehaviorTreeComponent", "UBlackboardComponent", "UEnvQueryManager", "UNavigationSystemV1"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.StateTree": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/StateTree/Source/StateTreeModule/Public/StateTree.h; Engine/Plugins/Runtime/StateTree/Source/StateTreeModule/Public/StateTreeTaskBase.h; Engine/Plugins/Runtime/StateTree/Source/StateTreeModule/Public/StateTreeEvaluatorBase.h; Engine/Plugins/Runtime/StateTree/Source/StateTreeModule/Public/StateTreeConditionBase.h; Engine/Plugins/Runtime/GameplayStateTree/Source/GameplayStateTreeModule/Public/Components/StateTreeComponent.h; Engine/Plugins/AI/MassAI/Source/MassAIBehavior/Public/MassStateTreeTypes.h; Engine/Plugins/AI/MassAI/Source/MassAIBehavior/Public/MassStateTreeFragments.h; Engine/Plugins/AI/MassAI/Source/MassAIBehavior/Public/MassStateTreeSubsystem.h",
+      "symbols": ["UStateTree", "UStateTreeComponent", "FStateTreeTaskBase", "FStateTreeEvaluatorBase", "FStateTreeConditionBase", "UMassStateTreeSchema", "UMassStateTreeTrait", "UMassStateTreeSubsystem"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.MassEntity": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/MassEntity/Public/MassEntityElementTypes.h; Engine/Source/Runtime/MassEntity/Public/MassEntityManager.h; Engine/Source/Runtime/MassEntity/Public/MassEntityQuery.h; Engine/Source/Runtime/MassEntity/Public/MassExecutionContext.h; Engine/Source/Runtime/MassEntity/Public/MassProcessor.h; Engine/Plugins/Runtime/MassGameplay/Source/MassCommon/Public/MassCommonFragments.h; Engine/Plugins/Runtime/MassGameplay/Source/MassMovement/Public/MassMovementFragments.h",
+      "symbols": ["FMassEntityHandle", "FMassFragment", "FMassTag", "FMassChunkFragment", "FMassSharedFragment", "FMassConstSharedFragment", "FMassEntityManager", "FMassEntityQuery", "FMassExecutionContext", "UMassProcessor"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.GameFeatures": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/GameFeatures/Source/GameFeatures/Public/GameFeaturesSubsystem.h; Engine/Plugins/Runtime/GameFeatures/Source/GameFeatures/Public/GameFeatureData.h; Engine/Plugins/Runtime/GameFeatures/Source/GameFeatures/Public/GameFeatureAction.h; Engine/Plugins/Runtime/GameFeatures/Source/GameFeatures/Public/GameFeatureAction_AddComponents.h; Engine/Plugins/Runtime/GameFeatures/Source/GameFeatures/GameFeatures.Build.cs",
+      "symbols": ["UGameFeaturesSubsystem", "UGameFeatureData", "UGameFeatureAction", "UGameFeatureAction_AddComponents", "LoadAndActivateGameFeaturePlugin", "DeactivateGameFeaturePlugin"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.WorldStreaming": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/Engine/LevelStreaming.h; Engine/Source/Runtime/Engine/Classes/Engine/LevelStreamingDynamic.h; Engine/Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h; Engine/Source/Runtime/Engine/Public/WorldPartition/WorldPartitionSubsystem.h; Engine/Source/Runtime/Engine/Public/Subsystems/WorldSubsystem.h",
+      "symbols": ["ULevelStreaming", "ELevelStreamingState", "ULevelStreamingDynamic", "LoadStreamLevel", "UnloadStreamLevel", "UWorldPartitionSubsystem", "UWorldSubsystem"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    }
+  },
+  "groups": [
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.AINavigation"],
+      "validation_ids": ["UEKB.Compile.AINavigation"],
+      "claim_ids": [
+        "uekb.7cf2520a11235d472ac51e43.c11645152d23bfb3c", "uekb.7cf2520a11235d472ac51e43.c4ca0b5deda24ecdc", "uekb.7cf2520a11235d472ac51e43.c704e987f78550047", "uekb.7cf2520a11235d472ac51e43.cbc984285fcda886d", "uekb.7cf2520a11235d472ac51e43.ccddb271f42b502b4", "uekb.7cf2520a11235d472ac51e43.cd5c219f3833838ed", "uekb.7cf2520a11235d472ac51e43.cdaf3afcfb6168c88", "uekb.7ee70913b7a7f9ec2497235b.c1274a563031f4d3d", "uekb.7ee70913b7a7f9ec2497235b.c1b1bacad4e626be4", "uekb.7ee70913b7a7f9ec2497235b.c1f25a9daaca9face", "uekb.7ee70913b7a7f9ec2497235b.c3526856ca3395ada", "uekb.7ee70913b7a7f9ec2497235b.c8bceb8c98e942357", "uekb.7ee70913b7a7f9ec2497235b.c91ae3ee697aa5018", "uekb.85c2d18fe1b60ab2f4eded32.c29f2037bf938894e", "uekb.85c2d18fe1b60ab2f4eded32.cf2cfe58866468836", "uekb.85c2d18fe1b60ab2f4eded32.cfef559a2a5935532"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.AINavigation"],
+      "claim_ids": [
+        "uekb.7cf2520a11235d472ac51e43.c90f714560c633ad7", "uekb.7cf2520a11235d472ac51e43.cf85ae4b8dee6b5c1", "uekb.7ee70913b7a7f9ec2497235b.c24e410411ca69a3f", "uekb.7ee70913b7a7f9ec2497235b.ca08af91332327e31", "uekb.85c2d18fe1b60ab2f4eded32.c1eb885c33b36a722", "uekb.85c2d18fe1b60ab2f4eded32.c3fcba3eabba7442a", "uekb.85c2d18fe1b60ab2f4eded32.ca45e6370be8a8440", "uekb.85c2d18fe1b60ab2f4eded32.cf34f3fa1ebec78a2"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Verification boundary or review checklist defines evidence method and does not assert that a runtime or human outcome passed.",
+      "claim_ids": [
+        "uekb.7cf2520a11235d472ac51e43.c04e34c752cb6f730", "uekb.7ee70913b7a7f9ec2497235b.c7c3e050eab3f39ff", "uekb.7ee70913b7a7f9ec2497235b.ce7ededbf09292184", "uekb.85c2d18fe1b60ab2f4eded32.c3ca98e79fe637d7a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.StateTree"],
+      "validation_ids": ["UEKB.Compile.StateTree"],
+      "claim_ids": [
+        "uekb.f054939d6b85d70a3e85a37d.c1396b60e600cd111", "uekb.f054939d6b85d70a3e85a37d.c3e364a3e00f5ede8", "uekb.f054939d6b85d70a3e85a37d.c7798b17ef1ff57e7", "uekb.f054939d6b85d70a3e85a37d.c7a724a154524f248", "uekb.f054939d6b85d70a3e85a37d.c8615bbfbe17ba070", "uekb.f054939d6b85d70a3e85a37d.cedba2e28921d4d69", "uekb.f054939d6b85d70a3e85a37d.cf88117a4bf38e275", "uekb.3c89d7853e82670f582453fd.c8c457525f8fef0e6", "uekb.3c89d7853e82670f582453fd.ccefae755c40de603", "uekb.3c89d7853e82670f582453fd.cd1836caa6dcdffe9", "uekb.3c89d7853e82670f582453fd.ceb3cc4c476c7a134", "uekb.3c89d7853e82670f582453fd.cf3c7679684eb8b27", "uekb.79ce04032651bbf7d4705cdb.c0696aa497cdbf497", "uekb.79ce04032651bbf7d4705cdb.c150eb205c0ab7fb7", "uekb.79ce04032651bbf7d4705cdb.c2610ef832073bce5", "uekb.79ce04032651bbf7d4705cdb.c7dadd5e9a9a8e383", "uekb.79ce04032651bbf7d4705cdb.cb173f1a3b0f57a89", "uekb.79ce04032651bbf7d4705cdb.cf5ebb08bf3cdb4fc"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.StateTree"],
+      "claim_ids": [
+        "uekb.f054939d6b85d70a3e85a37d.c4cf307e741114bfa", "uekb.3c89d7853e82670f582453fd.ca22353f0ffba0dc2", "uekb.79ce04032651bbf7d4705cdb.c465c431a51d20d85", "uekb.79ce04032651bbf7d4705cdb.cedf5599218eadb56"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Reference routing, validation checklist, or evidence boundary defines review method and does not claim StateTree behavior passed.",
+      "claim_ids": [
+        "uekb.f054939d6b85d70a3e85a37d.c1f1ae141093567d2", "uekb.f054939d6b85d70a3e85a37d.ce837cba21afff2d3", "uekb.3c89d7853e82670f582453fd.c978299d98d0c9c43", "uekb.79ce04032651bbf7d4705cdb.c0c2bcc58a7021daa"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.MassEntity"],
+      "validation_ids": ["UEKB.Compile.MassEntity"],
+      "claim_ids": [
+        "uekb.306a55671638f66d96a7ddc4.c032d6daf4a36bacb", "uekb.306a55671638f66d96a7ddc4.c756214ae6a48fd87", "uekb.306a55671638f66d96a7ddc4.cad577315533aea34", "uekb.306a55671638f66d96a7ddc4.cbcedef846ae6e36a", "uekb.306a55671638f66d96a7ddc4.cd88ce52026e7acdd", "uekb.1819dcda296c34a9c55fe293.c3e2fd98f073eda8a", "uekb.1819dcda296c34a9c55fe293.c5729b95c403fc779", "uekb.1819dcda296c34a9c55fe293.c9633d3ade20c6ba3", "uekb.1819dcda296c34a9c55fe293.cb21cb1a4df9c8b75", "uekb.2b4d561926aae32fdedfe720.c1afee1229c8e2ddc", "uekb.2b4d561926aae32fdedfe720.c4be895321ca6264e", "uekb.2b4d561926aae32fdedfe720.c4f3a4d53cc11fa1b", "uekb.2b4d561926aae32fdedfe720.c5aa1f29808d94aae", "uekb.2b4d561926aae32fdedfe720.c6aec9a9e4ce091bb"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.MassEntity"],
+      "claim_ids": [
+        "uekb.306a55671638f66d96a7ddc4.c65caab32f150a0ed", "uekb.306a55671638f66d96a7ddc4.ccac4a7d795be41da", "uekb.1819dcda296c34a9c55fe293.c2f49dd99fe55656d", "uekb.1819dcda296c34a9c55fe293.c4bd170bf7561d39a", "uekb.1819dcda296c34a9c55fe293.c807233c64a14cfe5", "uekb.1819dcda296c34a9c55fe293.ce69a9d277c9f3b6f", "uekb.2b4d561926aae32fdedfe720.c05a4e49d2eb7ede8", "uekb.2b4d561926aae32fdedfe720.cd79c038fccb9d47f"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Reference routing, validation checklist, or evidence boundary defines review method and does not claim Mass runtime behavior passed.",
+      "claim_ids": [
+        "uekb.306a55671638f66d96a7ddc4.c1b21b9ac5564794a", "uekb.306a55671638f66d96a7ddc4.c42fc2401aa6db63a", "uekb.1819dcda296c34a9c55fe293.cc281f8009b281407", "uekb.2b4d561926aae32fdedfe720.cebcb5569369d4f09"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.GameFeatures"],
+      "validation_ids": ["UEKB.Compile.GameFeatures"],
+      "claim_ids": [
+        "uekb.6c293b2d66cd534f0a4ce7c6.c0fb70838e8dc84d1", "uekb.6c293b2d66cd534f0a4ce7c6.c3e22bf5663d24008", "uekb.6c293b2d66cd534f0a4ce7c6.c93de1f633a3c2af7", "uekb.6c293b2d66cd534f0a4ce7c6.ce77b8f53325be615", "uekb.6c293b2d66cd534f0a4ce7c6.ce958ed9de2a34f33", "uekb.c0c442d21df0f1ef60317535.c40c1a34065aa3767", "uekb.bd3987a546a74b1b619a3dce.c361cc7a08903eed2", "uekb.bd3987a546a74b1b619a3dce.c45c217e4ed3b7184", "uekb.bd3987a546a74b1b619a3dce.c906347c16a1f8f8b", "uekb.bd3987a546a74b1b619a3dce.c9a6bdaf233f52581", "uekb.bd3987a546a74b1b619a3dce.cca21830416c125c1", "uekb.bd3987a546a74b1b619a3dce.cefd30ddfec0c219e"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.GameFeatures"],
+      "claim_ids": [
+        "uekb.6c293b2d66cd534f0a4ce7c6.cb8c3aef821a2e729", "uekb.6c293b2d66cd534f0a4ce7c6.cd29d72206929b9ca", "uekb.c0c442d21df0f1ef60317535.cb25619789150b93b", "uekb.bd3987a546a74b1b619a3dce.cf0573314f42f4920"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Project composition method, readiness split, reference routing, or checklist text does not assert that a Game Feature or human outcome passed.",
+      "claim_ids": [
+        "uekb.6c293b2d66cd534f0a4ce7c6.c9b1446b8f61c9c3c", "uekb.6c293b2d66cd534f0a4ce7c6.cbc14c1f0db2b0787", "uekb.c0c442d21df0f1ef60317535.c1dd75aca3ec76c33", "uekb.c0c442d21df0f1ef60317535.c2e5af3d00df0ff63", "uekb.c0c442d21df0f1ef60317535.cd5d03663e9e0dd02", "uekb.c0c442d21df0f1ef60317535.cf73a6734687f2ded", "uekb.bd3987a546a74b1b619a3dce.cdc5504c431c3019a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.WorldStreaming"],
+      "validation_ids": ["UEKB.Compile.WorldStreaming"],
+      "claim_ids": [
+        "uekb.a90ebec19cf862dcbb630c2d.c031bc0156373dffa", "uekb.a90ebec19cf862dcbb630c2d.c314bcd3afc3375fb", "uekb.a90ebec19cf862dcbb630c2d.c4713102687c4140e", "uekb.a90ebec19cf862dcbb630c2d.c790b10b3e4f2c54d", "uekb.a90ebec19cf862dcbb630c2d.c8be49638aefaf6ff", "uekb.a90ebec19cf862dcbb630c2d.cac55555800c50624", "uekb.a90ebec19cf862dcbb630c2d.cecb492aae34ddd97", "uekb.4618cf38491f38f238195fb0.c01e7207e6d5b29ed", "uekb.4618cf38491f38f238195fb0.c647691e89aae0835", "uekb.4618cf38491f38f238195fb0.c9a3722f1e66859f2"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.WorldStreaming"],
+      "claim_ids": [
+        "uekb.a90ebec19cf862dcbb630c2d.c6c03b7d0d1c9963d", "uekb.a90ebec19cf862dcbb630c2d.cd23de6824ef18b65", "uekb.4618cf38491f38f238195fb0.c1b71b5b52c6f51db", "uekb.4618cf38491f38f238195fb0.c45f42ceb9edad494", "uekb.4618cf38491f38f238195fb0.c55e4dd0345836d64", "uekb.4618cf38491f38f238195fb0.ca70461f47255ef66"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Reference routing, completion-evidence split, validation checklist, or evidence boundary defines method and does not claim streaming completed.",
+      "claim_ids": [
+        "uekb.a90ebec19cf862dcbb630c2d.c82fd103a10d572a7", "uekb.a90ebec19cf862dcbb630c2d.cf35a4a2122b55ae0", "uekb.4618cf38491f38f238195fb0.ca77304bda009b5f4", "uekb.4618cf38491f38f238195fb0.cfdb2f5743857437e"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Project-context workflow is an evidence-collection procedure and carries no engine, project-state, or acceptance-result assertion.",
+      "claim_ids": [
+        "uekb.e5bb97fd92264d681e8e5e4a.c1f493617c5afada0", "uekb.e5bb97fd92264d681e8e5e4a.c2fc85528166dd6d0", "uekb.e5bb97fd92264d681e8e5e4a.c94c9e838752e6370", "uekb.e5bb97fd92264d681e8e5e4a.cabea1ee2251b8d86", "uekb.e5bb97fd92264d681e8e5e4a.cc38417d8aa2a55c5", "uekb.e5bb97fd92264d681e8e5e4a.cc44b7fa167b9fdd4", "uekb.e5bb97fd92264d681e8e5e4a.cde58f624b766f7c3", "uekb.e5bb97fd92264d681e8e5e4a.ce5c6327355d82d0e"
+      ]
+    }
+  ]
+}

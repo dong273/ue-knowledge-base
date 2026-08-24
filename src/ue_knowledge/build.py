@@ -1,4 +1,4 @@
-"""Build validated schema-v2 index generations and activate atomically."""
+"""Build validated schema-v3 index generations and activate atomically."""
 
 from __future__ import annotations
 
@@ -28,6 +28,7 @@ from .index_store import (
     sweep_incomplete,
     utc_now,
 )
+from .metadata import audit_corpus, encode_metadata, load_provenance, metadata_for
 from .retrieval import build_bm25
 
 Progress = Callable[[str], None]
@@ -142,10 +143,16 @@ def build_index(
     embedder=None,
     append: bool = False,
     progress: Progress | None = None,
+    scope: str = "public",
+    provenance_path: str | Path | None = None,
+    source_registry: str | Path | None = None,
+    evidence_manifest: str | Path | None = None,
+    claim_ledger: str | Path | None = None,
+    strict_provenance: bool = False,
 ) -> dict:
     """Build a complete generation, validate it, then atomically activate it.
 
-    ``append`` is the compatibility spelling for schema-v2 sync: the corpus is
+    ``append`` is the compatibility spelling for schema-v3 sync: the corpus is
     reconciled as a full snapshot, so additions, edits and deletions are all
     reflected and stale chunks cannot survive.
     """
@@ -153,6 +160,24 @@ def build_index(
     root = Path(chroma_dir) if chroma_dir is not None else config.chroma_dir()
     selected_model = model_name or config.MODEL_NAME
     report = progress or (lambda _message: None)
+
+    if scope not in {"public", "project"}:
+        raise ValueError("scope must be 'public' or 'project'")
+    provenance, resolved_provenance, _ = load_provenance(source, provenance_path)
+    audit = audit_corpus(
+        source,
+        provenance_path=provenance_path,
+        scope=scope,
+        source_registry=source_registry,
+        evidence_manifest=evidence_manifest,
+        claim_ledger=claim_ledger,
+        allow_pending=not strict_provenance,
+    )
+    if strict_provenance and not audit["release_ready"]:
+        raise RuntimeError(
+            f"provenance audit failed: {audit['verified']}/{audit['documents']} documents verified; "
+            f"{audit['issue_count']} issue(s)"
+        )
 
     config.check_ascii_path(root, "索引")
     if not source.is_dir():
@@ -166,8 +191,17 @@ def build_index(
         if not force:
             raise
         current = None
-    if current is not None and not force and not append:
+    if current is not None:
         manifest = read_manifest(current)
+        existing_scope = manifest.get("scope")
+        if existing_scope and existing_scope != scope:
+            action = "append across index scopes" if append else "reuse an index directory across scopes"
+            raise RuntimeError(
+                f"cannot {action}: "
+                f"existing={existing_scope!r}, requested={scope!r}; "
+                "build public and project indexes in separate directories"
+            )
+    if current is not None and not force and not append:
         raise RuntimeError(
             f"index already has {manifest['corpus']['chunks']} chunks; "
             "use --force to rebuild or --append to sync"
@@ -186,6 +220,14 @@ def build_index(
         overlap_tokens=DEFAULT_OVERLAP_TOKENS,
         tokenizer=tokenizer,
     )
+    for document in documents:
+        metadata = metadata_for(document["source"], provenance, default_scope=scope)
+        metadata.update({
+            "source": document["source"],
+            "heading": document["heading"],
+            "type": document.get("type", "content"),
+        })
+        document["kb_metadata"] = metadata
     markdown_files = list(source.rglob("*.md"))
     if not documents:
         if not markdown_files:
@@ -221,14 +263,7 @@ def build_index(
 
         texts = [document["text"] for document in documents]
         identifiers = [document["id"] for document in documents]
-        metadata = [
-            {
-                "source": document["source"],
-                "heading": document["heading"],
-                "type": document.get("type", "content"),
-            }
-            for document in documents
-        ]
+        metadata = [encode_metadata(document["kb_metadata"]) for document in documents]
         batch_size = 64
         report(f"Embedding {len(texts)} chunks")
         for start in range(0, len(texts), batch_size):
@@ -246,11 +281,18 @@ def build_index(
             report(f"Embedded {min(start + batch_size, len(texts))}/{len(texts)}")
 
         build_bm25(documents, generation / "bm25.json")
-        fingerprint, document_count = corpus_fingerprint(source)
+        sidecars = [
+            path for path in (
+                resolved_provenance,
+                Path(source_registry) if source_registry else None,
+            ) if path
+        ]
+        fingerprint, document_count = corpus_fingerprint(source, extra_files=sidecars)
         manifest = {
             "schema_version": INDEX_SCHEMA_VERSION,
             "package_version": __version__,
             "built_at": utc_now(),
+            "scope": scope,
             "embedding": {
                 "model": selected_model,
                 "revision": _model_revision(model),
@@ -268,6 +310,17 @@ def build_index(
                 "documents": document_count,
                 "chunks": len(documents),
             },
+            "provenance": {
+                "path": str(resolved_provenance.resolve()) if resolved_provenance else None,
+                "schema_version": audit["schema_version"],
+                "documents": audit["documents"],
+                "covered": audit["covered"],
+                "verified": audit["verified"],
+                "release_ready": audit["release_ready"],
+                "working_ready": audit.get("working_ready", False),
+                "evidence_manifest": audit.get("evidence_manifest"),
+            },
+            "source_registry": str(Path(source_registry).resolve()) if source_registry else None,
         }
         import json
 
@@ -306,4 +359,6 @@ def build_index(
         "chroma_dir": str(root),
         "generation": generation.name,
         "schema_version": INDEX_SCHEMA_VERSION,
+        "scope": scope,
+        "provenance": audit,
     }

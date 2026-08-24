@@ -9,6 +9,21 @@ is:
 ~/AppData/Local/hermes/skills/ue/<topic>/
 ```
 
+Each published Markdown document also needs a matching generated provenance
+entry and schema-v2 claim ledger. Keep the sidecar outside the searchable tree
+as `.ue-kb-provenance.json` and run `ue-kb audit-corpus --scope public --json`
+before packaging. A release is blocked until every document is reviewed and
+all blocking claim/evidence issues are gone; pending entries may only be used
+for a local working index.
+
+To initialize the review queue after regenerating the corpus:
+
+```bash
+python scripts/scaffold_provenance.py \
+  --source src/ue_knowledge/knowledge \
+  --output src/ue_knowledge/knowledge/.ue-kb-provenance.json
+```
+
 **Never hand-edit files under `src/ue_knowledge/knowledge/`.** The previous
 manual pass corrupted the corpus (broken code fences, `.agents/` sentence
 leftovers, eaten multi-line YAML descriptions). Everything must go through
@@ -25,6 +40,8 @@ leftovers, eaten multi-line YAML descriptions). Everything must go through
 
 ```bash
 python scripts/publish_from_hermes.py
+# Check the render without modifying the corpus (required before release).
+python scripts/publish_from_hermes.py --check
 ```
 
 Exclusions handled by the script:
@@ -38,6 +55,7 @@ Exclusions handled by the script:
 ```bash
 # Privacy: private names, personal paths, agent-prompt leftovers
 python scripts/check_privacy.py                                                        # 0 findings
+python scripts/check_scope.py dist/*.whl dist/*.tar.gz                                # no project-scope leaks
 # Broken fences: single-backtick + language tag at line start
 grep -rnE '^`(csharp|cpp|python|bash|json|text|py|c|h|sh)$' src/ue_knowledge/knowledge/ | wc -l   # 0
 # Orphan single-backtick lines
@@ -58,6 +76,9 @@ After any corpus change, the release gate must stay green (CI runs it):
 python -m build                                   # build wheel + sdist
 python scripts/verify_package.py dist/*.whl       # corpus in wheel == source corpus (hashes)
 python -m pytest tests/                           # incl. 90-file corpus + generated chunk checks
+ue-kb audit-corpus --scope public \
+  --claim-ledger validation/corpus-audit.json \
+  --evidence-manifest validation/artifacts/ue57/ue57-validation-evidence.json --json
 ```
 
 ### 4. Update README numbers

@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-06-final-tools-ui",
+  "reviewer": "codex-wave-06-source-review",
+  "reviewed_at": "2026-08-24",
+  "evidence_catalog": {
+    "UE57.Source.EditorTools": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Editor/PropertyEditor/Public/PropertyEditorModule.h; Engine/Source/Editor/PropertyEditor/Public/IDetailCustomization.h; Engine/Source/Editor/PropertyEditor/Public/DetailLayoutBuilder.h; Engine/Source/Editor/UnrealEd/Public/ScopedTransaction.h; Engine/Source/Developer/ToolMenus/Public/ToolMenus.h; Engine/Source/Runtime/Core/Public/CoreGlobals.h; Engine/Source/Runtime/Core/Public/Misc/App.h",
+      "symbols": ["FPropertyEditorModule", "IDetailCustomization", "IDetailLayoutBuilder", "FScopedTransaction", "UToolMenus", "IsRunningCommandlet", "FApp::IsUnattended"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.PCG": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/PCG/Source/PCG/Public/PCGComponent.h; Engine/Plugins/PCG/Source/PCG/Public/PCGGraph.h; Engine/Plugins/PCG/Source/PCG/Public/PCGSettings.h; Engine/Plugins/Runtime/ProceduralMeshComponent/Source/ProceduralMeshComponent/Public/ProceduralMeshComponent.h",
+      "symbols": ["UPCGComponent", "UPCGGraph", "UPCGSettings", "UPCGNode", "UProceduralMeshComponent", "CreateMeshSection"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.Automation": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Core/Public/Misc/AutomationTest.h",
+      "symbols": ["FAutomationTestBase", "IMPLEMENT_SIMPLE_AUTOMATION_TEST", "BEGIN_DEFINE_SPEC", "DEFINE_LATENT_AUTOMATION_COMMAND", "ADD_LATENT_AUTOMATION_COMMAND", "AddExpectedError", "EAutomationTestFlags"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.UI": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h; Engine/Source/Runtime/UMG/Public/Blueprint/WidgetBlueprintLibrary.h; Engine/Source/Runtime/UMG/Public/Components/Widget.h; Engine/Source/Runtime/UMG/Public/Components/PanelWidget.h; Engine/Source/Runtime/UMG/Public/Components/Button.h; Engine/Source/Runtime/UMG/Public/Components/TextBlock.h; Engine/Source/Runtime/SlateCore/Public/Widgets/SWidget.h; Engine/Plugins/Runtime/CommonUI/Source/CommonUI/Public/CommonActivatableWidget.h",
+      "symbols": ["UUserWidget", "UWidgetBlueprintLibrary", "UWidget", "UPanelWidget", "UButton", "UTextBlock", "SWidget", "UCommonActivatableWidget", "BindWidget"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UEKB.Source.RAG": {
+      "type": "repository_source",
+      "source_locator": "src/ue_knowledge/build.py; src/ue_knowledge/query.py; src/ue_knowledge/federation.py; src/ue_knowledge/server.py; scripts/publish_from_hermes.py; scripts/evaluate_coverage.py; scripts/measure_mcp.py",
+      "symbols": ["build_index", "query_index_envelope", "federated_query", "run_server", "coverage", "publication manifest", "MCP performance"],
+      "package_version": "0.6.3",
+      "verified_at": "2026-08-24"
+    }
+  },
+  "groups": [
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.Automation"], "validation_ids": ["UEKB.Compile.Automation"],
+      "claim_ids": ["uekb.f26a6738bacbedc1b610b38e.c21f327022988e46e", "uekb.f26a6738bacbedc1b610b38e.c42439f3593d76d58", "uekb.f26a6738bacbedc1b610b38e.cd2ac9491d7843e91", "uekb.3fe47cfafe955b372789e0b0.c18a14cbfb3f38e4c", "uekb.3fe47cfafe955b372789e0b0.c3417600bd942ac96", "uekb.3fe47cfafe955b372789e0b0.c7941193b505ef2ba", "uekb.3fe47cfafe955b372789e0b0.c813e83a2cf87d28f", "uekb.3fe47cfafe955b372789e0b0.cd4bfa3ea69684990", "uekb.3fe47cfafe955b372789e0b0.cd99a2580bf475f9e"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.Automation"], "validation_ids": ["UEKB.Compile.Automation"], "code_kind": "fragment",
+      "claim_ids": ["uekb.f26a6738bacbedc1b610b38e.c6fc22d7c710f3f80", "uekb.f26a6738bacbedc1b610b38e.cae70929d50bf2425", "uekb.3fe47cfafe955b372789e0b0.c318f98eeb5b58ae4", "uekb.3fe47cfafe955b372789e0b0.c4c4ea3fba1697737"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.EditorTools"], "validation_ids": ["UEKB.Compile.EditorTools"],
+      "claim_ids": ["uekb.a9f54ebd22558cca95749077.c721ce8febb1eb14c", "uekb.a9f54ebd22558cca95749077.c86d0879ab2bd5fbc", "uekb.a9f54ebd22558cca95749077.cd0a92e5a79da1c89", "uekb.f6a892608966467008ec94ba.c07c77a375be83311", "uekb.f6a892608966467008ec94ba.c81c9d1cbfa74a351", "uekb.f6a892608966467008ec94ba.c901cfc5ab91ecf41", "uekb.f6a892608966467008ec94ba.cc0b50b658d00ebe7", "uekb.f6a892608966467008ec94ba.cf9f1c3b0f7dc232c", "uekb.50a38237872106d770207101.c74e8aff8fddd1834", "uekb.50a38237872106d770207101.cc715ee2b51d0040e", "uekb.50a38237872106d770207101.ce0b48d814ab7aa14", "uekb.50ad612d616618acfc2028d5.c771382ea7ec86986"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.EditorTools"], "validation_ids": ["UEKB.Compile.EditorTools"], "code_kind": "config",
+      "claim_ids": ["uekb.50a38237872106d770207101.c2b7cdb9233c0d7b6"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.EditorTools"], "validation_ids": ["UEKB.Compile.EditorTools"], "code_kind": "fragment",
+      "claim_ids": ["uekb.a9f54ebd22558cca95749077.ca336b23667c291d9", "uekb.a9f54ebd22558cca95749077.cc420e880b159ecd5", "uekb.f6a892608966467008ec94ba.c1e6fa74641bd7a52", "uekb.f6a892608966467008ec94ba.c28d1fc5b2cb35cb1", "uekb.f6a892608966467008ec94ba.c9aa7fcd5a57b6c13", "uekb.50a38237872106d770207101.cc162d05dfdb3e560"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.PCG"], "validation_ids": ["UEKB.Compile.PCG"],
+      "claim_ids": ["uekb.7e90fe20f94877ee972fbdb8.c0a6b036235196a89", "uekb.7e90fe20f94877ee972fbdb8.c8d3fe6c232c39efb", "uekb.04fe60cff04f78af0943c720.c457bf4cb7a993a86", "uekb.04fe60cff04f78af0943c720.c7af2fd2b700ef085", "uekb.04fe60cff04f78af0943c720.cf4e68bacc202f50a", "uekb.5664f1303986889021932e6c.cbaad8bb19a737271", "uekb.5664f1303986889021932e6c.cccbb4d2d37551604", "uekb.5664f1303986889021932e6c.ce6786b1a810864d2"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.PCG"], "validation_ids": ["UEKB.Compile.PCG"], "code_kind": "fragment",
+      "claim_ids": ["uekb.7e90fe20f94877ee972fbdb8.c8997d2939b66a146", "uekb.04fe60cff04f78af0943c720.c41820721deb711f2", "uekb.04fe60cff04f78af0943c720.cded1a1af61e34246", "uekb.04fe60cff04f78af0943c720.cdf41b16537fbb1a1", "uekb.5664f1303986889021932e6c.c186303e7c909f936"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.UI"], "validation_ids": ["UEKB.Compile.UI"],
+      "claim_ids": ["uekb.9ba5308b62ccfa3eb8191d44.c4e3b64d0ef536e20", "uekb.9ba5308b62ccfa3eb8191d44.c65e0b69c74291c1e", "uekb.9ba5308b62ccfa3eb8191d44.cb8b82add697a281b", "uekb.9ba5308b62ccfa3eb8191d44.ce022bdebf5de0717", "uekb.925164b2a9ac0a0d36cc299e.c036f08ed487c8c8e", "uekb.925164b2a9ac0a0d36cc299e.c38d79953e0c3d318", "uekb.925164b2a9ac0a0d36cc299e.cb99bc7e1765993b4", "uekb.e0f77dd076b8ab122a51065a.c0042b8172fa8b581", "uekb.e0f77dd076b8ab122a51065a.c01070174fd82c7b1", "uekb.e0f77dd076b8ab122a51065a.c0f40b0bdb81d394a", "uekb.e0f77dd076b8ab122a51065a.c7c3d22937a825cdd", "uekb.e0f77dd076b8ab122a51065a.cbc8231dfae2fda45"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.UI"], "validation_ids": ["UEKB.Compile.UI"], "code_kind": "fragment",
+      "claim_ids": ["uekb.9ba5308b62ccfa3eb8191d44.cb52e18c2d0403fa3", "uekb.9ba5308b62ccfa3eb8191d44.cf0b31cc85609a62b", "uekb.925164b2a9ac0a0d36cc299e.cdaf9df7ee5d91c8b"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.UI"], "validation_ids": ["UEKB.Compile.UIBindWidget"],
+      "claim_ids": ["uekb.e0f77dd076b8ab122a51065a.cfadd33588df3cb9d"]
+    },
+    {
+      "disposition": "api_contract", "requirements": ["authoritative_source", "compile"], "evidence_ids": ["UE57.Source.UI"], "validation_ids": ["UEKB.Compile.UIBindWidget"], "code_kind": "fragment",
+      "claim_ids": ["uekb.e0f77dd076b8ab122a51065a.c7ce49bc6273243f9"]
+    },
+    {
+      "disposition": "concept", "requirements": ["authoritative_source"], "evidence_ids": ["UE57.Source.Automation"],
+      "claim_ids": ["uekb.f26a6738bacbedc1b610b38e.c4db250678942523b", "uekb.f26a6738bacbedc1b610b38e.cad22fa38e79ff4f2", "uekb.f26a6738bacbedc1b610b38e.cd64c7945dd37671b", "uekb.3fe47cfafe955b372789e0b0.c5557ba5fc441989d", "uekb.3fe47cfafe955b372789e0b0.cf66818984c0cccba"]
+    },
+    {
+      "disposition": "concept", "requirements": ["authoritative_source"], "evidence_ids": ["UE57.Source.EditorTools"],
+      "claim_ids": ["uekb.a9f54ebd22558cca95749077.c5b32fe8c92687404", "uekb.a9f54ebd22558cca95749077.c8c3e5a51067ff5d3", "uekb.a9f54ebd22558cca95749077.cb267d7dd3c0b2d72", "uekb.f6a892608966467008ec94ba.cca3c947230a3c579", "uekb.f6a892608966467008ec94ba.cdf82e73bd14ea4f7", "uekb.50a38237872106d770207101.c262729f37144502a", "uekb.50a38237872106d770207101.c345ed6024248ec21", "uekb.50a38237872106d770207101.c444f703b5e067170", "uekb.50a38237872106d770207101.cf23fa4c7aed03ff6", "uekb.50ad612d616618acfc2028d5.c1590dbea4b936335", "uekb.50ad612d616618acfc2028d5.c23056f9b9bb21f03", "uekb.50ad612d616618acfc2028d5.c6530ca15719b31b4", "uekb.50ad612d616618acfc2028d5.c9e966e0c6812e522"]
+    },
+    {
+      "disposition": "concept", "requirements": ["authoritative_source"], "evidence_ids": ["UE57.Source.PCG"],
+      "claim_ids": ["uekb.7e90fe20f94877ee972fbdb8.c2952369285182c66", "uekb.7e90fe20f94877ee972fbdb8.c32e132a98c78e7b0", "uekb.7e90fe20f94877ee972fbdb8.c7cebd2f10abdb0a1", "uekb.7e90fe20f94877ee972fbdb8.c928f2b343d82c1a9", "uekb.04fe60cff04f78af0943c720.c4cda11b11a6f6387", "uekb.04fe60cff04f78af0943c720.c7b937caf51250d29", "uekb.04fe60cff04f78af0943c720.cb96766c5d93900c9", "uekb.04fe60cff04f78af0943c720.cc90e347836d4393f", "uekb.5664f1303986889021932e6c.c29b654087126bd48", "uekb.5664f1303986889021932e6c.c8a02aa33606f8092", "uekb.5664f1303986889021932e6c.c8d024facffdad29b", "uekb.5664f1303986889021932e6c.ccca2c69c7864bfb7"]
+    },
+    {
+      "disposition": "concept", "requirements": ["authoritative_source"], "evidence_ids": ["UE57.Source.UI"],
+      "claim_ids": ["uekb.9ba5308b62ccfa3eb8191d44.c16ca3d65fdc6ef6d", "uekb.9ba5308b62ccfa3eb8191d44.cf59bd03c82b4e9cd", "uekb.925164b2a9ac0a0d36cc299e.c0a47dc075834ff84", "uekb.925164b2a9ac0a0d36cc299e.cad9b8c4873982c43", "uekb.925164b2a9ac0a0d36cc299e.ceb23fd143b775cd4", "uekb.e0f77dd076b8ab122a51065a.c9da77905ac5205f6", "uekb.e0f77dd076b8ab122a51065a.ced7136e3b7de3d0a"]
+    },
+    {
+      "disposition": "concept", "requirements": ["authoritative_source"], "evidence_ids": ["UEKB.Source.RAG"],
+      "claim_ids": ["uekb.ae579db001a17cc28300ff5c.c05115dc09cbc259f", "uekb.ae579db001a17cc28300ff5c.c1051ce312f84ad8f", "uekb.ae579db001a17cc28300ff5c.c107a2ebc5702a2f5", "uekb.ae579db001a17cc28300ff5c.c524648fad556cc3e", "uekb.ae579db001a17cc28300ff5c.c5ef463be3fae3333", "uekb.ae579db001a17cc28300ff5c.c7b81511984947f0f", "uekb.ae579db001a17cc28300ff5c.cf59a13994a97598d", "uekb.64e1845fe44a3d4fe6be3a0e.c09858a4e748997dd", "uekb.64e1845fe44a3d4fe6be3a0e.c23d9fc94aa65912f", "uekb.64e1845fe44a3d4fe6be3a0e.c2e7a1bede3d7bda4", "uekb.64e1845fe44a3d4fe6be3a0e.c5f4dd9e2a7726e7e", "uekb.64e1845fe44a3d4fe6be3a0e.c60bd837af83864f4", "uekb.64e1845fe44a3d4fe6be3a0e.c66dc75df7d2eb59e", "uekb.64e1845fe44a3d4fe6be3a0e.c9ffe4a9674e10469", "uekb.64e1845fe44a3d4fe6be3a0e.cfabdbeedd734c6cc"]
+    },
+    {
+      "disposition": "non_claim", "requirements": [], "evidence_ids": [], "exclusion_reason": "Profiling commands and evidence checklists define a capture procedure and do not assert that a performance result passed.",
+      "claim_ids": ["uekb.1898167e1653b539ef16caff.c27cc99fbfb52b5e9", "uekb.1898167e1653b539ef16caff.c2f228625d49f3869", "uekb.1898167e1653b539ef16caff.c650344a814b23a08", "uekb.1898167e1653b539ef16caff.c769691ef7d81a8b6", "uekb.1898167e1653b539ef16caff.c8bc407a40804e2b2", "uekb.1898167e1653b539ef16caff.c93a8986ab40aa21b", "uekb.1898167e1653b539ef16caff.ccc725cb19e9e0d0c", "uekb.1898167e1653b539ef16caff.ccdd3503fb9ac472d", "uekb.1898167e1653b539ef16caff.ccf1dec175b6cf162", "uekb.1898167e1653b539ef16caff.cd4e0519b7155a189", "uekb.1898167e1653b539ef16caff.cdd5561f24915d3c4", "uekb.1898167e1653b539ef16caff.cf206d06c81fdba47"]
+    },
+    {
+      "disposition": "non_claim", "requirements": [], "evidence_ids": [], "exclusion_reason": "Reference routing or an evidence boundary defines method and does not assert that a runtime, visual, usability, or human outcome passed.",
+      "claim_ids": ["uekb.a9f54ebd22558cca95749077.cd063cd2219053cf6", "uekb.a9f54ebd22558cca95749077.cf622e9c26fc43d20", "uekb.f6a892608966467008ec94ba.c4731a92209850261", "uekb.50a38237872106d770207101.c622cc1faffc14acc", "uekb.50ad612d616618acfc2028d5.cb155a7c11d639384", "uekb.ae579db001a17cc28300ff5c.c569a22e368d775c1", "uekb.ae579db001a17cc28300ff5c.c87dae3bfce77688c", "uekb.7e90fe20f94877ee972fbdb8.c5750767ea2da6606", "uekb.7e90fe20f94877ee972fbdb8.cc21b0dedf56d004a", "uekb.04fe60cff04f78af0943c720.c3832ae038e5959bd", "uekb.5664f1303986889021932e6c.c647fe6376b6cf503", "uekb.f26a6738bacbedc1b610b38e.c10f88c5b9cefb9a4", "uekb.f26a6738bacbedc1b610b38e.c25ab14de3b550232", "uekb.3fe47cfafe955b372789e0b0.c994060310c21d245", "uekb.9ba5308b62ccfa3eb8191d44.c2df08bf1150b0a2a", "uekb.9ba5308b62ccfa3eb8191d44.c3a2f5c17af8b087e", "uekb.925164b2a9ac0a0d36cc299e.c40f5495b6b448824", "uekb.e0f77dd076b8ab122a51065a.cd0b5952eab5690df"]
+    },
+    {
+      "disposition": "non_claim", "requirements": [], "evidence_ids": [], "code_kind": "command", "exclusion_reason": "Command examples define an invocation procedure and do not assert that execution or an outcome passed.",
+      "claim_ids": ["uekb.ae579db001a17cc28300ff5c.cbc4e9fe805c7c382"]
+    }
+  ]
+}

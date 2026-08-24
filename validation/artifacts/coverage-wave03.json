@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "queries": 14,
+  "failures": 0,
+  "pass": true,
+  "categories": [
+    "chapter",
+    "confusable",
+    "natural_zh",
+    "unsupported"
+  ],
+  "unsupported_queries": 2,
+  "unsupported_false_positives": 0,
+  "unsupported_false_positive_rate": 0.0,
+  "results": [
+    {
+      "category": "chapter",
+      "query": "TestEqual TestTrue TestFalse UE_RETURN_ON_ERROR",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-testing-debugging",
+      "expected_heading_contains": "Test Assertion Methods",
+      "observed_coverage": "supported",
+      "top_source": "ue-testing-debugging/SKILL.md"
+    },
+    {
+      "category": "confusable",
+      "query": "Fresh PIE 没有日志不能算通过，需要什么负向证据",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-testing-debugging",
+      "expected_heading_contains": "Fresh PIE Negative",
+      "observed_coverage": "supported",
+      "top_source": "ue-testing-debugging/SKILL.md"
+    },
+    {
+      "category": "unsupported",
+      "query": "白盒关卡首次游玩引导可发现性如何自动验证",
+      "expected_scope": "public",
+      "expected_coverage": "none",
+      "observed_coverage": "none",
+      "top_source": null
+    },
+    {
+      "category": "unsupported",
+      "query": "示例项目 H1 Bead 首次游玩可发现性",
+      "expected_scope": "public",
+      "expected_coverage": "none",
+      "observed_coverage": "none",
+      "top_source": null
+    },
+    {
+      "category": "natural_zh",
+      "query": "Automation 测试怎样验证断言",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-testing-debugging",
+      "observed_coverage": "supported",
+      "top_source": "ue-testing-debugging/SKILL.md"
+    },
+    {
+      "category": "natural_zh",
+      "query": "运行时创建组件为什么要 RegisterComponent 和 AddInstanceComponent",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-actor-component-architecture",
+      "expected_heading_contains": "Runtime components",
+      "observed_coverage": "supported",
+      "top_source": "ue-actor-component-architecture/SKILL.md"
+    },
+    {
+      "category": "confusable",
+      "query": "TMap Find 返回的指针在修改容器后还能保存吗",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-cpp-foundations",
+      "expected_heading_contains": "TMap",
+      "observed_coverage": "supported",
+      "top_source": "ue-cpp-foundations/references/container-patterns.md"
+    },
+    {
+      "category": "natural_zh",
+      "query": "软引用 RequestAsyncLoad 完成后如何通过 TSoftObjectPtr Get",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-data-assets-tables",
+      "observed_coverage": "supported",
+      "top_source": "ue-data-assets-tables/references/asset-loading-patterns.md"
+    },
+    {
+      "category": "confusable",
+      "query": "远程客户端应该读取 GameMode 还是 GameState",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-gameplay-framework",
+      "observed_coverage": "supported",
+      "top_source": "ue-gameplay-framework/SKILL.md"
+    },
+    {
+      "category": "chapter",
+      "query": "Enhanced Input AddMappingContext BindAction ETriggerEvent",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-input-system",
+      "observed_coverage": "supported",
+      "top_source": "ue-input-system/SKILL.md"
+    },
+    {
+      "category": "confusable",
+      "query": "APawn 调用 AddMovementInput 为什么没有自动移动",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-character-movement",
+      "expected_heading_contains": "Choose the movement owner",
+      "observed_coverage": "supported",
+      "top_source": "ue-character-movement/references/movement-pipeline.md"
+    },
+    {
+      "category": "natural_zh",
+      "query": "SetActorEnableCollision 开启后组件仍然 NoCollision 怎么排查",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-physics-collision",
+      "observed_coverage": "supported",
+      "top_source": "ue-physics-collision/references/actor-collision-enable-state.md"
+    },
+    {
+      "category": "confusable",
+      "query": "AsyncSaveGameToSlot 已调度是否代表保存成功",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-serialization-savegames",
+      "expected_heading_contains": "Prefer async operations",
+      "observed_coverage": "supported",
+      "top_source": "ue-serialization-savegames/SKILL.md"
+    },
+    {
+      "category": "chapter",
+      "query": "AsyncTask ENamedThreads GameThread TWeakObjectPtr",
+      "expected_scope": "public",
+      "expected_coverage": "supported",
+      "expected_source_contains": "ue-async-threading",
+      "observed_coverage": "supported",
+      "top_source": "ue-async-threading/references/threading-patterns.md"
+    }
+  ]
+}

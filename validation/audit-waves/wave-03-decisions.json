@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-03-gameplay-runtime",
+  "reviewer": "codex-wave-03-source-review",
+  "reviewed_at": "2026-08-24",
+  "evidence_catalog": {
+    "UE57.Source.CharacterMovement": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h; Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h; Engine/Source/Runtime/Engine/Classes/GameFramework/MovementComponent.h; Engine/Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h",
+      "symbols": [
+        "APawn",
+        "ACharacter",
+        "UMovementComponent",
+        "UCharacterMovementComponent",
+        "AddMovementInput",
+        "ConsumeMovementInputVector",
+        "SetMovementMode",
+        "PhysCustom",
+        "FindFloor",
+        "SafeMoveUpdatedComponent",
+        "SlideAlongSurface",
+        "LaunchCharacter",
+        "FSavedMove_Character"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.PhysicsCollision": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h; Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h; Engine/Source/Runtime/Engine/Classes/Engine/World.h; Engine/Source/Runtime/Engine/Public/CollisionQueryParams.h; Engine/Source/Runtime/Engine/Classes/Engine/EngineTypes.h",
+      "symbols": [
+        "SetActorEnableCollision",
+        "GetActorEnableCollision",
+        "UPrimitiveComponent",
+        "ECollisionEnabled",
+        "SetCollisionResponseToChannel",
+        "SetGenerateOverlapEvents",
+        "SetNotifyRigidBodyCollision",
+        "FCollisionQueryParams",
+        "LineTraceSingleByChannel",
+        "SweepSingleByChannel",
+        "FCollisionShape",
+        "FHitResult"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.SaveGames": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/GameFramework/SaveGame.h; Engine/Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h; Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectMacros.h",
+      "symbols": [
+        "USaveGame",
+        "CPF_SaveGame",
+        "CreateSaveGameObject",
+        "SaveGameToSlot",
+        "DoesSaveGameExist",
+        "LoadGameFromSlot",
+        "AsyncSaveGameToSlot",
+        "AsyncLoadGameFromSlot"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.AsyncThreading": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Core/Public/Async/Async.h; Engine/Source/Runtime/Core/Public/Async/AsyncWork.h; Engine/Source/Runtime/Core/Public/Tasks/Task.h; Engine/Source/Runtime/Core/Public/HAL/CriticalSection.h; Engine/Source/Runtime/Core/Public/Misc/ScopeLock.h; Engine/Source/Runtime/Core/Public/Templates/Atomic.h; Engine/Source/Runtime/Core/Public/UObject/WeakObjectPtr.h",
+      "symbols": [
+        "Async",
+        "EAsyncExecution",
+        "TFuture",
+        "AsyncTask",
+        "ENamedThreads",
+        "UE::Tasks::Launch",
+        "FAsyncTask",
+        "FAutoDeleteAsyncTask",
+        "FCriticalSection",
+        "FScopeLock",
+        "TAtomic",
+        "TWeakObjectPtr"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    }
+  },
+  "groups": [
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "claim_ids": [
+        "uekb.52743fd6f0c8454f2862c1b1.c018f5dccc848e56d",
+        "uekb.52743fd6f0c8454f2862c1b1.c38304138760950ce",
+        "uekb.52743fd6f0c8454f2862c1b1.c6af355e31b48ede7",
+        "uekb.52743fd6f0c8454f2862c1b1.ca56e5fa9bab4e26f",
+        "uekb.52743fd6f0c8454f2862c1b1.cb2f9f1366624aa75",
+        "uekb.52743fd6f0c8454f2862c1b1.cbbe97e8c5fae3d0b",
+        "uekb.52743fd6f0c8454f2862c1b1.cbec67e3cce01faf6",
+        "uekb.52743fd6f0c8454f2862c1b1.cdc7a0cacab6bb573",
+        "uekb.994240234395f1990393c029.c04fabf684ded8b35",
+        "uekb.994240234395f1990393c029.c1de76cf053b88f24",
+        "uekb.994240234395f1990393c029.c56d7f168094155f5",
+        "uekb.994240234395f1990393c029.c666659aab32f7751",
+        "uekb.994240234395f1990393c029.c6f0ccdcb33f012c9",
+        "uekb.994240234395f1990393c029.c77fb08ad690ca896",
+        "uekb.994240234395f1990393c029.ccf022df31ce69478",
+        "uekb.994240234395f1990393c029.cfd059ed9d6e23cdf",
+        "uekb.ca3f900a258f491a0ab870cd.c0682b3f24f786b2a",
+        "uekb.ca3f900a258f491a0ab870cd.c2774207b765056f9",
+        "uekb.ca3f900a258f491a0ab870cd.c7eca0d57be3600ec",
+        "uekb.ca3f900a258f491a0ab870cd.cf9b3a0868e876824",
+        "uekb.49d25a6225d301aff090335d.c19a4dc9f1f2432d0",
+        "uekb.49d25a6225d301aff090335d.cbbef7302955e39b7",
+        "uekb.49d25a6225d301aff090335d.cd6e0058599803c3c",
+        "uekb.f5e755b3860e010caaa6a7b1.c2984d39904e62399",
+        "uekb.f5e755b3860e010caaa6a7b1.cfb8b32dbe2399b47"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "claim_ids": [
+        "uekb.52743fd6f0c8454f2862c1b1.c8d5fad73cfbe7cb5",
+        "uekb.994240234395f1990393c029.c01da1a9bb04f8efc",
+        "uekb.994240234395f1990393c029.cc2783d68dd00aef5",
+        "uekb.ca3f900a258f491a0ab870cd.c3b5cd5230e3367cf",
+        "uekb.ca3f900a258f491a0ab870cd.cdcb5926d259f72c2",
+        "uekb.ca3f900a258f491a0ab870cd.cf141b81edfc72890",
+        "uekb.49d25a6225d301aff090335d.c4fe1982bd7d78d49",
+        "uekb.49d25a6225d301aff090335d.c618f27ace79c5ae4",
+        "uekb.49d25a6225d301aff090335d.c67ba4a2ec6151604",
+        "uekb.49d25a6225d301aff090335d.cf6b511bb381838ff",
+        "uekb.f5e755b3860e010caaa6a7b1.c1845d3cc715094c8",
+        "uekb.f5e755b3860e010caaa6a7b1.c7b41e276b7ad1035",
+        "uekb.f5e755b3860e010caaa6a7b1.c84e7d071879a2ad7",
+        "uekb.f5e755b3860e010caaa6a7b1.cb01abcd710989e1e",
+        "uekb.f5e755b3860e010caaa6a7b1.cf39137ea610b7693"
+      ]
+    },
+    {
+      "disposition": "runtime_behavior",
+      "requirements": [
+        "authoritative_source",
+        "compile",
+        "runtime"
+      ],
+      "evidence_ids": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.ActorCollision",
+        "UEKnowledgeValidation.ActorCollisionEnableState"
+      ],
+      "claim_ids": [
+        "uekb.6b27a6e428a6f0d6b3d9afd5.c2985331f7bb5f71a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.PhysicsCollision"
+      ],
+      "claim_ids": [
+        "uekb.700b69951f76581fdf788ae4.c10bb8b8abdade519",
+        "uekb.700b69951f76581fdf788ae4.c454d5e1b50f35041",
+        "uekb.700b69951f76581fdf788ae4.c7ccbeb34633c13b1",
+        "uekb.700b69951f76581fdf788ae4.c8070ce17c6fe9d62",
+        "uekb.700b69951f76581fdf788ae4.c93ba38ab69f0fd8b",
+        "uekb.700b69951f76581fdf788ae4.c94ee62e3b5078349",
+        "uekb.700b69951f76581fdf788ae4.ca680a9f9a9ad9fec",
+        "uekb.700b69951f76581fdf788ae4.cf01206d1f4637b3c",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.cd8b14058ce70d9e5",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.cdeb5bf110ee9dc3d",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c208298890294c751",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c6471fb3f40d9438f",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c7477dc2084d34c7b",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.cee6e4db52db44131",
+        "uekb.29dc3af7031aa5ba6de51c1d.c71243836c2361b38",
+        "uekb.32148321ed44df6039b176e4.c0a40ed8c3e767891",
+        "uekb.32148321ed44df6039b176e4.c32b4e52db635956f",
+        "uekb.32148321ed44df6039b176e4.c7a3f93ac228b6099",
+        "uekb.32148321ed44df6039b176e4.c8062e8962cbe7f7e",
+        "uekb.32148321ed44df6039b176e4.c8f5e322f4af498f5",
+        "uekb.32148321ed44df6039b176e4.cb6798aa80d1cef28",
+        "uekb.32148321ed44df6039b176e4.cb96972c555af0141"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "claim_ids": [
+        "uekb.700b69951f76581fdf788ae4.cf5698ee2d6cc7faf",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.cccc043f3bc5eb748",
+        "uekb.6b27a6e428a6f0d6b3d9afd5.ce26bf5b1331103f8",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c597dccaebb97f47f",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.c6fc12fd37f6948c3",
+        "uekb.6b271d6b3f6a823ffa0e9f0b.cd9a96bc189a91a5a",
+        "uekb.29dc3af7031aa5ba6de51c1d.c07cffb01c0ba5d6a",
+        "uekb.29dc3af7031aa5ba6de51c1d.c7dc03386b324f2ce",
+        "uekb.29dc3af7031aa5ba6de51c1d.cc6fba33732032b43",
+        "uekb.29dc3af7031aa5ba6de51c1d.ce630248605359888",
+        "uekb.29dc3af7031aa5ba6de51c1d.cf259d947a437c7ba",
+        "uekb.32148321ed44df6039b176e4.ccccd7c79f56b0b6b",
+        "uekb.32148321ed44df6039b176e4.ccd87eb063df3cf8c"
+      ]
+    },
+    {
+      "disposition": "runtime_behavior",
+      "requirements": [
+        "authoritative_source",
+        "compile",
+        "runtime"
+      ],
+      "evidence_ids": [
+        "UE57.Source.SaveGames"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.SaveGameApi",
+        "UEKnowledgeValidation.SaveGameObjectCreation"
+      ],
+      "claim_ids": [
+        "uekb.100c04138184ad1677de3870.c0536baecc9fb9eaf"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.SaveGames"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.SaveGameTypes"
+      ],
+      "claim_ids": [
+        "uekb.100c04138184ad1677de3870.c1f128162fc74a139",
+        "uekb.100c04138184ad1677de3870.c59f42c80ec1c9d91",
+        "uekb.100c04138184ad1677de3870.c7ae61c47688f4713"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.SaveGames"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.SaveGameApi"
+      ],
+      "claim_ids": [
+        "uekb.100c04138184ad1677de3870.c48d9c58e4bf4240f",
+        "uekb.100c04138184ad1677de3870.c8f3a44a487c86c9f",
+        "uekb.100c04138184ad1677de3870.cb400d5cce04937ba",
+        "uekb.100c04138184ad1677de3870.ceb2ccdf43680e13c",
+        "uekb.ec78d30283c4dd09de64064b.c4912ecc0a7026802",
+        "uekb.ec78d30283c4dd09de64064b.c93d638b0d3ad7d24",
+        "uekb.ec78d30283c4dd09de64064b.c9ec7260d793e2313",
+        "uekb.ec78d30283c4dd09de64064b.cc5962a6e97103c88"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.SaveGames"
+      ],
+      "claim_ids": [
+        "uekb.100c04138184ad1677de3870.c09f4aca12131b7cf",
+        "uekb.100c04138184ad1677de3870.cf6fc337b28d24f73",
+        "uekb.ec78d30283c4dd09de64064b.c016e1a2e2032fda9",
+        "uekb.ec78d30283c4dd09de64064b.c3f0b18f24b53269b",
+        "uekb.ec78d30283c4dd09de64064b.c6dc885e294905ccd",
+        "uekb.ec78d30283c4dd09de64064b.cd501d919a5e32783",
+        "uekb.ec78d30283c4dd09de64064b.cf7a3b5b3d2a74b55"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.AsyncThreading"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.AsyncThreading"
+      ],
+      "claim_ids": [
+        "uekb.54a47114f6be3e64e7b20c6d.c307eb238e925ad67",
+        "uekb.54a47114f6be3e64e7b20c6d.c794be30b952715a5",
+        "uekb.54a47114f6be3e64e7b20c6d.c862722b560745437",
+        "uekb.54a47114f6be3e64e7b20c6d.c927db990d801a8b4",
+        "uekb.54a47114f6be3e64e7b20c6d.cc651b5724479b300",
+        "uekb.54a47114f6be3e64e7b20c6d.cdfdcb69c56fd2546",
+        "uekb.224c50032f9284fd6df7a87e.c6a530be080355c56",
+        "uekb.224c50032f9284fd6df7a87e.c8b918f767a16b64b",
+        "uekb.224c50032f9284fd6df7a87e.ca94abd51d1cf9237",
+        "uekb.224c50032f9284fd6df7a87e.cc098ffdc453ce018",
+        "uekb.224c50032f9284fd6df7a87e.ccaacfd425a787f39",
+        "uekb.ae7942b50d418e3ab65981c6.c0a938adceeb45cc1",
+        "uekb.ae7942b50d418e3ab65981c6.c11fc60b23b23cd50",
+        "uekb.ae7942b50d418e3ab65981c6.c16de79a24baf39fd",
+        "uekb.ae7942b50d418e3ab65981c6.cbc97ca8db0f9d02f",
+        "uekb.ae7942b50d418e3ab65981c6.cc222f6f44b38dcce",
+        "uekb.ae7942b50d418e3ab65981c6.ccc91955bb4e87257",
+        "uekb.ae7942b50d418e3ab65981c6.cdd23df17d4eb9259"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.AsyncThreading"
+      ],
+      "claim_ids": [
+        "uekb.54a47114f6be3e64e7b20c6d.c9efc9be67332d0e4",
+        "uekb.54a47114f6be3e64e7b20c6d.ce3269cdd7d69415d",
+        "uekb.54a47114f6be3e64e7b20c6d.ce93b2aac047b4f8f",
+        "uekb.224c50032f9284fd6df7a87e.c06f763e7d4647d68",
+        "uekb.224c50032f9284fd6df7a87e.c3bb48f8692f96d67",
+        "uekb.224c50032f9284fd6df7a87e.c46c1641158c428fe",
+        "uekb.224c50032f9284fd6df7a87e.cee0d8bf8740109d4",
+        "uekb.ae7942b50d418e3ab65981c6.ca38a8533e942f0be",
+        "uekb.ae7942b50d418e3ab65981c6.ccabfd7d9bff74891"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Checklist or acceptance/test-boundary text defines review method and does not assert that a gameplay outcome passed.",
+      "claim_ids": [
+        "uekb.52743fd6f0c8454f2862c1b1.c6a57596d14c24b79",
+        "uekb.49d25a6225d301aff090335d.c7fa1ae5045538982",
+        "uekb.f5e755b3860e010caaa6a7b1.cd18ca0ce039e3bfa",
+        "uekb.700b69951f76581fdf788ae4.c0ce1ed1696d493a5",
+        "uekb.100c04138184ad1677de3870.c50a703eaf7d95159",
+        "uekb.ec78d30283c4dd09de64064b.c56a09fd1e2a1cb45",
+        "uekb.54a47114f6be3e64e7b20c6d.c89bc5db3cf224189"
+      ]
+    }
+  ]
+}

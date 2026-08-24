@@ -71,7 +71,7 @@ def test_doctor_mcp_smoke_reports_tools_and_ready_index(capsys, tmp_path):
     assert payload["mcp"]["checked"] is True
     assert payload["mcp"]["info_ready"] is True
     assert payload["mcp"]["tools"] == [
-        "ue_kb_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary",
+        "ue_kb_query", "ue_kb_federated_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary",
     ]
     assert payload["mcp"]["tools_complete"] is True
 
@@ -156,7 +156,7 @@ def test_info_json_success_exposes_manifest(capsys, tmp_path):
     rc = main(["info", "--db", str(db), "--model", "fake", "--json"])
     payload, _ = _json_stdout(capsys)
     assert rc == 0
-    assert payload["manifest"]["schema_version"] == 2
+    assert payload["manifest"]["schema_version"] == 3
     assert payload["stale"] is False
     assert payload["model_matches"] is True
 
@@ -217,7 +217,7 @@ def test_console_script_info_json_success(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
-    assert payload["manifest"]["schema_version"] == 2
+    assert payload["manifest"]["schema_version"] == 3
     assert payload["model_matches"] is True
 
 

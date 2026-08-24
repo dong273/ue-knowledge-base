@@ -47,6 +47,18 @@ Returns structured JSON:
   CLI list content hits first automatically, add `--demote-frontmatter`
   (fusion scores are untouched, only the ordering changes).
 
+For an opt-in trust envelope, add `--envelope`:
+
+```bash
+ue-kb query "Actor collision readback" --envelope --json
+```
+
+The envelope preserves the legacy hit list under `hits` and adds a query-level
+`coverage.status` (`supported`, `weak`, or `none`) plus per-hit provenance:
+`knowledge_id`, `scope`, `engine_versions`, `verification`, `verified_at`,
+`evidence_refs`, and `audit_status`. A `none` result is a coverage signal, not
+permission to invent project facts.
+
 ## MCP server (recommended for agent loops)
 
 Each `ue-kb query` spawns a process and loads the ~100MB embedding model
@@ -58,8 +70,10 @@ MCP tool — the model loads once per session:
 ue-kb serve                 # MCP stdio server; expose as an MCP client tool
 ```
 
-- Exposes tools: `ue_kb_query(query, top_k?, profile?)` returning the
+- Exposes tools: `ue_kb_query(query, top_k?, profile?, envelope?)` returning the
   same hit structure as `ue-kb query --json` (including `raw_score`);
+  `ue_kb_federated_query(query, top_k?, profile?, indexes?)` returns separate
+  public/project groups and never compares their raw scores;
   `ue_kb_info` (index status / chunk count / model match, call before
   querying to learn whether an index exists); `ue_kb_topics` (topic list);
   `ue_kb_glossary(topic?)` (terminology table). Also implements MCP
@@ -69,6 +83,17 @@ ue-kb serve                 # MCP stdio server; expose as an MCP client tool
   / any MCP-capable client; no API key, fully local.
 - The server is a plain JSON-RPC-over-stdio process: anything that can spawn
   a subprocess and read stdout can speak the protocol directly.
+
+To record the three latency numbers used by the v0.7 release checklist:
+
+```powershell
+python scripts/measure_mcp.py --db <PUBLIC_INDEX> --model BAAI/bge-small-en-v1.5 --baseline tests/data/mcp-baseline-v0.6.3.json --max-regression 0.20
+```
+
+The JSON report separates server startup, first query, and resident hot query;
+when `--baseline` is supplied it fails if any metric regresses by more than
+20% against the same-machine 0.6.x baseline. CI records these numbers but does
+not compare different runner hardware.
 
 Agent-side workflow:
 
@@ -97,13 +122,14 @@ in-process tools as any MCP client — the model loads once per session:
 ```toml
 # .codex/config.toml (project root)
 [mcp_servers.ue_kb]
-command = "C:/Users/15141/AppData/Local/ue-knowledge-base/venv/Scripts/ue-kb.exe"
+command = "<VENV_ROOT>/Scripts/ue-kb.exe"
 args = ["serve"]
 ```
 
 Then verify with `codex mcp list` (shows `ue_kb ... enabled`) and check the
-tools are visible in a session (`ue_kb_query` / `ue_kb_info` / `ue_kb_topics`
-/ `ue_kb_glossary`). For a local, machine-readable transport check, run:
+tools are visible in a session (`ue_kb_query` / `ue_kb_federated_query` /
+`ue_kb_info` / `ue_kb_topics` / `ue_kb_glossary`). For a local,
+machine-readable transport check, run:
 
 ```bash
 ue-kb doctor --json --mcp-smoke
@@ -121,12 +147,17 @@ Codex integration has three separate states:
 
 1. **Server configured** — `.codex/config.toml` contains the `ue_kb` stdio
    entry above.
-2. **Tools injected** — a fresh Codex session lists the four `ue_kb_*` tools.
+2. **Tools injected** — a fresh Codex session lists the five `ue_kb_*` tools.
 3. **Automatic use instructed** — the project `AGENTS.md` requires a KB query
    before the relevant UE implementation work.
 
 Only the third state makes use automatic for matching tasks; MCP registration
 alone is not an autonomous-use guarantee.
+
+When a question may involve project state, configure two MCP indexes and call
+`ue_kb_federated_query`. Treat the project group as authoritative for Beads,
+H1, acceptance evidence, levels, and current status; treat the public group as
+reusable UE guidance only.
 
 Autonomous use comes from instructions, not just tools — put the read/write
 protocol into the project `AGENTS.md` so the agent knows *when* to query

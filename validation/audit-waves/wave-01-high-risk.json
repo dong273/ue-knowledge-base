@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-01-high-risk",
+  "description": "UE Knowledge Base v0.7 first-wave trust audit",
+  "documents": [
+    {
+      "cohort": "A",
+      "path": "ue-networking-replication/SKILL.md",
+      "initial_content_sha256": "7e71d8b1317f82d22aa2d9b9e4f664840e8179bf5584984b5540d8006687a80f"
+    },
+    {
+      "cohort": "A",
+      "path": "ue-networking-replication/references/rpc-decision-guide.md",
+      "initial_content_sha256": "43468053f723e97d4af45c1e2b9c52f6b33a7165c56aeaf5b97cc3542d73eaab"
+    },
+    {
+      "cohort": "A",
+      "path": "ue-networking-replication/references/replication-patterns.md",
+      "initial_content_sha256": "2ad0da16405a429503faa8db5bb94080873ca8e082f57d36b0df2b7a993f1573"
+    },
+    {
+      "cohort": "A",
+      "path": "ue-code-review/SKILL.md",
+      "initial_content_sha256": "605670fbbde54c39150ef36153da432753b065f71e54e59d4399a7d0b32e5cec"
+    },
+    {
+      "cohort": "A",
+      "path": "ue-testing-debugging/references/fresh-pie-negative-evidence.md",
+      "initial_content_sha256": "583c34dd5adc9db62fd39574f50626315dbf5cf485ef0fbec76643eaa69656c6"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/SKILL.md",
+      "initial_content_sha256": "a20a17eb3517223fab4f3881266adacf1322551edf61d7e2d19f4d430c30c5ab"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/references/ue5.7-api-migration.md",
+      "initial_content_sha256": "6bdf586887dc998f8eabd8b77c00b4b0a6e5b1edcc2e1eec0312e7cc51df4d41"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/references/gas-setup-patterns.md",
+      "initial_content_sha256": "4427d7920aa82670ec09ef11afc565ace557ac5ca0cd58726678ad823c47d976"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/references/gameplay-effect-reference.md",
+      "initial_content_sha256": "5d5927d30ad02ab3441c519845a4c05a43c1dfe23d16d5cf36d25d82ddade414"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/references/ability-task-reference.md",
+      "initial_content_sha256": "12f1e5aa0a82bc1ec89b2a0c48b222332d848074d1412a52abeaf3a699254ad1"
+    },
+    {
+      "cohort": "B",
+      "path": "ue-gameplay-abilities/references/gas-input-integration.md",
+      "initial_content_sha256": "fe36e0f8f751fd014a9ac187a04470a2bdebaf6da7a5ff7f87613e325659e60b"
+    },
+    {
+      "cohort": "C",
+      "path": "ue-module-build-system/SKILL.md",
+      "initial_content_sha256": "3b0a58d21731b1e66acc357c564e8c28aae14a6606d1f71d08c5d808e81184ac"
+    },
+    {
+      "cohort": "C",
+      "path": "ue-module-build-system/references/build-cs-reference.md",
+      "initial_content_sha256": "dadc1af31e91924ce92d3ca6c81154f4b85e7dac1dfa48616874caee77603c80"
+    },
+    {
+      "cohort": "C",
+      "path": "ue-module-build-system/references/common-build-errors.md",
+      "initial_content_sha256": "8a7b66398395a34c3534bba127a400e5e9425bcbdd3f316a37284fbe6782e69b"
+    },
+    {
+      "cohort": "C",
+      "path": "ue-module-build-system/references/windows-non-ascii-project-paths.md",
+      "initial_content_sha256": "1c5bb696670d82bb62ce29f644079ddf86a5f71041c4842b9cadb4a7cbfdde25"
+    }
+  ]
+}

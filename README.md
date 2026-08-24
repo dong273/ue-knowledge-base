@@ -103,11 +103,14 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb query "..."` | Hybrid search by default; top-k hits with source + heading | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | Fall back to 0.4-style vector-only ranking | `ue-kb query "GAS" --profile vector` |
 | `ue-kb query --demote-frontmatter` | List content chunks before topic-summary chunks; fusion scores unchanged | `ue-kb query "GAS" --demote-frontmatter` |
+| `ue-kb query --envelope` | Add `coverage` and evidence metadata; `none` answers abstain instead of returning misleading hits | `ue-kb query "project H1" --envelope --json` |
+| `ue-kb audit-corpus` | Audit version, source and verification metadata for every document | `ue-kb audit-corpus --json` |
+| `ue-kb federated-query` | Query public/project indexes in separate score groups | `ue-kb federated-query "question" --index public=<PUBLIC_INDEX> --index project=<PROJECT_INDEX> --json` |
 | `ue-kb info` | Manifest, generation, staleness and model-match status | `ue-kb info --json` |
 | `ue-kb doctor` | Read-only package, index and MCP runtime diagnostics | `ue-kb doctor --json --mcp-smoke` |
 | `ue-kb download-model` | One-time embedding model download | `ue-kb download-model` |
 | `ue-kb serve` | MCP stdio server: load the model once, answer queries in process (fast agent loops) | `ue-kb serve` |
-| `ue-kb serve` tools | MCP tools: `ue_kb_query` (search), `ue_kb_info` (index status), `ue_kb_topics` (topic list), `ue_kb_glossary` (terminology table) + `resources/list` / `resources/read` | via any MCP client |
+| `ue-kb serve` tools | MCP tools: `ue_kb_query`, `ue_kb_federated_query`, `ue_kb_info`, `ue_kb_topics`, `ue_kb_glossary` + `resources/list` / `resources/read` | via any MCP client |
 | `--json` | Machine-readable output (agents) | `ue-kb query "..." --json` |
 | `--db <dir>` | Custom chroma dir (default: user data dir, see FAQ) | `ue-kb build --db C:/uekb/.chroma_db` |
 | `--source <dir>` | Custom corpus dir (default: bundled corpus) | `ue-kb build --source my-docs/` |
@@ -136,6 +139,10 @@ on every command. Integration examples in
 - **MCP server** (`ue-kb serve`) — the model loads once per session, so
   query loops skip the ~12s cold start entirely
 - Plain **Python snippet** for any custom pipeline
+
+Release and candidate-package gates are documented in
+[docs/releasing.md](docs/releasing.md); v0.7 remains blocked until the strict
+90-document audit and UE 5.7 evidence manifest pass.
 
 ## Extending the corpus
 
@@ -173,6 +180,11 @@ locally and **not redistributed**, out of respect for Epic's copyright).
   opt-in `--demote-frontmatter`, `requires-python` capped to `<3.13`
   (chroma-hnswlib has no 3.13+ Windows wheels), UTF-8-safe MCP server entry
   point, cached model load for the Python API
+- **v0.7.0 (in development, release-blocked)** — provenance sidecars and a
+  full corpus audit, schema-v3 metadata, opt-in coverage envelopes, separate
+  public/project federated queries, and MCP `ue_kb_federated_query`. No release
+  is cut until all 90 documents have verification evidence and the UE 5.7
+  validation gate is complete.
 - **next candidates** — agent write-back protocol (verified material routes
   back into the corpus through the publish pipeline; see
   `docs/agent-integration.md` Codex section), more bilingual topics,
