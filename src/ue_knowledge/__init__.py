@@ -5,7 +5,7 @@ Build a local vector index from the bundled knowledge/ markdown corpus
 or from Python. Zero API cost, fully offline after the one-time model download.
 """
 
-__version__ = "0.6.3"
+__version__ = "0.7.0"
 
 # Public audit seam; importing it here keeps the v0.7 trust contract discoverable
 # without changing the existing CLI/runtime imports.
