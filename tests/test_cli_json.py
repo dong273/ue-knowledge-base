@@ -124,14 +124,33 @@ def test_doctor_json_reports_non_ascii_index_path(capsys, tmp_path):
     assert payload["index"]["corpus"]["stale"] is None
 
 
-def test_doctor_package_identity_matches_ci_install_mode(capsys, tmp_path):
+def test_doctor_package_identity_matches_ci_install_mode(tmp_path):
     mode = os.environ.get("UE_KB_EXPECT_PACKAGE_MODE")
     if not mode:
         pytest.skip("CI install mode not requested")
 
-    rc = main(["doctor", "--db", str(tmp_path / "missing"), "--model", "fake", "--json"])
-    payload, _ = _json_stdout(capsys)
-    assert rc == 1
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "ue_knowledge.cli",
+            "doctor",
+            "--db",
+            str(tmp_path / "missing"),
+            "--model",
+            "fake",
+            "--json",
+        ],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=30,
+    )
+    assert result.returncode == 1, result.stderr
+    payload = json.loads(result.stdout)
     module_path = Path(payload["package"]["module_path"])
     if mode == "source":
         assert module_path.is_relative_to(Path(__file__).resolve().parents[1] / "src")

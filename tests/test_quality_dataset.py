@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+from ue_knowledge.chunking import collect_markdown
+
 
 def test_golden_queries_cover_31_topics_and_124_unique_queries():
     path = Path(__file__).parent / "data" / "golden_queries.json"
@@ -43,9 +45,16 @@ def test_passage_expected_covers_heldout_queries_with_specific_sections():
     }
     assert {entry["query"] for entry in entries} == heldout_texts
 
+    corpus = Path(__file__).parents[1] / "src" / "ue_knowledge" / "knowledge"
+    available_sections = {
+        (chunk["source"], chunk["heading"])
+        for chunk in collect_markdown(corpus)
+    }
+
     for entry in entries:
         assert entry["expected"], entry["query"]
         expected = entry["expected"][0]
         assert expected["heading"].strip() != "前言", entry["query"]
         assert expected["source"].replace("\\", "/").startswith(entry["topic"] + "/")
         assert expected["heading"].strip(), entry["query"]
+        assert (expected["source"], expected["heading"]) in available_sections, entry["query"]

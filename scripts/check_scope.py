@@ -9,12 +9,18 @@ import tarfile
 import zipfile
 from pathlib import Path
 
-FORBIDDEN = (
+FORBIDDEN_CONTENT = (
     re.compile(r"ZSWM", re.IGNORECASE),
-    re.compile(r"Source-Registry\.tsv", re.IGNORECASE),
     re.compile(r"我的项目"),
     re.compile(r"(?:^|[\\/])\.beads(?:[\\/]|$)"),
     re.compile(r"[A-Za-z]:[\\/]unreal projects[\\/]", re.IGNORECASE),
+)
+
+# A public command may name the project registry contract, but the registry
+# file itself must never be present in a public wheel or sdist.
+FORBIDDEN_FILENAMES = (
+    *FORBIDDEN_CONTENT,
+    re.compile(r"(?:^|[\\/])Source-Registry\.tsv$", re.IGNORECASE),
 )
 
 
@@ -38,11 +44,14 @@ def _artifact_files(path: Path):
 def scan_artifact(path: Path) -> list[dict[str, str]]:
     findings: list[dict[str, str]] = []
     for name, data in _artifact_files(path):
-        name_match = next((pattern.pattern for pattern in FORBIDDEN if pattern.search(name)), None)
+        name_match = next(
+            (pattern.pattern for pattern in FORBIDDEN_FILENAMES if pattern.search(name)),
+            None,
+        )
         if name_match:
             findings.append({"file": name, "pattern": name_match, "location": "filename"})
         text = data.decode("utf-8", errors="replace")
-        for pattern in FORBIDDEN:
+        for pattern in FORBIDDEN_CONTENT:
             if pattern.search(text):
                 findings.append({"file": name, "pattern": pattern.pattern, "location": "content"})
     return findings

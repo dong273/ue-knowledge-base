@@ -27,7 +27,7 @@ jobs:
       - name: Unit tests (chunking + CLI + default paths)
         env:
           UE_KB_EXPECT_PACKAGE_MODE: source
-        run: pip install pytest && pytest tests/ -v
+        run: pip install pytest && python -m pytest tests/ -v
       - name: Doctor source identity
         env:
           UE_KB_EXPECT_PACKAGE_MODE: source
@@ -116,7 +116,7 @@ jobs:
           path: mcp-timing-report.json
       - name: Corpus shipped intact (chunk count sanity)
         run: |
-          fresh/bin/ue-kb info --db .smoke-index --json | python -c "import json,sys; d=json.load(sys.stdin); assert d['documents'] >= 1500, d['documents']; print('chunks ok:', d['documents'])"
+          fresh/bin/ue-kb info --db .smoke-index --json | python -c "import json,sys; d=json.load(sys.stdin); assert d['manifest']['corpus']['documents'] == 90, d; assert d['documents'] == d['manifest']['corpus']['chunks'], d; print('corpus ok:', d['manifest']['corpus'])"
 
   privacy:
     # The corpus ships inside the published wheel: personal paths, private

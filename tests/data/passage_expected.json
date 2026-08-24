@@ -4,8 +4,8 @@
     "topic": "ue-actor-component-architecture",
     "expected": [
       {
-        "source": "ue-actor-component-architecture/SKILL.md",
-        "heading": "UE Actor-Component Architecture / Actor Lifecycle"
+        "source": "ue-actor-component-architecture/references/actor-lifecycle.md",
+        "heading": "Actor Lifecycle Reference / Initialization order"
       }
     ]
   },
@@ -15,7 +15,7 @@
     "expected": [
       {
         "source": "ue-actor-component-architecture/references/actor-lifecycle.md",
-        "heading": "Actor Lifecycle Reference / Complete Lifecycle Diagram"
+        "heading": "Actor Lifecycle Reference / BeginPlay"
       }
     ]
   },
@@ -24,8 +24,8 @@
     "topic": "ue-ai-navigation",
     "expected": [
       {
-        "source": "ue-ai-navigation/references/behavior-tree-patterns.md",
-        "heading": "Behavior Tree Patterns"
+        "source": "ue-ai-navigation/SKILL.md",
+        "heading": "UE AI Navigation / Behavior Tree ownership"
       }
     ]
   },
@@ -34,8 +34,8 @@
     "topic": "ue-ai-navigation",
     "expected": [
       {
-        "source": "ue-ai-navigation/SKILL.md",
-        "heading": "UE AI and Navigation / AI Architecture"
+        "source": "ue-ai-navigation/references/behavior-tree-patterns.md",
+        "heading": "Behavior Tree Contracts"
       }
     ]
   },
@@ -44,8 +44,8 @@
     "topic": "ue-animation-system",
     "expected": [
       {
-        "source": "ue-animation-system/references/locomotion-setup.md",
-        "heading": "Locomotion Setup Reference / State Machine Setup — Locomotion State Machine"
+        "source": "ue-animation-system/SKILL.md",
+        "heading": "UE Animation System / Locomotion inputs"
       }
     ]
   },
@@ -54,8 +54,8 @@
     "topic": "ue-animation-system",
     "expected": [
       {
-        "source": "ue-animation-system/SKILL.md",
-        "heading": "UE Animation System / Architecture"
+        "source": "ue-animation-system/references/locomotion-setup.md",
+        "heading": "Locomotion Data Setup / Character movement state"
       }
     ]
   },
@@ -64,8 +64,8 @@
     "topic": "ue-async-threading",
     "expected": [
       {
-        "source": "ue-async-threading/SKILL.md",
-        "heading": "UE Async and Threading / Pattern Selection Guide"
+        "source": "ue-async-threading/references/threading-patterns.md",
+        "heading": "Async and Task Patterns / UE Tasks"
       }
     ]
   },
@@ -75,7 +75,7 @@
     "expected": [
       {
         "source": "ue-async-threading/SKILL.md",
-        "heading": "UE Async and Threading / Synchronization Primitives / FCriticalSection (Recursive Mutex)"
+        "heading": "UE Async and Threading / Choose a primitive"
       }
     ]
   },
@@ -85,7 +85,7 @@
     "expected": [
       {
         "source": "ue-audio-system/SKILL.md",
-        "heading": "UE Audio System"
+        "heading": "UE Audio System / Spatial settings"
       }
     ]
   },
@@ -95,7 +95,7 @@
     "expected": [
       {
         "source": "ue-audio-system/SKILL.md",
-        "heading": "UE Audio System"
+        "heading": "UE Audio System / Spatial settings"
       }
     ]
   },
@@ -104,8 +104,8 @@
     "topic": "ue-character-movement",
     "expected": [
       {
-        "source": "ue-character-movement/references/third-person-setup.md",
-        "heading": "Third-Person Character Setup / Component Layout / Constructor pattern"
+        "source": "ue-character-movement/SKILL.md",
+        "heading": "UE Character Movement / Configure built-in movement"
       }
     ]
   },
@@ -114,8 +114,8 @@
     "topic": "ue-character-movement",
     "expected": [
       {
-        "source": "ue-character-movement/references/third-person-setup.md",
-        "heading": "Third-Person Character Setup / Component Layout / Constructor pattern"
+        "source": "ue-character-movement/SKILL.md",
+        "heading": "UE Character Movement / Configure built-in movement"
       }
     ]
   },
@@ -125,7 +125,7 @@
     "expected": [
       {
         "source": "ue-code-review/SKILL.md",
-        "heading": "UE C++ 代码审查规则 / 使用方法 / 与 requesting-code-review 配合"
+        "heading": "UE C++ Code Review / Review checklist"
       }
     ]
   },
@@ -135,7 +135,7 @@
     "expected": [
       {
         "source": "ue-code-review/SKILL.md",
-        "heading": "UE C++ 代码审查规则 / 1. 宏 & 反射安全 / UFUNCTION 检查"
+        "heading": "UE C++ Code Review / Review checklist"
       }
     ]
   },
@@ -145,7 +145,7 @@
     "expected": [
       {
         "source": "ue-cpp-foundations/SKILL.md",
-        "heading": "UE C++ Foundations / Memory & Garbage Collection"
+        "heading": "UE C++ Foundations / UObject references"
       }
     ]
   },
@@ -155,7 +155,7 @@
     "expected": [
       {
         "source": "ue-cpp-foundations/SKILL.md",
-        "heading": "UE C++ Foundations / Before You Start"
+        "heading": "UE C++ Foundations / UObject references"
       }
     ]
   },
@@ -164,8 +164,8 @@
     "topic": "ue-data-assets-tables",
     "expected": [
       {
-        "source": "ue-data-assets-tables/references/data-driven-design.md",
-        "heading": "Data-Driven Design in Unreal Engine"
+        "source": "ue-data-assets-tables/SKILL.md",
+        "heading": "UE Data Assets and Tables / Selection rule"
       }
     ]
   },
@@ -175,7 +175,7 @@
     "expected": [
       {
         "source": "ue-data-assets-tables/SKILL.md",
-        "heading": "UE Data Assets and Tables"
+        "heading": "UE Data Assets and Tables / Selection rule"
       }
     ]
   },
@@ -185,7 +185,7 @@
     "expected": [
       {
         "source": "ue-editor-tools/SKILL.md",
-        "heading": "UE Editor Tools / Editor Utility Widgets"
+        "heading": "UE Editor Tools / Transactions"
       }
     ]
   },
@@ -195,7 +195,7 @@
     "expected": [
       {
         "source": "ue-editor-tools/SKILL.md",
-        "heading": "UE Editor Tools / Before You Start"
+        "heading": "UE Editor Tools / Transactions"
       }
     ]
   },
@@ -204,8 +204,8 @@
     "topic": "ue-game-features",
     "expected": [
       {
-        "source": "ue-game-features/SKILL.md",
-        "heading": "UE Game Features and Modular Gameplay / Plugin State Machine"
+        "source": "ue-game-features/references/game-feature-patterns.md",
+        "heading": "Game Feature Lifecycle Patterns / Load and activate"
       }
     ]
   },
@@ -214,8 +214,8 @@
     "topic": "ue-game-features",
     "expected": [
       {
-        "source": "ue-game-features/SKILL.md",
-        "heading": "UE Game Features and Modular Gameplay / UGameFeaturesSubsystem"
+        "source": "ue-game-features/references/game-feature-patterns.md",
+        "heading": "Game Feature Lifecycle Patterns / Load and activate"
       }
     ]
   },
@@ -224,8 +224,8 @@
     "topic": "ue-gameplay-abilities",
     "expected": [
       {
-        "source": "ue-gameplay-abilities/SKILL.md",
-        "heading": "Gameplay Ability System (GAS) / GameplayAbilities / ActivateAbility Pattern"
+        "source": "ue-gameplay-abilities/references/gameplay-effect-reference.md",
+        "heading": "GameplayEffect Reference / Runtime acceptance"
       }
     ]
   },
@@ -234,8 +234,8 @@
     "topic": "ue-gameplay-abilities",
     "expected": [
       {
-        "source": "ue-gameplay-abilities/SKILL.md",
-        "heading": "Gameplay Ability System (GAS) / GAS Architecture Overview"
+        "source": "ue-gameplay-abilities/references/gameplay-effect-reference.md",
+        "heading": "GameplayEffect Reference / Runtime acceptance"
       }
     ]
   },
@@ -245,7 +245,7 @@
     "expected": [
       {
         "source": "ue-gameplay-framework/SKILL.md",
-        "heading": "UE Gameplay Framework / GameMode: Registration and Spawn Pipeline"
+        "heading": "UE Gameplay Framework / Authority and presence"
       }
     ]
   },
@@ -255,7 +255,7 @@
     "expected": [
       {
         "source": "ue-gameplay-framework/SKILL.md",
-        "heading": "UE Gameplay Framework / GameMode: Registration and Spawn Pipeline"
+        "heading": "UE Gameplay Framework / Placement rule"
       }
     ]
   },
@@ -265,7 +265,7 @@
     "expected": [
       {
         "source": "ue-input-system/SKILL.md",
-        "heading": "UE Enhanced Input System / Mapping Context Priority"
+        "heading": "UE Enhanced Input System / Add a mapping context"
       }
     ]
   },
@@ -275,7 +275,7 @@
     "expected": [
       {
         "source": "ue-input-system/SKILL.md",
-        "heading": "UE Enhanced Input System / Context Check"
+        "heading": "UE Enhanced Input System / Add a mapping context"
       }
     ]
   },
@@ -284,8 +284,8 @@
     "topic": "ue-knowledge-rag",
     "expected": [
       {
-        "source": "ue-knowledge-rag/SKILL.md",
-        "heading": "UE Knowledge Base (RAG) / 数据源 / Layer 1: 随包分发的技能文档"
+        "source": "ue-knowledge-rag/references/query-optimization.md",
+        "heading": "Query Optimization"
       }
     ]
   },
@@ -295,7 +295,7 @@
     "expected": [
       {
         "source": "ue-knowledge-rag/references/query-optimization.md",
-        "heading": "UE Knowledge Base — Query Optimization Guide / 查询重写与术语扩展"
+        "heading": "Query Optimization"
       }
     ]
   },
@@ -304,8 +304,8 @@
     "topic": "ue-mass-entity",
     "expected": [
       {
-        "source": "ue-mass-entity/SKILL.md",
-        "heading": "UE Mass Entity Framework / Reference Files"
+        "source": "ue-mass-entity/references/mass-entity-patterns.md",
+        "heading": "Mass Entity Query Patterns / Declare requirements"
       }
     ]
   },
@@ -314,8 +314,8 @@
     "topic": "ue-mass-entity",
     "expected": [
       {
-        "source": "ue-mass-entity/SKILL.md",
-        "heading": "UE Mass Entity Framework / FMassEntityQuery / Fragment-Based Chunk Filtering"
+        "source": "ue-mass-entity/references/mass-entity-patterns.md",
+        "heading": "Mass Entity Query Patterns"
       }
     ]
   },
@@ -324,8 +324,8 @@
     "topic": "ue-materials-rendering",
     "expected": [
       {
-        "source": "ue-materials-rendering/references/material-parameter-reference.md",
-        "heading": "Material Parameter Reference / API Quick Reference / UMaterialInstanceDynamic (MaterialInstanceDynamic.h)"
+        "source": "ue-materials-rendering/SKILL.md",
+        "heading": "UE Materials and Rendering / Parameter updates"
       }
     ]
   },
@@ -335,7 +335,7 @@
     "expected": [
       {
         "source": "ue-materials-rendering/SKILL.md",
-        "heading": "UE Materials and Rendering / Core Patterns / 1. Dynamic Material Instances (MID) / Additional MID Operations"
+        "heading": "UE Materials and Rendering / Parameter updates"
       }
     ]
   },
@@ -344,8 +344,8 @@
     "topic": "ue-module-build-system",
     "expected": [
       {
-        "source": "ue-module-build-system/references/common-build-errors.md",
-        "heading": "Common UE Build Errors: Causes and Solutions / Circular Dependency / Symptom"
+        "source": "ue-module-build-system/SKILL.md",
+        "heading": "UE Module and Build System / Public and private dependencies"
       }
     ]
   },
@@ -354,8 +354,8 @@
     "topic": "ue-module-build-system",
     "expected": [
       {
-        "source": "ue-module-build-system/references/build-cs-reference.md",
-        "heading": "Build.cs Complete Field Reference / Class Structure"
+        "source": "ue-module-build-system/SKILL.md",
+        "heading": "UE Module and Build System / Public and private dependencies"
       }
     ]
   },
@@ -365,7 +365,7 @@
     "expected": [
       {
         "source": "ue-networking-replication/references/rpc-decision-guide.md",
-        "heading": "RPC Decision Guide / RPC Type Quick Reference"
+        "heading": "RPC Decision Guide / Server RPC"
       }
     ]
   },
@@ -375,7 +375,7 @@
     "expected": [
       {
         "source": "ue-networking-replication/references/rpc-decision-guide.md",
-        "heading": "RPC Decision Guide / RPC Type Quick Reference"
+        "heading": "RPC Decision Guide / Server RPC"
       }
     ]
   },
@@ -384,8 +384,8 @@
     "topic": "ue-niagara-effects",
     "expected": [
       {
-        "source": "ue-niagara-effects/references/niagara-data-interfaces.md",
-        "heading": "Niagara Data Interfaces — Built-In Reference / Export DI / UNiagaraDataInterfaceExport"
+        "source": "ue-niagara-effects/references/niagara-parameter-types.md",
+        "heading": "Niagara Runtime Parameter Types / Vector parameter"
       }
     ]
   },
@@ -395,7 +395,7 @@
     "expected": [
       {
         "source": "ue-niagara-effects/references/niagara-parameter-types.md",
-        "heading": "Niagara Parameter Types — C++ to Niagara Type Mapping / Parameter Namespace Rules"
+        "heading": "Niagara Runtime Parameter Types / Vector parameter"
       }
     ]
   },
@@ -404,8 +404,8 @@
     "topic": "ue-physics-collision",
     "expected": [
       {
-        "source": "ue-physics-collision/references/collision-channel-setup.md",
-        "heading": "Collision Channel Setup Reference / DefaultEngine.ini Configuration / Declaring a Custom Trace Channel"
+        "source": "ue-physics-collision/references/trace-patterns.md",
+        "heading": "Collision Trace Patterns / Line trace by channel"
       }
     ]
   },
@@ -414,8 +414,8 @@
     "topic": "ue-physics-collision",
     "expected": [
       {
-        "source": "ue-physics-collision/SKILL.md",
-        "heading": "UE Physics & Collision"
+        "source": "ue-physics-collision/references/trace-patterns.md",
+        "heading": "Collision Trace Patterns / Line trace by channel"
       }
     ]
   },
@@ -425,7 +425,7 @@
     "expected": [
       {
         "source": "ue-plugin-installation/SKILL.md",
-        "heading": "UE Plugin Installation / Workflow / 1. Feasibility Research"
+        "heading": "UE Plugin Installation / Time-sensitive discovery"
       }
     ]
   },
@@ -435,7 +435,7 @@
     "expected": [
       {
         "source": "ue-plugin-installation/SKILL.md",
-        "heading": "UE Plugin Installation / Workflow / 1. Feasibility Research"
+        "heading": "UE Plugin Installation / Time-sensitive discovery"
       }
     ]
   },
@@ -445,7 +445,7 @@
     "expected": [
       {
         "source": "ue-procedural-generation/SKILL.md",
-        "heading": "ue-procedural-generation / 1. PCG Framework (UE 5.2+)"
+        "heading": "UE Procedural Generation / PCG component"
       }
     ]
   },
@@ -455,7 +455,7 @@
     "expected": [
       {
         "source": "ue-procedural-generation/SKILL.md",
-        "heading": "ue-procedural-generation / 2. ProceduralMeshComponent"
+        "heading": "UE Procedural Generation"
       }
     ]
   },
@@ -465,7 +465,7 @@
     "expected": [
       {
         "source": "ue-project-context/SKILL.md",
-        "heading": "UE Project Context"
+        "heading": "Unreal Project Context Workflow"
       }
     ]
   },
@@ -475,7 +475,7 @@
     "expected": [
       {
         "source": "ue-project-context/SKILL.md",
-        "heading": "UE Project Context"
+        "heading": "Unreal Project Context Workflow"
       }
     ]
   },
@@ -485,7 +485,7 @@
     "expected": [
       {
         "source": "ue-project-creation/SKILL.md",
-        "heading": "UE Project Creation — Standard Workflow / 方式 B：克隆模板 + CLI（推荐用于自动化） / Step 5：生成项目文件"
+        "heading": "UE Project Creation / Generate project files"
       }
     ]
   },
@@ -495,7 +495,7 @@
     "expected": [
       {
         "source": "ue-project-creation/SKILL.md",
-        "heading": "UE Project Creation — Standard Workflow / 方式 B：克隆模板 + CLI（推荐用于自动化） / Step 6：验证项目"
+        "heading": "UE Project Creation / Generate project files"
       }
     ]
   },
@@ -504,8 +504,8 @@
     "topic": "ue-sequencer-cinematics",
     "expected": [
       {
-        "source": "ue-sequencer-cinematics/references/sequencer-patterns.md",
-        "heading": "Sequencer Patterns Reference / Pattern 1: Full-Screen Dialogue Cutscene"
+        "source": "ue-sequencer-cinematics/SKILL.md",
+        "heading": "UE Sequencer and Cinematics / Create a player"
       }
     ]
   },
@@ -515,7 +515,7 @@
     "expected": [
       {
         "source": "ue-sequencer-cinematics/SKILL.md",
-        "heading": "Skill: ue-sequencer-cinematics / Build.cs Modules"
+        "heading": "UE Sequencer and Cinematics"
       }
     ]
   },
@@ -524,8 +524,8 @@
     "topic": "ue-serialization-savegames",
     "expected": [
       {
-        "source": "ue-serialization-savegames/references/save-system-architecture.md",
-        "heading": "Save System Architecture / 2. Save Manager Subsystem"
+        "source": "ue-serialization-savegames/SKILL.md",
+        "heading": "UE Serialization and Save Games / Create and write a slot"
       }
     ]
   },
@@ -535,7 +535,7 @@
     "expected": [
       {
         "source": "ue-serialization-savegames/SKILL.md",
-        "heading": "UE Serialization & Save Games"
+        "heading": "UE Serialization and Save Games / Create and write a slot"
       }
     ]
   },
@@ -544,8 +544,8 @@
     "topic": "ue-state-trees",
     "expected": [
       {
-        "source": "ue-state-trees/SKILL.md",
-        "heading": "UE State Trees / Evaluators"
+        "source": "ue-state-trees/references/state-tree-patterns.md",
+        "heading": "StateTree Node Patterns / Condition boundary"
       }
     ]
   },
@@ -554,8 +554,8 @@
     "topic": "ue-state-trees",
     "expected": [
       {
-        "source": "ue-state-trees/SKILL.md",
-        "heading": "UE State Trees / Tasks / FStateTreeTaskBase API"
+        "source": "ue-state-trees/references/state-tree-patterns.md",
+        "heading": "StateTree Node Patterns"
       }
     ]
   },
@@ -564,8 +564,8 @@
     "topic": "ue-testing-debugging",
     "expected": [
       {
-        "source": "ue-testing-debugging/references/automation-test-patterns.md",
-        "heading": "Automation Test Patterns"
+        "source": "ue-testing-debugging/SKILL.md",
+        "heading": "UE Testing and Debugging / Automation test"
       }
     ]
   },
@@ -575,7 +575,7 @@
     "expected": [
       {
         "source": "ue-testing-debugging/SKILL.md",
-        "heading": "UE Testing & Debugging / Before You Start"
+        "heading": "UE Testing and Debugging / Automation test"
       }
     ]
   },
@@ -584,8 +584,8 @@
     "topic": "ue-ui-umg-slate",
     "expected": [
       {
-        "source": "ue-ui-umg-slate/SKILL.md",
-        "heading": "UE UI: UMG, Slate, and Common UI / 2. BindWidget Pattern"
+        "source": "ue-ui-umg-slate/references/widget-types.md",
+        "heading": "Widget Type Boundaries / BindWidget"
       }
     ]
   },
@@ -595,7 +595,7 @@
     "expected": [
       {
         "source": "ue-ui-umg-slate/references/widget-types.md",
-        "heading": "UMG Widget Type Reference / UButton"
+        "heading": "Widget Type Boundaries / BindWidget"
       }
     ]
   },
@@ -605,7 +605,7 @@
     "expected": [
       {
         "source": "ue-world-level-streaming/SKILL.md",
-        "heading": "UE World & Level Streaming / World Partition (UE5) / HLOD"
+        "heading": "UE World and Level Streaming / World Partition"
       }
     ]
   },
@@ -615,7 +615,7 @@
     "expected": [
       {
         "source": "ue-world-level-streaming/SKILL.md",
-        "heading": "UE World & Level Streaming"
+        "heading": "UE World and Level Streaming / World Partition"
       }
     ]
   }

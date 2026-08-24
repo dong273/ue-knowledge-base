@@ -86,7 +86,14 @@ def test_mcp_startup_metric_stops_at_initialize_readiness(monkeypatch):
             return 0
 
     process = FakeProcess()
-    monkeypatch.setattr(measure_mcp.subprocess, "Popen", lambda *args, **kwargs: process)
+    captured = {}
+
+    def fake_popen(*args, **kwargs):
+        captured.update(kwargs)
+        return process
+
+    monkeypatch.setenv("PYTHONPATH", "selected-installation")
+    monkeypatch.setattr(measure_mcp.subprocess, "Popen", fake_popen)
     ticks = iter((10.0, 10.2))
     monkeypatch.setattr(measure_mcp.time, "perf_counter", lambda: next(ticks))
     roundtrips = iter((
@@ -101,3 +108,4 @@ def test_mcp_startup_metric_stops_at_initialize_readiness(monkeypatch):
     assert payload["server_startup_seconds"] == 1.5
     assert payload["first_query_seconds"] == 2.0
     assert payload["hot_query_seconds"] == 0.1
+    assert captured["env"]["PYTHONPATH"] == "selected-installation"

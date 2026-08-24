@@ -28,7 +28,9 @@ def _roundtrip(process: subprocess.Popen, payload: dict) -> tuple[dict, float]:
 
 
 def measure(db: Path, model: str, query_text: str) -> dict:
-    env = {**os.environ, "PYTHONPATH": str(Path(__file__).resolve().parent.parent / "src")}
+    # Preserve the caller's selected installation. In fresh-wheel CI, forcing
+    # the repository's src/ directory here would silently benchmark source.
+    env = dict(os.environ)
     command = [
         sys.executable, "-m", "ue_knowledge.cli", "serve",
         "--db", str(db), "--model", model,
