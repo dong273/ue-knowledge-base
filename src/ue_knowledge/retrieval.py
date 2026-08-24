@@ -58,35 +58,32 @@ def expand_query(text: str) -> str:
     normalized = normalize(text)
     additions: list[str] = []
     occupied: list[tuple[int, int]] = []
-    aliases: list[tuple[str, dict]] = []
+    candidates: list[tuple[str, tuple[str, ...]]] = []
     for entry in glossary():
         for alias in entry.get("aliases", []):
-            aliases.append((normalize(alias), entry))
-    aliases.sort(key=lambda item: len(item[0]), reverse=True)
+            candidates.append(
+                (
+                    normalize(alias),
+                    (entry["canonical"], *entry.get("identifiers", [])),
+                )
+            )
 
-    for alias, entry in aliases:
+    if _has_cjk(normalized):
+        candidates.extend((normalize(phrase), concepts) for phrase, concepts in zh_dict())
+
+    # Match both sources together so a long, passage-specific spoken phrase
+    # wins over a shorter generic glossary alias inside the same text span.
+    candidates.sort(key=lambda item: len(item[0]), reverse=True)
+    for phrase, concepts in candidates:
         start = 0
-        while alias and (found := normalized.find(alias, start)) >= 0:
-            interval = (found, found + len(alias))
+        while phrase and (found := normalized.find(phrase, start)) >= 0:
+            interval = (found, found + len(phrase))
             start = interval[1]
             if any(not (interval[1] <= left or interval[0] >= right) for left, right in occupied):
                 continue
             occupied.append(interval)
-            additions.extend([entry["canonical"], *entry.get("identifiers", [])])
+            additions.extend(concepts)
             break
-
-    if _has_cjk(normalized):
-        phrases = sorted(zh_dict(), key=lambda item: len(item[0]), reverse=True)
-        for phrase, concepts in phrases:
-            start = 0
-            while phrase and (found := normalized.find(phrase, start)) >= 0:
-                interval = (found, found + len(phrase))
-                start = interval[1]
-                if any(not (interval[1] <= left or interval[0] >= right) for left, right in occupied):
-                    continue
-                occupied.append(interval)
-                additions.extend(concepts)
-                break
 
     seen: set[str] = set()
     unique: list[str] = []

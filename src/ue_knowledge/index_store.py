@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-INDEX_SCHEMA_VERSION = 2
+INDEX_SCHEMA_VERSION = 3
 CURRENT_FILE = "CURRENT"
 GENERATIONS_DIR = "generations"
 
@@ -29,13 +29,30 @@ class IndexSchemaMismatch(IndexErrorBase):
     action = "ue-kb build --force"
 
 
-def corpus_fingerprint(source_dir: Path) -> tuple[str, int]:
-    """Hash normalized relative paths and complete file bytes."""
+def corpus_fingerprint(
+    source_dir: Path,
+    extra_files: list[Path] | None = None,
+) -> tuple[str, int]:
+    """Hash Markdown plus optional sidecar files.
+
+    Sidecars are tagged separately so changing provenance invalidates an
+    otherwise unchanged index.  The document count remains the Markdown
+    count for backwards-compatible inventory semantics.
+    """
     digest = hashlib.sha256()
     files = sorted(source_dir.rglob("*.md"))
     for path in files:
         relative = path.relative_to(source_dir).as_posix().encode("utf-8")
         content = path.read_bytes()
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    for extra in sorted((Path(path) for path in (extra_files or [])), key=lambda p: str(p)):
+        if not extra.is_file():
+            continue
+        relative = f"@sidecar/{extra.name}".encode("utf-8")
+        content = extra.read_bytes()
         digest.update(len(relative).to_bytes(4, "big"))
         digest.update(relative)
         digest.update(len(content).to_bytes(8, "big"))

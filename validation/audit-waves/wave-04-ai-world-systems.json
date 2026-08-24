@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-04-ai-world-systems",
+  "description": "AI navigation, StateTree, Mass Entity, Game Features, world streaming, and project-context methodology.",
+  "documents": [
+    {"cohort": "A", "path": "ue-ai-navigation/SKILL.md", "initial_content_sha256": "303c8bd5ca40c8d9b8d4e2e328f63c4b29058a88dfa656409a3fdc92fc9dbbfd"},
+    {"cohort": "A", "path": "ue-ai-navigation/references/behavior-tree-patterns.md", "initial_content_sha256": "640ea8302d1e206541216e44e06f3d7742f5a4cc819ee9cf740f30141a0b6f45"},
+    {"cohort": "A", "path": "ue-ai-navigation/references/eqs-reference.md", "initial_content_sha256": "17c58d2b3f75693a238a6a25974dca1e7ac31dc01b8161b08901d5df9529e17e"},
+    {"cohort": "B", "path": "ue-state-trees/SKILL.md", "initial_content_sha256": "e01aff38b20b3a3b28dec9db580c81cd0eeae6e2ba70bc1e2422fce35d9b4c88"},
+    {"cohort": "B", "path": "ue-state-trees/references/state-tree-mass-integration.md", "initial_content_sha256": "97dda8b7f71a6bed6e8e3fe37c4f0a449daabb5fd63d6d39b9606358401d447d"},
+    {"cohort": "B", "path": "ue-state-trees/references/state-tree-patterns.md", "initial_content_sha256": "e4cbe5cd6c60f01d70990a6dbd8fa00ae2463c72599c99bf0078fa88fded1e62"},
+    {"cohort": "B", "path": "ue-mass-entity/SKILL.md", "initial_content_sha256": "e6d78f81fc707cef43583ae8a61d2767b1c3f6c09fa9332a7d4fd05b92500715"},
+    {"cohort": "B", "path": "ue-mass-entity/references/mass-entity-patterns.md", "initial_content_sha256": "b3ba0fc44c1324c28d998fdbe0070a98e21598363461d852d1d331819a585c81"},
+    {"cohort": "B", "path": "ue-mass-entity/references/mass-fragment-reference.md", "initial_content_sha256": "f11bb932e6b4c541911ef316626e311c2d349948da1113a508d0e78ffc2b34ec"},
+    {"cohort": "C", "path": "ue-game-features/SKILL.md", "initial_content_sha256": "aa606cd143a3357cea07272e375228ffcc5934a2905dbf129015af8b16067566"},
+    {"cohort": "C", "path": "ue-game-features/references/experience-system.md", "initial_content_sha256": "e84b3fd3209eeec02f16d7d7f5b02cd7defc2e45ca02431b3a65c943cf20cad9"},
+    {"cohort": "C", "path": "ue-game-features/references/game-feature-patterns.md", "initial_content_sha256": "584ddbbb5cb41f30086bb6e5e1389271f0441cdbf6398f28084dbb799235e19d"},
+    {"cohort": "D", "path": "ue-world-level-streaming/SKILL.md", "initial_content_sha256": "d1e4c3afebcfe993f927aaf43cd574453580d63b655325b077764e1427a061b2"},
+    {"cohort": "D", "path": "ue-world-level-streaming/references/streaming-patterns.md", "initial_content_sha256": "79ba4c1dd1bb653d7e10de522cb0a116346c786301acaf320410e43ba7e3b8cb"},
+    {"cohort": "D", "path": "ue-project-context/SKILL.md", "initial_content_sha256": "c56fe7496e7980d40f78ecfcf95c5f227629cb405dcb96424dd0951565738382"}
+  ]
+}

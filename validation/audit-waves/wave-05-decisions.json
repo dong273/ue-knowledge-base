@@ -1,0 +1,419 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-05-presentation-plugins",
+  "reviewer": "codex-wave-05-source-review",
+  "reviewed_at": "2026-08-24",
+  "evidence_catalog": {
+    "UE57.Source.Animation": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/Animation/AnimInstance.h; Engine/Source/Runtime/Engine/Classes/Animation/AnimMontage.h; Engine/Source/Runtime/Engine/Classes/Animation/AnimNotifies/AnimNotify.h; Engine/Source/Runtime/Engine/Classes/Animation/AnimNotifies/AnimNotifyState.h; Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h; Engine/Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h",
+      "symbols": [
+        "UAnimInstance",
+        "UAnimMontage",
+        "UAnimNotify",
+        "UAnimNotifyState",
+        "FAnimNotifyEventReference",
+        "APawn",
+        "UCharacterMovementComponent"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.Audio": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/Components/AudioComponent.h; Engine/Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h; Engine/Source/Runtime/Engine/Classes/Sound/SoundBase.h; Engine/Source/Runtime/Engine/Classes/Sound/SoundAttenuation.h; Engine/Source/Runtime/Engine/Classes/Sound/SoundConcurrency.h",
+      "symbols": [
+        "UAudioComponent",
+        "UGameplayStatics",
+        "USoundBase",
+        "USoundAttenuation",
+        "USoundConcurrency"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.MaterialsRendering": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h; Engine/Source/Runtime/Engine/Public/Materials/MaterialInstanceDynamic.h; Engine/Source/Runtime/Engine/Classes/Kismet/KismetMaterialLibrary.h; Engine/Source/Runtime/Engine/Classes/Camera/CameraComponent.h; Engine/Source/Runtime/Engine/Classes/Engine/PostProcessVolume.h; Engine/Source/Runtime/Engine/Classes/Components/PostProcessComponent.h",
+      "symbols": [
+        "UPrimitiveComponent",
+        "UMaterialInstanceDynamic",
+        "UKismetMaterialLibrary",
+        "UCameraComponent",
+        "APostProcessVolume",
+        "UPostProcessComponent",
+        "FPostProcessSettings"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.Niagara": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h; Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h; Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraSystem.h; Engine/Plugins/FX/Niagara/Source/Niagara/Classes/NiagaraDataInterface.h; Engine/Plugins/FX/Niagara/Source/Niagara/Classes/NiagaraDataInterfaceSkeletalMesh.h; Engine/Plugins/FX/Niagara/Source/Niagara/Classes/NiagaraDataInterfaceArrayFloat.h; Engine/Plugins/FX/Niagara/Source/Niagara/Classes/NiagaraDataInterfaceArrayInt.h; Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraTypes.h",
+      "symbols": [
+        "UNiagaraComponent",
+        "UNiagaraFunctionLibrary",
+        "UNiagaraSystem",
+        "UNiagaraDataInterface",
+        "UNiagaraDataInterfaceSkeletalMesh",
+        "UNiagaraDataInterfaceArrayFloat",
+        "UNiagaraDataInterfaceArrayInt32",
+        "FNiagaraVariable"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.Sequencer": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/LevelSequence/Public/LevelSequence.h; Engine/Source/Runtime/LevelSequence/Public/LevelSequenceActor.h; Engine/Source/Runtime/LevelSequence/Public/LevelSequencePlayer.h; Engine/Source/Runtime/MovieScene/Public/MovieSceneSequencePlayer.h; Engine/Source/Runtime/MovieScene/Public/MovieSceneObjectBindingID.h; Engine/Source/Runtime/MovieScene/Public/MovieSceneSequencePlaybackSettings.h",
+      "symbols": [
+        "ULevelSequence",
+        "ALevelSequenceActor",
+        "ULevelSequencePlayer",
+        "UMovieSceneSequencePlayer",
+        "FMovieSceneObjectBindingID",
+        "FMovieSceneSequencePlaybackParams"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    },
+    "UE57.Source.PluginManager": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Projects/Public/Interfaces/IPluginManager.h; Engine/Source/Runtime/Projects/Public/PluginDescriptor.h; Engine/Source/Runtime/Projects/Projects.Build.cs",
+      "symbols": [
+        "IPluginManager",
+        "IPlugin",
+        "FPluginDescriptor",
+        "FindPlugin",
+        "GetEnabledPlugins",
+        "GetDescriptor",
+        "GetBaseDir",
+        "GetMountedAssetPath"
+      ],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-24"
+    }
+  },
+  "groups": [
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Animation"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.Animation"
+      ],
+      "claim_ids": [
+        "uekb.068005acf558dfcc264e33a3.c3f21401b6a1c2868",
+        "uekb.068005acf558dfcc264e33a3.c680f2e6b3cb03a7d",
+        "uekb.068005acf558dfcc264e33a3.c6c495c154a941d63",
+        "uekb.068005acf558dfcc264e33a3.c784f139c902d9f52",
+        "uekb.068005acf558dfcc264e33a3.c8a0b28585fb553ca",
+        "uekb.068005acf558dfcc264e33a3.ce4b5842975b168de",
+        "uekb.551c08370c97d414c075b04a.c1c8aa804e048a83c",
+        "uekb.551c08370c97d414c075b04a.c5a05e6aac9ad5c19",
+        "uekb.551c08370c97d414c075b04a.c6c78af2dce2aff39",
+        "uekb.551c08370c97d414c075b04a.cb5094442fbaea9d8",
+        "uekb.551c08370c97d414c075b04a.cf35e072b8e5ed48c",
+        "uekb.cce821f186c44b13fdc5de9c.c2c382f4c8136cc60",
+        "uekb.cce821f186c44b13fdc5de9c.c890aa71c0dbd6da1",
+        "uekb.cce821f186c44b13fdc5de9c.cafa592b0e1d75e65",
+        "uekb.cce821f186c44b13fdc5de9c.cf63bd8954186b53a"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Reference routing, validation checklist, or verification boundary defines evidence method and does not assert that a visual, audible, runtime, or human outcome passed.",
+      "claim_ids": [
+        "uekb.068005acf558dfcc264e33a3.c440b0047a7f4f9ec",
+        "uekb.068005acf558dfcc264e33a3.c4468f3c4de31b702",
+        "uekb.1050fc1878447f1d627ca2e6.c9c27dcb30f410c52",
+        "uekb.2b057435373e9c5d6d10c6c3.c932f79280306ae98",
+        "uekb.2b057435373e9c5d6d10c6c3.ca558841ba2c9d6c2",
+        "uekb.551c08370c97d414c075b04a.c29f497e42bc9f7dd",
+        "uekb.6776ac74fad4e6ac4c501b8c.c5d22552fa677d620",
+        "uekb.8029d73dd5ae4069d1e93ec6.c272726d6fd0d21a5",
+        "uekb.8029d73dd5ae4069d1e93ec6.ce5a4623e76c86831",
+        "uekb.ab2bbcc94e204b7693919148.ca52a1bb322d426d2",
+        "uekb.bfc38d2d801db19d852aba4a.c675b5eb73da38d5d",
+        "uekb.bfc38d2d801db19d852aba4a.ce1d3210c96e9ed96",
+        "uekb.c42031870195ff106a2da1ae.c77fbec542619d7af",
+        "uekb.c74f110a2584df5073f47c84.ced7ad89c272a3c43",
+        "uekb.cce821f186c44b13fdc5de9c.c8384641a5a7e6546",
+        "uekb.d5dfd402682e3a61241a5ac1.c10684fa051bd63ee",
+        "uekb.d5dfd402682e3a61241a5ac1.c4a7e5c35f65bc442",
+        "uekb.e0d901bcfa01548bade92705.c106174ae5b7eb5f7",
+        "uekb.e0d901bcfa01548bade92705.cfbbab60c636f55fb",
+        "uekb.f93e6d2a0761a067cc22950e.c10b716990ffafb21"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Animation"
+      ],
+      "claim_ids": [
+        "uekb.068005acf558dfcc264e33a3.cda12cd58a5719d3c",
+        "uekb.551c08370c97d414c075b04a.c4a03b545d1a157db",
+        "uekb.551c08370c97d414c075b04a.c5271d6e94fb73a7d",
+        "uekb.551c08370c97d414c075b04a.ca111ff41c9cda9ba",
+        "uekb.551c08370c97d414c075b04a.ca9b861d98d825bd5",
+        "uekb.cce821f186c44b13fdc5de9c.c623b0f8f67e427f7",
+        "uekb.cce821f186c44b13fdc5de9c.c886fc29065ab72a4",
+        "uekb.cce821f186c44b13fdc5de9c.cc0ee70d8503610b7"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Sequencer"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.Sequencer"
+      ],
+      "claim_ids": [
+        "uekb.1050fc1878447f1d627ca2e6.c35cdcb228a9b5ee2",
+        "uekb.1050fc1878447f1d627ca2e6.c79f95d4a563405db",
+        "uekb.1050fc1878447f1d627ca2e6.c85002120c8b407ec",
+        "uekb.1050fc1878447f1d627ca2e6.cb7c678f2db3c61b6",
+        "uekb.1050fc1878447f1d627ca2e6.cbf4f7b984c010b8e",
+        "uekb.1050fc1878447f1d627ca2e6.cdd6c13a8269db4a8",
+        "uekb.d5dfd402682e3a61241a5ac1.c109594deaa31c2e0",
+        "uekb.d5dfd402682e3a61241a5ac1.c5f4f9c2a56dab93a",
+        "uekb.d5dfd402682e3a61241a5ac1.ca3c546c3cf0acfee",
+        "uekb.d5dfd402682e3a61241a5ac1.cadb962e5e3b86ba1",
+        "uekb.d5dfd402682e3a61241a5ac1.ccae29a2fcd23a08c"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Sequencer"
+      ],
+      "claim_ids": [
+        "uekb.1050fc1878447f1d627ca2e6.c1259f23b887ee1da",
+        "uekb.1050fc1878447f1d627ca2e6.c562918e7c6a2c5a5",
+        "uekb.1050fc1878447f1d627ca2e6.c790a238929f7a1b1",
+        "uekb.d5dfd402682e3a61241a5ac1.c3fbc350a76f5605c",
+        "uekb.d5dfd402682e3a61241a5ac1.c52c269435befd0db"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Audio"
+      ],
+      "claim_ids": [
+        "uekb.ab2bbcc94e204b7693919148.c2bb995163852a95e",
+        "uekb.ab2bbcc94e204b7693919148.c2ddf8d76695d4790",
+        "uekb.ab2bbcc94e204b7693919148.c5350fec51c361012",
+        "uekb.bfc38d2d801db19d852aba4a.c138c73c18bad01cc",
+        "uekb.bfc38d2d801db19d852aba4a.cec4d8858662bb6fc",
+        "uekb.bfc38d2d801db19d852aba4a.cef76644f70b84e74"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Audio"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.Audio"
+      ],
+      "claim_ids": [
+        "uekb.ab2bbcc94e204b7693919148.c13ffcdbd524ea228",
+        "uekb.ab2bbcc94e204b7693919148.c4ec5f9add47119eb",
+        "uekb.ab2bbcc94e204b7693919148.c542b4ec674326ef7",
+        "uekb.ab2bbcc94e204b7693919148.c74ff9e907fe14a63",
+        "uekb.ab2bbcc94e204b7693919148.c911a117c93efb273",
+        "uekb.ab2bbcc94e204b7693919148.ccba368fd230b3365",
+        "uekb.bfc38d2d801db19d852aba4a.c223d90979c598916",
+        "uekb.bfc38d2d801db19d852aba4a.c22d007a6ed3a8b7c",
+        "uekb.bfc38d2d801db19d852aba4a.c86557536d9f0e876",
+        "uekb.bfc38d2d801db19d852aba4a.cee3af86f76bd33b1"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.MaterialsRendering"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.MaterialsRendering"
+      ],
+      "claim_ids": [
+        "uekb.2b057435373e9c5d6d10c6c3.c4550576a927e5191",
+        "uekb.2b057435373e9c5d6d10c6c3.c56b75c9bc92a746d",
+        "uekb.2b057435373e9c5d6d10c6c3.c5b58fbd02be55ec6",
+        "uekb.2b057435373e9c5d6d10c6c3.c5cf3c156fa52fcbf",
+        "uekb.2b057435373e9c5d6d10c6c3.ce332d1f47dd3cb35",
+        "uekb.2b057435373e9c5d6d10c6c3.ce964a6009237bc1f",
+        "uekb.c42031870195ff106a2da1ae.c00ca99013c9f5605",
+        "uekb.c42031870195ff106a2da1ae.c2131d77c8eeff8a9",
+        "uekb.c42031870195ff106a2da1ae.c2f7dcb79ba91a665",
+        "uekb.c42031870195ff106a2da1ae.c3d3f09bb301ccd49",
+        "uekb.c42031870195ff106a2da1ae.c809efecf6f570016",
+        "uekb.c42031870195ff106a2da1ae.c85e36bd4d66fa776",
+        "uekb.c42031870195ff106a2da1ae.cb56ee87b11ceb5ba",
+        "uekb.f93e6d2a0761a067cc22950e.c0ee25c4f80fa59a8",
+        "uekb.f93e6d2a0761a067cc22950e.c3666ccb53d10936a",
+        "uekb.f93e6d2a0761a067cc22950e.c502e59ea17012118",
+        "uekb.f93e6d2a0761a067cc22950e.c549862ca082f55c0",
+        "uekb.f93e6d2a0761a067cc22950e.c86d19a0239eb3c2b",
+        "uekb.f93e6d2a0761a067cc22950e.ccda909aae1fac55f",
+        "uekb.f93e6d2a0761a067cc22950e.cd7fa64b72670dffa"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.MaterialsRendering"
+      ],
+      "claim_ids": [
+        "uekb.2b057435373e9c5d6d10c6c3.c85c455870ad2883a",
+        "uekb.c42031870195ff106a2da1ae.c0ed5d90f706807dd",
+        "uekb.c42031870195ff106a2da1ae.c866eda17b6471b35",
+        "uekb.f93e6d2a0761a067cc22950e.c0d562799593775ff",
+        "uekb.f93e6d2a0761a067cc22950e.c5eee3f918fc788ab",
+        "uekb.f93e6d2a0761a067cc22950e.cc2f597a704366ef7"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Niagara"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.Niagara"
+      ],
+      "claim_ids": [
+        "uekb.6776ac74fad4e6ac4c501b8c.c2c071536ed0ad382",
+        "uekb.6776ac74fad4e6ac4c501b8c.c59598004b6afa290",
+        "uekb.6776ac74fad4e6ac4c501b8c.c8f2ee2652019ddb9",
+        "uekb.6776ac74fad4e6ac4c501b8c.cc7c863d86c029195",
+        "uekb.6776ac74fad4e6ac4c501b8c.cd6709e3c0aedf101",
+        "uekb.6776ac74fad4e6ac4c501b8c.cdac15443f7c2537c",
+        "uekb.6776ac74fad4e6ac4c501b8c.cf009ee0aeb67620c",
+        "uekb.c74f110a2584df5073f47c84.c25e6f51a9eaa5a10",
+        "uekb.c74f110a2584df5073f47c84.c36de529372203461",
+        "uekb.c74f110a2584df5073f47c84.c58cc40e909bd0c9c",
+        "uekb.c74f110a2584df5073f47c84.cd1a4a080d99c8309",
+        "uekb.e0d901bcfa01548bade92705.c05dd5149fcee878b",
+        "uekb.e0d901bcfa01548bade92705.c4870520656eff8d0",
+        "uekb.e0d901bcfa01548bade92705.c59abb201bd7224eb",
+        "uekb.e0d901bcfa01548bade92705.c7531c23279f07f9d",
+        "uekb.e0d901bcfa01548bade92705.cdd249d64963d15cd",
+        "uekb.e0d901bcfa01548bade92705.cf447f6dad6546c6b"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.Niagara"
+      ],
+      "claim_ids": [
+        "uekb.6776ac74fad4e6ac4c501b8c.c7295120cdaf59285",
+        "uekb.6776ac74fad4e6ac4c501b8c.cf0bf02de2e01bcfc",
+        "uekb.6776ac74fad4e6ac4c501b8c.cfe890b6c606da579",
+        "uekb.c74f110a2584df5073f47c84.c4934f1e2b43538e6",
+        "uekb.c74f110a2584df5073f47c84.c954572c6718fb931",
+        "uekb.c74f110a2584df5073f47c84.ce19cf58abc1e6b81",
+        "uekb.e0d901bcfa01548bade92705.c986466d1887d367f"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": [
+        "authoritative_source"
+      ],
+      "evidence_ids": [
+        "UE57.Source.PluginManager"
+      ],
+      "claim_ids": [
+        "uekb.8029d73dd5ae4069d1e93ec6.c1832ef89cbd55a56",
+        "uekb.8029d73dd5ae4069d1e93ec6.c31f89b98d81a8322",
+        "uekb.8029d73dd5ae4069d1e93ec6.c415c05755ba6b345",
+        "uekb.8029d73dd5ae4069d1e93ec6.c7979b1d2f5279f2a",
+        "uekb.8029d73dd5ae4069d1e93ec6.c7ffa6caf62ac25f4",
+        "uekb.8029d73dd5ae4069d1e93ec6.cae6b9bd8c2c6574a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": [
+        "authoritative_source",
+        "compile"
+      ],
+      "evidence_ids": [
+        "UE57.Source.PluginManager"
+      ],
+      "validation_ids": [
+        "UEKB.Compile.PluginManager"
+      ],
+      "claim_ids": [
+        "uekb.8029d73dd5ae4069d1e93ec6.c75e2237b6ded8e9b",
+        "uekb.8029d73dd5ae4069d1e93ec6.c96225f9c8a283d1c",
+        "uekb.8029d73dd5ae4069d1e93ec6.ce59517ba8667c819"
+      ]
+    },
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "evidence_ids": [],
+      "exclusion_reason": "Time-sensitive marketplace discovery, build, packaging, privacy, and review steps define a verification procedure and do not assert that any current third-party offer is free or compatible.",
+      "claim_ids": [
+        "uekb.9722a4bd8703d3f68b4cb580.c5626ae9c316f095d",
+        "uekb.9722a4bd8703d3f68b4cb580.ca3d4859e8140072c",
+        "uekb.9722a4bd8703d3f68b4cb580.cc3b951d6263a3a8a",
+        "uekb.9722a4bd8703d3f68b4cb580.ccb2c9c42032f753c",
+        "uekb.9722a4bd8703d3f68b4cb580.cec58590ac1edbc92",
+        "uekb.9722a4bd8703d3f68b4cb580.cee42c511607a7754",
+        "uekb.9722a4bd8703d3f68b4cb580.ceea97e3085f44835",
+        "uekb.9722a4bd8703d3f68b4cb580.cf662877fd3567903"
+      ]
+    }
+  ]
+}

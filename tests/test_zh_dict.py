@@ -5,6 +5,8 @@ import sys
 from importlib.resources import files
 from pathlib import Path
 
+import pytest
+
 from ue_knowledge.retrieval import expand_query, zh_dict
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -24,7 +26,7 @@ def test_zh_dict_dataset_is_sane():
 
 def test_expand_query_adds_spoken_concepts():
     expanded = expand_query("角色从斜坡上滑下去的时候速度要怎么控制")
-    for concept in ("slope", "walkable", "velocity", "movement"):
+    for concept in ("slide", "walkable", "velocity", "movement"):
         assert concept in expanded
 
 
@@ -46,6 +48,28 @@ def test_overlapping_phrases_match_longest():
     # "卡顿" must win over the shorter "卡" at the same position.
     expanded = expand_query("游戏玩着玩着开始卡顿，怎么定位问题")
     assert "hitch" in expanded
+
+
+@pytest.mark.parametrize(
+    ("query", "concept"),
+    [
+        ("行为树黑板任务怎么写", "blackboard"),
+        ("MetaSound 空间音频衰减", "USoundAttenuation"),
+        ("角色移动速度衰减", "BrakingDecelerationWalking"),
+        ("UE C++ 代码审查垃圾回收", "review checklist"),
+        ("编辑器工具批量处理资产", "FScopedTransaction"),
+        ("游戏功能插件激活", "LoadAndActivateGameFeaturePlugin"),
+        ("增强输入映射上下文", "AddMappingContext"),
+        ("Build.cs 模块依赖", "PublicDependencyModuleNames"),
+        ("网络复制 RPC 服务器权限", "Server RPC"),
+        ("存档系统保存到槽位", "SaveGameToSlot"),
+        ("虚幻自动化测试", "Automation test"),
+        ("UMG 用户控件绑定", "BindWidget"),
+        ("世界分区数据层", "UWorldPartitionSubsystem"),
+    ],
+)
+def test_expand_query_adds_passage_specific_concepts(query, concept):
+    assert concept.lower() in expand_query(query).lower()
 
 
 def test_check_zh_dict_script_passes():

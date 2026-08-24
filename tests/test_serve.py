@@ -19,12 +19,12 @@ def _corpus(tmp_path):
     return directory
 
 
-def _run_server(input_lines, db, embedder):
+def _run_server(input_lines, db, embedder, indexes=None):
     stdin = io.StringIO("\n".join(input_lines) + "\n")
     stdout = io.StringIO()
     serve_loop(
         stdin, stdout, chroma_dir=str(db), model_name="fake",
-        embedder=embedder, top_k=3,
+        embedder=embedder, top_k=3, indexes=indexes,
     )
     return [json.loads(line) for line in stdout.getvalue().strip().splitlines()]
 
@@ -73,6 +73,39 @@ def test_tools_call_returns_hits(tmp_path):
     assert set(hits[0]) == {"source", "heading", "type", "score", "raw_score", "rank", "text"}
     assert hits[0]["raw_score"] > 0
     assert hits[0]["rank"] == 1
+
+
+def test_federated_tool_returns_separate_groups(tmp_path):
+    public_corpus = _corpus(tmp_path / "public")
+    project_corpus = _corpus(tmp_path / "project")
+    public_db = tmp_path / "public-db"
+    project_db = tmp_path / "project-db"
+    build_index(
+        source_dir=public_corpus, chroma_dir=public_db,
+        model_name="fake", embedder=FakeEmbedder(), scope="public",
+    )
+    build_index(
+        source_dir=project_corpus, chroma_dir=project_db,
+        model_name="fake", embedder=FakeEmbedder(), scope="project",
+    )
+    responses = _run_server(
+        [json.dumps({
+            "jsonrpc": "2.0", "id": 31, "method": "tools/call",
+            "params": {
+                "name": "ue_kb_federated_query",
+                "arguments": {"query": "movement speed"},
+            },
+        })],
+        public_db,
+        FakeEmbedder(),
+        indexes={"public": public_db, "project": project_db},
+    )
+    result = responses[0]["result"]
+    assert result["isError"] is False
+    payload = result["structuredContent"]
+    assert set(payload["groups"]) == {"public", "project"}
+    assert payload["public_hits"][0]["scope"] == "public"
+    assert payload["project_hits"][0]["scope"] == "project"
 
 
 def test_tools_call_missing_query_is_error(tmp_path):
@@ -129,7 +162,7 @@ def test_tools_list_has_info_topics_glossary(tmp_path):
         FakeEmbedder(),
     )
     names = [tool["name"] for tool in responses[0]["result"]["tools"]]
-    assert names == ["ue_kb_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary"]
+    assert names == ["ue_kb_query", "ue_kb_federated_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary"]
 
 
 def test_info_tool_reports_missing_index(tmp_path):

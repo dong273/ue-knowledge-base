@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-06-final-tools-ui",
+  "status": "passed",
+  "scope": {
+    "documents": 15,
+    "review_units": 145,
+    "sections": 120,
+    "code_artifacts": 25,
+    "dispositions": {
+      "api_contract": 62,
+      "concept": 52,
+      "non_claim": 31
+    },
+    "code_kinds": {
+      "fragment": 19,
+      "config": 1,
+      "command": 5
+    }
+  },
+  "corrections": [
+    "Replaced the 15 Hermes-authoritative documents with concise UE 5.7 contracts and republished deterministically.",
+    "Recognized explicit config and command fences without creating duplicate claims.",
+    "Added CoreUObject to the editor validation module after the clean linker exposed the missing dependency.",
+    "Removed a duplicate UMG dependency from the runtime validation module and reran the clean UE gate.",
+    "Removed 12 orphan Chinese-query aliases after the reviewed corpus no longer contained their English targets.",
+    "Updated the CI evidence fixture to the successful Wave 06 registry and Automation projection.",
+    "Made CI cross-check evidence against the schema-v2 claim ledger instead of validating registry hashes alone."
+  ],
+  "ue_validation": {
+    "engine_version": "5.7.4",
+    "changelist": 51494982,
+    "compile_validations": 35,
+    "automation_success": 7,
+    "expected_failures_matched": 1,
+    "new_compile_ids": [
+      "UEKB.Compile.EditorTools",
+      "UEKB.Compile.PCG",
+      "UEKB.Compile.Automation",
+      "UEKB.Compile.UI",
+      "UEKB.Compile.UIBindWidget"
+    ],
+    "new_automation_ids": [
+      "UEKnowledgeValidation.AutomationApiSurface"
+    ],
+    "unregistered_warnings": 0,
+    "errors": 0,
+    "passed": true
+  },
+  "retrieval": {
+    "queries": 30,
+    "failures": 0,
+    "fresh_pie_top_3": true,
+    "unsupported_false_positive_rate": 0.0,
+    "passed": true
+  },
+  "mcp": {
+    "server_startup_seconds": 0.0966914999880828,
+    "first_query_seconds": 6.641329200007021,
+    "hot_query_seconds": 0.00016680004773661494,
+    "max_regression": 0.2,
+    "passed": true
+  },
+  "gates": {
+    "wave_documents": 15,
+    "wave_reviewed": 15,
+    "wave_pending": 0,
+    "wave_blocking_issue_count": 0,
+    "wave_warning_count": 0,
+    "wave_ready": true,
+    "global_documents": 90,
+    "global_reviewed": 90,
+    "global_verified": 90,
+    "global_pending": 0,
+    "global_blocking_issue_count": 0,
+    "global_issue_count": 0,
+    "global_release_ready": true,
+    "python_tests": "140 passed, 1 skipped",
+    "hermes_drift": 0,
+    "publication_manifest_documents": 90,
+    "privacy_leaks": 0
+  },
+  "release_actions": {
+    "version": "0.6.3",
+    "candidate_package_built": false,
+    "committed": false,
+    "pushed": false,
+    "pull_request_created": false,
+    "pypi_published": false
+  }
+}

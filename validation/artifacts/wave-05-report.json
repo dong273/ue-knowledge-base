@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-05-presentation-plugins",
+  "generated_at": "2026-08-24",
+  "scope": "public",
+  "documents": {
+    "total": 15,
+    "reviewed": 15,
+    "pending": 0,
+    "blocking_issue_count": 0,
+    "warning_count": 0,
+    "unclassified_code": 0,
+    "stale_evidence": 0,
+    "wave_ready": true
+  },
+  "review_units": {
+    "total": 142,
+    "sections": 116,
+    "code_artifacts": 26,
+    "dispositions": {
+      "api_contract": 76,
+      "concept": 38,
+      "non_claim": 28
+    },
+    "code_kinds": {
+      "fragment": 25,
+      "config": 1
+    }
+  },
+  "ue_gate": {
+    "engine_version": "5.7.4",
+    "changelist": 51494982,
+    "compile_validations": 30,
+    "automation_tests": 6,
+    "expected_failure_probes": 1,
+    "build_exit_code": 0,
+    "automation_exit_code": 0,
+    "automation_warnings": 0,
+    "automation_errors": 0,
+    "checker_passed": true,
+    "new_compile_validations": [
+      "UEKB.Compile.Animation",
+      "UEKB.Compile.Audio",
+      "UEKB.Compile.MaterialsRendering",
+      "UEKB.Compile.Niagara",
+      "UEKB.Compile.Sequencer",
+      "UEKB.Compile.PluginManager"
+    ],
+    "corrected_contracts": [
+      "UE 5.7 uses UNiagaraDataInterfaceArrayInt32; the nonexistent UNiagaraDataInterfaceArrayInt name was removed."
+    ],
+    "external_environment_notices": [
+      "Unreal Build Accelerator reported a PagefileOnOsVolume registry mismatch; this was not a compiler or Automation warning and was not exported as corpus evidence."
+    ]
+  },
+  "retrieval": {
+    "queries": 24,
+    "failures": 0,
+    "unsupported_queries": 2,
+    "unsupported_false_positives": 0,
+    "unsupported_false_positive_rate": 0.0,
+    "fresh_pie_top_3": true,
+    "passed": true
+  },
+  "mcp_performance": {
+    "server_startup_seconds": 0.09296290000202134,
+    "first_query_seconds": 6.631752100016456,
+    "hot_query_seconds": 0.0001770000089891255,
+    "baseline_gate_passed": true
+  },
+  "regression": {
+    "python_tests_passed": 139,
+    "python_tests_skipped": 1,
+    "hermes_check": true,
+    "publication_manifest_documents": 90,
+    "privacy_check": true,
+    "scope_isolation_tests": true,
+    "wheel_roundtrip_tests": true,
+    "git_diff_check": true
+  },
+  "global_state": {
+    "documents": 90,
+    "reviewed": 75,
+    "verified": 75,
+    "pending": 15,
+    "release_ready": false,
+    "release_gate_passed": false,
+    "pending_distribution": {
+      "ue-editor-tools": 4,
+      "ue-knowledge-rag": 2,
+      "ue-procedural-generation": 3,
+      "ue-testing-debugging": 3,
+      "ue-ui-umg-slate": 3
+    }
+  },
+  "release_actions": {
+    "version_changed": false,
+    "candidate_package_built": false,
+    "commit": false,
+    "push": false,
+    "pull_request": false,
+    "pypi": false
+  }
+}

@@ -11,7 +11,9 @@ from pathlib import Path
 
 import ue_knowledge
 from . import __version__, config
+from .audit import audit_payload_for_cli
 from .build import build_index
+from .federation import federated_query, parse_index_specs
 from .index_store import (
     IndexErrorBase,
     IndexSchemaMismatch,
@@ -19,7 +21,7 @@ from .index_store import (
     load_current,
     read_manifest,
 )
-from .query import format_results, query
+from .query import format_results, query, query_envelope
 
 HF_MIRROR = "https://hf-mirror.com"
 
@@ -77,6 +79,12 @@ def cmd_build(args: argparse.Namespace) -> int:
             force=args.force,
             append=args.append,
             offline=not args.online,
+            scope=args.scope,
+            provenance_path=args.provenance,
+            source_registry=args.source_registry,
+            evidence_manifest=args.evidence_manifest,
+            claim_ledger=args.claim_ledger,
+            strict_provenance=args.strict_provenance,
             progress=lambda message: print(f"[*] {message}", file=sys.stderr),
         )
     except Exception as exc:
@@ -87,7 +95,8 @@ def cmd_build(args: argparse.Namespace) -> int:
 
 def cmd_query(args: argparse.Namespace) -> int:
     try:
-        results = query(
+        search = query_envelope if args.envelope else query
+        results = search(
             args.query,
             top_k=args.top_k,
             chroma_dir=config.chroma_dir(args.db),
@@ -98,8 +107,43 @@ def cmd_query(args: argparse.Namespace) -> int:
         )
     except Exception as exc:
         return _fail(exc, args.json)
-    _emit(results if args.json else format_results(results, args.query), args.json)
+    if args.envelope:
+        _emit(results if args.json else json.dumps(results, ensure_ascii=False, indent=2), True)
+    else:
+        _emit(results if args.json else format_results(results, args.query), args.json)
     return 0
+
+
+def cmd_audit_corpus(args: argparse.Namespace) -> int:
+    payload = audit_payload_for_cli(
+        config.source_dir(args.source),
+        provenance=args.provenance,
+        scope=args.scope,
+        source_registry=args.source_registry,
+        evidence_manifest=args.evidence_manifest,
+        claim_ledger=args.claim_ledger,
+        allow_pending=args.allow_pending,
+    )
+    _emit(payload if args.json else json.dumps(payload, ensure_ascii=False, indent=2), args.json)
+    return 0 if payload["release_ready"] or (args.allow_pending and payload.get("working_ready")) else 1
+
+
+def cmd_federated_query(args: argparse.Namespace) -> int:
+    try:
+        indexes = parse_index_specs(args.index)
+        payload = federated_query(
+            args.query,
+            indexes,
+            top_k=args.top_k,
+            model_name=args.model,
+            offline=not args.online,
+            profile=args.profile,
+            demote_frontmatter=args.demote_frontmatter,
+        )
+    except Exception as exc:
+        return _fail(exc, args.json)
+    _emit(payload if args.json else json.dumps(payload, ensure_ascii=False, indent=2), True)
+    return 0 if payload["groups"] and not payload["errors"] else 1
 
 
 def _info(args: argparse.Namespace) -> dict:
@@ -107,12 +151,15 @@ def _info(args: argparse.Namespace) -> dict:
     config.check_ascii_path(root, "索引")
     generation = load_current(root)
     manifest = read_manifest(generation)
-    source = config.source_dir(args.source) if args.source else config.source_dir(
+    source = config.source_dir(args.source) if getattr(args, "source", None) else config.source_dir(
         manifest["corpus"].get("source")
     )
+    provenance = getattr(args, "provenance", None) or manifest.get("provenance", {}).get("path")
+    source_registry = getattr(args, "source_registry", None) or manifest.get("source_registry")
+    extra_files = [path for path in (provenance, source_registry) if path]
     stale = None
     if source.is_dir():
-        fingerprint, _ = corpus_fingerprint(source)
+        fingerprint, _ = corpus_fingerprint(source, extra_files=[Path(path) for path in extra_files])
         stale = fingerprint != manifest["corpus"]["sha256"]
     return {
         "collection": config.COLLECTION_NAME,
@@ -248,7 +295,7 @@ def _mcp_smoke(args: argparse.Namespace) -> dict:
         info = by_id[3]["result"]["structuredContent"]
         tool_names = [tool["name"] for tool in tools]
         expected_tools = [
-            "ue_kb_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary",
+            "ue_kb_query", "ue_kb_federated_query", "ue_kb_info", "ue_kb_topics", "ue_kb_glossary",
         ]
         payload.update({
             "protocol_version": initialize["protocolVersion"],
@@ -365,10 +412,14 @@ def cmd_download_model(args: argparse.Namespace) -> int:
 def _cmd_serve(args: argparse.Namespace) -> int:
     from .server import serve_loop
 
+    indexes = parse_index_specs(args.index)
+    if not indexes and args.db:
+        indexes = {"public": Path(args.db)}
     serve_loop(
         sys.stdin,
         sys.stdout,
         chroma_dir=args.db,
+        indexes=indexes,
         model_name=args.model,
         top_k=args.top_k,
     )
@@ -395,6 +446,12 @@ def main(argv: list[str] | None = None) -> int:
     build.add_argument("--force", action="store_true")
     build.add_argument("--append", action="store_true", help="sync additions, edits and deletions")
     build.add_argument("--online", action="store_true")
+    build.add_argument("--scope", choices=("public", "project"), default="public")
+    build.add_argument("--provenance", help="provenance sidecar JSON")
+    build.add_argument("--source-registry", help="project source registry TSV")
+    build.add_argument("--evidence-manifest", help="sanitized UE validation evidence JSON")
+    build.add_argument("--claim-ledger", help="claim-level audit ledger JSON")
+    build.add_argument("--strict-provenance", action="store_true", help="fail until every document is verified")
     build.add_argument("--json", action="store_true")
     build.set_defaults(func=cmd_build)
 
@@ -408,9 +465,46 @@ def main(argv: list[str] | None = None) -> int:
         "--demote-frontmatter", action="store_true",
         help="rank topic-summary chunks (type=frontmatter) below content chunks",
     )
+    search.add_argument(
+        "--envelope", action="store_true",
+        help="return a versioned coverage/provenance envelope (JSON)",
+    )
     search.add_argument("--online", action="store_true")
     search.add_argument("--json", action="store_true")
     search.set_defaults(func=cmd_query)
+
+    audit = subcommands.add_parser(
+        "audit-corpus",
+        help="audit schema-v2 claims, code artifacts, provenance, and evidence",
+    )
+    audit.add_argument("--source", help="corpus directory")
+    audit.add_argument("--provenance", help="provenance sidecar JSON")
+    audit.add_argument("--source-registry", help="project source registry TSV")
+    audit.add_argument("--evidence-manifest", help="sanitized UE validation evidence JSON")
+    audit.add_argument("--claim-ledger", help="claim-level audit ledger JSON")
+    audit.add_argument("--scope", choices=("public", "project"), default="public")
+    audit.add_argument("--allow-pending", action="store_true", help="validate shape without release readiness")
+    audit.add_argument("--json", action="store_true")
+    audit.set_defaults(func=cmd_audit_corpus)
+
+    federated = subcommands.add_parser(
+        "federated-query",
+        help="query named public/project indexes without mixing score scales",
+    )
+    federated.add_argument("query")
+    federated.add_argument(
+        "--index",
+        action="append",
+        required=True,
+        help="named index: public=<PUBLIC_INDEX> or project=<PROJECT_INDEX>",
+    )
+    federated.add_argument("--top-k", type=int, default=5)
+    federated.add_argument("--model", default=config.MODEL_NAME)
+    federated.add_argument("--profile", choices=("hybrid", "vector"), default="hybrid")
+    federated.add_argument("--demote-frontmatter", action="store_true")
+    federated.add_argument("--online", action="store_true")
+    federated.add_argument("--json", action="store_true")
+    federated.set_defaults(func=cmd_federated_query)
 
     info = subcommands.add_parser("info", help="show manifest and index health")
     info.add_argument("--db")
@@ -433,6 +527,7 @@ def main(argv: list[str] | None = None) -> int:
         help="MCP stdio server (loads the model once; agents keep it running)",
     )
     serve.add_argument("--db", help="index root (default: user data dir)")
+    serve.add_argument("--index", action="append", help="named index for federated MCP: name=path")
     serve.add_argument("--model", default=config.MODEL_NAME)
     serve.add_argument("--top-k", type=int, default=5)
     serve.set_defaults(func=_cmd_serve)

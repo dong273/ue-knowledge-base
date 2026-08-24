@@ -1,0 +1,12 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.7",
+  "Description": "Expected failure: GameplayAbilities header without module dependency.",
+  "Modules": [
+    {
+      "Name": "UEKBNegTags",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

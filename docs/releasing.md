@@ -1,5 +1,10 @@
 # Release Checklist
 
+The current formal release remains `0.6.3`. The `0.7.0` worktree is a
+release-blocked candidate until the complete 90-document provenance audit and
+the UE 5.7 evidence gate pass. Do not tag, push, upload, or publish a 0.7
+artifact from a working index with pending provenance.
+
 > Why this exists: 0.4.0 was published to PyPI without the bundled corpus
 > (the wheel was ~15 KB and could not build an index), and the fix lived in
 > unreleased commits while the repo moved on to 0.5.0. This checklist makes a
@@ -33,10 +38,47 @@ ue-kb query "GAS ability cooldown" --top-k 5
 ue-kb info --json                          # stale must be false
 ```
 
+For a v0.7 candidate, also run the fail-closed gate with the sanitized UE
+validation manifest:
+
+```bash
+python scripts/check_ue57_evidence.py \
+  validation/artifacts/ue57/ue57-validation-evidence.json \
+  --fixture-registry validation/fixture-registry.json \
+  --claim-ledger validation/corpus-audit.json
+python scripts/release_gate.py \
+  --source src/ue_knowledge/knowledge \
+  --evidence-manifest validation/artifacts/ue57/ue57-validation-evidence.json \
+  --claim-ledger validation/corpus-audit.json
+```
+
+`release_gate.py` must exit 0. A result containing pending entries, missing
+`validation_ids`, or evidence errors is an intentional release stop. The
+local working build may use `--allow-pending`, but that is not a release
+result.
+
+The retrieval and abstention regression datasets are separate release gates:
+
+```bash
+python scripts/evaluate_retrieval.py --db <quality-index> --output quality-report.json
+python scripts/evaluate_coverage.py --db <quality-index> --output coverage-report.json
+python scripts/measure_mcp.py --db <public-index> \
+  --baseline tests/data/mcp-baseline-v0.6.3.json \
+  --max-regression 0.20 --output mcp-timing.json
+```
+
+The coverage report must keep existing bilingual recall, place the Fresh PIE
+negative-evidence chapter in the top three, and keep unsupported-query false
+positives at or below 10%. The MCP report records server startup, first query,
+and hot query separately; use the resident server for agent loops. Sub-
+millisecond hot-query timings also use a small absolute jitter tolerance. The
+baseline comparison is intended for the same machine; CI records timing but
+does not compare GitHub runners with a developer workstation.
+
 ## Publish
 
 ```bash
-git tag v0.5.0                             # match pyproject version
+git tag v0.7.0                             # only after every v0.7 gate is green
 git push origin main --tags
 
 # PyPI (requires an API token; use a token scoped to the project, not a password)

@@ -1,0 +1,232 @@
+[
+  {
+    "category": "chapter",
+    "query": "TestEqual TestTrue TestFalse UE_RETURN_ON_ERROR",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-testing-debugging",
+    "expected_heading_contains": "Assertions"
+  },
+  {
+    "category": "confusable",
+    "query": "Fresh PIE 没有日志不能算通过，需要什么负向证据",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-testing-debugging",
+    "expected_heading_contains": "Fresh PIE Negative"
+  },
+  {
+    "category": "unsupported",
+    "query": "白盒关卡首次游玩引导可发现性如何自动验证",
+    "expected_scope": "public",
+    "expected_coverage": "none"
+  },
+  {
+    "category": "unsupported",
+    "query": "示例项目 H1 Bead 首次游玩可发现性",
+    "expected_scope": "public",
+    "expected_coverage": "none"
+  },
+  {
+    "category": "natural_zh",
+    "query": "Automation 测试怎样验证断言",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-testing-debugging"
+  },
+  {
+    "category": "natural_zh",
+    "query": "运行时创建组件为什么要 RegisterComponent 和 AddInstanceComponent",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-actor-component-architecture",
+    "expected_heading_contains": "Runtime components"
+  },
+  {
+    "category": "confusable",
+    "query": "TMap Find 返回的指针在修改容器后还能保存吗",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-cpp-foundations",
+    "expected_heading_contains": "TMap"
+  },
+  {
+    "category": "natural_zh",
+    "query": "软引用 RequestAsyncLoad 完成后如何通过 TSoftObjectPtr Get",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-data-assets-tables"
+  },
+  {
+    "category": "confusable",
+    "query": "远程客户端应该读取 GameMode 还是 GameState",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-gameplay-framework"
+  },
+  {
+    "category": "chapter",
+    "query": "Enhanced Input AddMappingContext BindAction ETriggerEvent",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-input-system"
+  },
+  {
+    "category": "confusable",
+    "query": "APawn 调用 AddMovementInput 为什么没有自动移动",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-character-movement",
+    "expected_heading_contains": "Choose the movement owner"
+  },
+  {
+    "category": "natural_zh",
+    "query": "SetActorEnableCollision 开启后组件仍然 NoCollision 怎么排查",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-physics-collision"
+  },
+  {
+    "category": "confusable",
+    "query": "AsyncSaveGameToSlot 已调度是否代表保存成功",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-serialization-savegames",
+    "expected_heading_contains": "Prefer async operations"
+  },
+  {
+    "category": "chapter",
+    "query": "AsyncTask ENamedThreads GameThread TWeakObjectPtr",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-async-threading"
+  },
+  {
+    "category": "confusable",
+    "query": "MoveTo 返回成功是否代表 AI 已经到达目标",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-ai-navigation",
+    "expected_heading_contains": "Movement requests"
+  },
+  {
+    "category": "confusable",
+    "query": "Mass ForEachEntityChunk UE5.7 是否还要传 EntityManager",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-mass-entity",
+    "expected_heading_contains": "Iterate chunks"
+  },
+  {
+    "category": "natural_zh",
+    "query": "Experience 系统是 UE GameFeatures 核心类型还是项目层架构",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-game-features/references/experience-system.md",
+    "expected_heading_contains": "Experience-Style Project Layer"
+  },
+  {
+    "category": "confusable",
+    "query": "LoadStreamLevel 调用返回是否代表关卡已经可见",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-world-level-streaming",
+    "expected_heading_contains": "Latent requests"
+  },
+  {
+    "category": "confusable",
+    "query": "Montage_Play 返回非零是否代表动画槽位已经正确播放",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-animation-system",
+    "expected_heading_contains": "Montage requests"
+  },
+  {
+    "category": "confusable",
+    "query": "PlaySoundAtLocation 调用后没有声音能否算播放成功",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-audio-system",
+    "expected_heading_contains": "One-shot requests"
+  },
+  {
+    "category": "natural_zh",
+    "query": "SetScalarParameterValue 调用成功但材质没有变化 ParameterName FName parameter identity",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-materials-rendering",
+    "expected_heading_contains": "Parameter identity"
+  },
+  {
+    "category": "confusable",
+    "query": "Niagara Component Active 是否代表粒子已经可见",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-niagara-effects",
+    "expected_heading_contains": "Component control"
+  },
+  {
+    "category": "confusable",
+    "query": "Level Sequence Play 调用返回是否代表 Camera Cut 已经完成",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-sequencer-cinematics",
+    "expected_heading_contains": "Playback state"
+  },
+  {
+    "category": "natural_zh",
+    "query": "UE 5.7 plugin Marketplace static list availability price compatibility changes why expires",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-plugin-installation/references/free-ue57-plugins-2026.md",
+    "expected_heading_contains": "Current-source requirement"
+  },
+  {
+    "category": "chapter",
+    "query": "RegisterCustomClassLayout StartupModule ShutdownModule unregister detail customization",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-editor-tools",
+    "expected_heading_contains": "Customization lifecycle"
+  },
+  {
+    "category": "confusable",
+    "query": "PCGComponent Generate 调用返回是否代表已经生成预期 actors",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-procedural-generation",
+    "expected_heading_contains": "PCG component"
+  },
+  {
+    "category": "confusable",
+    "query": "Automation 测试 NotRun 能不能当 Success 证据",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-testing-debugging/references/automation-test-patterns.md",
+    "expected_heading_contains": "Test flags"
+  },
+  {
+    "category": "confusable",
+    "query": "CommonActivatableWidget IsActivated 是否代表界面可见且获得焦点",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-ui-umg-slate/references/common-ui-setup.md",
+    "expected_heading_contains": "Activatable widgets"
+  },
+  {
+    "category": "confusable",
+    "query": "public project 两个独立索引 raw_score 能否直接比较",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-knowledge-rag",
+    "expected_heading_contains": "Federated query"
+  },
+  {
+    "category": "confusable",
+    "query": "stat gpu 命令被接受是否代表性能结论成立 command acceptance captured artifacts reproducible conditions",
+    "expected_scope": "public",
+    "expected_coverage": "supported",
+    "expected_source_contains": "ue-testing-debugging/references/profiling-commands.md",
+    "expected_heading_contains": "Evidence boundary"
+  }
+]

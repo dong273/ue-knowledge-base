@@ -40,6 +40,9 @@ Usage:
     python scripts/publish_from_hermes.py --topics ue-knowledge-rag ue-project-context  # selected only
 """
 
+import argparse
+import hashlib
+import json
 import re
 import sys
 from pathlib import Path
@@ -155,34 +158,88 @@ def sanitize_reference(text: str) -> str:
     return "\n".join(sanitize_body(lines, keep_agents=False)).rstrip("\n") + "\n"
 
 
-def main() -> None:
-    topics = None
-    if "--topics" in sys.argv:
-        topics = set(sys.argv[sys.argv.index("--topics") + 1:])
-
-    stats = {"skills": 0, "refs": 0, "skipped": 0}
-    for topic in sorted(p for p in SKILLS_SRC.iterdir() if p.is_dir()):
-        if topic.name in EXCLUDED_TOPICS:
-            stats["skipped"] += 1
-            continue
-        if topics and topic.name not in topics:
+def _rendered_files(source_root: Path, topics: set[str] | None = None):
+    """Yield ``(relative, sanitized_text)`` without touching the repository."""
+    if not source_root.is_dir():
+        raise FileNotFoundError(source_root)
+    for topic in sorted(path for path in source_root.iterdir() if path.is_dir()):
+        if topic.name in EXCLUDED_TOPICS or (topics and topic.name not in topics):
             continue
         for src in sorted(topic.rglob("*.md")):
-            rel = src.relative_to(SKILLS_SRC)
-            dst = OUT / rel
-            dst.parent.mkdir(parents=True, exist_ok=True)
+            rel = src.relative_to(source_root).as_posix()
             if src.name == "SKILL.md":
-                dst.write_text(sanitize_skill(src.read_text(encoding="utf-8"),
-                                              keep_agents=topic.name in AGENTS_IS_CONTENT),
-                               encoding="utf-8", newline="\n")
-                stats["skills"] += 1
+                rendered = sanitize_skill(
+                    src.read_text(encoding="utf-8"),
+                    keep_agents=topic.name in AGENTS_IS_CONTENT,
+                )
             else:
-                dst.write_text(sanitize_reference(src.read_text(encoding="utf-8")),
-                               encoding="utf-8", newline="\n")
-                stats["refs"] += 1
-    print(f"published {stats['skills']} SKILL.md + {stats['refs']} references "
-          f"({stats['skipped']} skipped)")
+                rendered = sanitize_reference(src.read_text(encoding="utf-8"))
+            yield rel, rendered
+
+
+def _write_rendered(files, output: Path) -> dict[str, int]:
+    stats = {"skills": 0, "refs": 0}
+    output.mkdir(parents=True, exist_ok=True)
+    for rel, rendered in files:
+        dst = output / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_text(rendered, encoding="utf-8", newline="\n")
+        stats["skills" if dst.name == "SKILL.md" else "refs"] += 1
+    return stats
+
+
+def _manifest_payload(files: list[tuple[str, str]]) -> dict:
+    ordered = sorted(files, key=lambda item: item[0])
+    return {
+        "schema_version": 1,
+        "files": [rel for rel, _ in ordered],
+        "sha256": {rel: hashlib.sha256(text.encode("utf-8")).hexdigest() for rel, text in ordered},
+    }
+
+
+def _check(files: list[tuple[str, str]], output: Path, manifest: Path | None) -> int:
+    expected = _manifest_payload(files)
+    if manifest and manifest.is_file():
+        try:
+            recorded = json.loads(manifest.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"[FAIL] invalid publication manifest: {exc}", file=sys.stderr)
+            return 1
+        if recorded.get("files") != expected["files"] or recorded.get("sha256") != expected["sha256"]:
+            print("[FAIL] Hermes render differs from publication manifest", file=sys.stderr)
+            return 1
+    actual_files = sorted(path.relative_to(output).as_posix() for path in output.rglob("*.md")) if output.is_dir() else []
+    if actual_files != expected["files"]:
+        print("[FAIL] Hermes render file set differs from public corpus", file=sys.stderr)
+        return 1
+    for rel, rendered in files:
+        current = output / rel
+        if not current.is_file() or current.read_text(encoding="utf-8") != rendered:
+            print(f"[FAIL] Hermes render differs: {rel}", file=sys.stderr)
+            return 1
+    print(f"[ok] Hermes render matches {len(files)} public Markdown files")
+    return 0
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description="Publish sanitized Hermes UE skills")
+    parser.add_argument("--topics", nargs="*", help="publish only named topics")
+    parser.add_argument("--source", type=Path, default=SKILLS_SRC, help="Hermes UE skill root")
+    parser.add_argument("--output", type=Path, default=OUT, help="public corpus output root")
+    parser.add_argument("--manifest", type=Path, help="publication manifest to write or verify")
+    parser.add_argument("--check", action="store_true", help="render in memory and verify output without writing")
+    args = parser.parse_args(argv)
+    topics = set(args.topics) if args.topics else None
+    files = list(_rendered_files(args.source, topics))
+    if args.check:
+        return _check(files, args.output, args.manifest)
+    stats = _write_rendered(files, args.output)
+    if args.manifest:
+        args.manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.manifest.write_text(json.dumps(_manifest_payload(files), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"published {stats['skills']} SKILL.md + {stats['refs']} references")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

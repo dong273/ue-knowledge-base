@@ -1,26 +1,18 @@
-# Windows Non-ASCII Project Paths and Build Diagnostics
+# Windows Non-ASCII Project Paths
 
-Observed with Unreal Engine 5.7.4 and the Windows toolchain.
+Do not assume that every UE build failure under a non-ASCII path is caused by the path.
+First preserve the original UBT/UHT/compiler diagnostic and identify the failing tool or
+argument boundary.
 
-## Failure pattern
+## Diagnostic method
 
-Some Windows build and response-file paths do not survive non-ASCII characters consistently. The visible error may mention `cl.exe`, a response file, or a missing header even though the source and module dependency are correct. Treat the path encoding as a separate hypothesis before changing Build.cs dependencies.
+- Re-run the same target with a clean build and record the first failure.
+- Check quoting and encoding at each wrapper-script/process boundary.
+- Reproduce from a short ASCII-only worktree only as a diagnostic comparison.
+- If the ASCII path succeeds, narrow the failing tool before changing the project layout.
 
-## Bounded workaround
+## Evidence boundary
 
-Use an ASCII-only junction or checkout path for the project during the build diagnostic:
-
-```text
-<ASCII_PROJECT_ROOT>\Project.uproject
-```
-
-Keep the real project and source files unchanged. Point the build invocation at the ASCII path, and use `-NoUBA` when the goal is to isolate the ordinary compiler/response-file path from Unreal Build Accelerator behavior. Remove the workaround only after a clean build from the original path is independently confirmed.
-
-## Verification order
-
-1. Reproduce the failure from the original path and save the exact compiler/response-file error.
-2. Build from the ASCII path with the same target, configuration, and engine version.
-3. If the ASCII build passes, classify the issue as path/toolchain handling rather than a module contract failure.
-4. Re-run the original path after the environment or toolchain fix; do not claim the junction is a product fix.
-
-Do not place a real user profile, drive path, project name, or machine-specific junction in public documentation. Use placeholders such as `<ASCII_PROJECT_ROOT>`.
+An ASCII-path workaround is not proof that UE 5.7 globally rejects non-ASCII paths, and
+a successful source build is not proof that packaging, external SDKs, or deployment use
+the same path handling. Report the exact target, tool, path shape, and result separately.

@@ -1,146 +1,56 @@
 ---
-title: ue-plugin-installation
-description: Install third-party UE plugins (GitHub open-source, marketplace, project vs engine level). Covers feasibility research, download, submodule handling, registration, build verification, and MCP registration for UE-facing tools.
+description: Use for UE 5.7 plugin discovery, descriptor inspection, project enablement, module dependencies, compatibility checks, and packaging verification.
 ---
 
 # UE Plugin Installation
 
-Install third-party UE plugins into a project. Two levels: **Project plugin** (`Plugins/<Name>/` — travels with repo) and **Engine plugin** (`Engine/Plugins/<Name>/` — all projects on that engine install).
+Use this workflow to distinguish plugin discovery, project enablement, module dependencies, loading, and packaged availability.
 
-## Workflow
+## Discover installed plugins
 
-### 1. Feasibility Research
+IPluginManager::Get returns the plugin manager. FindPlugin returns a shared plugin pointer by name, and GetEnabledPlugins enumerates enabled plugins.
 
-Check via GitHub API (fast, no full page load):
-
-```bash
-# Repo metadata — stars, license, last update, description
-curl -sL "https://api.github.com/repos/<owner>/<repo>"
-
-# Check releases for supported engine versions
-curl -sL "https://api.github.com/repos/<owner>/<repo>/releases?per_page=5"
-
-# Check .uplugin for engine version and module list
-curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<Name>.uplugin"
-
-# Check submodules requirement
-curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/.gitmodules"
-```
-
-**Key signals:**
-- Stars: >50 = community tested; >300 = well-vetted
-- License: MIT/Apache-2.0/MPL-2.0 = free for commercial; check terms
-- Last update: within 6 months = actively maintained
-- EngineVersion in .uplugin: empty string = no version lock; specific = may need matching engine
-- Tags/releases exist = easier install; no releases = build from source
-
-### 2. Download via gh-proxy (slow network fallback)
-
-When `https://github.com/` downloads are slow, prefix with gh-proxy:
-
-```bash
-curl -sL -o plugin.zip "https://gh-proxy.com/https://github.com/<owner>/<repo>/archive/refs/heads/main.zip"
-```
-
-For tagged releases:
-```bash
-curl -sL -o plugin.zip "https://gh-proxy.com/https://github.com/<owner>/<repo>/archive/refs/tags/v1.0.0.zip"
-```
-
-### 3. Handle Submodules
-
-Check `.gitmodules` in the repo for submodule dependencies. Download each separately:
-
-```bash
-# For each submodule: url + path
-curl -sL -o submodule.zip "https://gh-proxy.com/https://github.com/<owner>/<subrepo>/archive/refs/heads/main.zip"
-unzip -qo submodule.zip
-# ⚠️ Fix nested directory: archive extracts as SubRepo-main/ inside SubRepo/
-# Move contents up one level if this happens
-if [ -d "Source/SubRepo/SubRepo-main" ]; then
-  mv Source/SubRepo/SubRepo-main/* Source/SubRepo/
-  rmdir Source/SubRepo/SubRepo-main
-fi
-```
-
-### 4. Install to Project
-
-```bash
-# Extract to project Plugins/
-unzip -qo plugin.zip -d /tmp/plugin-tmp
-mv /tmp/plugin-tmp/Repo-BranchOrTag/ Plugins/<PluginName>/
-rm -rf /tmp/plugin-tmp plugin.zip
-```
-
-**Naming:** The directory name doesn't matter for UE — it resolves by .uplugin filename. But keep it clean (repo name or friendly name).
-
-### 5. Register in .uproject
-
-```json
+```cpp fragment
+TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(PluginName);
+if (!Plugin.IsValid())
 {
-  "Plugins": [
-    {"Name": "<UPluginFilename>", "Enabled": true}
-  ]
+    return;
 }
 ```
 
-The `Name` must match the `.uplugin` filename (without extension). Patch the existing .uproject using `patch` tool — add the entry in the `Plugins` array.
+## Inspect descriptors
 
-### 6. Build to Verify
+IPlugin exposes GetDescriptor, GetBaseDir, and GetMountedAssetPath. FPluginDescriptor contains plugin metadata and module descriptors. Do not infer compatibility from a friendly name alone.
 
-```bash
-cd "<ProjectDir>"
-"<EngineDir>/Engine/Build/BatchFiles/Build.bat" <ProjectName>Editor Win64 Development \
-  -Project="<ProjectDir>/<Project>.uproject" -Progress 2>&1 | tail -10
+## Enable for a project
+
+A project plugin reference belongs in the Plugins array of the .uproject file.
+
+```json config
+{
+  "Name": "PluginName",
+  "Enabled": true
+}
 ```
 
-**Signs of success:**
-- `Compile [x64] <Module>.cpp` entries for the plugin's modules
-- `Link [x64] UnrealEditor-<Module>.dll`
-- `Result: Succeeded`
+Project enablement does not automatically add a C++ module dependency.
 
-**Signs of failure:**
-- `ERROR: ... is not compatible with the current engine version` — engine mismatch
-- `LNK2019` / `LNK2001` — missing dependency module, add to Build.cs or .uplugin dependencies
-- `Cannot open include file` — missing submodule or include path issue
-- `Target is up to date` with 0 new compilations — plugin may not have been detected (check .uproject entry, file paths)
+## Add module dependencies
 
-If "Target is up to date" but plugin was just added, touch the .uplugin to force re-evaluation:
-```bash
-touch "Plugins/<Name>/<Name>.uplugin"
-```
+A C++ module that includes plugin public headers must add the required plugin module to its Build.cs dependency list. Keep editor-only plugin modules out of runtime modules.
 
-### 7. (Optional) Hermes MCP Registration
+## Compatibility checks
 
-If the plugin provides an MCP server (e.g. FlopAI UnrealMCP), register it with Hermes:
+Verify engine version support, target platform, plugin modules, loading phases, dependencies, source or binary availability, and licensing. Rebuild source plugins with the target toolchain.
 
-```bash
-hermes mcp add <server-name> \
-  --command <command> \
-  --args --directory "<PythonDir>" run <script.py>
+## Packaging boundary
 
-# Handle interactive "Enable all N tools?" prompt by piping Y
-echo "Y" | hermes mcp add ...
-```
+Editor discovery and successful PIE loading do not prove a plugin is included or functional in a packaged target. Run the target build and inspect staging or runtime logs.
 
-The server must be running before Hermes can use its tools.
+## Time-sensitive discovery
 
-## Pitfalls
+- [Time-sensitive plugin discovery](references/free-ue57-plugins-2026.md)
 
-- **Submodule nested directory:** GitHub zip archives extract as `RepoName-main/` — if you extract into a directory that already has a nested folder with the same name, check and move contents up.
-- **Engine version lock in .uplugin:** Some plugins pin an EngineVersion. If empty string (`""`), they usually work across versions. If pinned, may need manual UE5.x compatibility edits.
-- **Content-only plugins (no Source/):** No C++ compilation needed — just drop in Plugins/ and register in .uproject.
-- **MSYS2 git-bash path quirks:** When running Build.bat from git-bash, some MSYS2 path conversions may affect `/c/` paths. Use absolute Windows paths with drive letters (e.g. `<ENGINE_ROOT>/...`).
-- **Plugin conflicts:** Two plugins registering the same module name cause a build error. Check existing plugins before adding new ones.
-- **Third-party DLL dependencies:** Some plugins ship with .dll files that must be in the executable path. Check plugin docs for redist requirements.
+## Verification boundary
 
-## Verification
-
-After installation, open the project in UE Editor and check:
-- Edit → Plugins → search for plugin name → should show Enabled ✓
-- Window menu should show the plugin's panel if it provides one
-- Build output should show the plugin's modules
-
-## Related Skills
-
-- **ue-module-build-system** — Build.cs, .uplugin structure, creating your own plugins
+Compile a public plugin-manager probe and the actual dependent module. Runtime-test loading where applicable. Marketplace availability, licensing, and packaged behavior need current external and target-build evidence.

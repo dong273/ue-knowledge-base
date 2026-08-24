@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "wave_id": "wave-01-high-risk",
+  "reviewer": "codex-wave-01-source-review",
+  "reviewed_at": "2026-08-23",
+  "evidence_catalog": {
+    "UE57.Source.ActorReplication": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h",
+      "symbols": ["HasAuthority", "SetReplicates", "GetIsReplicated", "SetReplicateMovement", "GetLifetimeReplicatedProps", "AddReplicatedSubObject", "RemoveReplicatedSubObject", "IsUsingRegisteredSubObjectList"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.RpcSpecifiers": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Programs/Shared/EpicGames.UHT/Specifiers/UhtFunctionSpecifiers.cs; Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectMacros.h",
+      "symbols": ["WithValidationSpecifier", "WithValidation", "Server", "Client", "NetMulticast", "Reliable", "Unreliable"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.ReplicationMacros": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Engine/Public/Net/UnrealNetwork.h",
+      "symbols": ["DOREPLIFETIME", "DOREPLIFETIME_CONDITION", "COND_OwnerOnly"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.FastArray": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Runtime/Net/Core/Public/Net/Serialization/FastArraySerializer.h",
+      "symbols": ["FFastArraySerializer", "FFastArraySerializerItem", "MarkItemDirty", "MarkArrayDirty"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.AbilitySystemComponent": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/AbilitySystemComponent.h",
+      "symbols": ["InitAbilityActorInfo", "SetReplicationMode", "GiveAbility", "GetNumericAttribute", "MakeOutgoingSpec", "ApplyGameplayEffectSpecToSelf", "CancelAbilities", "TryActivateAbilitiesByTag"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.GameplayAbility": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/Abilities/GameplayAbility.h",
+      "symbols": ["ActivateAbility", "EndAbility", "FGameplayAbilityActivationInfo"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.GameplayEffect": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/GameplayEffect.h",
+      "symbols": ["FGameplayEffectSpec", "FGameplayEffectSpecHandle", "SetSetByCallerMagnitude", "FActiveGameplayEffectHandle"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.AbilityTasks": {
+      "type": "engine_source",
+      "source_locator": "Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/Abilities/Tasks/AbilityTask_WaitDelay.h; Engine/Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/Abilities/Tasks/AbilityTask_PlayMontageAndWait.h",
+      "symbols": ["UAbilityTask_WaitDelay", "WaitDelay", "UAbilityTask_PlayMontageAndWait", "CreatePlayMontageAndWaitProxy"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.ModuleRules": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Programs/UnrealBuildTool/Configuration/ModuleRules.cs",
+      "symbols": ["ModuleRules", "PublicDependencyModuleNames", "PrivateDependencyModuleNames", "PublicIncludePaths", "PrivateIncludePaths"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.Source.UhtGeneratedHeader": {
+      "type": "engine_source",
+      "source_locator": "Engine/Source/Programs/Shared/EpicGames.UHT/Exporters/CodeGen/UhtHeaderCodeGenerator.cs",
+      "symbols": ["generated.h", "UHT"],
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    },
+    "UE57.ExpectedFailure.MissingGameplayAbilitiesDependency": {
+      "type": "expected_failure",
+      "source_locator": "validation/neg/mt",
+      "validation_id": "UEKB.ExpectedFailure.MissingGameplayAbilitiesDependency",
+      "diagnostic": "C1083.*AbilitySystemComponent\\.h",
+      "engine_version": "5.7.4",
+      "changelist": 51494982,
+      "verified_at": "2026-08-23"
+    }
+  },
+  "groups": [
+    {
+      "disposition": "non_claim",
+      "requirements": [],
+      "exclusion_reason": "Heading, reference list, checklist, review procedure, evidence method, or acceptance boundary; it does not assert that an engine or human outcome passed.",
+      "claim_ids": [
+        "uekb.c9680a1d9dc4aa1d75275920.c01f120d2e25b18ab",
+        "uekb.c9680a1d9dc4aa1d75275920.c26e1d9ec1502caf3",
+        "uekb.c9680a1d9dc4aa1d75275920.c7c60e09163d6cfff",
+        "uekb.c9680a1d9dc4aa1d75275920.ce2f20981b56e35ab",
+        "uekb.00cbca16f5f03012307136d9.c098ca7202ae06a94",
+        "uekb.00cbca16f5f03012307136d9.ca903856718ae3609",
+        "uekb.afc9f9852859f1b4a7325ba9.c74f107624e625e3a",
+        "uekb.afc9f9852859f1b4a7325ba9.cc23e2e1b499201e0",
+        "uekb.c671e50cea68b16ee9698815.c9895e4267f25cf95",
+        "uekb.c671e50cea68b16ee9698815.c2a01b6891e84747e",
+        "uekb.c671e50cea68b16ee9698815.c37545a953315f802",
+        "uekb.c671e50cea68b16ee9698815.cb504b5cbb4ed0783",
+        "uekb.c671e50cea68b16ee9698815.ce0e2838b2f57e3a8",
+        "uekb.ec911c508691a40afa9b5293.c128b1e167837face",
+        "uekb.ec911c508691a40afa9b5293.cff89017435c5f86c",
+        "uekb.ec911c508691a40afa9b5293.cd92b2b424e631526",
+        "uekb.ec911c508691a40afa9b5293.cc3ed47c428cd4e0c",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c76918fdb7f906715",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c6f8d24170959d744",
+        "uekb.cd786022fb2f3b94c7b14ca0.cdd7b5f478d1796bb",
+        "uekb.cd786022fb2f3b94c7b14ca0.c259989237a5537d7",
+        "uekb.558fdd0b751029a790ed90e4.c1a167cfaeb341320",
+        "uekb.558fdd0b751029a790ed90e4.c0d29cdc5d5703a47",
+        "uekb.dccb7fe1d0cb4fafb55befed.c51da0b3b05df187f",
+        "uekb.dccb7fe1d0cb4fafb55befed.ca3fa24857b3bce0d",
+        "uekb.44747041c9a8fc2d33cfc3bd.cb0f91f4c3a795faf",
+        "uekb.44747041c9a8fc2d33cfc3bd.ccc10e2660d6db713",
+        "uekb.806616a23321819bf28bc8d2.c55b82e90862b3c86",
+        "uekb.806616a23321819bf28bc8d2.cc6a0ee163c38f75b",
+        "uekb.871d2cc2288767a58e52e563.c77f3f20f79ff3537",
+        "uekb.871d2cc2288767a58e52e563.c0e3191b77da0b3a2",
+        "uekb.93ad96acc2b36c14cc041d00.cef676a943c89ded4",
+        "uekb.9da7f2edf9472a048cce8f09.c24f247aa82de1906",
+        "uekb.9da7f2edf9472a048cce8f09.ce07a7a058739b5c2",
+        "uekb.98b443ac6a6c1cf7250e7553.c6a1b1c04f9ad628c",
+        "uekb.98b443ac6a6c1cf7250e7553.c90e4dbb3bdf2981c",
+        "uekb.98b443ac6a6c1cf7250e7553.cc30dc13833f1b75b"
+      ]
+    },
+    {
+      "disposition": "runtime_behavior",
+      "requirements": ["authoritative_source", "compile", "runtime"],
+      "evidence_ids": ["UE57.Source.ActorReplication"],
+      "validation_ids": ["UEKB.Compile.NetworkingRpc", "UEKnowledgeValidation.ActorReplicationState"],
+      "notes": "World-spawned actor SetReplicates/GetIsReplicated readback; not evidence of packet delivery.",
+      "claim_ids": ["uekb.c9680a1d9dc4aa1d75275920.c591d7c14d135ab10"]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ActorReplication"],
+      "validation_ids": ["UEKB.Compile.NetworkingRpc"],
+      "claim_ids": [
+        "uekb.c9680a1d9dc4aa1d75275920.c362b16bfc848b3ea",
+        "uekb.c9680a1d9dc4aa1d75275920.c52f44378a6401982",
+        "uekb.c9680a1d9dc4aa1d75275920.cde68685203ff6ec1",
+        "uekb.c9680a1d9dc4aa1d75275920.cb593a25719d3c0bd",
+        "uekb.afc9f9852859f1b4a7325ba9.cc6b047456ef0e5d5",
+        "uekb.afc9f9852859f1b4a7325ba9.c1a98b3682d4535b2",
+        "uekb.afc9f9852859f1b4a7325ba9.cfb3ab58eab73c5d1"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.RpcSpecifiers"],
+      "validation_ids": ["UEKB.Compile.NetworkingRpc"],
+      "claim_ids": [
+        "uekb.c9680a1d9dc4aa1d75275920.ce3571f4ad18ef37a",
+        "uekb.c9680a1d9dc4aa1d75275920.c8a58ac7e8dab1a77",
+        "uekb.00cbca16f5f03012307136d9.c213014a38115ea1a",
+        "uekb.00cbca16f5f03012307136d9.cf2982086ac9f8b72",
+        "uekb.00cbca16f5f03012307136d9.c32c3e5f874d9f462",
+        "uekb.00cbca16f5f03012307136d9.ce7ca4497bc89c532"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.RpcSpecifiers"],
+      "claim_ids": [
+        "uekb.c9680a1d9dc4aa1d75275920.cf6fa0e0be268b670",
+        "uekb.00cbca16f5f03012307136d9.c063d4779ed2eee24",
+        "uekb.00cbca16f5f03012307136d9.ce438729b5554cad1",
+        "uekb.00cbca16f5f03012307136d9.c626bd43a2a7d84c6"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ReplicationMacros"],
+      "validation_ids": ["UEKB.Compile.NetworkingRpc"],
+      "claim_ids": [
+        "uekb.afc9f9852859f1b4a7325ba9.c0fadd92a4106b0b7",
+        "uekb.afc9f9852859f1b4a7325ba9.cbfa212dacd33da81",
+        "uekb.afc9f9852859f1b4a7325ba9.c9f80198c13b3f5c9",
+        "uekb.afc9f9852859f1b4a7325ba9.c94b80a515474f3fa"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.FastArray"],
+      "validation_ids": ["UEKB.Compile.NetworkingRpc"],
+      "claim_ids": [
+        "uekb.afc9f9852859f1b4a7325ba9.c04c13c7f2f269982",
+        "uekb.afc9f9852859f1b4a7325ba9.c94bbd3108c44a52b"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.AbilitySystemComponent"],
+      "claim_ids": [
+        "uekb.5dd79f6eb11abe7bf2b19b21.ce68e360bef738416",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c21335772a665d37b",
+        "uekb.806616a23321819bf28bc8d2.cdcfa468bfa593ed6"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.AbilitySystemComponent"],
+      "validation_ids": ["UEKB.Compile.GasApi"],
+      "claim_ids": [
+        "uekb.5dd79f6eb11abe7bf2b19b21.c46219d307ae1e0c3",
+        "uekb.5dd79f6eb11abe7bf2b19b21.ca06e83ac147392f7",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c2d4cd98eca179080",
+        "uekb.5dd79f6eb11abe7bf2b19b21.cd06227bf9c152176",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c368b73ae2d03316a",
+        "uekb.cd786022fb2f3b94c7b14ca0.cf3cb3dcf36e473a3",
+        "uekb.cd786022fb2f3b94c7b14ca0.c5deb1ca1c342e07f",
+        "uekb.cd786022fb2f3b94c7b14ca0.c8170057d409844ed",
+        "uekb.cd786022fb2f3b94c7b14ca0.c96d6e44157650f19",
+        "uekb.cd786022fb2f3b94c7b14ca0.c13c738fe91f4dbfc",
+        "uekb.cd786022fb2f3b94c7b14ca0.c4389d46985b22ed4",
+        "uekb.558fdd0b751029a790ed90e4.cfe7f17c52fa2746b",
+        "uekb.558fdd0b751029a790ed90e4.cda85b51550f7273a",
+        "uekb.558fdd0b751029a790ed90e4.c07f98d7f018be1b3",
+        "uekb.558fdd0b751029a790ed90e4.ccf77b5f30a56dfc0",
+        "uekb.558fdd0b751029a790ed90e4.cb32e37db8adf4e95",
+        "uekb.558fdd0b751029a790ed90e4.cbd85716df5779571",
+        "uekb.806616a23321819bf28bc8d2.cb3f82f318776f47d",
+        "uekb.806616a23321819bf28bc8d2.c662b8fa7de23757b",
+        "uekb.806616a23321819bf28bc8d2.c68dcd31296c2a00d",
+        "uekb.806616a23321819bf28bc8d2.c1e962bfcfbf9110a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.GameplayAbility"],
+      "validation_ids": ["UEKB.Compile.GasApi"],
+      "claim_ids": [
+        "uekb.5dd79f6eb11abe7bf2b19b21.cf738a96278c2acc3",
+        "uekb.5dd79f6eb11abe7bf2b19b21.c05ead871827ad505",
+        "uekb.cd786022fb2f3b94c7b14ca0.c1d3231254acadffd",
+        "uekb.cd786022fb2f3b94c7b14ca0.cd347da968ba74222"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.GameplayEffect", "UE57.Source.AbilitySystemComponent"],
+      "validation_ids": ["UEKB.Compile.GasApi"],
+      "claim_ids": [
+        "uekb.dccb7fe1d0cb4fafb55befed.cfde06984ce635e74",
+        "uekb.dccb7fe1d0cb4fafb55befed.c429bae794ea6c841",
+        "uekb.dccb7fe1d0cb4fafb55befed.ca592199724fdbd41",
+        "uekb.dccb7fe1d0cb4fafb55befed.cd69998c3caf53b43",
+        "uekb.dccb7fe1d0cb4fafb55befed.c527987fbceca753d"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.AbilityTasks"],
+      "validation_ids": ["UEKB.Compile.GasApi"],
+      "claim_ids": [
+        "uekb.44747041c9a8fc2d33cfc3bd.c505f7a4e14401918",
+        "uekb.44747041c9a8fc2d33cfc3bd.c4b92133ee20dce1b",
+        "uekb.44747041c9a8fc2d33cfc3bd.c830d6a59c028c1b6",
+        "uekb.44747041c9a8fc2d33cfc3bd.cb697bd6436262d30",
+        "uekb.44747041c9a8fc2d33cfc3bd.cb5aac0aa7ebdd812"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.AbilityTasks"],
+      "claim_ids": ["uekb.44747041c9a8fc2d33cfc3bd.c3339572589767f24"]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ModuleRules"],
+      "validation_ids": ["UEKB.Compile.BuildRules"],
+      "claim_ids": ["uekb.cd786022fb2f3b94c7b14ca0.c6e2a0be22f5b0054"]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.ModuleRules"],
+      "claim_ids": [
+        "uekb.871d2cc2288767a58e52e563.c796d9e0ea88762b8",
+        "uekb.871d2cc2288767a58e52e563.c958ec96131f8884d",
+        "uekb.9da7f2edf9472a048cce8f09.ce9e15c385ff7990a"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ModuleRules"],
+      "validation_ids": ["UEKB.Compile.BuildRules"],
+      "claim_ids": [
+        "uekb.871d2cc2288767a58e52e563.c920392bf46ee0a01",
+        "uekb.871d2cc2288767a58e52e563.c710ce0089c6d3a00",
+        "uekb.871d2cc2288767a58e52e563.c024eb0e1acb06a54",
+        "uekb.93ad96acc2b36c14cc041d00.ca45213a2a5ee053f",
+        "uekb.93ad96acc2b36c14cc041d00.cca1e1a87d5d06981",
+        "uekb.93ad96acc2b36c14cc041d00.cff0423b0cb9f2ee9",
+        "uekb.93ad96acc2b36c14cc041d00.c9692b4316ceb15fd",
+        "uekb.93ad96acc2b36c14cc041d00.ccdc92938d4da2325"
+      ]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ModuleRules"],
+      "validation_ids": ["UEKB.Compile.BuildRules", "UEKB.Compile.BuildRulesEditor"],
+      "claim_ids": ["uekb.871d2cc2288767a58e52e563.c1dd674ec24331643"]
+    },
+    {
+      "disposition": "api_contract",
+      "requirements": ["authoritative_source", "compile"],
+      "evidence_ids": ["UE57.Source.ModuleRules"],
+      "validation_ids": ["UEKB.Compile.BuildRulesEditor"],
+      "claim_ids": [
+        "uekb.93ad96acc2b36c14cc041d00.cf8a0c1d9d9c8aee8",
+        "uekb.93ad96acc2b36c14cc041d00.c39641afc5126d9bc",
+        "uekb.9da7f2edf9472a048cce8f09.cbf74e487336ce14d"
+      ]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.ModuleRules", "UE57.ExpectedFailure.MissingGameplayAbilitiesDependency"],
+      "claim_ids": ["uekb.9da7f2edf9472a048cce8f09.c1d1a0a75c7fcc0e7"]
+    },
+    {
+      "disposition": "concept",
+      "requirements": ["authoritative_source"],
+      "evidence_ids": ["UE57.Source.UhtGeneratedHeader"],
+      "claim_ids": ["uekb.9da7f2edf9472a048cce8f09.cff77ecc2fae6bb5f"]
+    }
+  ]
+}

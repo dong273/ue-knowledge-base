@@ -127,6 +127,14 @@ def passage_rate(rows, split=None):
     return sum(row["passage_recall_at_3"] for row in selected) / len(selected)
 
 
+def failed_passages(rows):
+    """Return labeled queries whose expected section missed the top three."""
+    return [
+        row for row in rows
+        if row.get("expected") and row.get("passage_recall_at_3") is False
+    ]
+
+
 def mrr(rows, split=None):
     selected = rows if split is None else [row for row in rows if row["split"] == split]
     return statistics.fmean(row["reciprocal_rank_at_5"] for row in selected)
@@ -254,11 +262,9 @@ def main(argv=None) -> int:
         "en_regression_within_2pp": rate(hybrid, "en", "heldout") >= rate(vector, "en", "heldout") - 0.02,
         "overall_mrr_at_5_not_lower": mrr(hybrid, "heldout") >= mrr(vector, "heldout"),
         # Passage-level recall: labels in tests/data/passage_expected.json
-        # are the most specific section the engine actually returns for each
-        # held-out query (refined from a top-10 pass; no "前言" fallbacks).
-        # Same-source labels make this a REGRESSION gate (measured 98.4%),
-        # not an absolute-quality claim — it fails when a change stops
-        # surfacing the right section in the top 3.
+        # are manually reviewed sections that answer each held-out query.
+        # Dataset integrity tests require every exact source/heading pair to
+        # exist in the current corpus, with no "前言" fallbacks.
         "heldout_passage_recall_at_3": passage_rate(hybrid, "heldout") >= 0.80,
         # natural_zh is the honest bar for spoken-Chinese queries: no
         # glossary-alias wording, plain phrasing (baseline 25.8% before the
@@ -310,6 +316,8 @@ def main(argv=None) -> int:
         "failures": {
             "heldout_vector": [row for row in vector if not row["recall_at_3"]],
             "heldout_hybrid": [row for row in hybrid if not row["recall_at_3"]],
+            "heldout_passage_vector": failed_passages(vector),
+            "heldout_passage_hybrid": failed_passages(hybrid),
             "tune_hybrid": [row for row in tune_hybrid if not row["recall_at_3"]],
             "natural_zh_hybrid": [row for row in natural_hybrid if not row["recall_at_3"]],
         },

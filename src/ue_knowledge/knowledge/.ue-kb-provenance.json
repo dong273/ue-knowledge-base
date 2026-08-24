@@ -1,0 +1,2431 @@
+{
+  "documents": {
+    "ue-actor-component-architecture/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "c036780efb8b00d94b233a275246d66f4c73fab8931ab8c5b0372abc32efe2a4",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ActorComponents"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ac08ec5586c3a011e5d39e31",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.ActorComponents"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-actor-component-architecture/references/actor-lifecycle.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "ee1b0de5b0e6b79e2fd6ac076f3c8d2d74a4b9cf6ff72d129f065766d52996ea",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ActorLifecycle"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.888079fa045ea523b79a9e4e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.ActorComponents"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-actor-component-architecture/references/component-types.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "79e2e3a07fb5f55c1034d144b47e9025305e7bd23c8e6c0ba53516687989e600",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ActorComponents"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.5df89051d0def2a7a3033d2c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.ActorComponents"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ai-navigation/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "396f358293c83981644fba0a05e92ce401876c341b75b5de7773bc5ae482d221",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AINavigation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.7cf2520a11235d472ac51e43",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AINavigation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ai-navigation/references/behavior-tree-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "eb12491aa1c2881db51d88c988b2af356a3b5dd7c519e081d203905ec11a8a86",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AINavigation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.7ee70913b7a7f9ec2497235b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AINavigation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ai-navigation/references/eqs-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "90b9338591b42ef41262389997070f1467c3d6f4018a0647d608ccaf8c2316a1",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AINavigation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.85c2d18fe1b60ab2f4eded32",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AINavigation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-animation-system/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "b8ce39dca9327129ad230562d6835942a609e25307b2cd63122f53b92e32f07d",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Animation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.068005acf558dfcc264e33a3",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Animation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-animation-system/references/anim-notify-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "8570eaf5e5e63cc44adbfbe431c969b4babccea2307a5c98a61d44cf2365c716",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Animation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.cce821f186c44b13fdc5de9c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Animation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-animation-system/references/locomotion-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "5ed6deb8b9f0c2d8d3021f4420b94f89775a0e89b5253b44140fe56ea1d4b353",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Animation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.551c08370c97d414c075b04a",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Animation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-async-threading/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "5cf186764d24ebf90ee36e4bbcd52a32cb8feddf52b61c5839d17022efb30ab8",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AsyncThreading"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.54a47114f6be3e64e7b20c6d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AsyncThreading"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-async-threading/references/thread-safety-guide.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "4ade904952910b7e7db6219865fe65de3df146f778e47133c0c3a4d0668d8147",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AsyncThreading"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.224c50032f9284fd6df7a87e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AsyncThreading"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-async-threading/references/threading-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "18e407c06bef2098dd0fb72ee42d18b601db31672fd230e71b9eb45ca83ebbc6",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AsyncThreading"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ae7942b50d418e3ab65981c6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.AsyncThreading"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-audio-system/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "d39110b1323cbdb8a70ad899816399a11e100e3ed4780be4ed4e5aa716340701",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Audio"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.bfc38d2d801db19d852aba4a",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Audio"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-audio-system/references/audio-setup-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "3e55d51e9644ab9437663953edcd669cefa6e624e18fcc49807891801ff9be96",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Audio"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ab2bbcc94e204b7693919148",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Audio"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-character-movement/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "06f9b25b3b358b97b1196416a9f6022fb83deef89e75f45a6b314a17aee26ee1",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.52743fd6f0c8454f2862c1b1",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-character-movement/references/cmc-extension-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "f50d09149b4a07ba09a05e82d20f166c347d0145a7fe08e87d7726e84ea6dd33",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.994240234395f1990393c029",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-character-movement/references/movement-pipeline.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "98918e4e55da1bcc52ee0b3515e5eae53be2563748e36ac2cf7b271d23befb74",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ca3f900a258f491a0ab870cd",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-character-movement/references/third-person-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "6b860e0aa24bc641d8907a722ebedab49f5faec00c87be91c13623f3ae8a8562",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.49d25a6225d301aff090335d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-character-movement/references/top-down-hades-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "3ef4bb0d65a4867dde07579f74a5136cbe560532cd39209c79ee6fe7a8188f74",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CharacterMovement"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.f5e755b3860e010caaa6a7b1",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CharacterMovement"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-code-review/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "5619147523ac73c2217168d476db8918ef97713321b89f416a2f1704a5a1bacc",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c671e50cea68b16ee9698815",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-23"
+    },
+    "ue-cpp-foundations/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "f1a6f87eca474f77355fb6690f5a699e312613143074e077d43978b05e58435d",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CoreContainersDelegates",
+        "UE57.Source.CppReflection"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.43b994d4cf24ee47b6824a14",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CppFoundations",
+        "UEKB.Compile.CppReflection"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-cpp-foundations/references/container-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "528b69ef83ab9d5dba8586d9dd2d3cea133b2d92b6bb55f68e7eb58684126fbf",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CoreContainersDelegates"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.05f562fbd6f13535e566d332",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CppFoundations"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-cpp-foundations/references/delegate-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "2c159c281ee3f0a3903488d0f91069ca2cb88738b4d69aa2e10808d17e2d35f6",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CoreContainersDelegates",
+        "UE57.Source.CppReflection"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.60479440c7329c769a53e93b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CppFoundations",
+        "UEKB.Compile.CppReflection"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-cpp-foundations/references/property-specifiers.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "63c850b6d5038040237acf82988ce5d435d04b7a68b173026f8be053934a1d68",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.CppReflection"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.6f918359a268debd248043be",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.CppReflection"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-data-assets-tables/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "686d207a682cb5f7e8e64d0034c0722a775239f9c342f6198ac66c364a165b6f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.DataAssets"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.b862f31ca20bb773ad0f5a04",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.DataAssetTypes",
+        "UEKB.Compile.DataAssets"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-data-assets-tables/references/asset-loading-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "041be4b80fc4d1692f4fae1f52b811e972f4f7ee02b4df469dae20c70d11ccf8",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.DataAssets"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.864b779e6c1827766d88fe11",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.DataAssetTypes",
+        "UEKB.Compile.DataAssets"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-data-assets-tables/references/data-driven-design.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "ad3eb7d69847afce8ad5c8adeb6d7ad0fbc0e0819aea7d2c4553c5348496826a",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.DataAssets"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.47367af0320bb47b5c6490dc",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.DataAssetTypes",
+        "UEKB.Compile.DataAssets"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "44ef7419783b405cc1ed5683c0384df64c3831efee32859a3510ece9db924488",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EditorTools"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.a9f54ebd22558cca95749077",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.EditorTools"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/references/detail-customization-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "062c4bd3b6759ae94950895e0ab27fd5cad3e3162756a54d48672a29be54904f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EditorTools"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.f6a892608966467008ec94ba",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.EditorTools"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/references/editor-module-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "9994121cfaad5b22c91ed89e4e7209a00add9ba3e430abdd909d2229c8a66fea",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EditorTools"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.50a38237872106d770207101",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.EditorTools"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/references/unattended-editor-automation.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "38d8f24576f1db81e0d0c27e8a8f4f82f52661ef72065b4b66c24dca3643418a",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EditorTools"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.50ad612d616618acfc2028d5",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.EditorTools"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-game-features/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "04cff4bb75eb9c3f9ff4691f192a0ab10eba01cc0f598f02e62cbfc97192e9b0",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.GameFeatures"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.6c293b2d66cd534f0a4ce7c6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GameFeatures"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-game-features/references/experience-system.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "8aeefa764be8ad53555c49486c6e46bf448ed74c8d0bcb24c214686bfd86459f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.GameFeatures"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c0c442d21df0f1ef60317535",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GameFeatures"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-game-features/references/game-feature-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "11b26f62077c56607fde38c74c9ca6ae5b7f09e6d72f144adf809577acddd04b",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.GameFeatures"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.bd3987a546a74b1b619a3dce",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GameFeatures"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-gameplay-abilities/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "9a596d6e0c3734deb40a826cde183f5d52dadc7fb7fd72f72d2b2b09b6a2173d",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilitySystemComponent",
+        "UE57.Source.GameplayAbility"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.5dd79f6eb11abe7bf2b19b21",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-abilities/references/ability-task-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "b923d4cece380cfa47f9517bdbf7c14d67b6b40b1d9cbc9027d58988877f0af8",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilityTasks"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.44747041c9a8fc2d33cfc3bd",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-abilities/references/gameplay-effect-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "fe514cb5da0ee5aa819e01876d0c00bb3055b124d774ec1bad15cd81fc803f87",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilitySystemComponent",
+        "UE57.Source.GameplayEffect"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.dccb7fe1d0cb4fafb55befed",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-abilities/references/gas-input-integration.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "b24dd4bf142424e423c95c3c535ac40b089697ca4a49bbd0066833b9edeea2c3",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilitySystemComponent"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.806616a23321819bf28bc8d2",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-abilities/references/gas-setup-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "469b43c02ecc7033e4f3194155c7c431e3d0dc976ae9a66629b12d6e8cc423e1",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilitySystemComponent"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.558fdd0b751029a790ed90e4",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-abilities/references/ue5.7-api-migration.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "25947ecc6d793a1d95359b4ee201442b1ff362e821fc63ff004c1b03da8847c6",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.AbilitySystemComponent",
+        "UE57.Source.GameplayAbility",
+        "UE57.Source.ModuleRules"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.cd786022fb2f3b94c7b14ca0",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.BuildRules",
+        "UEKB.Compile.GasApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-gameplay-framework/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "2974f3adf83cca61c048fa81b01aa8cb3dfd6376634f717377a7fcd361bc05f5",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.GameplayFramework"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c892fe4ece105de6f951dd7e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GameplayFramework"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-gameplay-framework/references/framework-class-map.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "dcad98505a48564d975e8e518a63848991bc0cc01f26c60fec104f8f09d3999f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.GameplayFramework"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.e9e9c11320f4c84b477dddd7",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.GameplayFramework"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-input-system/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "ff0a0caeb886d39c118247389a370496a9073860180866ecfd746b37588e3b1c",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EnhancedInput"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.32af6265d13f8b998b8a6d0b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.InputTypes",
+        "UEKB.Compile.InputUi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-input-system/references/input-action-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "099bc6aaf2d870614c4b899099b032a43d3bcebfbaabcc76cda5e744fd81d0a3",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.EnhancedInput"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.3a973a344ef2fc95c9b445e6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.InputTypes",
+        "UEKB.Compile.InputUi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-knowledge-rag/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "bae57531f770d684ca15487f4880a12bb66ab56e464237b8b436f40622249593",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UEKB.Source.RAG"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ae579db001a17cc28300ff5c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-knowledge-rag/references/query-optimization.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "01cd4069c7c8a0bcb5f9fa00e723e7382ff3fc7b36bb17814d7c18008e26f78f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UEKB.Source.RAG"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.64e1845fe44a3d4fe6be3a0e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-mass-entity/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "9791bfef300cc484dc34a0bdd0a5076c1c05ed48151b4f423e364f38f00f418b",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MassEntity"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.306a55671638f66d96a7ddc4",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MassEntity"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-mass-entity/references/mass-entity-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "6d733297ea5f8130d6625163da0d8d9c0ea8db73cc3fa54618f1735bd9f24540",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MassEntity"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.1819dcda296c34a9c55fe293",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MassEntity"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-mass-entity/references/mass-fragment-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "5e379171631ad9798047c64479f498f80c14497923c0f264cdf36702f257876b",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MassEntity"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.2b4d561926aae32fdedfe720",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MassEntity"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-materials-rendering/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "9c11df825f3037318eb5d2cf08759093567644db81a1a05a9ba9244f06eee1f3",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MaterialsRendering"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.2b057435373e9c5d6d10c6c3",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MaterialsRendering"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-materials-rendering/references/material-parameter-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "08545e31d40650c2116869487128677cb6c135d5edad12941218f45aa69f9d72",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MaterialsRendering"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.f93e6d2a0761a067cc22950e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MaterialsRendering"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-materials-rendering/references/post-process-settings.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "visual"
+      ],
+      "content_sha256": "7425d07c35377d040836f556623f038d0a2a9da467b611497cfc1a60cc560948",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.MaterialsRendering"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c42031870195ff106a2da1ae",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.MaterialsRendering"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-module-build-system/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "ac27b065f0c6392c7df607938d241b9c1780254ca14e64a616c972eb76db5807",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ModuleRules"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.871d2cc2288767a58e52e563",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.BuildRules",
+        "UEKB.Compile.BuildRulesEditor"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-module-build-system/references/build-cs-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "0f29604087b907cf0ed7b3be353c18464a969010a2c25385b12f76b0c556896d",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ModuleRules"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.93ad96acc2b36c14cc041d00",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.BuildRules",
+        "UEKB.Compile.BuildRulesEditor"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-module-build-system/references/common-build-errors.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "e462906f6ea76e6e7a379d5e8ada2953cdc3f017ae8cc5cc50cd55137bcb6f8f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.ExpectedFailure.MissingGameplayAbilitiesDependency",
+        "UE57.Source.ModuleRules",
+        "UE57.Source.UhtGeneratedHeader"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.9da7f2edf9472a048cce8f09",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.BuildRulesEditor"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-module-build-system/references/windows-non-ascii-project-paths.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "62946177c38ddd134fd76f9b0e4eb2eaa4ca0bd16d5782fff9d69b3e3c39e66b",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.98b443ac6a6c1cf7250e7553",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-23"
+    },
+    "ue-networking-replication/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "f52621a1b314c2bc9ea32042d3007530468340d06b91931addd2749508a9c6fa",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ActorReplication",
+        "UE57.Source.RpcSpecifiers"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c9680a1d9dc4aa1d75275920",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.NetworkingRpc",
+        "UEKnowledgeValidation.ActorReplicationState"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test",
+        "runtime_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-networking-replication/references/replication-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "5cc85f4e05c80ba263203c7bd2364fee8cbdbd3180d3270880a026b2d20b6082",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ActorReplication",
+        "UE57.Source.FastArray",
+        "UE57.Source.ReplicationMacros"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.afc9f9852859f1b4a7325ba9",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.NetworkingRpc"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-networking-replication/references/rpc-decision-guide.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "c4e536cdba04447c5e7af9729cc94270b675df43b34a8a195f21b400c315da48",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.RpcSpecifiers"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.00cbca16f5f03012307136d9",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.NetworkingRpc"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-23"
+    },
+    "ue-niagara-effects/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "06f0d89fa82dc83b0e08b3f12037b483142fc0ecb01316b5ed25e6641dad8181",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Niagara"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.e0d901bcfa01548bade92705",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Niagara"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-niagara-effects/references/niagara-data-interfaces.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "d3993c4d95fb331739be7533d11362a3f9e03fa14f76f36ccbfcc4816f2fe2f9",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Niagara"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.c74f110a2584df5073f47c84",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Niagara"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-niagara-effects/references/niagara-parameter-types.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "254f92cd975a03bee012b49df1d2af17df50d5f69a7762550cdaa792ef634a69",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Niagara"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.6776ac74fad4e6ac4c501b8c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Niagara"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "7481a4800d0aec25bbe7d6938decf504d3c96b80e1a1a9a193243a7b7edd0e24",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.700b69951f76581fdf788ae4",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PhysicsCollision"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/references/actor-collision-enable-state.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "33af6a10dbda7ee6cac11dc5fae884310db23004013a2b7c0e0200caedd40ec7",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.6b27a6e428a6f0d6b3d9afd5",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.ActorCollision",
+        "UEKB.Compile.PhysicsCollision",
+        "UEKnowledgeValidation.ActorCollisionEnableState"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test",
+        "runtime_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/references/collision-channel-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "c5b611320ef8f6c23f109e33171cace55719c457480bc6167120111ee14640d1",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.6b271d6b3f6a823ffa0e9f0b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PhysicsCollision"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/references/ground-penetration-debugging.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "e0a947ca08a3fe8268452bd8a2d67fb5422c9c1209e091669c25827dcdfa2263",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.29dc3af7031aa5ba6de51c1d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PhysicsCollision"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/references/trace-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "0dd596d0429c7a7c159be88612e57f7b7f25008f994b498f0c47a252f4d9f765",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PhysicsCollision"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.32148321ed44df6039b176e4",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PhysicsCollision"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-plugin-installation/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "b00208701ecab1275eb21c95546db81c5a5e82a06084f8f0286b79afe0bb9058",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PluginManager"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.8029d73dd5ae4069d1e93ec6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PluginManager"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-plugin-installation/references/free-ue57-plugins-2026.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "344b91030f5485cf7e84a5abf1297110c59854a9df3980e7b8f6432d0740be82",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.9722a4bd8703d3f68b4cb580",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-24"
+    },
+    "ue-procedural-generation/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "b92be00cadc4ed7e47f921743182b34f762acb1b4321dd84a6db16ad0ac6a0ff",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PCG"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.7e90fe20f94877ee972fbdb8",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PCG"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-procedural-generation/references/pcg-node-reference.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "76e2b6614a3d698b9d61599ba8817a7ee48e0e212552be606f3a2835a2643699",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PCG"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.04fe60cff04f78af0943c720",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PCG"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-procedural-generation/references/procedural-mesh-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "8a4799f83897dfbdb8b9967f3020772fdcb320e1600790deffb088a26d20e44c",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.PCG"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.5664f1303986889021932e6c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.PCG"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-project-context/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "51e55d849a9baad66f0451e8bea31d9ee4183792ac11386b8e51fe129298818a",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.e5bb97fd92264d681e8e5e4a",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-24"
+    },
+    "ue-project-creation/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "96570aefc52025dadcb983cf9125f6bc49a36b2137c6a99b27e9d330a86b98f5",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.ProjectCreation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.4f56f1c97aa321c29e9f38f2",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-sequencer-cinematics/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "0307340d0a754f1c52acabed3a2a59baa6de61d8978e58e52755cf2b92ce2938",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Sequencer"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.d5dfd402682e3a61241a5ac1",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Sequencer"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-sequencer-cinematics/references/sequencer-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "f11f7597cb06a7c03e6ec8c8ba17f757100418a7bd94de9b38d047c15eea6ca7",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Sequencer"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.1050fc1878447f1d627ca2e6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Sequencer"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-serialization-savegames/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "89b2e3d068cb94634df1830f171d8ee106d45f5e24c7e98097e207a61db2ed11",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.SaveGames"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.100c04138184ad1677de3870",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.SaveGameApi",
+        "UEKB.Compile.SaveGameTypes",
+        "UEKnowledgeValidation.SaveGameObjectCreation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test",
+        "runtime_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-serialization-savegames/references/save-system-architecture.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "bd21676fb9b62def4fcfa7f8f7c08575827cc39986500d2653dc8ed46cfbc9a6",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.SaveGames"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ec78d30283c4dd09de64064b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.SaveGameApi"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-state-trees/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "40b2c089be03a5dfa55cfc59309a4fc9c2588959d835ddbfc07eaeed46979072",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.StateTree"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.f054939d6b85d70a3e85a37d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.StateTree"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-state-trees/references/state-tree-mass-integration.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "12dc0ccc17a08944c8313a993a601e119d7e2afcc4f473faa6d937bf34468176",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.StateTree"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.3c89d7853e82670f582453fd",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.StateTree"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-state-trees/references/state-tree-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "90e5485cecc8c03aab8b3d22ab7641de0edeca40a379b32ff63cace1ab350803",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.StateTree"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.79ce04032651bbf7d4705cdb",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.StateTree"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-testing-debugging/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime",
+        "visual"
+      ],
+      "content_sha256": "4bfc5309346195ca9f1e3865aae2f872c72c5a17734415052b3eb873f569c4ba",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Automation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.f26a6738bacbedc1b610b38e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Automation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-testing-debugging/references/automation-test-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "runtime"
+      ],
+      "content_sha256": "ebbe9509f0b2a184882f2d678b94efb2dbf5081d46d06433df42c00e94ed0a0b",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.Automation"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.3fe47cfafe955b372789e0b0",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.Automation"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-testing-debugging/references/fresh-pie-negative-evidence.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept",
+        "runtime",
+        "visual"
+      ],
+      "content_sha256": "b2adfca416d9e2c3495723fb3a08efe9e34b64484c9d1a95d53fcb8e6f5e286f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.ec911c508691a40afa9b5293",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-23"
+    },
+    "ue-testing-debugging/references/profiling-commands.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "f87d2f7e89f9f53eb68b971457670a0ddc48290a8af4912dd6f9c123c109e6d3",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.1898167e1653b539ef16caff",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ui-umg-slate/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept",
+        "visual"
+      ],
+      "content_sha256": "8c02a6b264341c5b61579b88978cf6f019055f5336ecbd5116d70e7ad62dc08e",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.UI"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.9ba5308b62ccfa3eb8191d44",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.UI"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ui-umg-slate/references/common-ui-setup.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "6b3a5e5532d5efe3791f61c7574bb24bc03b91c03ef404d8526a8d639d43216a",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.UI"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.925164b2a9ac0a0d36cc299e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.UI"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-ui-umg-slate/references/widget-types.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "5c43234be772aeed4ee7b42445cac19a0b15ecb923ab93dc9c52dcb8fe3627f1",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.UI"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.e0f77dd076b8ab122a51065a",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.UI",
+        "UEKB.Compile.UIBindWidget"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-world-level-streaming/SKILL.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "86553462f299be30d23d158e453a23ec2b23f44498464fa17df4c353450c5267",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.WorldStreaming"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.a90ebec19cf862dcbb630c2d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.WorldStreaming"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    },
+    "ue-world-level-streaming/references/streaming-patterns.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "ebe54880afe60ed20df039625393563dc961320c012cded00f0f865fc58d3d2f",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [
+        "UE57.Source.WorldStreaming"
+      ],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.4618cf38491f38f238195fb0",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [
+        "UEKB.Compile.WorldStreaming"
+      ],
+      "verification": [
+        "engine_source",
+        "compile_test"
+      ],
+      "verified_at": "2026-08-24"
+    }
+  },
+  "generated_from_claim_ledger_sha256": "66ece7b446706ccf1ce980ffcbb991efaa1a73f38e34b97a3b92a178b841f492",
+  "schema_version": 1,
+  "scope": "public"
+}
