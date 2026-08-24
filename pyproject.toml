@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ue-knowledge-base"
-version = "0.6.3"
+version = "0.7.0"
 description = "Offline hybrid search over Unreal Engine development knowledge (BGE + BM25 + ChromaDB)"
 readme = "README.md"
 # Upper bound: the pinned chromadb 0.x line pulls chroma-hnswlib, which has
