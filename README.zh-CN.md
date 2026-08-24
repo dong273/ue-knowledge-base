@@ -1,6 +1,6 @@
 # UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
 
-[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg?v=0.6.3)](https://pypi.org/project/ue-knowledge-base/)
+[![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -8,12 +8,16 @@
 > 配合本地混合检索（BGE + BM25 + ChromaDB）。模型一次下载（约 100MB）后
 > 完全离线，笔记本 CPU 即可运行，无 API 费用。
 
+> **v0.7.0 已发布到 [PyPI](https://pypi.org/project/ue-knowledge-base/0.7.0/)。**
+> 本版本通过 90/90 语料可信审计、UE 5.7.4（CL 51494982）证据门禁、检索/隐私检查和 CI。
+> 公共索引与项目索引保持物理隔离。
+
 ## 为什么你需要它
 
 | 痛点 | 常见现状 | 这个项目 |
 |---|---|---|
 | **中文 UE 资料碎片化** | 答案散落在论坛、博客、视频和英文官方文档里，一个"GAS 冷却"要拼十几个来源 | 31 个主题、90 篇**结构化原创文档**，一次检索直达答案 |
-| **LLM 会幻觉 UE API** | 通用模型分不清 UE 5.4 和 5.7 的 API 差异，给你"看起来对"的代码 | 文档来自真实项目实践，包含**可直接使用的 C++ 模式**，并针对特定引擎版本校验 |
+| **LLM 会幻觉 UE API** | 通用模型分不清 UE 5.4 和 5.7 的 API 差异，给你"看起来对"的代码 | 文档来自真实项目实践；每个章节和代码 artifact 都有分类，高风险 UE 5.7 API/运行结论关联源码、编译或 Automation 证据 |
 | **云 RAG 花钱 + 泄代码** | 每次查询都把你的代码片段发给云端 API，还要按 token 计费 | **完全本地运行，零 API 成本**——游戏代码一行都不会离开你的机器 |
 | **翻译丢保真度** | 翻译/转述文档会模糊 UE 术语、偏离真实引擎行为 | **原创英文语料**（引擎本身的语言，无翻译损耗）+ 混合主题支持中文查询 |
 
@@ -26,16 +30,17 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 - 90 篇原创文档（83 英文、7 中英混合），使用 Markdown-aware 分块，
   每块最多 384 个 embedding tokens；精确块数由发布验证脚本动态生成和校验
 - 中英 UE 术语扩展 + 口语中文短语词典（`zh_dict.json`，每个概念词均由语料
-  词表校验）+ 向量/BM25 RRF 融合。124 条黄金查询门禁在发布机器上中文
-  held-out Recall@3 达到 **100%**，英文 **100%**；另有一组 **31 条独立
-  自然口语中文查询**（非术语表措辞）达到 **90.3% Recall@3**（引入短语
-  词典前仅 25.8%）。同一评测还报告 tune 组，防止别名式查询虚高数字
+  词表校验）+ 向量/BM25 RRF 融合。held-out 门禁（62 条、每主题 2 条）在
+  发布机器上中文 Recall@3 达到 **100%**，英文 **100%**；另有一组 **31 条独立
+  自然口语中文查询**（非术语表措辞）达到 **96.8% Recall@3**，相对 25.8%
+  的纯向量基线显著提升。同一评测还报告 tune 组，防止别名式查询虚高数字
   （见 `scripts/evaluate_retrieval.py`）
 - 无 API key、无 token 计费，`pip install` 后即可使用
 - embedding 与检索全部在本地完成，代码不会离开你的机器
 - 所有命令支持 `--json` 输出，可接入 Hermes / Claude Code / OpenCode 等 Agent
 - 面向国内网络：GitHub 镜像克隆 + 清华 PyPI + hf-mirror 自动回退，无需代理
-- 模型约 100MB，笔记本 CPU 即可运行，无 GPU 要求；索引构建约 1 分钟
+- 模型约 100MB，笔记本 CPU 即可运行，无 GPU 要求；索引构建约 1 分钟；发布
+  机器冷查询约 7 秒，进程内热查询低于 0.1 秒
 
 ## 一分钟上手
 
@@ -63,7 +68,8 @@ $ ue-kb query "GAS ability cooldown"
     effects, and attributes...
 ```
 
-检索结果直接包含可用的 C++ 写法，不只是相关文字。
+检索结果包含带类型标记的代码 artifact 和使用模式，不只是相关文字；复制代码前应检查
+artifact 类型和证据元数据。
 
 ## 国内安装（零代理）
 
@@ -89,13 +95,13 @@ ue-kb query "GAS ability cooldown"
 
 | 命令 | 说明 | 示例 |
 | --- | --- | --- |
-| `ue-kb build` | 切块 + embedding 建立索引 | `ue-kb build --force` |
-| `ue-kb build --append` | 快照同步：新增、替换编辑内容并删除 stale chunks | `ue-kb build --append` |
+| `ue-kb build` | 为指定公共或项目语料切块并建立 ChromaDB 索引 | `ue-kb build --scope public --force` |
+| `ue-kb build --append` | 快照同步新增、编辑和删除；禁止把项目内容追加到公共快照 | `ue-kb build --scope project --append` |
 | `ue-kb query "..."` | 默认混合检索，返回带来源和标题的 top-k 结果 | `ue-kb query "角色移动 速度衰减" --top-k 5` |
 | `ue-kb query --profile vector` | 回退到 0.4 风格纯向量排序 | `ue-kb query "GAS" --profile vector` |
 | `ue-kb query --demote-frontmatter` | 内容块排在主题摘要块（frontmatter）之前；融合分数不变 | `ue-kb query "GAS" --demote-frontmatter` |
 | `ue-kb query --envelope` | 增加 `coverage` 与证据元数据；`none` 会拒答而不是返回误导性命中 | `ue-kb query "项目 H1" --envelope --json` |
-| `ue-kb audit-corpus` | 审计每篇文档的版本、来源和验证证据 | `ue-kb audit-corpus --json` |
+| `ue-kb audit-corpus` | 审计 schema-v2 claim、代码 artifact、证据和验证元数据 | `ue-kb audit-corpus --scope public --json` |
 | `ue-kb federated-query` | 分组查询公共与项目索引，不混比分数 | `ue-kb federated-query "问题" --index public=<PUBLIC_INDEX> --index project=<PROJECT_INDEX> --json` |
 | `ue-kb info` | 查看 manifest、generation、过期状态和模型匹配 | `ue-kb info --json` |
 | `ue-kb doctor` | 只读诊断包、索引和 MCP 运行时身份 | `ue-kb doctor --json --mcp-smoke` |
@@ -104,7 +110,8 @@ ue-kb query "GAS ability cooldown"
 | `ue-kb serve` 工具 | MCP 工具：`ue_kb_query`、`ue_kb_federated_query`、`ue_kb_info`、`ue_kb_topics`、`ue_kb_glossary` ＋ `resources/list` / `resources/read` | 通过任意 MCP 客户端调用 |
 | `--json` | 机器可读输出（Agent 集成） | `ue-kb query "..." --json` |
 | `--db <dir>` | 自定义索引目录（默认：用户数据目录，见 FAQ） | `ue-kb build --db C:/uekb/.chroma_db` |
-| `--source <dir>` | 自定义语料目录（默认：包内内置语料） | `ue-kb build --source my-docs/` |
+| `--source <dir>` | 自定义语料目录（默认：包内公共语料） | `ue-kb build --source my-docs/` |
+| `--source-registry <path>` | 将项目文档映射到批准的 source ID；仅项目 scope 使用 | `ue-kb build --scope project --source-registry Source-Registry.tsv` |
 | `--model <name>` | 自定义 embedding 模型 | `ue-kb query "..." --model BAAI/bge-large-zh-v1.5` |
 | `--force` | 已存在索引时强制重建 | `ue-kb build --force` |
 | `--online` | 允许模型缺失时联网下载（默认离线） | `ue-kb build --online` |
@@ -127,11 +134,11 @@ for hit in query("GAS 冷却", top_k=5):
 - **Claude Code** 斜杠命令
 - **OpenCode** 命令
 - **MCP server**（`ue-kb serve`）——模型每次会话只加载一次，查询循环
-  完全跳过约 12s 冷启动
+  不再重复加载模型；发布机器首次查询约 6.6 秒，热查询低于 0.1 秒
 - 任意管线的**纯 Python 片段**
 
-候选包与发布门禁见 [docs/releasing.md](docs/releasing.md)；v0.7 必须先通过
-90 篇文档严格审计和 UE 5.7 证据清单，当前仍保持发布阻断。
+发布清单与门禁见 [docs/releasing.md](docs/releasing.md)；v0.7.0 已通过
+90 篇文档严格审计和 UE 5.7 证据清单，并已发布到 PyPI。
 
 ## 扩展语料
 
@@ -157,16 +164,17 @@ for hit in query("GAS 冷却", top_k=5):
   + 构建锁、Windows CI、`raw_score`/`rank` 语义、MCP `ue-kb serve`、
   隐私门禁、发布清单
 - **v0.6.2** — 运行时 doctor 诊断、MCP 身份校验，以及检索质量：口语中文短语词典（`zh_dict.json`，
-  自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
+  历史自然中文 Recall@3 25.8% → 90.3%）、MCP 工具集（`ue_kb_info` /
   `ue_kb_topics` / `ue_kb_glossary` ＋ `resources/list` ＋ 查询缓存）、
   可续爬的 Epic 官方文档爬虫（输出 markdown 语料，不再直接写 ChromaDB）
-- **v0.6.3（当前）** — MCP `resources/read`（ advertised 主题资源真正可读）、
+- **v0.6.3（上一版本）** — MCP `resources/read`（advertised 主题资源真正可读）、
   chunk 打上 `type=frontmatter/content` 标记并提供可选 `--demote-frontmatter`、
   `requires-python` 上限收紧到 `<3.13`（chroma-hnswlib 无 3.13+ Windows wheel）、
   MCP server 入口强制 UTF-8、Python API 模型加载缓存
-- **v0.7.0（开发中，发布阻断）** — provenance sidecar 与全量语料审计、
-  schema v3 元数据、查询 coverage envelope、公共/项目双索引联邦查询、
-  MCP `ue_kb_federated_query`；90 篇文档和 UE 5.7 验证证据全部完成前不会发布
+- **v0.7.0（已发布）** — schema-v2 claim/provenance 审计（90/90 文档完成审阅）、
+  schema-v3 索引元数据、UE 5.7.4/CL 51494982 编译与 Automation 证据、coverage
+  envelope、物理隔离的公共/项目联邦查询和 MCP `ue_kb_federated_query`；已通过
+  隐私、检索、包完整性和 CI 门禁并发布到 PyPI
 - **后续候选** — Agent 写回协议（已验证材料经 publish 管线路由回语料；
   见 `docs/agent-integration.md` Codex 章节）、更多双语主题、UE 5.7 新特性覆盖
 

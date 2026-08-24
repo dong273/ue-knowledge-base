@@ -1,9 +1,10 @@
 # Release Checklist
 
-The current formal release remains `0.6.3`. The `0.7.0` worktree is a
-release-blocked candidate until the complete 90-document provenance audit and
-the UE 5.7 evidence gate pass. Do not tag, push, upload, or publish a 0.7
-artifact from a working index with pending provenance.
+The latest published package is [`0.7.0`](https://pypi.org/project/ue-knowledge-base/0.7.0/).
+It passed the complete 90/90 provenance audit, the UE 5.7.4 (CL 51494982)
+evidence gate, retrieval/privacy checks, package verification and CI. This
+checklist is now the release procedure for the next version; do not reuse a
+working index with pending provenance.
 
 > Why this exists: 0.4.0 was published to PyPI without the bundled corpus
 > (the wheel was ~15 KB and could not build an index), and the fix lived in
@@ -38,8 +39,8 @@ ue-kb query "GAS ability cooldown" --top-k 5
 ue-kb info --json                          # stale must be false
 ```
 
-For a v0.7 candidate, also run the fail-closed gate with the sanitized UE
-validation manifest:
+For a future v0.7+ candidate, also run the fail-closed gate with the sanitized
+UE validation manifest:
 
 ```bash
 python scripts/check_ue57_evidence.py \
@@ -78,7 +79,8 @@ does not compare GitHub runners with a developer workstation.
 ## Publish
 
 ```bash
-git tag v0.7.0                             # only after every v0.7 gate is green
+# Replace vX.Y.Z with the next release version after every gate is green.
+git tag vX.Y.Z
 git push origin main --tags
 
 # PyPI (requires an API token; use a token scoped to the project, not a password)
