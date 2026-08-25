@@ -32,7 +32,7 @@ Thanks for considering a contribution to **ue-knowledge-base**!
 
 ## Content guidelines
 
-- **Language**: the corpus is English-first (79/86 docs), matching the
+- **Language**: the corpus is English-first (83/90 docs), matching the
   default `bge-small-en-v1.5` embedder. New docs should be **English**;
   bilingual topics may add Chinese phrasing but keep code identifiers in
   English. Chinese queries are supported via the glossary, not via
