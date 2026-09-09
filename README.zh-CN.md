@@ -1,16 +1,62 @@
-# UE Knowledge Base — UE 开发者的本地语义知识库（English-first）
+# UE Knowledge Base
 
 [![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> 面向 UE 开发者的本地语义知识库：90 篇原创文档（83 篇英文、7 篇中英混合），
-> 配合本地混合检索（BGE + BM25 + ChromaDB）。模型一次下载（约 100MB）后
-> 完全离线，笔记本 CPU 即可运行，无 API 费用。
+[English](README.md) · **简体中文**
 
-> **v0.7.0 已发布到 [PyPI](https://pypi.org/project/ue-knowledge-base/0.7.0/)。**
-> 本版本通过 90/90 语料可信审计、UE 5.7.4（CL 51494982）证据门禁、检索/隐私检查和 CI。
-> 公共索引与项目索引保持物理隔离。
+> 为 UE 开发者和 AI Agent 提供本地、离线的知识检索。
+
+- **离线与隐私**：模型下载、索引构建后，本地 CPU 即可检索。
+- **版本与证据**：查询结果关联来源及验证元数据，便于检查 UE API 适用范围。
+- **Agent 集成**：CLI、JSON 与常驻 MCP 服务，共用同一知识库。
+
+## 一分钟上手
+
+```bash
+pip install ue-knowledge-base   # 安装
+
+ue-kb download-model            # 下载模型（约 100MB，仅一次；官方源失败自动切 hf-mirror）
+ue-kb build                     # 构建索引（约 1 分钟，之后完全离线）
+ue-kb query "GAS ability cooldown"   # 语义检索
+ue-kb query "Niagara particle collision" --json   # JSON 输出，给 Agent 用
+ue-kb query "GAS cooldown" --profile vector       # 回退到 0.4 纯向量行为
+```
+
+## 查询实例与证据
+
+下面摘自仓库保存的[检索验证记录](validation/artifacts/coverage-wave06.json)，并非本次运行的新结果。
+
+| 查询 | 已记录的首条来源 | 覆盖状态 |
+| --- | --- | --- |
+| `Automation 测试怎样验证断言` | `ue-testing-debugging/SKILL.md` | `supported` |
+| `运行时创建组件为什么要 RegisterComponent 和 AddInstanceComponent` | `ue-actor-component-architecture/SKILL.md` | `supported` |
+| `白盒关卡首次游玩引导可发现性如何自动验证` | 无 | `none` |
+
+使用 `ue-kb query "Automation 测试怎样验证断言" --envelope --json` 检查你的本地结果。覆盖状态表示语料的支持范围，不能代替项目实测或人工验收。
+
+## 架构
+
+```mermaid
+flowchart LR
+    P[Public UE corpus] --> PB[Chunk and embed]
+    J[Private project corpus] --> JB[Chunk and embed]
+    PB --> PI[(Public index)]
+    JB --> JI[(Project index)]
+    Q[CLI / MCP query] --> PH[BGE + BM25 + RRF]
+    Q --> JH[BGE + BM25 + RRF]
+    PI --> PH
+    JI --> JH
+    PH --> PG[Public coverage and hits]
+    JH --> JG[Project coverage and hits]
+    PG --> F[Federated response: separate groups]
+    JG --> F
+```
+
+公共语料与私有项目语料分别构建、分别存储；项目索引是可选的。联邦查询保留每个索引的覆盖信息与结果分组，不跨索引比较分数。详见[实现](src/ue_knowledge/federation.py)与 [CLI 参考](#cli-参考)。
+
+**当前包版本：[v0.7.0（PyPI）](https://pypi.org/project/ue-knowledge-base/0.7.0/)**。已记录的审计与发布门禁见[发布说明](docs/releasing.md)。
 
 ## 为什么你需要它
 
@@ -41,35 +87,6 @@ Niagara、Mass Entity、State Trees、PCG 程序化生成、材质/渲染、模�
 - 面向国内网络：GitHub 镜像克隆 + 清华 PyPI + hf-mirror 自动回退，无需代理
 - 模型约 100MB，笔记本 CPU 即可运行，无 GPU 要求；索引构建约 1 分钟；发布
   机器冷查询约 7 秒，进程内热查询低于 0.1 秒
-
-## 一分钟上手
-
-```bash
-pip install ue-knowledge-base   # 安装
-
-ue-kb download-model            # 下载模型（约 100MB，仅一次；官方源失败自动切 hf-mirror）
-ue-kb build                     # 构建索引（约 1 分钟，之后完全离线）
-ue-kb query "GAS ability cooldown"   # 语义检索
-ue-kb query "Niagara particle collision" --json   # JSON 输出，给 Agent 用
-ue-kb query "GAS cooldown" --profile vector       # 回退到 0.4 纯向量行为
-```
-
-## 查询示例
-
-```text
-$ ue-kb query "GAS ability cooldown"
-🔍 UE 知识库检索：GAS ability cooldown
-
-[1] ue-gameplay-abilities/references/ue5.7-api-migration.md › Cooldown GE Tag Workaround (匹配度: 100.0%)
-    Since GrantedTags is removed from the GE constructor, cooldown tags must be
-    set via DynamicGrantedTags at spec-application time...
-[2] ue-gameplay-abilities/SKILL.md › GAS Architecture Overview (匹配度: 99.0%)
-    GAS has three pillars that live on UAbilitySystemComponent (ASC): abilities,
-    effects, and attributes...
-```
-
-检索结果包含带类型标记的代码 artifact 和使用模式，不只是相关文字；复制代码前应检查
-artifact 类型和证据元数据。
 
 ## 国内安装（零代理）
 

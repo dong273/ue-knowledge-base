@@ -1,16 +1,62 @@
-# UE Knowledge Base — a local semantic knowledge base for UE developers
+# UE Knowledge Base
 
 [![PyPI version](https://img.shields.io/pypi/v/ue-knowledge-base.svg)](https://pypi.org/project/ue-knowledge-base/)
 [![CI](https://github.com/dong273/ue-knowledge-base/actions/workflows/ci.yml/badge.svg)](https://github.com/dong273/ue-knowledge-base/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> A local semantic knowledge base for UE development: 90 original documents
-> (83 English, 7 bilingual), indexed with BGE + BM25 hybrid retrieval. Download
-> the ~100MB model once, then search fully offline on a laptop CPU — no API costs.
+**English** · [简体中文](README.zh-CN.md)
 
-> **v0.7.0 is published on [PyPI](https://pypi.org/project/ue-knowledge-base/0.7.0/).** The release passed the 90/90 corpus trust
-> audit, the UE 5.7.4 (CL 51494982) evidence gate, retrieval/privacy checks,
-> and CI. Public and project indexes remain physically separated.
+> Offline UE knowledge for developers and AI agents.
+
+- **Offline & private** — download the model, build an index, then search on a local CPU.
+- **Version & evidence aware** — inspect sources and verification metadata before applying UE API advice.
+- **Agent ready** — use the CLI, JSON output, or a resident MCP server.
+
+## Quick start
+
+```bash
+pip install ue-knowledge-base   # install
+
+ue-kb download-model            # one-time ~100MB model (auto-falls back to hf-mirror)
+ue-kb build                     # build the index (~1 min, fully offline from here)
+ue-kb query "GAS ability cooldown"
+ue-kb query "Niagara particle collision" --json   # JSON output for agents
+ue-kb query "GAS cooldown" --profile vector       # 0.4-compatible vector fallback
+```
+
+## Query examples with evidence
+
+These examples come from the committed [retrieval validation record](validation/artifacts/coverage-wave06.json), not a new run in this documentation update.
+
+| Query | Recorded first source | Coverage |
+| --- | --- | --- |
+| `Automation 测试怎样验证断言` | `ue-testing-debugging/SKILL.md` | `supported` |
+| `运行时创建组件为什么要 RegisterComponent 和 AddInstanceComponent` | `ue-actor-component-architecture/SKILL.md` | `supported` |
+| `白盒关卡首次游玩引导可发现性如何自动验证` | None | `none` |
+
+Run `ue-kb query "Automation 测试怎样验证断言" --envelope --json` to inspect your local results. Coverage describes corpus support; it does not replace project testing or human acceptance.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    P[Public UE corpus] --> PB[Chunk and embed]
+    J[Private project corpus] --> JB[Chunk and embed]
+    PB --> PI[(Public index)]
+    JB --> JI[(Project index)]
+    Q[CLI / MCP query] --> PH[BGE + BM25 + RRF]
+    Q --> JH[BGE + BM25 + RRF]
+    PI --> PH
+    JI --> JH
+    PH --> PG[Public coverage and hits]
+    JH --> JG[Project coverage and hits]
+    PG --> F[Federated response: separate groups]
+    JG --> F
+```
+
+Public and private project corpora are built and stored separately; a project index is optional. Federation preserves per-index coverage and result groups without comparing scores across indexes. See the [implementation](src/ue_knowledge/federation.py) and [CLI reference](#cli-reference).
+
+**Current package: [v0.7.0 on PyPI](https://pypi.org/project/ue-knowledge-base/0.7.0/).** Recorded audit and release gates are documented in the [release checklist](docs/releasing.md).
 
 ## Why this exists
 
@@ -49,35 +95,6 @@ materials/rendering, module build system, editor tools, and more
   hf-mirror fallback — no proxy needed
 - ~100MB model, laptop CPU, no GPU; index build ~1 min; on the release machine
   cold CLI query ~7s (model load), warm in-process query <0.1s
-
-## Quick start
-
-```bash
-pip install ue-knowledge-base   # install
-
-ue-kb download-model            # one-time ~100MB model (auto-falls back to hf-mirror)
-ue-kb build                     # build the index (~1 min, fully offline from here)
-ue-kb query "GAS ability cooldown"
-ue-kb query "Niagara particle collision" --json   # JSON output for agents
-ue-kb query "GAS cooldown" --profile vector       # 0.4-compatible vector fallback
-```
-
-## Query output
-
-```text
-$ ue-kb query "GAS ability cooldown"
-🔍 UE 知识库检索：GAS ability cooldown
-
-[1] ue-gameplay-abilities/references/ue5.7-api-migration.md › Cooldown GE Tag Workaround (匹配度: 100.0%)
-    Since GrantedTags is removed from the GE constructor, cooldown tags must be
-    set via DynamicGrantedTags at spec-application time...
-[2] ue-gameplay-abilities/SKILL.md › GAS Architecture Overview (匹配度: 99.0%)
-    GAS has three pillars that live on UAbilitySystemComponent (ASC): abilities,
-    effects, and attributes...
-```
-
-Hits include labeled code artifacts and usage patterns, not just related text;
-check the artifact kind and evidence metadata before copying code.
 
 ## Install in mainland China (zero proxy)
 
