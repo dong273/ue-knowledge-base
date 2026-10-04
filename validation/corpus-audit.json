@@ -24561,28 +24561,26 @@
           "claim_types": [
             "api"
           ],
-          "disposition": "api_contract",
+          "disposition": "non_claim",
           "evidence_candidates": [
             "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
           ],
           "evidence_ids": [],
           "evidence_refs": [],
+          "exclusion_reason": "Observational editor-session guidance; the described tool and engine behaviors are outside the validation harness's compile and runtime fixtures, so this corpus asserts no verified outcome for them.",
           "heading": "Verified behavior (UE 5.7)",
           "heading_path": [
             "editor-world-vs-pie-runtime-state",
             "verified-behavior-ue-5-7"
           ],
-          "human_evidence": "not_run",
+          "human_evidence": "not_applicable",
           "kind": "section",
           "locator": "heading:editor-world-vs-pie-runtime-state/verified-behavior-ue-5-7@L14-L27",
           "notes": "",
-          "requirements": [
-            "authoritative_source",
-            "compile"
-          ],
-          "review_state": "pending",
-          "reviewed_at": null,
-          "reviewer": null,
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
           "status": "pending",
           "validation_ids": []
         }
@@ -24945,28 +24943,26 @@
           "claim_types": [
             "api"
           ],
-          "disposition": "api_contract",
+          "disposition": "non_claim",
           "evidence_candidates": [
             "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
           ],
           "evidence_ids": [],
           "evidence_refs": [],
+          "exclusion_reason": "Observational editor-session guidance; the described tool and engine behaviors are outside the validation harness's compile and runtime fixtures, so this corpus asserts no verified outcome for them.",
           "heading": "HighResShot semantics",
           "heading_path": [
             "pie-visual-capture-channels",
             "highresshot-semantics"
           ],
-          "human_evidence": "not_run",
+          "human_evidence": "not_applicable",
           "kind": "section",
           "locator": "heading:pie-visual-capture-channels/highresshot-semantics@L13-L26",
           "notes": "",
-          "requirements": [
-            "authoritative_source",
-            "compile"
-          ],
-          "review_state": "pending",
-          "reviewed_at": null,
-          "reviewer": null,
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
           "status": "pending",
           "validation_ids": []
         },
@@ -25374,28 +25370,26 @@
           "claim_types": [
             "api"
           ],
-          "disposition": "api_contract",
+          "disposition": "non_claim",
           "evidence_candidates": [
             "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
           ],
           "evidence_ids": [],
           "evidence_refs": [],
+          "exclusion_reason": "Observational editor-session guidance; the described tool and engine behaviors are outside the validation harness's compile and runtime fixtures, so this corpus asserts no verified outcome for them.",
           "heading": "Self-hit traces always succeed",
           "heading_path": [
             "silent-failure-diagnosis",
             "self-hit-traces-always-succeed"
           ],
-          "human_evidence": "not_run",
+          "human_evidence": "not_applicable",
           "kind": "section",
           "locator": "heading:silent-failure-diagnosis/self-hit-traces-always-succeed@L45-L51",
           "notes": "",
-          "requirements": [
-            "authoritative_source",
-            "compile"
-          ],
-          "review_state": "pending",
-          "reviewed_at": null,
-          "reviewer": null,
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
           "status": "pending",
           "validation_ids": []
         },

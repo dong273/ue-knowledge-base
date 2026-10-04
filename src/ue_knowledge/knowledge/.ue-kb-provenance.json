@@ -2348,8 +2348,7 @@
       "source_ids": [],
       "validation_ids": [],
       "verification": [
-        "engine_source",
-        "compile_test"
+        "engine_source"
       ],
       "verified_at": "2026-10-04"
     },
@@ -2411,8 +2410,7 @@
       "source_ids": [],
       "validation_ids": [],
       "verification": [
-        "engine_source",
-        "compile_test"
+        "engine_source"
       ],
       "verified_at": "2026-10-04"
     },
@@ -2454,8 +2452,7 @@
       "source_ids": [],
       "validation_ids": [],
       "verification": [
-        "engine_source",
-        "compile_test"
+        "engine_source"
       ],
       "verified_at": "2026-10-04"
     },
@@ -2616,7 +2613,7 @@
       "verified_at": "2026-08-24"
     }
   },
-  "generated_from_claim_ledger_sha256": "9189802edb7fef1860aede0d0a03a0091c3859ba8f3031d8b97b8be72c04e878",
+  "generated_from_claim_ledger_sha256": "afa55bb3fb415a224d64bb6e754d552d5ad2bb5de34ea8742e8c9fa797e89907",
   "schema_version": 1,
   "scope": "public"
 }

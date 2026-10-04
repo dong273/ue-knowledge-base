@@ -53,7 +53,7 @@ jobs:
       - name: Provenance coverage contract (pending entries stay non-release)
         run: |
           PYTHONPATH=src python -m ue_knowledge.cli audit-corpus --scope public --allow-pending --json > provenance-audit.json
-          python -c "import json; d=json.load(open('provenance-audit.json', encoding='utf-8')); assert d['schema_version'] == 1; assert d['documents'] == d['covered'] == 90, d; assert d['working_ready'] is True, d; assert 'blocking_issue_count' in d and 'claim_summary' in d, d; print('provenance contract:', d['covered'], 'covered,', d['verified'], 'verified')"
+          python -c "import json; d=json.load(open('provenance-audit.json', encoding='utf-8')); assert d['schema_version'] == 1; assert d['documents'] == d['covered'] == 99, d; assert d['working_ready'] is True, d; assert 'blocking_issue_count' in d and 'claim_summary' in d, d; print('provenance contract:', d['covered'], 'covered,', d['verified'], 'verified')"
       - name: UE evidence manifest contract
         run: python scripts/check_ue57_evidence.py validation/fixtures/ue57-validation-evidence.json --fixture-registry validation/fixture-registry.json --claim-ledger validation/corpus-audit.json
       - name: Fresh venv, install from wheel only
@@ -116,7 +116,7 @@ jobs:
           path: mcp-timing-report.json
       - name: Corpus shipped intact (chunk count sanity)
         run: |
-          fresh/bin/ue-kb info --db .smoke-index --json | python -c "import json,sys; d=json.load(sys.stdin); assert d['manifest']['corpus']['documents'] == 90, d; assert d['documents'] == d['manifest']['corpus']['chunks'], d; print('corpus ok:', d['manifest']['corpus'])"
+          fresh/bin/ue-kb info --db .smoke-index --json | python -c "import json,sys; d=json.load(sys.stdin); assert d['manifest']['corpus']['documents'] == 99, d; assert d['documents'] == d['manifest']['corpus']['chunks'], d; print('corpus ok:', d['manifest']['corpus'])"
 
   privacy:
     # The corpus ships inside the published wheel: personal paths, private
