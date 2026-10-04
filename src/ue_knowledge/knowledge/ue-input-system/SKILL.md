@@ -53,3 +53,8 @@ hard to reason about.
 
 Compilation proves Enhanced Input types and binding overloads. Device mappings,
 priority conflicts, focus, and perceived controls require runtime or human input tests.
+
+## Focused references
+
+- [Input action and trigger reference](references/input-action-reference.md)
+- [Same-frame tap trigger](references/same-frame-tap-trigger.md)

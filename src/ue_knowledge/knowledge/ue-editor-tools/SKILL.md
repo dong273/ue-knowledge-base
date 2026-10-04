@@ -44,6 +44,8 @@ Commandlet or unattended execution has no interactive user contract. Avoid modal
 - [Detail customization patterns](references/detail-customization-patterns.md)
 - [Editor module setup](references/editor-module-setup.md)
 - [Unattended editor automation](references/unattended-editor-automation.md)
+- [Minimized editor throttling](references/minimized-editor-throttling.md)
+- [Blueprint graph authoring pitfalls](references/blueprint-graph-authoring-pitfalls.md)
 
 ## Verification boundary
 

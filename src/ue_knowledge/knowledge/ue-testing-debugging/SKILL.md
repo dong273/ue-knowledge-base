@@ -43,6 +43,11 @@ Capture a reproducible workload and compare the same metric under the same confi
 - [Automation test patterns](references/automation-test-patterns.md)
 - [Profiling commands](references/profiling-commands.md)
 - [Fresh PIE negative evidence](references/fresh-pie-negative-evidence.md)
+- [Editor world vs PIE runtime state](references/editor-world-vs-pie-runtime-state.md)
+- [Silent failure diagnosis](references/silent-failure-diagnosis.md)
+- [Log tail evidence caliber](references/log-tail-evidence-caliber.md)
+- [PIE visual capture channels](references/pie-visual-capture-channels.md)
+- [Timing-sensitive evidence](references/timing-sensitive-evidence.md)
 
 ## Verification boundary
 
