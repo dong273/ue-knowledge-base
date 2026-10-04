@@ -7887,7 +7887,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -7919,7 +7919,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -7953,7 +7953,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -7986,7 +7986,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8016,7 +8016,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8049,7 +8049,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8079,7 +8079,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8103,13 +8103,13 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-editor-tools/focused-references@L42-L47",
+          "locator": "heading:ue-editor-tools/focused-references@L42-L49",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8141,7 +8141,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8165,19 +8165,225 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-editor-tools/verification-boundary@L48-L50",
+          "locator": "heading:ue-editor-tools/verification-boundary@L50-L52",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         }
       ],
-      "content_sha256": "44ef7419783b405cc1ed5683c0384df64c3831efee32859a3510ece9db924488",
+      "content_sha256": "b28050c76c40a45b55fe1ae0c4e6d23d3197dc5e4c74a0c6ca3c95961446baae",
       "knowledge_id": "uekb.a9f54ebd22558cca95749077",
       "source": "ue-editor-tools/SKILL.md"
+    },
+    "ue-editor-tools/references/blueprint-graph-authoring-pitfalls.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c1297a41680679c5b",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Batch creation does not scale",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "batch-creation-does-not-scale"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/batch-creation-does-not-scale@L7-L18",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c1bed87edf83948b2",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Compile and save gates",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "compile-and-save-gates"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/compile-and-save-gates@L54-L59",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c203ea0645f5cfac4",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Cold-load node conversion (UE 5.7)",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "cold-load-node-conversion-ue-5-7"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/cold-load-node-conversion-ue-5-7@L29-L36",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c227b0c0db91db8c0",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Named CreateDelegate pin order",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "named-createdelegate-pin-order"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/named-createdelegate-pin-order@L37-L43",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c8adeccfa9c70d2fc",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Redirector cleanup order",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "redirector-cleanup-order"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/redirector-cleanup-order@L44-L53",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.c9ca31e74c973d626",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Exec wiring rules",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls",
+            "exec-wiring-rules"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls/exec-wiring-rules@L19-L28",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.38bdb00907854d17652ef094.cc80187a3ab25654a",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Blueprint Graph Authoring Pitfalls",
+          "heading_path": [
+            "blueprint-graph-authoring-pitfalls"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:blueprint-graph-authoring-pitfalls@L1-L6",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "071af23509a7c1c1af5dba740cb68f8e5e3e9366c879b8dc1215c9bd92d67e41",
+      "knowledge_id": "uekb.38bdb00907854d17652ef094",
+      "source": "ue-editor-tools/references/blueprint-graph-authoring-pitfalls.md"
     },
     "ue-editor-tools/references/detail-customization-patterns.md": {
       "claims": [
@@ -8210,7 +8416,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8242,7 +8448,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8274,7 +8480,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8304,7 +8510,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8336,7 +8542,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8370,7 +8576,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8402,7 +8608,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8436,7 +8642,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8469,7 +8675,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8499,7 +8705,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8531,7 +8737,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8571,7 +8777,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8601,7 +8807,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8634,7 +8840,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8664,7 +8870,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8692,7 +8898,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8724,7 +8930,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8756,7 +8962,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8790,7 +8996,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8824,7 +9030,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -8857,13 +9063,133 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
       "content_sha256": "9994121cfaad5b22c91ed89e4e7209a00add9ba3e430abdd909d2229c8a66fea",
       "knowledge_id": "uekb.50a38237872106d770207101",
       "source": "ue-editor-tools/references/editor-module-setup.md"
+    },
+    "ue-editor-tools/references/minimized-editor-throttling.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.415c04dc52a09a09b6ee2ed6.c719d5c47c33b5e12",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "What breaks",
+          "heading_path": [
+            "minimized-editor-throttling",
+            "what-breaks"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:minimized-editor-throttling/what-breaks@L9-L20",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.415c04dc52a09a09b6ee2ed6.c869341d18397f3f1",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Minimized Editor Throttling",
+          "heading_path": [
+            "minimized-editor-throttling"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:minimized-editor-throttling@L1-L8",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.415c04dc52a09a09b6ee2ed6.c95829f7127481e6d",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Diagnostic rule",
+          "heading_path": [
+            "minimized-editor-throttling",
+            "diagnostic-rule"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:minimized-editor-throttling/diagnostic-rule@L30-L33",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.415c04dc52a09a09b6ee2ed6.cfa4720dd5a984cdb",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Editor/UnrealEd/Public/Editor/EditorEngine.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Mitigations",
+          "heading_path": [
+            "minimized-editor-throttling",
+            "mitigations"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:minimized-editor-throttling/mitigations@L21-L29",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "cf013e9843d47bf0b7a3c09ea9bd06c3683dc0d1ffaf66b68e0b4c7171616a5e",
+      "knowledge_id": "uekb.415c04dc52a09a09b6ee2ed6",
+      "source": "ue-editor-tools/references/minimized-editor-throttling.md"
     },
     "ue-editor-tools/references/unattended-editor-automation.md": {
       "claims": [
@@ -8895,7 +9221,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8925,7 +9251,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8956,7 +9282,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -8988,7 +9314,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.EditorTools"
           ]
@@ -9021,7 +9347,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -9049,7 +9375,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -12003,7 +12329,7 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-enhanced-input-system/verification-boundary@L52-L55",
+          "locator": "heading:ue-enhanced-input-system/verification-boundary@L52-L56",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
@@ -12235,9 +12561,37 @@
             "UEKB.Compile.InputTypes",
             "UEKB.Compile.InputUi"
           ]
+        },
+        {
+          "claim_id": "uekb.32af6265d13f8b998b8a6d0b.cffd0127257a16539",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Review routing, evidence boundary, metadata caveat, scope boundary, or reference list; it does not assert that a runtime or human outcome passed.",
+          "heading": "Focused references",
+          "heading_path": [
+            "ue-enhanced-input-system",
+            "focused-references"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:ue-enhanced-input-system/focused-references@L57-L60",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
         }
       ],
-      "content_sha256": "ff0a0caeb886d39c118247389a370496a9073860180866ecfd746b37588e3b1c",
+      "content_sha256": "d1475860c88d82d97d0778b2b240f5779753ef0e908e8cea9e47d9e94ca2ac47",
       "knowledge_id": "uekb.32af6265d13f8b998b8a6d0b",
       "source": "ue-input-system/SKILL.md"
     },
@@ -12534,6 +12888,126 @@
       "knowledge_id": "uekb.3a973a344ef2fc95c9b445e6",
       "source": "ue-input-system/references/input-action-reference.md"
     },
+    "ue-input-system/references/same-frame-tap-trigger.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.5100723485199d2168d223b6.c1e273f16f5b12b47",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Test caliber",
+          "heading_path": [
+            "same-frame-tap-trigger",
+            "test-caliber"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:same-frame-tap-trigger/test-caliber@L21-L26",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.5100723485199d2168d223b6.c247f50943f9c8a17",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Same-Frame Tap Trigger",
+          "heading_path": [
+            "same-frame-tap-trigger"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:same-frame-tap-trigger@L1-L6",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.5100723485199d2168d223b6.c2fcfa2d389a7ad77",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Shape of the miss",
+          "heading_path": [
+            "same-frame-tap-trigger",
+            "shape-of-the-miss"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:same-frame-tap-trigger/shape-of-the-miss@L7-L13",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.5100723485199d2168d223b6.ccbf4dcdd4d6d3de6",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Fix shape",
+          "heading_path": [
+            "same-frame-tap-trigger",
+            "fix-shape"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:same-frame-tap-trigger/fix-shape@L14-L20",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "b4b5556de51fecf98352239a07ba4f39c1f7f329bb9f3d80fbdf8cdfa6d8c4be",
+      "knowledge_id": "uekb.5100723485199d2168d223b6",
+      "source": "ue-input-system/references/same-frame-tap-trigger.md"
+    },
     "ue-knowledge-rag/SKILL.md": {
       "claims": [
         {
@@ -12564,7 +13038,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12595,7 +13069,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12625,7 +13099,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12656,7 +13130,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12684,7 +13158,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12715,7 +13189,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12746,7 +13220,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12774,7 +13248,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12800,7 +13274,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12831,7 +13305,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -12869,7 +13343,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12900,7 +13374,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12930,7 +13404,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12961,7 +13435,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -12992,7 +13466,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -13023,7 +13497,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -13054,7 +13528,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -13085,7 +13559,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -17701,7 +18175,7 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-physics-and-collision/debugging-checklist@L44-L52",
+          "locator": "heading:ue-physics-and-collision/debugging-checklist@L44-L51",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
@@ -17981,6 +18455,34 @@
           ]
         },
         {
+          "claim_id": "uekb.700b69951f76581fdf788ae4.cf542b4f39e65d956",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Review routing, evidence boundary, metadata caveat, scope boundary, or reference list; it does not assert that a runtime or human outcome passed.",
+          "heading": "Focused references",
+          "heading_path": [
+            "ue-physics-and-collision",
+            "focused-references"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:ue-physics-and-collision/focused-references@L52-L58",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
           "claim_id": "uekb.700b69951f76581fdf788ae4.cf5698ee2d6cc7faf",
           "claim_types": [
             "concept"
@@ -18011,7 +18513,7 @@
           "validation_ids": []
         }
       ],
-      "content_sha256": "7481a4800d0aec25bbe7d6938decf504d3c96b80e1a1a9a193243a7b7edd0e24",
+      "content_sha256": "b8dc5e536befdbbc55f2105ab0265619a407b177b8a02d22d17d487510a05e4a",
       "knowledge_id": "uekb.700b69951f76581fdf788ae4",
       "source": "ue-physics-collision/SKILL.md"
     },
@@ -18614,6 +19116,127 @@
       "content_sha256": "e0a947ca08a3fe8268452bd8a2d67fb5422c9c1209e091669c25827dcdfa2263",
       "knowledge_id": "uekb.29dc3af7031aa5ba6de51c1d",
       "source": "ue-physics-collision/references/ground-penetration-debugging.md"
+    },
+    "ue-physics-collision/references/runtime-collision-refresh.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.cd400c7c7863387eca1ce65d.c11c59a6fe6368e94",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Runtime Collision Refresh",
+          "heading_path": [
+            "runtime-collision-refresh"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:runtime-collision-refresh@L1-L5",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.cd400c7c7863387eca1ce65d.cc1e8d9d9b87471d7",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Fix: force a real state transition",
+          "heading_path": [
+            "runtime-collision-refresh",
+            "fix-force-a-real-state-transition"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:runtime-collision-refresh/fix-force-a-real-state-transition@L15-L21",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.cd400c7c7863387eca1ce65d.ccc502147aa58934e",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Shapes",
+          "heading_path": [
+            "runtime-collision-refresh",
+            "shapes"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:runtime-collision-refresh/shapes@L6-L14",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.cd400c7c7863387eca1ce65d.cff8d8f07fa13ca5f",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Verification boundary",
+          "heading_path": [
+            "runtime-collision-refresh",
+            "verification-boundary"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:runtime-collision-refresh/verification-boundary@L22-L30",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "eec4f78c0b12aa6dbcf56b187bfccc789021735fffa7e3374d0abc2c139d1090",
+      "knowledge_id": "uekb.cd400c7c7863387eca1ce65d",
+      "source": "ue-physics-collision/references/runtime-collision-refresh.md"
     },
     "ue-physics-collision/references/trace-patterns.md": {
       "claims": [
@@ -19524,7 +20147,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19557,7 +20180,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19588,7 +20211,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19616,7 +20239,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19646,7 +20269,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19676,7 +20299,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19710,7 +20333,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19743,7 +20366,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19771,7 +20394,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -19806,7 +20429,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19836,7 +20459,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19870,7 +20493,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19902,7 +20525,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19934,7 +20557,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -19967,7 +20590,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -19998,7 +20621,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20029,7 +20652,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20059,7 +20682,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20091,7 +20714,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20125,7 +20748,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20164,7 +20787,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20197,7 +20820,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20225,7 +20848,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20255,7 +20878,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20286,7 +20909,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20318,7 +20941,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20351,7 +20974,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -20383,7 +21006,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -20417,7 +21040,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.PCG"
           ]
@@ -23182,13 +23805,13 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-testing-and-debugging/verification-boundary@L47-L49",
+          "locator": "heading:ue-testing-and-debugging/verification-boundary@L52-L54",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23220,7 +23843,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23244,13 +23867,13 @@
           ],
           "human_evidence": "not_applicable",
           "kind": "section",
-          "locator": "heading:ue-testing-and-debugging/focused-references@L41-L46",
+          "locator": "heading:ue-testing-and-debugging/focused-references@L41-L51",
           "notes": "",
           "requirements": [],
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23282,7 +23905,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23315,7 +23938,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23345,7 +23968,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23378,7 +24001,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23408,7 +24031,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23442,7 +24065,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23474,11 +24097,11 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
-      "content_sha256": "4bfc5309346195ca9f1e3865aae2f872c72c5a17734415052b3eb873f569c4ba",
+      "content_sha256": "a0a96fd3f7965a42c7e485a1ad5004f37d03e639362648282b9790f52ec312d0",
       "knowledge_id": "uekb.f26a6738bacbedc1b610b38e",
       "source": "ue-testing-debugging/SKILL.md"
     },
@@ -23513,7 +24136,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23545,7 +24168,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23579,7 +24202,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23611,7 +24234,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23644,7 +24267,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23676,7 +24299,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23710,7 +24333,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23740,7 +24363,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -23772,7 +24395,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23806,7 +24429,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.Automation"
           ]
@@ -23838,13 +24461,135 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
       "content_sha256": "ebbe9509f0b2a184882f2d678b94efb2dbf5081d46d06433df42c00e94ed0a0b",
       "knowledge_id": "uekb.3fe47cfafe955b372789e0b0",
       "source": "ue-testing-debugging/references/automation-test-patterns.md"
+    },
+    "ue-testing-debugging/references/editor-world-vs-pie-runtime-state.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.0b3d4fb84f5f32abd56c0c9e.c2aee8f0d4f534587",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Symptom",
+          "heading_path": [
+            "editor-world-vs-pie-runtime-state",
+            "symptom"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:editor-world-vs-pie-runtime-state/symptom@L7-L13",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0b3d4fb84f5f32abd56c0c9e.c51eb43e07c014857",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Diagnostic discipline",
+          "heading_path": [
+            "editor-world-vs-pie-runtime-state",
+            "diagnostic-discipline"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:editor-world-vs-pie-runtime-state/diagnostic-discipline@L28-L39",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0b3d4fb84f5f32abd56c0c9e.c650f7c9d50907c29",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Editor World vs PIE Runtime State",
+          "heading_path": [
+            "editor-world-vs-pie-runtime-state"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:editor-world-vs-pie-runtime-state@L1-L6",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0b3d4fb84f5f32abd56c0c9e.c911352d51c68e5e0",
+          "claim_types": [
+            "api"
+          ],
+          "disposition": "api_contract",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Verified behavior (UE 5.7)",
+          "heading_path": [
+            "editor-world-vs-pie-runtime-state",
+            "verified-behavior-ue-5-7"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:editor-world-vs-pie-runtime-state/verified-behavior-ue-5-7@L14-L27",
+          "notes": "",
+          "requirements": [
+            "authoritative_source",
+            "compile"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "1f36c00d37b33c69f9c4c452815a3709c2d743634a076d6d0d7838eca7121366",
+      "knowledge_id": "uekb.0b3d4fb84f5f32abd56c0c9e",
+      "source": "ue-testing-debugging/references/editor-world-vs-pie-runtime-state.md"
     },
     "ue-testing-debugging/references/fresh-pie-negative-evidence.md": {
       "claims": [
@@ -23964,6 +24709,330 @@
       "knowledge_id": "uekb.ec911c508691a40afa9b5293",
       "source": "ue-testing-debugging/references/fresh-pie-negative-evidence.md"
     },
+    "ue-testing-debugging/references/log-tail-evidence-caliber.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.0477e28faac0d51de453f08b.c054d6354ae26cc78",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Baseline invalidation",
+          "heading_path": [
+            "log-tail-evidence-caliber",
+            "baseline-invalidation"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:log-tail-evidence-caliber/baseline-invalidation@L18-L22",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0477e28faac0d51de453f08b.c1b18d524756c7798",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Log Tail Evidence Caliber",
+          "heading_path": [
+            "log-tail-evidence-caliber"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:log-tail-evidence-caliber@L1-L5",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0477e28faac0d51de453f08b.c6164da44fe9e879f",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "RED then GREEN keeps both",
+          "heading_path": [
+            "log-tail-evidence-caliber",
+            "red-then-green-keeps-both"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:log-tail-evidence-caliber/red-then-green-keeps-both@L23-L28",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0477e28faac0d51de453f08b.c7960af8420ddcb75",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Bounded windows, not whole-session claims",
+          "heading_path": [
+            "log-tail-evidence-caliber",
+            "bounded-windows-not-whole-session-claims"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:log-tail-evidence-caliber/bounded-windows-not-whole-session-claims@L6-L17",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.0477e28faac0d51de453f08b.c9d81a8f91e646950",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Tool summaries vs real diagnostics",
+          "heading_path": [
+            "log-tail-evidence-caliber",
+            "tool-summaries-vs-real-diagnostics"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:log-tail-evidence-caliber/tool-summaries-vs-real-diagnostics@L29-L34",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "7d2c4d557a411ee047008970c03122cf8b9a86f126ff243fe32033d301c68ed7",
+      "knowledge_id": "uekb.0477e28faac0d51de453f08b",
+      "source": "ue-testing-debugging/references/log-tail-evidence-caliber.md"
+    },
+    "ue-testing-debugging/references/pie-visual-capture-channels.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.c093f61b8ddb22029",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Say what the capture does not verify",
+          "heading_path": [
+            "pie-visual-capture-channels",
+            "say-what-the-capture-does-not-verify"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels/say-what-the-capture-does-not-verify@L41-L47",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.c4daeacfba03642d2",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Programmatic pixels vs human review",
+          "heading_path": [
+            "pie-visual-capture-channels",
+            "programmatic-pixels-vs-human-review"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels/programmatic-pixels-vs-human-review@L48-L54",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.c8e804b3f5af63d9e",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "PIE Visual Capture Channels",
+          "heading_path": [
+            "pie-visual-capture-channels"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels@L1-L5",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.cedf5fa6eb1f12d1d",
+          "claim_types": [
+            "api"
+          ],
+          "disposition": "api_contract",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "HighResShot semantics",
+          "heading_path": [
+            "pie-visual-capture-channels",
+            "highresshot-semantics"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels/highresshot-semantics@L13-L26",
+          "notes": "",
+          "requirements": [
+            "authoritative_source",
+            "compile"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.cf3ef969e906074e5",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Editor viewport screenshot can be stale",
+          "heading_path": [
+            "pie-visual-capture-channels",
+            "editor-viewport-screenshot-can-be-stale"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels/editor-viewport-screenshot-can-be-stale@L6-L12",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.b18dd79e6452a4e6ac6ac03c.cf450848423c55971",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "OS-level window capture",
+          "heading_path": [
+            "pie-visual-capture-channels",
+            "os-level-window-capture"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:pie-visual-capture-channels/os-level-window-capture@L27-L40",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "83182432d9158d1ec249ea24df1973ae0bf31b12d0967a392711843acf856d84",
+      "knowledge_id": "uekb.b18dd79e6452a4e6ac6ac03c",
+      "source": "ue-testing-debugging/references/pie-visual-capture-channels.md"
+    },
     "ue-testing-debugging/references/profiling-commands.md": {
       "claims": [
         {
@@ -23991,7 +25060,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24017,7 +25086,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24045,7 +25114,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24072,7 +25141,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24100,7 +25169,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24126,7 +25195,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24154,7 +25223,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24182,7 +25251,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24210,7 +25279,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24238,7 +25307,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24264,7 +25333,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24290,13 +25359,281 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         }
       ],
       "content_sha256": "f87d2f7e89f9f53eb68b971457670a0ddc48290a8af4912dd6f9c123c109e6d3",
       "knowledge_id": "uekb.1898167e1653b539ef16caff",
       "source": "ue-testing-debugging/references/profiling-commands.md"
+    },
+    "ue-testing-debugging/references/silent-failure-diagnosis.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.e265a11913323421f90ff281.c3f0f12e2cd643d59",
+          "claim_types": [
+            "api"
+          ],
+          "disposition": "api_contract",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Self-hit traces always succeed",
+          "heading_path": [
+            "silent-failure-diagnosis",
+            "self-hit-traces-always-succeed"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:silent-failure-diagnosis/self-hit-traces-always-succeed@L45-L51",
+          "notes": "",
+          "requirements": [
+            "authoritative_source",
+            "compile"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.e265a11913323421f90ff281.c5a3efcb34c4d52eb",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Per-frame overwrite looks like a frozen variable",
+          "heading_path": [
+            "silent-failure-diagnosis",
+            "per-frame-overwrite-looks-like-a-frozen-variable"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:silent-failure-diagnosis/per-frame-overwrite-looks-like-a-frozen-variable@L21-L36",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.e265a11913323421f90ff281.c76760b92d978c207",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Static mobility swallows transforms (UE 5.7 verified)",
+          "heading_path": [
+            "silent-failure-diagnosis",
+            "static-mobility-swallows-transforms-ue-5-7-verified"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:silent-failure-diagnosis/static-mobility-swallows-transforms-ue-5-7-verified@L7-L20",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.e265a11913323421f90ff281.c7cd23311851c08a8",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "concept",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "heading": "Silent Failure Diagnosis",
+          "heading_path": [
+            "silent-failure-diagnosis"
+          ],
+          "human_evidence": "not_run",
+          "kind": "section",
+          "locator": "heading:silent-failure-diagnosis@L1-L6",
+          "notes": "",
+          "requirements": [
+            "authoritative_source"
+          ],
+          "review_state": "pending",
+          "reviewed_at": null,
+          "reviewer": null,
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.e265a11913323421f90ff281.ccd90f9ee4f991794",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Choose a discriminative probe, not the suspect path",
+          "heading_path": [
+            "silent-failure-diagnosis",
+            "choose-a-discriminative-probe-not-the-suspect-path"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:silent-failure-diagnosis/choose-a-discriminative-probe-not-the-suspect-path@L37-L44",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "7f1d75aaf3e21a6e8f6205618a3f0ebf50aaa4192f114d8ab56f7e265cddd8c3",
+      "knowledge_id": "uekb.e265a11913323421f90ff281",
+      "source": "ue-testing-debugging/references/silent-failure-diagnosis.md"
+    },
+    "ue-testing-debugging/references/timing-sensitive-evidence.md": {
+      "claims": [
+        {
+          "claim_id": "uekb.fd9204f3eec5b1834c998bfe.c9029fa161f4c0647",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Pre-armed calls: receipt vs effect",
+          "heading_path": [
+            "timing-sensitive-evidence",
+            "pre-armed-calls-receipt-vs-effect"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:timing-sensitive-evidence/pre-armed-calls-receipt-vs-effect@L7-L18",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.fd9204f3eec5b1834c998bfe.cc3bc08fc56605aa1",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Single-frame sampling artifacts",
+          "heading_path": [
+            "timing-sensitive-evidence",
+            "single-frame-sampling-artifacts"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:timing-sensitive-evidence/single-frame-sampling-artifacts@L19-L27",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.fd9204f3eec5b1834c998bfe.ccf158398380fc948",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Timing-Sensitive Evidence",
+          "heading_path": [
+            "timing-sensitive-evidence"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:timing-sensitive-evidence@L1-L6",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        },
+        {
+          "claim_id": "uekb.fd9204f3eec5b1834c998bfe.ce9f5fb35f058b115",
+          "claim_types": [
+            "concept"
+          ],
+          "disposition": "non_claim",
+          "evidence_candidates": [
+            "EngineSource:UE5.7.4/Engine/Source/Runtime/Core/Public/CoreMinimal.h"
+          ],
+          "evidence_ids": [],
+          "evidence_refs": [],
+          "exclusion_reason": "Prescriptive validation or workflow guidance; it does not assert that an engine, runtime, or human outcome passed.",
+          "heading": "Keep the failed probes",
+          "heading_path": [
+            "timing-sensitive-evidence",
+            "keep-the-failed-probes"
+          ],
+          "human_evidence": "not_applicable",
+          "kind": "section",
+          "locator": "heading:timing-sensitive-evidence/keep-the-failed-probes@L28-L32",
+          "notes": "",
+          "requirements": [],
+          "review_state": "excluded",
+          "reviewed_at": "2026-10-04",
+          "reviewer": "zcode-2026-10-ledger-review",
+          "status": "pending",
+          "validation_ids": []
+        }
+      ],
+      "content_sha256": "9ff9bbd291bebd30fc29b4f748b567e469c0565b047e07bee3a5fcadeb7e0003",
+      "knowledge_id": "uekb.fd9204f3eec5b1834c998bfe",
+      "source": "ue-testing-debugging/references/timing-sensitive-evidence.md"
     },
     "ue-ui-umg-slate/SKILL.md": {
       "claims": [
@@ -24328,7 +25665,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24356,7 +25693,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24384,7 +25721,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24416,7 +25753,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24450,7 +25787,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24482,7 +25819,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24516,7 +25853,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24550,7 +25887,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24582,7 +25919,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24615,7 +25952,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -24654,7 +25991,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24687,7 +26024,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24719,7 +26056,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24749,7 +26086,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24780,7 +26117,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -24812,7 +26149,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24844,7 +26181,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24876,7 +26213,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         }
       ],
@@ -24915,7 +26252,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24949,7 +26286,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -24983,7 +26320,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -25017,7 +26354,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -25049,7 +26386,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UIBindWidget"
           ]
@@ -25082,7 +26419,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -25114,7 +26451,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UI"
           ]
@@ -25144,7 +26481,7 @@
           "review_state": "excluded",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "excluded",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -25174,7 +26511,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": []
         },
         {
@@ -25206,7 +26543,7 @@
           "review_state": "verified",
           "reviewed_at": "2026-08-24",
           "reviewer": "codex-wave-06-source-review",
-          "status": "verified",
+          "status": "pending",
           "validation_ids": [
             "UEKB.Compile.UIBindWidget"
           ]
