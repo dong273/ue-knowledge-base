@@ -15,6 +15,6 @@ def test_ci_smoke_uses_manifest_identity_instead_of_a_stale_chunk_floor():
         encoding="utf-8"
     )
 
-    assert "d['manifest']['corpus']['documents'] == 90" in workflow
+    assert "d['manifest']['corpus']['documents'] == 99" in workflow
     assert "d['documents'] == d['manifest']['corpus']['chunks']" in workflow
     assert "d['documents'] >= 1500" not in workflow

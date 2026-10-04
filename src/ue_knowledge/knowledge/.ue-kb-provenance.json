@@ -736,7 +736,7 @@
         "api",
         "concept"
       ],
-      "content_sha256": "44ef7419783b405cc1ed5683c0384df64c3831efee32859a3510ece9db924488",
+      "content_sha256": "b28050c76c40a45b55fe1ae0c4e6d23d3197dc5e4c74a0c6ca3c95961446baae",
       "engine_versions": [
         "5.7.4"
       ],
@@ -756,6 +756,27 @@
         "compile_test"
       ],
       "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/references/blueprint-graph-authoring-pitfalls.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "071af23509a7c1c1af5dba740cb68f8e5e3e9366c879b8dc1215c9bd92d67e41",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.38bdb00907854d17652ef094",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
     },
     "ue-editor-tools/references/detail-customization-patterns.md": {
       "audit_status": "verified",
@@ -811,6 +832,27 @@
         "compile_test"
       ],
       "verified_at": "2026-08-24"
+    },
+    "ue-editor-tools/references/minimized-editor-throttling.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "cf013e9843d47bf0b7a3c09ea9bd06c3683dc0d1ffaf66b68e0b4c7171616a5e",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.415c04dc52a09a09b6ee2ed6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
     },
     "ue-editor-tools/references/unattended-editor-automation.md": {
       "audit_status": "verified",
@@ -1151,7 +1193,7 @@
         "concept",
         "runtime"
       ],
-      "content_sha256": "ff0a0caeb886d39c118247389a370496a9073860180866ecfd746b37588e3b1c",
+      "content_sha256": "d1475860c88d82d97d0778b2b240f5779753ef0e908e8cea9e47d9e94ca2ac47",
       "engine_versions": [
         "5.7.4"
       ],
@@ -1171,7 +1213,7 @@
         "engine_source",
         "compile_test"
       ],
-      "verified_at": "2026-08-24"
+      "verified_at": "2026-10-04"
     },
     "ue-input-system/references/input-action-reference.md": {
       "audit_status": "verified",
@@ -1200,6 +1242,27 @@
         "compile_test"
       ],
       "verified_at": "2026-08-24"
+    },
+    "ue-input-system/references/same-frame-tap-trigger.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "b4b5556de51fecf98352239a07ba4f39c1f7f329bb9f3d80fbdf8cdfa6d8c4be",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.5100723485199d2168d223b6",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
     },
     "ue-knowledge-rag/SKILL.md": {
       "audit_status": "verified",
@@ -1692,7 +1755,7 @@
         "concept",
         "runtime"
       ],
-      "content_sha256": "7481a4800d0aec25bbe7d6938decf504d3c96b80e1a1a9a193243a7b7edd0e24",
+      "content_sha256": "b8dc5e536befdbbc55f2105ab0265619a407b177b8a02d22d17d487510a05e4a",
       "engine_versions": [
         "5.7.4"
       ],
@@ -1711,7 +1774,7 @@
         "engine_source",
         "compile_test"
       ],
-      "verified_at": "2026-08-24"
+      "verified_at": "2026-10-04"
     },
     "ue-physics-collision/references/actor-collision-enable-state.md": {
       "audit_status": "verified",
@@ -1796,6 +1859,27 @@
         "compile_test"
       ],
       "verified_at": "2026-08-24"
+    },
+    "ue-physics-collision/references/runtime-collision-refresh.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "eec4f78c0b12aa6dbcf56b187bfccc789021735fffa7e3374d0abc2c139d1090",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.cd400c7c7863387eca1ce65d",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
     },
     "ue-physics-collision/references/trace-patterns.md": {
       "audit_status": "verified",
@@ -2197,7 +2281,7 @@
         "runtime",
         "visual"
       ],
-      "content_sha256": "4bfc5309346195ca9f1e3865aae2f872c72c5a17734415052b3eb873f569c4ba",
+      "content_sha256": "a0a96fd3f7965a42c7e485a1ad5004f37d03e639362648282b9790f52ec312d0",
       "engine_versions": [
         "5.7.4"
       ],
@@ -2246,6 +2330,28 @@
       ],
       "verified_at": "2026-08-24"
     },
+    "ue-testing-debugging/references/editor-world-vs-pie-runtime-state.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "1f36c00d37b33c69f9c4c452815a3709c2d743634a076d6d0d7838eca7121366",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.0b3d4fb84f5f32abd56c0c9e",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
+    },
     "ue-testing-debugging/references/fresh-pie-negative-evidence.md": {
       "audit_status": "verified",
       "claim_types": [
@@ -2267,6 +2373,47 @@
       "verification": [],
       "verified_at": "2026-08-23"
     },
+    "ue-testing-debugging/references/log-tail-evidence-caliber.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "7d2c4d557a411ee047008970c03122cf8b9a86f126ff243fe32033d301c68ed7",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.0477e28faac0d51de453f08b",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-10-04"
+    },
+    "ue-testing-debugging/references/pie-visual-capture-channels.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "83182432d9158d1ec249ea24df1973ae0bf31b12d0967a392711843acf856d84",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.b18dd79e6452a4e6ac6ac03c",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
+    },
     "ue-testing-debugging/references/profiling-commands.md": {
       "audit_status": "verified",
       "claim_types": [
@@ -2286,6 +2433,47 @@
       "validation_ids": [],
       "verification": [],
       "verified_at": "2026-08-24"
+    },
+    "ue-testing-debugging/references/silent-failure-diagnosis.md": {
+      "audit_status": "pending",
+      "claim_types": [
+        "api",
+        "concept"
+      ],
+      "content_sha256": "7f1d75aaf3e21a6e8f6205618a3f0ebf50aaa4192f114d8ab56f7e265cddd8c3",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.e265a11913323421f90ff281",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [
+        "engine_source"
+      ],
+      "verified_at": "2026-10-04"
+    },
+    "ue-testing-debugging/references/timing-sensitive-evidence.md": {
+      "audit_status": "verified",
+      "claim_types": [
+        "concept"
+      ],
+      "content_sha256": "9ff9bbd291bebd30fc29b4f748b567e469c0565b047e07bee3a5fcadeb7e0003",
+      "engine_versions": [
+        "5.7.4"
+      ],
+      "evidence_refs": [],
+      "expires_at": null,
+      "human_evidence": "not_applicable",
+      "knowledge_id": "uekb.fd9204f3eec5b1834c998bfe",
+      "scope": "public",
+      "source_ids": [],
+      "validation_ids": [],
+      "verification": [],
+      "verified_at": "2026-10-04"
     },
     "ue-ui-umg-slate/SKILL.md": {
       "audit_status": "verified",
@@ -2425,7 +2613,7 @@
       "verified_at": "2026-08-24"
     }
   },
-  "generated_from_claim_ledger_sha256": "66ece7b446706ccf1ce980ffcbb991efaa1a73f38e34b97a3b92a178b841f492",
+  "generated_from_claim_ledger_sha256": "afa55bb3fb415a224d64bb6e754d552d5ad2bb5de34ea8742e8c9fa797e89907",
   "schema_version": 1,
   "scope": "public"
 }

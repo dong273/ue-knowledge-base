@@ -46,7 +46,7 @@ def built_index(tmp_path_factory):
         model_name="fake",
         embedder=FakeEmbedder(),
     )
-    assert summary["files"] == 90
+    assert summary["files"] == 99
     assert summary["chunks"] > summary["files"]
     return db
 

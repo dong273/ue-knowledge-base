@@ -49,4 +49,10 @@ After changing collision at runtime, read back the Actor/component state and run
 - Check initial penetration and the movement/query shape.
 - Use a focused Automation test for any behavior claimed as verified.
 
-See the references for trace and failure-isolation patterns.
+## Focused references
+
+- [Trace patterns](references/trace-patterns.md)
+- [Actor collision enable state](references/actor-collision-enable-state.md)
+- [Collision channel setup](references/collision-channel-setup.md)
+- [Ground penetration debugging](references/ground-penetration-debugging.md)
+- [Runtime collision refresh](references/runtime-collision-refresh.md)
