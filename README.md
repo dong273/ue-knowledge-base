@@ -62,7 +62,7 @@ Public and private project corpora are built and stored separately; a project in
 
 | Problem | Status quo | This project |
 |---|---|---|
-| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **90 structured original documents**, one search away |
+| **UE knowledge is scattered** | Answers live in forums, blogs, videos and English docs; one question = a dozen sources | 31 topics, **99 structured original documents**, one search away |
 | **LLMs hallucinate UE APIs** | Generic models blur the UE 5.4 vs 5.7 differences and hand you "looks right" code | Documents are distilled from **real project work**; each section and code artifact is labeled, and high-risk UE 5.7 API/runtime claims link to source, compile, or Automation evidence |
 | **Cloud RAG costs money & leaks code** | Every query ships your game code to an API and bills you per token | **100% local, zero API cost** — code never leaves your machine |
 | **Docs lose fidelity in translation** | Translated or re-summarized docs blur UE terminology and drift from actual engine behavior | **Original English corpus** — written in the engine's own language, nothing lost in translation; bilingual topics keep Chinese queries working |
@@ -74,7 +74,8 @@ materials/rendering, module build system, editor tools, and more
 
 ## Highlights
 
-- 90 original docs (83 English, 7 bilingual), split into Markdown-aware chunks
+- 99 original documents (97 English, 2 bilingual; Chinese query support spans
+  all 31 topics via the glossary), split into Markdown-aware chunks
   of at most 384 embedding tokens; the release verifier generates and checks
   the exact chunk count instead of keeping a stale number in this README
 - Chinese terminology expansion + spoken-Chinese phrase dictionary
@@ -167,6 +168,8 @@ on every command. Integration examples in
 Release and candidate-package gates are documented in
 [docs/releasing.md](docs/releasing.md); v0.7.0 has passed the strict
 90-document audit and UE 5.7 evidence manifest gate and is published on PyPI.
+The 2026-10 corpus refresh (99 documents) passes the same contracts on main
+and ships in the next release.
 
 ## Extending the corpus
 
@@ -209,6 +212,14 @@ locally and **not redistributed**, out of respect for Epic's copyright).
   and Automation evidence, opt-in coverage envelopes, physically separate
   public/project federated queries, and MCP `ue_kb_federated_query`. Published
   on PyPI after the privacy, retrieval, package and CI gates passed.
+- **2026-10 refresh (merged on main, unreleased)** — nine new
+  editor-automation and validation-evidence references (editor vs PIE runtime
+  state, silent failure diagnosis, PIE visual capture channels, log-tail
+  evidence caliber, minimized editor throttling, Blueprint graph authoring
+  pitfalls, runtime collision refresh, same-frame input taps, timing-sensitive
+  evidence); corpus now 99 documents with CI corpus contracts aligned (newer
+  behavioral sections carry pending evidence status in the claim ledger until
+  harness coverage lands)
 - **next candidates** — agent write-back protocol (verified material routes
   back into the corpus through the publish pipeline; see
   `docs/agent-integration.md` Codex section), more bilingual topics,
